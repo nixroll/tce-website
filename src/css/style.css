@@ -23,7 +23,7 @@ body {
 /* Home — Hero (node 308:1917) */
 .hero {
   width: 100%;
-  height: 900px;
+  height: 100vh;
   background-color: var(--background-primary);
   display: flex;
   align-items: center;
