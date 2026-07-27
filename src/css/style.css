@@ -9,9 +9,12 @@
   --border-primary: #2f3238;    /* borders/primary-border */
   --brand: #fdb022;             /* base/brand */
 
-  --button-primary: #373c43;    /* button/primary-button */
-  --border-secondary: #525966;  /* borders/secondary-border */
+  --button-primary: #373c43;         /* button/primary-button */
+  --button-primary-hover: #40464e;   /* button/hover-primary-button */
+  --border-secondary: #525966;       /* borders/secondary-border */
+  --white: #ffffff;                  /* base/white */
   --radius-lg: 10px;
+  --header-height: 70px;
 
   --spacing-md: 8px;
   --spacing-xl: 16px;
@@ -84,6 +87,11 @@ body {
    На <768px (мобильный дизайн ещё не готов) — просто не показываем. */
 .site-header {
   display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
   width: 100%;
   background-color: var(--background-primary);
   border-bottom: 1px solid var(--border-primary);
@@ -94,12 +102,18 @@ body {
     display: flex;
     justify-content: center;
   }
+
+  /* Header зафиксирован, поэтому компенсируем его высоту отступом
+     сверху у контента — иначе он перекроет Hero (node 295:887) */
+  body {
+    padding-top: var(--header-height);
+  }
 }
 
 .header__inner {
   width: 100%;
   max-width: 1440px;
-  height: 70px;
+  height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -163,7 +177,8 @@ body {
 }
 
 .header__cta:hover {
-  background-color: var(--border-secondary);
+  background-color: var(--button-primary-hover);
+  color: var(--white);
 }
 
 /* Home — Hero (node 308:1917) */
