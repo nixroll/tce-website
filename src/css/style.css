@@ -221,6 +221,11 @@ body {
     align-items: flex-start;
   }
 
+  .footer__contact {
+    width: 400px;
+    flex-shrink: 0;
+  }
+
   .footer__bottom {
     flex-direction: row;
     justify-content: space-between;
