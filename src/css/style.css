@@ -9,6 +9,7 @@
   --border-primary: #2f3238;    /* borders/primary-border */
   --brand: #fdb022;             /* base/brand */
 
+  --spacing-xl: 16px;
   --spacing-2xl: 20px;
   --spacing-3xl: 24px;
   --spacing-5xl: 40px;
@@ -111,21 +112,18 @@ body {
   max-width: 1392px;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-9xl);
-  padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-5xl);
+  gap: var(--spacing-6xl);
+  padding: var(--spacing-8xl) var(--spacing-3xl) var(--spacing-5xl);
 }
 
+/* Logo, Contact и Columns — три равноправных элемента одного flex-контейнера.
+   Порядок/группировка между ними разная на мобильных и на >=1000px,
+   поэтому не оборачиваем их во вложенные div — регулируем через order. */
 .footer__top {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-7xl);
+  gap: var(--spacing-6xl);
   width: 100%;
-}
-
-.footer__brand {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-7xl);
 }
 
 .footer__logo {
@@ -133,7 +131,7 @@ body {
   width: 48px;
   height: 48px;
   flex-shrink: 0;
-  margin-top: 4px; /* оптическое выравнивание с первой строкой колонок */
+  margin-top: 0;
 }
 
 .footer__logo img {
@@ -160,13 +158,13 @@ body {
 .footer__contact {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2xl);
+  gap: var(--spacing-xl);
 }
 
 .footer__bottom {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-3xl);
+  gap: var(--spacing-xl);
   width: 100%;
 }
 
@@ -177,53 +175,55 @@ body {
 .footer__legal {
   order: 1;
   display: flex;
-  flex-wrap: wrap;
   gap: var(--spacing-2xl);
   align-items: center;
-  width: 100%;
+  width: 400px;
 }
 
-/* >=768: Container получает боковой паддинг 48px вместо 24px,
-   ссылки нижней строки перестают переноситься (фикс. ширина 400px) */
+/* >=768: Container получает боковой паддинг 48px вместо 24px
+   (gap/pt контейнера и раскладка Top/Bottom остаются как на мобильном) */
 @media (min-width: 768px) {
   .footer__inner {
     padding-left: var(--spacing-6xl);
     padding-right: var(--spacing-6xl);
   }
-
-  .footer__legal {
-    flex-wrap: nowrap;
-    width: 400px;
-  }
 }
 
-/* >=1000: раскладка "в строку" — контент и низ футера в ряд,
-   логотип рядом с колонками, декоративные боковые линии появляются */
+/* >=1000: раскладка "в строку" — верх и низ футера в ряд,
+   логотип+колонки слева, контакты прижаты вправо, декоративные боковые линии появляются */
 @media (min-width: 1000px) {
   .site-footer {
     padding: 0 var(--spacing-3xl);
   }
 
   .footer__inner {
+    gap: var(--spacing-9xl);
+    padding-top: var(--spacing-9xl);
     border-left: 1px solid var(--border-primary);
     border-right: 1px solid var(--border-primary);
   }
 
   .footer__top {
     flex-direction: row;
-    justify-content: space-between;
+    align-items: flex-start;
     gap: var(--spacing-8xl);
   }
 
-  .footer__brand {
-    flex-direction: row;
-    gap: var(--spacing-8xl);
-    align-items: flex-start;
+  .footer__logo {
+    order: 1;
+    margin-top: 4px; /* оптическое выравнивание с первой строкой колонок */
+  }
+
+  .footer__columns {
+    order: 2;
   }
 
   .footer__contact {
+    order: 3;
     width: 400px;
     flex-shrink: 0;
+    gap: var(--spacing-2xl);
+    margin-left: auto; /* прижимает контакты к правому краю */
   }
 
   .footer__bottom {
@@ -235,9 +235,5 @@ body {
   .footer__copyright,
   .footer__legal {
     order: initial;
-  }
-
-  .footer__legal {
-    width: 400px;
   }
 }
