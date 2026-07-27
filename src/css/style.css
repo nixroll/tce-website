@@ -1,10 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Figma design tokens (node 308:1918) */
+  /* Figma design tokens */
   --background-primary: #101010;
-  --text-primary: #f7f7f7;
+  --text-primary: #f7f7f7;      /* text/primary-text */
+  --text-secondary: #cecfd2;    /* text/secondary-text */
+  --text-tertiary: #94979c;     /* text/tertiary-text */
+  --border-primary: #2f3238;    /* borders/primary-border */
+  --brand: #fdb022;             /* base/brand */
+
+  --spacing-2xl: 20px;
   --spacing-3xl: 24px;
+  --spacing-5xl: 40px;
+  --spacing-6xl: 48px;
+  --spacing-7xl: 64px;
+  --spacing-8xl: 80px;
+  --spacing-9xl: 96px;
 }
 
 * {
@@ -14,10 +25,46 @@
 html, body {
   margin: 0;
   padding: 0;
+  /* Фон на весь документ, а не только на секции — иначе на мобильных
+     экранах ниже последней секции просвечивают белые поля браузера */
+  background-color: var(--background-primary);
 }
 
 body {
   font-family: "Inter", sans-serif;
+}
+
+/* Общий стиль текстовых ссылок футера (компонент Footer Link) */
+.footer-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.footer-link:hover {
+  color: var(--brand);
+}
+
+.footer-link--legal {
+  color: var(--text-tertiary);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.footer-link--legal:hover {
+  color: var(--text-secondary);
+}
+
+.footer__copyright {
+  margin: 0;
+  color: var(--text-tertiary);
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 /* Home — Hero (node 308:1917) */
@@ -43,4 +90,144 @@ body {
   text-align: center;
   white-space: nowrap;
   word-break: break-word;
+}
+
+/* Home — Footer (node 157:3735) */
+.site-footer {
+  background-color: var(--background-primary);
+  border-top: 1px solid var(--border-primary);
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.footer__inner {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-9xl);
+  padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-5xl);
+}
+
+.footer__top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-7xl);
+  width: 100%;
+}
+
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-7xl);
+}
+
+.footer__logo {
+  display: block;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  margin-top: 4px; /* оптическое выравнивание с первой строкой колонок */
+}
+
+.footer__logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.footer__columns {
+  display: flex;
+  gap: var(--spacing-6xl);
+  align-items: flex-start;
+}
+
+.footer__col {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.footer__contact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+}
+
+.footer__bottom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3xl);
+  width: 100%;
+}
+
+.footer__copyright {
+  order: 2;
+}
+
+.footer__legal {
+  order: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2xl);
+  align-items: center;
+  width: 100%;
+}
+
+/* >=768: Container получает боковой паддинг 48px вместо 24px,
+   ссылки нижней строки перестают переноситься (фикс. ширина 400px) */
+@media (min-width: 768px) {
+  .footer__inner {
+    padding-left: var(--spacing-6xl);
+    padding-right: var(--spacing-6xl);
+  }
+
+  .footer__legal {
+    flex-wrap: nowrap;
+    width: 400px;
+  }
+}
+
+/* >=1000: раскладка "в строку" — контент и низ футера в ряд,
+   логотип рядом с колонками, декоративные боковые линии появляются */
+@media (min-width: 1000px) {
+  .site-footer {
+    padding: 0 var(--spacing-3xl);
+  }
+
+  .footer__inner {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+
+  .footer__top {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: var(--spacing-8xl);
+  }
+
+  .footer__brand {
+    flex-direction: row;
+    gap: var(--spacing-8xl);
+    align-items: flex-start;
+  }
+
+  .footer__bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer__copyright,
+  .footer__legal {
+    order: initial;
+  }
+
+  .footer__legal {
+    width: 400px;
+  }
 }
