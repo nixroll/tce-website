@@ -177,15 +177,19 @@ body {
   display: flex;
   gap: var(--spacing-2xl);
   align-items: center;
-  width: 400px;
+  width: 100%;
 }
 
-/* >=768: Container получает боковой паддинг 48px вместо 24px
-   (gap/pt контейнера и раскладка Top/Bottom остаются как на мобильном) */
+/* >=768: Container получает боковой паддинг 48px вместо 24px,
+   строка легал-ссылок становится фиксированной ширины 400px */
 @media (min-width: 768px) {
   .footer__inner {
     padding-left: var(--spacing-6xl);
     padding-right: var(--spacing-6xl);
+  }
+
+  .footer__legal {
+    width: 400px;
   }
 }
 
