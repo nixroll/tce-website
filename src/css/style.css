@@ -9,9 +9,15 @@
   --border-primary: #2f3238;    /* borders/primary-border */
   --brand: #fdb022;             /* base/brand */
 
+  --button-primary: #373c43;    /* button/primary-button */
+  --border-secondary: #525966;  /* borders/secondary-border */
+  --radius-lg: 10px;
+
+  --spacing-md: 8px;
   --spacing-xl: 16px;
   --spacing-2xl: 20px;
   --spacing-3xl: 24px;
+  --spacing-4xl: 32px;
   --spacing-5xl: 40px;
   --spacing-6xl: 48px;
   --spacing-7xl: 64px;
@@ -71,6 +77,108 @@ body {
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
+}
+
+/* Header (node 335:2092). Одна и та же раскладка на 768/1000/1440 —
+   различается только ширина вьюпорта, контейнер сам её ограничивает.
+   На <768px (мобильный дизайн ещё не готов) — просто не показываем. */
+.site-header {
+  display: none;
+  width: 100%;
+  background-color: var(--background-primary);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+@media (min-width: 768px) {
+  .site-header {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.header__inner {
+  width: 100%;
+  max-width: 1440px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-3xl);
+}
+
+/* Логотип — вылоцированный в Figma текст (не редактируемый text-layer),
+   поэтому воспроизводим как обычный HTML-текст в две строки. */
+.header__logo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.header__logo-line {
+  font-family: "Inter", sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 15px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.header__logo-line--primary {
+  color: var(--text-primary);
+}
+
+.header__logo-line--brand {
+  color: var(--brand);
+  letter-spacing: 1.5px;
+}
+
+.header__right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4xl);
+}
+
+.header__links {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3xl);
+}
+
+.header-link {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.header-link:hover {
+  color: var(--brand);
+}
+
+.header__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md) var(--spacing-2xl);
+  background-color: var(--button-primary);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-lg);
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--text-primary);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.header__cta:hover {
+  background-color: var(--border-secondary);
 }
 
 /* Home — Hero (node 308:1917) */
