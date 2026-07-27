@@ -32,6 +32,11 @@ html, body {
 
 body {
   font-family: "Inter", sans-serif;
+  /* Приближает рендер шрифта к тому, что видно в Figma —
+     без этого Inter в браузере выглядит заметно жирнее/грубее */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* Общий стиль текстовых ссылок футера (компонент Footer Link) */
