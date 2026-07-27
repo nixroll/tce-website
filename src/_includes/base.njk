@@ -7,12 +7,11 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  {% include "header.njk" %}
-
+  {# Header/footer временно отключены — верстаем по одному блоку из Figma,
+     header.njk/footer.njk остаются в проекте и вернутся, когда дизайнер
+     подготовит эти секции #}
   <main>
     {{ content | safe }}
   </main>
-
-  {% include "footer.njk" %}
 </body>
 </html>
