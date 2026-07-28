@@ -3,6 +3,7 @@
 :root {
   /* Figma design tokens */
   --background-primary: #101010;
+  --background-secondary: #181818;  /* background/secondary-background */
   --text-primary: #f7f7f7;      /* text/primary-text */
   --text-secondary: #cecfd2;    /* text/secondary-text */
   --text-tertiary: #94979c;     /* text/tertiary-text */
@@ -206,52 +207,212 @@ body {
   word-break: break-word;
 }
 
-/* Home — Footer (node 157:3735) */
+/* Home — Footer (node 157:3735). Новая архитектура (не совпадает с
+   предыдущей): у мобильной/планшетной и десктопной раскладок разная
+   структура (не просто reorder), поэтому это два отдельных блока
+   разметки внутри одного <footer>, переключаемые через display:
+   .footer__compact — 390/768, .footer__wide — 1000/1440. */
 .site-footer {
-  background-color: var(--background-primary);
+  background-color: var(--background-secondary);
   border-top: 1px solid var(--border-primary);
   display: flex;
   justify-content: center;
   width: 100%;
 }
 
-.footer__inner {
+/* ---------- Compact: <1000px ---------- */
+.footer__compact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6xl);
   width: 100%;
   max-width: 1392px;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-6xl);
-  padding: var(--spacing-8xl) var(--spacing-3xl) var(--spacing-5xl);
+  padding: var(--spacing-7xl) var(--spacing-3xl);
 }
 
-/* Logo, Contact и Columns — три равноправных элемента одного flex-контейнера.
-   Порядок/группировка между ними разная на мобильных и на >=1000px,
-   поэтому не оборачиваем их во вложенные div — регулируем через order. */
-.footer__top {
+@media (min-width: 1000px) {
+  .footer__compact {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .footer__compact {
+    padding-left: var(--spacing-6xl);
+    padding-right: var(--spacing-6xl);
+  }
+}
+
+.footer__compact-columns {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-6xl);
+  gap: var(--spacing-4xl);
   width: 100%;
 }
 
+@media (min-width: 768px) {
+  .footer__compact-columns {
+    flex-direction: row;
+  }
+}
+
+.footer__mlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .footer__mlist {
+    flex: 1 0 0;
+  }
+}
+
+.footer-mlink {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border-primary);
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 22px;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.footer-mlink:hover {
+  color: var(--brand);
+}
+
+.footer__compact-logo-contact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4xl);
+}
+
+.footer__mcontact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+  .footer__mcontact {
+    gap: var(--spacing-xl);
+  }
+}
+
+.footer-mtext {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 22px;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.footer-mtext:hover {
+  color: var(--brand);
+}
+
+.footer__compact-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  width: 100%;
+}
+
+.footer__compact-bottom .footer__legal {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .footer__compact-bottom .footer__legal {
+    width: 400px;
+  }
+}
+
+/* ---------- Wide: >=1000px (1000 и 1440 — одна и та же раскладка) ---------- */
+.footer__wide {
+  display: none;
+}
+
+@media (min-width: 1000px) {
+  .site-footer {
+    padding: 0 var(--spacing-3xl);
+  }
+
+  .footer__wide {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-9xl);
+    width: 100%;
+    max-width: 1392px;
+    padding: var(--spacing-9xl) var(--spacing-6xl) var(--spacing-5xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+.footer__wide-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.footer__wide-logo-links {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-8xl);
+}
+
+.footer__wide-logo-links .footer__logo {
+  margin-top: 4px; /* оптическое выравнивание с первой строкой колонок */
+}
+
+.footer__wide-columns {
+  display: flex;
+  gap: var(--spacing-6xl);
+  align-items: flex-start;
+}
+
+.footer__wide-contact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+  width: 400px;
+  flex-shrink: 0;
+}
+
+.footer__wide-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.footer__wide-bottom .footer__legal {
+  width: 400px;
+}
+
+/* ---------- Общее для обоих блоков ---------- */
 .footer__logo {
   display: block;
   width: 48px;
   height: 48px;
   flex-shrink: 0;
-  margin-top: 0;
 }
 
 .footer__logo img {
   display: block;
   width: 100%;
   height: 100%;
-}
-
-.footer__columns {
-  display: flex;
-  gap: var(--spacing-6xl);
-  align-items: flex-start;
 }
 
 .footer__col {
@@ -263,89 +424,8 @@ body {
   gap: 16px;
 }
 
-.footer__contact {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xl);
-}
-
-.footer__bottom {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xl);
-  width: 100%;
-}
-
-.footer__copyright {
-  order: 2;
-}
-
 .footer__legal {
-  order: 1;
   display: flex;
-  gap: var(--spacing-2xl);
+  gap: var(--spacing-lg);
   align-items: center;
-  width: 100%;
-}
-
-/* >=768: Container получает боковой паддинг 48px вместо 24px,
-   строка легал-ссылок становится фиксированной ширины 400px */
-@media (min-width: 768px) {
-  .footer__inner {
-    padding-left: var(--spacing-6xl);
-    padding-right: var(--spacing-6xl);
-  }
-
-  .footer__legal {
-    width: 400px;
-  }
-}
-
-/* >=1000: раскладка "в строку" — верх и низ футера в ряд,
-   логотип+колонки слева, контакты прижаты вправо, декоративные боковые линии появляются */
-@media (min-width: 1000px) {
-  .site-footer {
-    padding: 0 var(--spacing-3xl);
-  }
-
-  .footer__inner {
-    gap: var(--spacing-9xl);
-    padding-top: var(--spacing-9xl);
-    border-left: 1px solid var(--border-primary);
-    border-right: 1px solid var(--border-primary);
-  }
-
-  .footer__top {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: var(--spacing-8xl);
-  }
-
-  .footer__logo {
-    order: 1;
-    margin-top: 4px; /* оптическое выравнивание с первой строкой колонок */
-  }
-
-  .footer__columns {
-    order: 2;
-  }
-
-  .footer__contact {
-    order: 3;
-    width: 400px;
-    flex-shrink: 0;
-    gap: var(--spacing-2xl);
-    margin-left: auto; /* прижимает контакты к правому краю */
-  }
-
-  .footer__bottom {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .footer__copyright,
-  .footer__legal {
-    order: initial;
-  }
 }
