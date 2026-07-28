@@ -4,3 +4,4 @@ _site/
 .vercel
 netlify-test/
 *.old
+_git_junk/

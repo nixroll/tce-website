@@ -1,6 +1,61 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* Шрифты — self-hosted (woff2 из официального релиза Inter 4.1,
+   лицензия SIL Open Font License, файлы предоставил заказчик).
+   Раньше Inter грузился через Google Fonts CDN — перешли на локальные
+   файлы: не зависим от внешнего сервиса, нет лишнего DNS/TLS запроса,
+   работает офлайн. Inter Display — второй шрифт, для заголовков. */
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/Inter-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/Inter-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/Inter-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/Inter-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter Display";
+  src: url("../fonts/InterDisplay-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter Display";
+  src: url("../fonts/InterDisplay-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
+  /* Шрифтовые токены */
+  --font-body: "Inter", sans-serif;
+  --font-display: "Inter Display", "Inter", sans-serif;
+
   /* Figma design tokens */
   --background-primary: #101010;
   --background-secondary: #181818;  /* background/secondary-background */
@@ -308,6 +363,196 @@ body {
   text-align: center;
   white-space: nowrap;
   word-break: break-word;
+}
+
+/* Divider (node 416:1773). Повторяющийся элемент между секциями —
+   в макете-шаблоне встречается дважды вокруг CTA. Декоративные
+   боковые линии — только на >=1000px, как у Footer. */
+.divider {
+  width: 100%;
+  background-color: var(--background-primary);
+  display: flex;
+  justify-content: center;
+}
+
+.divider__inner {
+  width: 100%;
+  max-width: 1392px;
+  height: 64px;
+}
+
+@media (min-width: 768px) {
+  .divider__inner {
+    height: 80px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .divider {
+    padding: 0 var(--spacing-3xl);
+  }
+
+  .divider__inner {
+    height: 96px;
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+/* CTA (node 416:1812). Тоже повторяющийся элемент на всех страницах. */
+.cta {
+  width: 100%;
+  background-color: var(--background-primary);
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  justify-content: center;
+}
+
+.cta__inner {
+  width: 100%;
+  max-width: 1392px;
+  padding: var(--spacing-7xl) var(--spacing-3xl);
+}
+
+@media (min-width: 768px) {
+  .cta__inner {
+    padding: var(--spacing-8xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .cta {
+    padding: 0 var(--spacing-3xl);
+  }
+
+  .cta__inner {
+    padding: var(--spacing-9xl) var(--spacing-6xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+.cta__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .cta__content {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: var(--spacing-4xl);
+  }
+}
+
+.cta__heading {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 36px;
+  letter-spacing: -1px;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.cta__accent {
+  color: var(--brand);
+}
+
+@media (min-width: 768px) {
+  .cta__heading {
+    flex: 1 0 0;
+    min-width: 0;
+    font-family: var(--font-display);
+    font-size: 40px;
+    line-height: 40px;
+    text-align: left;
+  }
+}
+
+@media (min-width: 1000px) {
+  .cta__heading {
+    font-size: 50px;
+    line-height: 50px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .cta__heading {
+    font-size: 60px;
+    line-height: 60px;
+    letter-spacing: -1.5px;
+  }
+}
+
+.cta__buttons {
+  display: flex;
+  gap: var(--spacing-lg);
+  align-items: center;
+  width: 100%;
+  max-width: 250px;
+}
+
+.cta__buttons .btn {
+  flex: 1 0 0;
+}
+
+@media (min-width: 768px) {
+  .cta__buttons {
+    width: 250px;
+    flex-shrink: 0;
+  }
+
+  .cta__buttons .btn {
+    flex: none;
+  }
+
+  .cta__buttons .btn--services {
+    width: 119px;
+  }
+}
+
+/* Кнопки — переиспользуемый компонент (Button, node 17:97).
+   Primary визуально совпадает с .header__cta, но вынесена в общий
+   класс, т.к. теперь используется не только в Header. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md) var(--spacing-2xl);
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--text-primary);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn--primary {
+  background-color: var(--button-primary);
+  border-color: var(--border-secondary);
+}
+
+.btn--primary:hover {
+  background-color: var(--button-primary-hover);
+  color: var(--white);
+}
+
+.btn--secondary {
+  background-color: var(--background-secondary);
+  border-color: var(--border-primary);
+}
+
+.btn--secondary:hover {
+  border-color: var(--border-secondary);
 }
 
 /* Home — Footer (node 157:3735). Новая архитектура (не совпадает с

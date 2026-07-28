@@ -8,11 +8,16 @@
 </head>
 <body>
   {# Header: node 157:3721 (десктоп/планшет + мобильное бургер-меню).
+     Divider + CTA: node 416:1773 / 416:1812 — по шаблону-макету идут
+     на каждой странице перед Footer, Divider дважды (до и после CTA).
      Footer: node 157:3735 #}
   {% include "header.njk" %}
   <main>
     {{ content | safe }}
   </main>
+  {% include "divider.njk" %}
+  {% include "cta.njk" %}
+  {% include "divider.njk" %}
   {% include "footer.njk" %}
   <script src="{{ '/js/header.js' | url }}" defer></script>
 </body>
