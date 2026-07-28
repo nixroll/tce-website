@@ -451,7 +451,7 @@ body {
 
 .cta__heading {
   margin: 0;
-  font-family: var(--font-body);
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 36px;
   line-height: 36px;
@@ -468,7 +468,6 @@ body {
   .cta__heading {
     flex: 1 0 0;
     min-width: 0;
-    font-family: var(--font-display);
     font-size: 40px;
     line-height: 40px;
     text-align: left;
