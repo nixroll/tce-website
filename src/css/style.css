@@ -369,26 +369,22 @@ body {
    в макете-шаблоне встречается дважды вокруг CTA. Декоративные
    боковые линии — только на >=1000px, как у Footer. */
 .divider {
+  /* На 390/768 Divider убран из макета (Home, node 405:2033) — остаётся
+     только на 1000/1440, где он стоит вокруг CTA. */
+  display: none;
   width: 100%;
   background-color: var(--background-primary);
-  display: flex;
   justify-content: center;
 }
 
 .divider__inner {
   width: 100%;
   max-width: 1392px;
-  height: 64px;
-}
-
-@media (min-width: 768px) {
-  .divider__inner {
-    height: 80px;
-  }
 }
 
 @media (min-width: 1000px) {
   .divider {
+    display: flex;
     padding: 0 var(--spacing-3xl);
   }
 
@@ -401,10 +397,11 @@ body {
 
 /* CTA (node 416:1812). Тоже повторяющийся элемент на всех страницах. */
 .cta {
+  /* border-bottom только с 1000px — на 390/768 контейнер CTA
+     примыкает к Footer без нижней линии (node 416:1851 / 416:1860) */
   width: 100%;
   background-color: var(--background-primary);
   border-top: 1px solid var(--border-primary);
-  border-bottom: 1px solid var(--border-primary);
   display: flex;
   justify-content: center;
 }
@@ -424,6 +421,7 @@ body {
 @media (min-width: 1000px) {
   .cta {
     padding: 0 var(--spacing-3xl);
+    border-bottom: 1px solid var(--border-primary);
   }
 
   .cta__inner {
@@ -455,7 +453,7 @@ body {
   font-weight: 600;
   font-size: 36px;
   line-height: 36px;
-  letter-spacing: -1px;
+  letter-spacing: -0.36px;
   color: var(--text-primary);
   text-align: center;
 }
@@ -470,6 +468,7 @@ body {
     min-width: 0;
     font-size: 40px;
     line-height: 40px;
+    letter-spacing: -0.4px;
     text-align: left;
   }
 }
@@ -478,6 +477,7 @@ body {
   .cta__heading {
     font-size: 50px;
     line-height: 50px;
+    letter-spacing: -0.5px;
   }
 }
 
@@ -485,7 +485,7 @@ body {
   .cta__heading {
     font-size: 60px;
     line-height: 60px;
-    letter-spacing: -1.5px;
+    letter-spacing: -0.9px;
   }
 }
 
