@@ -1,7 +1,7 @@
 <header class="site-header" data-figma-node="157:3721" data-figma-name="Header">
   <div class="header__inner">
-    <a href="/" class="header__logo" aria-label="TCE — на главную">
-      <img src="/images/logo-text.svg" width="151" height="28" alt="Thermo Concept Engineering">
+    <a href="{{ '/' | url }}" class="header__logo" aria-label="TCE — на главную">
+      <img src="{{ '/images/logo-text.svg' | url }}" width="151" height="28" alt="Thermo Concept Engineering">
     </a>
 
     <button class="header__burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">
@@ -15,20 +15,20 @@
 
     <div class="header__right">
       <nav class="header__links">
-        <a class="header-link" href="/about/">О нас</a>
-        <a class="header-link" href="/services/">Услуги</a>
-        <a class="header-link" href="/catalog/">Каталог</a>
+        <a class="header-link" href="{{ '/about/' | url }}">О нас</a>
+        <a class="header-link" href="{{ '/services/' | url }}">Услуги</a>
+        <a class="header-link" href="{{ '/catalog/' | url }}">Каталог</a>
       </nav>
-      <a class="header__cta" href="/contact/">Связаться</a>
+      <a class="header__cta" href="{{ '/contact/' | url }}">Связаться</a>
     </div>
   </div>
 
   <div class="header__mobile-panel" id="mobile-menu">
     <nav class="header__mobile-links">
-      <a class="header-mlink" href="/about/">О нас</a>
-      <a class="header-mlink" href="/services/">Услуги</a>
-      <a class="header-mlink" href="/catalog/">Каталог</a>
+      <a class="header-mlink" href="{{ '/about/' | url }}">О нас</a>
+      <a class="header-mlink" href="{{ '/services/' | url }}">Услуги</a>
+      <a class="header-mlink" href="{{ '/catalog/' | url }}">Каталог</a>
     </nav>
-    <a class="header__mobile-cta" href="/contact/">Связаться</a>
+    <a class="header__mobile-cta" href="{{ '/contact/' | url }}">Связаться</a>
   </div>
 </header>

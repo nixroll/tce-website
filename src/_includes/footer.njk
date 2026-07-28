@@ -4,10 +4,10 @@
   <div class="footer__compact">
     <div class="footer__compact-columns">
       <ul class="footer__mlist">
-        <li><a class="footer-mlink" href="/about/">О нас</a></li>
-        <li><a class="footer-mlink" href="/services/">Услуги</a></li>
-        <li><a class="footer-mlink" href="/catalog/">Каталог</a></li>
-        <li><a class="footer-mlink" href="/contact/">Контакты</a></li>
+        <li><a class="footer-mlink" href="{{ '/about/' | url }}">О нас</a></li>
+        <li><a class="footer-mlink" href="{{ '/services/' | url }}">Услуги</a></li>
+        <li><a class="footer-mlink" href="{{ '/catalog/' | url }}">Каталог</a></li>
+        <li><a class="footer-mlink" href="{{ '/contact/' | url }}">Контакты</a></li>
       </ul>
       <ul class="footer__mlist">
         <li><a class="footer-mlink" href="https://www.instagram.com/thermoconceptby/" target="_blank" rel="noopener">Instagram</a></li>
@@ -17,8 +17,8 @@
     </div>
 
     <div class="footer__compact-logo-contact">
-      <a href="/" class="footer__logo" aria-label="TCE — на главную">
-        <img src="/images/logo-mark.svg" width="48" height="48" alt="TCE">
+      <a href="{{ '/' | url }}" class="footer__logo" aria-label="TCE — на главную">
+        <img src="{{ '/images/logo-mark.svg' | url }}" width="48" height="48" alt="TCE">
       </a>
       <div class="footer__mcontact">
         <a class="footer-mtext" href="https://maps.google.com/?q=Минск, ул. Матусевича, д. 33/2, офис 801" target="_blank" rel="noopener">Республика Беларусь, г. Минск,<br>ул. Матусевича, д. 33/2, офис 801</a>
@@ -29,9 +29,9 @@
 
     <div class="footer__compact-bottom">
       <div class="footer__legal">
-        <a class="footer-link footer-link--legal" href="/privacy/">Конфиденциальность</a>
-        <a class="footer-link footer-link--legal" href="/rights/">Права</a>
-        <a class="footer-link footer-link--legal" href="/cookies/">Куки</a>
+        <a class="footer-link footer-link--legal" href="{{ '/privacy/' | url }}">Конфиденциальность</a>
+        <a class="footer-link footer-link--legal" href="{{ '/rights/' | url }}">Права</a>
+        <a class="footer-link footer-link--legal" href="{{ '/cookies/' | url }}">Куки</a>
       </div>
       <p class="footer__copyright">&copy; {{ currentYear }} - ООО «Термо Концепт Инжиниринг»</p>
     </div>
@@ -41,16 +41,16 @@
   <div class="footer__wide">
     <div class="footer__wide-top">
       <div class="footer__wide-logo-links">
-        <a href="/" class="footer__logo" aria-label="TCE — на главную">
-          <img src="/images/logo-mark.svg" width="48" height="48" alt="TCE">
+        <a href="{{ '/' | url }}" class="footer__logo" aria-label="TCE — на главную">
+          <img src="{{ '/images/logo-mark.svg' | url }}" width="48" height="48" alt="TCE">
         </a>
 
         <div class="footer__wide-columns">
           <ul class="footer__col">
-            <li><a class="footer-link" href="/about/">О нас</a></li>
-            <li><a class="footer-link" href="/services/">Услуги</a></li>
-            <li><a class="footer-link" href="/catalog/">Каталог</a></li>
-            <li><a class="footer-link" href="/contact/">Контакты</a></li>
+            <li><a class="footer-link" href="{{ '/about/' | url }}">О нас</a></li>
+            <li><a class="footer-link" href="{{ '/services/' | url }}">Услуги</a></li>
+            <li><a class="footer-link" href="{{ '/catalog/' | url }}">Каталог</a></li>
+            <li><a class="footer-link" href="{{ '/contact/' | url }}">Контакты</a></li>
           </ul>
           <ul class="footer__col">
             <li><a class="footer-link" href="https://www.instagram.com/thermoconceptby/" target="_blank" rel="noopener">Instagram</a></li>
@@ -70,9 +70,9 @@
     <div class="footer__wide-bottom">
       <p class="footer__copyright">&copy; {{ currentYear }} - ООО «Термо Концепт Инжиниринг»</p>
       <div class="footer__legal">
-        <a class="footer-link footer-link--legal" href="/privacy/">Конфиденциальность</a>
-        <a class="footer-link footer-link--legal" href="/rights/">Права</a>
-        <a class="footer-link footer-link--legal" href="/cookies/">Куки</a>
+        <a class="footer-link footer-link--legal" href="{{ '/privacy/' | url }}">Конфиденциальность</a>
+        <a class="footer-link footer-link--legal" href="{{ '/rights/' | url }}">Права</a>
+        <a class="footer-link footer-link--legal" href="{{ '/cookies/' | url }}">Куки</a>
       </div>
     </div>
   </div>
