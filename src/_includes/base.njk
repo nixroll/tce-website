@@ -7,12 +7,13 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  {# Header: node 335:2092 (768/1000/1440, скрыт на <768 — мобильный дизайн ещё не готов).
+  {# Header: node 157:3721 (десктоп/планшет + мобильное бургер-меню).
      Footer: node 157:3735 #}
   {% include "header.njk" %}
   <main>
     {{ content | safe }}
   </main>
   {% include "footer.njk" %}
+  <script src="/js/header.js" defer></script>
 </body>
 </html>

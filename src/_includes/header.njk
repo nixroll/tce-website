@@ -1,8 +1,17 @@
-<header class="site-header" data-figma-node="335:2092" data-figma-name="Header">
+<header class="site-header" data-figma-node="157:3721" data-figma-name="Header">
   <div class="header__inner">
     <a href="/" class="header__logo" aria-label="TCE — на главную">
       <img src="/images/logo-text.svg" width="151" height="28" alt="Thermo Concept Engineering">
     </a>
+
+    <button class="header__burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">
+      <svg class="header__burger-icon header__burger-icon--menu" width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M6.25 11.25H23.75M6.25 15H23.75M6.25 18.75H23.75" stroke="#F7F7F7" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <svg class="header__burger-icon header__burger-icon--close" width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M8 8L22 22M22 8L8 22" stroke="#F7F7F7" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
 
     <div class="header__right">
       <nav class="header__links">
@@ -12,5 +21,14 @@
       </nav>
       <a class="header__cta" href="/contact/">Связаться</a>
     </div>
+  </div>
+
+  <div class="header__mobile-panel" id="mobile-menu">
+    <nav class="header__mobile-links">
+      <a class="header-mlink" href="/about/">О нас</a>
+      <a class="header-mlink" href="/services/">Услуги</a>
+      <a class="header-mlink" href="/catalog/">Каталог</a>
+    </nav>
+    <a class="header__mobile-cta" href="/contact/">Связаться</a>
   </div>
 </header>

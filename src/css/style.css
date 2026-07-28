@@ -15,7 +15,7 @@
   --border-secondary: #525966;       /* borders/secondary-border */
   --white: #ffffff;                  /* base/white */
   --radius-lg: 10px;
-  --header-height: 70px;
+  --header-height: 62px; /* высота свёрнутого Header, 72px на >=768 (см. media query ниже) */
 
   --spacing-md: 8px;
   --spacing-lg: 12px;
@@ -49,6 +49,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* Header зафиксирован (position:fixed) на всех брейкпоинтах,
+     поэтому компенсируем его высоту отступом сверху у контента */
+  padding-top: var(--header-height);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-height: 72px;
+  }
 }
 
 /* Общий стиль текстовых ссылок футера (компонент Footer Link) */
@@ -84,42 +93,31 @@ body {
   line-height: 20px;
 }
 
-/* Header (node 335:2092). Одна и та же раскладка на 768/1000/1440 —
-   различается только ширина вьюпорта, контейнер сам её ограничивает.
-   На <768px (мобильный дизайн ещё не готов) — просто не показываем. */
+/* Header (node 157:3721). Теперь есть мобильная версия — Header показан
+   на всех брейкпоинтах. На <768px это бургер-меню (State=Normal/Open),
+   на >=768px — привычная строка ссылок + кнопка (одна раскладка на
+   768/1000/1440, различается только ширина контейнера). */
 .site-header {
-  display: none;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  background-color: var(--background-primary);
+  background-color: var(--background-secondary);
   border-bottom: 1px solid var(--border-primary);
-}
-
-@media (min-width: 768px) {
-  .site-header {
-    display: flex;
-    justify-content: center;
-  }
-
-  /* Header зафиксирован, поэтому компенсируем его высоту отступом
-     сверху у контента — иначе он перекроет Hero (node 295:887) */
-  body {
-    padding-top: var(--header-height);
-  }
 }
 
 .header__inner {
   width: 100%;
   max-width: 1440px;
-  height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--spacing-3xl);
+  padding: var(--spacing-xl) var(--spacing-3xl);
 }
 
 .header__logo {
@@ -135,10 +133,110 @@ body {
   height: 100%;
 }
 
-.header__right {
+/* ---------- Бургер-кнопка и мобильная панель: <768px ---------- */
+.header__burger {
   display: flex;
   align-items: center;
-  gap: var(--spacing-4xl);
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.header__burger-icon--close {
+  display: none;
+}
+
+.site-header.is-open .header__burger-icon--menu {
+  display: none;
+}
+
+.site-header.is-open .header__burger-icon--close {
+  display: block;
+}
+
+.header__mobile-panel {
+  display: none;
+  width: 100%;
+}
+
+.site-header.is-open .header__mobile-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5xl);
+  width: 100%;
+  padding: var(--spacing-lg) var(--spacing-3xl) var(--spacing-5xl);
+}
+
+.header__mobile-links {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.header-mlink {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 62px;
+  border-bottom: 1px solid var(--border-primary);
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 22px;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.header-mlink:hover {
+  color: var(--brand);
+}
+
+.header__mobile-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 50px;
+  background-color: var(--button-primary);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-lg);
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 22px;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.header__mobile-cta:hover {
+  background-color: var(--button-primary-hover);
+  color: var(--white);
+}
+
+/* ---------- Строка ссылок + кнопка: >=768px ---------- */
+.header__right {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .header__burger {
+    display: none;
+  }
+
+  .header__mobile-panel {
+    display: none !important;
+  }
+
+  .header__right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4xl);
+  }
 }
 
 .header__links {
