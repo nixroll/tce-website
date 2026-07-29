@@ -1105,9 +1105,28 @@ body {
   white-space: nowrap;
 }
 
+/* Hover (node 494:2958, state=Hover): бордер primary -> secondary,
+   текст secondary -> primary. Иконка в Normal — text-tertiary
+   (#535862, задано пользователем напрямую в SVG), на Hover решил по
+   аналогии с текстом/бордером — сгущается до text-primary; в самой
+   Figma-иконке для состояния Hover цвет не проверить напрямую (только
+   растровый превью), если не совпадёт — поправим. */
+.areas__btn:hover {
+  border-color: var(--border-secondary);
+  color: var(--text-primary);
+}
+
 .areas__btn-icon {
   flex-shrink: 0;
   display: block;
+}
+
+.areas__btn-icon path {
+  stroke: var(--text-tertiary);
+}
+
+.areas__btn:hover .areas__btn-icon path {
+  stroke: var(--text-primary);
 }
 
 /* Testimonial (node 480:2828). Только на Home, сразу после Hero, до
