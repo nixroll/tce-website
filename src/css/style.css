@@ -618,6 +618,10 @@ body {
 }
 
 @media (min-width: 1000px) {
+  .brands {
+    padding: 0 var(--spacing-3xl);
+  }
+
   .brands__inner {
     padding: var(--spacing-10xl) var(--spacing-4xl) var(--spacing-9xl);
     border-left: 1px solid var(--border-primary);
