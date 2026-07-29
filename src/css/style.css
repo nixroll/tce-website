@@ -378,7 +378,7 @@ body {
      только на 1000/1440, где он стоит вокруг CTA. */
   display: none;
   width: 100%;
-  background-color: var(--background-primary);
+  background-color: var(--background-secondary);
   justify-content: center;
 }
 
@@ -405,7 +405,7 @@ body {
   /* border-bottom только с 1000px — на 390/768 контейнер CTA
      примыкает к Footer без нижней линии (node 416:1851 / 416:1860) */
   width: 100%;
-  background-color: var(--background-primary);
+  background-color: var(--background-secondary);
   border-top: 1px solid var(--border-primary);
   display: flex;
   justify-content: center;
