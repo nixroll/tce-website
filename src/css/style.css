@@ -89,6 +89,7 @@
   --spacing-8xl: 80px;
   --spacing-9xl: 96px;
   --spacing-10xl: 128px;
+  --spacing-11xl: 160px;
 }
 
 * {
@@ -864,6 +865,264 @@ body {
   .brands__cell--elco {
     border-left-width: 0.5px;
     border-right-width: 1px;
+  }
+}
+
+/* Stats - L (node 494:2782). Только на Home, первая секция после Hero
+   (перед Divider(light) → Areas-L). Светлая секция — тот же приём
+   локального переопределения токенов, что и у .services/.areas.
+
+   Порядок число/подпись в ячейке разный на каждой группе брейкпоинтов:
+   390 — подпись сверху, число снизу; 768 — подпись слева, число
+   справа; 1000/1440 — число сверху, подпись снизу. Вместо дублирования
+   разметки держу DOM-порядок постоянным (подпись, потом число) и
+   переключаю на 1000+ через flex-direction: column-reverse — это
+   визуально переставляет число наверх без второй копии разметки.
+
+   Заголовок: между основной (primary) и приглушённой (quaternary)
+   частью всегда жёсткий перенос (обычный <br>), плюс два переноса,
+   видимых ТОЛЬКО на 768px (.stats__break-tablet) — на 390/1000/1440
+   эти строки везде идут одним потоком и переносятся по ширине сами. */
+.stats {
+  --background-primary: #fafafb;
+  --background-secondary: #f3f4f6;
+  --text-primary: #181d27;
+  --text-secondary: #414651;
+  --text-tertiary: #535862;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+  --border-secondary: #cbd0d8;
+  --button-primary: #e5e7ec;
+  --button-primary-hover: #e9ebee;
+
+  width: 100%;
+  background-color: var(--background-primary);
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (min-width: 1000px) {
+  .stats {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+/* ---------- Intro: бейдж + заголовок + кнопка ---------- */
+.stats__intro {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-4xl);
+  padding: var(--spacing-8xl) var(--spacing-4xl);
+}
+
+@media (min-width: 768px) {
+  .stats__intro {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0;
+    padding: var(--spacing-10xl) var(--spacing-7xl) var(--spacing-9xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .stats__intro {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+.stats__title-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  width: 100%;
+  max-width: 660px;
+}
+
+@media (min-width: 768px) {
+  .stats__title-badge {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: none;
+  }
+}
+
+.stats__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: #325abc;
+}
+
+.stats__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 40px;
+  letter-spacing: -0.4px;
+  color: var(--text-primary);
+}
+
+.stats__heading-muted {
+  color: var(--text-quaternary);
+}
+
+.stats__break-tablet {
+  display: none;
+}
+
+@media (min-width: 768px) and (max-width: 999px) {
+  .stats__break-tablet {
+    display: inline;
+  }
+}
+
+.stats__btn {
+  flex-shrink: 0;
+}
+
+/* ---------- Сетка из 3 ячеек ---------- */
+.stats__grid {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 1000px) {
+  .stats__grid {
+    flex-direction: row;
+  }
+}
+
+.stats__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-7xl);
+  width: 100%;
+  padding: var(--spacing-4xl);
+  border-style: solid;
+  border-color: var(--border-primary);
+  border-width: 0;
+  border-top-width: 0.5px;
+  border-bottom-width: 0.5px;
+}
+
+.stats__cell:first-child {
+  border-top-width: 1px;
+}
+
+.stats__cell:last-child {
+  border-bottom-width: 0;
+}
+
+@media (min-width: 768px) and (max-width: 999px) {
+  .stats__cell {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0;
+  }
+}
+
+@media (min-width: 1000px) {
+  .stats__cell {
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+    flex-direction: column-reverse;
+    gap: var(--spacing-9xl);
+    border-top-width: 1px;
+    border-bottom-width: 0;
+    border-left-width: 0.5px;
+    border-right-width: 0.5px;
+  }
+
+  .stats__cell:first-child {
+    border-left-width: 1px;
+  }
+
+  .stats__cell:last-child {
+    border-right-width: 1px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .stats__cell {
+    gap: var(--spacing-11xl);
+  }
+}
+
+.stats__cell-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.stats__cell:last-child .stats__cell-text {
+  max-width: 280px;
+}
+
+@media (min-width: 1000px) and (max-width: 1439px) {
+  .stats__cell:nth-child(1) .stats__cell-text { max-width: 224px; }
+  .stats__cell:nth-child(2) .stats__cell-text { max-width: 225px; }
+  .stats__cell:nth-child(3) .stats__cell-text { max-width: 187px; }
+}
+
+.stats__cell-title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.09px;
+  color: var(--text-primary);
+}
+
+.stats__cell-desc {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.08px;
+  color: var(--text-quaternary);
+}
+
+.stats__cell-value {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 40px;
+  letter-spacing: -0.4px;
+  color: var(--brand);
+  white-space: nowrap;
+}
+
+@media (min-width: 1000px) {
+  .stats__cell-value {
+    white-space: normal;
   }
 }
 
