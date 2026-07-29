@@ -1021,7 +1021,7 @@ body {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-6xl);
-  padding: var(--spacing-3xl) var(--spacing-2xl);
+  padding: var(--spacing-4xl) var(--spacing-3xl);
   border-style: solid;
   border-color: var(--border-primary);
   border-width: 0;
