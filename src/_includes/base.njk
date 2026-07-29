@@ -8,18 +8,22 @@
 </head>
 <body>
   {# Header: node 157:3721 (десктоп/планшет + мобильное бургер-меню).
-     Порядок повторяющихся секций на каждой странице (Home, node
-     405:2033): Hero → Divider(edge) → Brands → Divider → CTA →
-     Divider(edge-secondary) → Footer. "Edge"-дивайдеры видны только
-     с 1000px, обычный — на всех брейкпоинтах. Brands: node 462:2019.
-     CTA: node 416:1812. Footer: node 157:3735 #}
+     Порядок повторяющихся секций (Home, node 405:2033): Hero →
+     Divider → [Services → Divider] (только Home) → Brands → Divider
+     → CTA → Divider(edge-secondary) → Footer. Первые три Divider
+     всегда видны (primary фон), последний — только с 1000px
+     (secondary фон). Services: node 472:3113 (только Home,
+     isHome=true в index.njk). Brands: node 462:2019. CTA: node
+     416:1812. Footer: node 157:3735 #}
   {% include "header.njk" %}
   <main>
     {{ content | safe }}
   </main>
-  {% set dividerVariant = "edge" %}
   {% include "divider.njk" %}
-  {% set dividerVariant = "" %}
+  {% if isHome %}
+    {% include "services.njk" %}
+    {% include "divider.njk" %}
+  {% endif %}
   {% include "brands.njk" %}
   {% include "divider.njk" %}
   {% include "cta.njk" %}

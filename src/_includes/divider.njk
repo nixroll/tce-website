@@ -1,13 +1,14 @@
 {#
-  Divider встречается на странице в 3 позициях (перед Brands, между
-  Brands и CTA, после CTA). Только позиция "между Brands и CTA" видна
-  на всех брейкпоинтах — это divider без модификаторов (dividerVariant
-  не задан). Две другие позиции видны только с 1000px — задай перед
-  include: {% set dividerVariant = "edge" %} (перед Brands, primary
-  фон) или {% set dividerVariant = "edge-secondary" %} (после CTA,
-  secondary фон). Не забудь сбросить {% set dividerVariant = "" %}
-  после использования, иначе значение утечёт в следующий include.
+  Divider встречается на странице в 4 позициях (перед Services/Brands,
+  после Services, между Brands и CTA, после CTA). Первые три всегда
+  видны на всех брейкпоинтах (primary фон, прогрессивная высота
+  64→80→96px) — это divider без модификаторов (dividerVariant не
+  задан). Только последняя позиция (после CTA, перед Footer) видна
+  исключительно с 1000px — задай перед include:
+  {% set dividerVariant = "edge-secondary" %} (secondary фон). Не
+  забудь сбросить {% set dividerVariant = "" %} после использования,
+  иначе значение утечёт в следующий include.
 #}
-<div class="divider{% if dividerVariant == 'edge' %} divider--edge{% elif dividerVariant == 'edge-secondary' %} divider--edge divider--secondary{% endif %}" data-figma-node="416:1773" data-figma-name="Divider">
+<div class="divider{% if dividerVariant == 'edge-secondary' %} divider--edge divider--secondary{% endif %}" data-figma-node="416:1773" data-figma-name="Divider">
   <div class="divider__inner"></div>
 </div>

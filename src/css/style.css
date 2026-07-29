@@ -62,6 +62,7 @@
   --text-primary: #f7f7f7;      /* text/primary-text */
   --text-secondary: #cecfd2;    /* text/secondary-text */
   --text-tertiary: #94979c;     /* text/tertiary-text */
+  --text-quaternary: #717680;   /* text/quaternary-text */
   --border-primary: #2f3238;    /* borders/primary-border */
   --brand: #fdb022;             /* base/brand */
 
@@ -373,13 +374,14 @@ body {
   word-break: break-word;
 }
 
-/* Divider (node 416:1773). Повторяющийся элемент, теперь встречается
-   в 3 позициях на странице (Home, node 405:2033): перед Brands, между
-   Brands и CTA, после CTA. Только "между Brands и CTA" виден на всех
-   брейкпоинтах (.divider по умолчанию) — два других видны только
-   с 1000px (модификатор .divider--edge). Цвет фона: primary у первых
-   двух позиций, secondary — только у последней (после CTA), см.
-   .divider--secondary. Декоративные боковые линии — только с 1000px. */
+/* Divider (node 416:1773). Повторяющийся элемент, встречается в 4
+   позициях на странице (Home, node 405:2033): перед Services/Brands,
+   после Services, между Brands и CTA, после CTA. Первые три всегда
+   видны на всех брейкпоинтах (.divider по умолчанию, primary фон,
+   прогрессивная высота 64→80→96px). Только последняя позиция (после
+   CTA) видна исключительно с 1000px (модификатор .divider--edge) и
+   имеет secondary фон (.divider--secondary). Декоративные боковые
+   линии — только с 1000px. */
 .divider {
   display: flex;
   width: 100%;
@@ -411,7 +413,7 @@ body {
   }
 }
 
-/* Перед Brands и после CTA — показываются только с 1000px */
+/* После CTA — показывается только с 1000px */
 .divider--edge {
   display: none;
 }
@@ -852,6 +854,295 @@ body {
   .brands__cell--tece,
   .brands__cell--elco {
     border-left-width: 0.5px;
+    border-right-width: 1px;
+  }
+}
+
+/* Services (node 472:3113). Только на Home, между первым и вторым
+   Divider. Заголовок содержит принудительный <br> (.services__heading-break)
+   — в макете он есть на 390/768 и скрыт на 1000/1440 (там перенос
+   естественный, по ширине). Сетка карточек: 1 колонка на 390,
+   2 на 768, 3 на 1000/1440 — те же самые 6 карточек, просто
+   переставляются в разное число колонок, поэтому границы заданы через
+   nth-child. Цвет приглушённого текста — новый токен
+   --text-quaternary (#717680), отдельный от --text-tertiary, значение
+   подтверждено пользователем напрямую (Figma API отдавал только
+   светлый fallback). */
+.services {
+  width: 100%;
+  background-color: var(--background-primary);
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (min-width: 1000px) {
+  .services {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+/* ---------- Intro: бейдж + заголовок + кнопка ---------- */
+.services__intro {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-4xl);
+  padding: var(--spacing-8xl) var(--spacing-4xl);
+}
+
+@media (min-width: 768px) {
+  .services__intro {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0;
+    padding: var(--spacing-10xl) var(--spacing-7xl) var(--spacing-9xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .services__intro {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+.services__title-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  width: 100%;
+  max-width: 340px;
+}
+
+@media (min-width: 768px) {
+  .services__title-badge {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 540px;
+  }
+}
+
+.services__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: #325abc;
+}
+
+.services__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 32px;
+  letter-spacing: -0.32px;
+  color: var(--text-primary);
+}
+
+.services__heading-muted {
+  color: var(--text-quaternary);
+}
+
+@media (min-width: 1000px) {
+  .services__heading-break {
+    display: none;
+  }
+}
+
+.services__btn {
+  width: 125px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+/* ---------- Сетка карточек услуг ---------- */
+.services__grid {
+  width: 100%;
+  max-width: 1392px;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .services__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1000px) {
+  .services__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.services__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-6xl);
+  padding: var(--spacing-3xl) var(--spacing-2xl);
+  border-style: solid;
+  border-color: var(--border-primary);
+  border-width: 0;
+}
+
+@media (min-width: 768px) {
+  .services__card {
+    gap: var(--spacing-7xl);
+    padding: var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .services__card {
+    gap: var(--spacing-8xl);
+  }
+}
+
+@media (min-width: 1440px) {
+  .services__card {
+    gap: var(--spacing-9xl);
+  }
+}
+
+.services__icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.services__icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.services__card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.services__card-title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.09px;
+  color: var(--text-primary);
+}
+
+.services__card-desc {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.08px;
+  color: var(--text-quaternary);
+}
+
+/* Индивидуальный max-width текстового блока — только на 1000px,
+   на 1000 колонки уже, чем на 1440, поэтому у каждой карточки свой
+   подобранный в макете предел ширины */
+@media (min-width: 1000px) and (max-width: 1439px) {
+  .services__card--teo .services__card-text,
+  .services__card--design .services__card-text,
+  .services__card--install .services__card-text { max-width: 250px; }
+  .services__card--supply .services__card-text { max-width: 240px; }
+  .services__card--commissioning .services__card-text { max-width: 230px; }
+  .services__card--warranty .services__card-text { max-width: 253px; }
+}
+
+/* ---------- Границы: 390px, 1 колонка x 6 строк ---------- */
+.services__card {
+  border-top-width: 0.5px;
+  border-bottom-width: 0.5px;
+}
+
+.services__card:first-child {
+  border-top-width: 1px;
+}
+
+.services__card:last-child {
+  border-bottom-width: 0;
+}
+
+/* ---------- Границы: 768px, 2 колонки x 3 строки ---------- */
+@media (min-width: 768px) {
+  .services__card {
+    border-top-width: 0.5px;
+    border-bottom-width: 0.5px;
+    border-left-width: 0;
+    border-right-width: 0;
+  }
+
+  .services__card:nth-child(1),
+  .services__card:nth-child(2) {
+    border-top-width: 1px;
+  }
+
+  .services__card:nth-child(5),
+  .services__card:nth-child(6) {
+    border-bottom-width: 0;
+  }
+
+  .services__card:nth-child(odd) {
+    border-right-width: 0.5px;
+  }
+
+  .services__card:nth-child(even) {
+    border-left-width: 0.5px;
+  }
+}
+
+/* ---------- Границы: 1000/1440px, 3 колонки x 2 строки ---------- */
+@media (min-width: 1000px) {
+  .services__card {
+    border-top-width: 0.5px;
+    border-bottom-width: 0.5px;
+    border-left-width: 0.5px;
+    border-right-width: 0.5px;
+  }
+
+  .services__card:nth-child(1),
+  .services__card:nth-child(2),
+  .services__card:nth-child(3) {
+    border-top-width: 1px;
+  }
+
+  .services__card:nth-child(4),
+  .services__card:nth-child(5),
+  .services__card:nth-child(6) {
+    border-bottom-width: 0;
+  }
+
+  .services__card:nth-child(1),
+  .services__card:nth-child(4) {
+    border-left-width: 1px;
+  }
+
+  .services__card:nth-child(3),
+  .services__card:nth-child(6) {
     border-right-width: 1px;
   }
 }
