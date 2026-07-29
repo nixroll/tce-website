@@ -76,6 +76,7 @@
 
   --spacing-xxs: 2px;
   --spacing-xs: 4px;
+  --spacing-sm: 6px;
   --spacing-md: 8px;
   --spacing-lg: 12px;
   --spacing-xl: 16px;
@@ -864,6 +865,249 @@ body {
     border-left-width: 0.5px;
     border-right-width: 1px;
   }
+}
+
+/* Areas - L (node 491:2875). Только на Home, между Hero и Divider(light)
+   → Testimonial. Светлая секция (как Services) — переопределяю токены
+   локально на .areas, тот же приём, что и на .services. Фото карточек
+   — self-hosted WebP+JPEG (picture/srcset 400w/700w/1000w), обрезаны
+   по центру под требуемое соотношение 615:460 из макета. Иконка
+   arrow-narrow-right у Figma не экспортируется через MCP (сетевой
+   доступ к их asset-серверу заблокирован в песочнице) — визуально
+   сверился по скриншоту, это стандартная иконка из Untitled UI Icons,
+   вручную восстановил path 1:1, встроил инлайн-SVG с stroke="currentColor",
+   чтобы наследовать цвет текста кнопки. */
+.areas {
+  --background-primary: #fafafb;
+  --background-secondary: #f3f4f6;
+  --text-primary: #181d27;
+  --text-secondary: #414651;
+  --text-tertiary: #535862;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+  --border-secondary: #cbd0d8;
+  --button-primary: #e5e7ec;
+  --button-primary-hover: #e9ebee;
+
+  width: 100%;
+  background-color: var(--background-primary);
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (min-width: 1000px) {
+  .areas {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+/* ---------- Intro: бейдж + заголовок ---------- */
+.areas__intro {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--spacing-8xl) var(--spacing-4xl);
+}
+
+@media (min-width: 768px) {
+  .areas__intro {
+    padding: var(--spacing-10xl) var(--spacing-7xl) var(--spacing-9xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .areas__intro {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+.areas__title-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  max-width: 480px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.areas__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: #325abc;
+}
+
+.areas__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 32px;
+  letter-spacing: -0.32px;
+  color: var(--text-primary);
+}
+
+.areas__heading-muted {
+  color: var(--text-quaternary);
+}
+
+/* ---------- Сетка карточек направлений ---------- */
+.areas__grid {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+@media (min-width: 768px) {
+  .areas__grid {
+    flex-direction: row;
+  }
+}
+
+.areas__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-4xl);
+  width: 100%;
+  padding: var(--spacing-3xl);
+  border-style: solid;
+  border-color: var(--border-primary);
+  border-width: 0;
+  border-top-width: 0.5px;
+  border-bottom-width: 0.5px;
+}
+
+.areas__card--engineering {
+  border-top-width: 1px;
+}
+
+.areas__card--supply {
+  border-bottom-width: 0;
+}
+
+@media (min-width: 768px) {
+  .areas__card {
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+    padding: var(--spacing-5xl);
+    border-top-width: 1px;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+  }
+
+  .areas__card--engineering {
+    border-right-width: 0.5px;
+  }
+
+  .areas__card--supply {
+    border-left-width: 0.5px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .areas__card--engineering {
+    border-left-width: 1px;
+  }
+
+  .areas__card--supply {
+    border-right-width: 1px;
+  }
+}
+
+.areas__image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 615 / 460;
+  overflow: hidden;
+}
+
+.areas__image picture,
+.areas__image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.areas__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  width: 100%;
+}
+
+.areas__card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.areas__card-title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.09px;
+  color: var(--text-primary);
+}
+
+.areas__card-desc {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.08px;
+  color: var(--text-quaternary);
+}
+
+.areas__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: fit-content;
+  padding: var(--spacing-md) var(--spacing-lg) var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  background-color: var(--background-primary);
+  border: 1px solid var(--border-primary);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.areas__btn-icon {
+  flex-shrink: 0;
+  display: block;
 }
 
 /* Testimonial (node 480:2828). Только на Home, сразу после Hero, до

@@ -1,17 +1,20 @@
 {#
-  Divider встречается на странице в 5 позициях (после Testimonial /
-  перед Services, после Services, между Brands и CTA, после CTA).
-  Все, кроме последней, видны на всех брейкпоинтах (прогрессивная
-  высота 64→80→96px) — это divider без модификаторов (dividerVariant
-  не задан), тёмный фон. Только последняя позиция (после CTA, перед
-  Footer) видна исключительно с 1000px — задай перед include:
-  {% set dividerVariant = "edge-secondary" %} (secondary тёмный фон).
-  Светлая только Services, поэтому светлый только ОДИН дивайдер — тот,
-  что идёт сразу ПОСЛЕ Services (перед Brands), задай перед include:
-  {% set dividerVariant = "light" %}. Дивайдер ПЕРЕД Services (после
-  Testimonial) остаётся тёмным по умолчанию. Не забудь сбросить
-  {% set dividerVariant = "" %} после использования, иначе значение
-  утечёт в следующий include.
+  Divider встречается на странице в 5 позициях (после Areas / перед
+  Testimonial, после Testimonial / перед Services, после Services,
+  между Brands и CTA, после CTA). Все, кроме последней, видны на всех
+  брейкпоинтах (прогрессивная высота 64→80→96px) — это divider без
+  модификаторов (dividerVariant не задан), тёмный фон. Только
+  последняя позиция (после CTA, перед Footer) видна исключительно с
+  1000px — задай перед include: {% set dividerVariant = "edge-secondary" %}
+  (secondary тёмный фон).
+
+  Светлые секции — Areas и Services; светлый дивайдер идёт СРАЗУ ПОСЛЕ
+  каждой из них (перед следующей тёмной секцией), задай перед include:
+  {% set dividerVariant = "light" %}. Дивайдер ПЕРЕД светлой секцией
+  (после предыдущей тёмной) остаётся тёмным по умолчанию — не путать
+  "Divider" (тёмный) и "Divider - L" (светлый) в Figma. Не забудь
+  сбросить {% set dividerVariant = "" %} после использования, иначе
+  значение утечёт в следующий include.
 #}
 <div class="divider{% if dividerVariant == 'edge-secondary' %} divider--edge divider--secondary{% elif dividerVariant == 'light' %} divider--light{% endif %}" data-figma-node="416:1773" data-figma-name="Divider">
   <div class="divider__inner"></div>

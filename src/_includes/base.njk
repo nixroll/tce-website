@@ -9,22 +9,27 @@
 <body>
   {# Header: node 157:3721 (десктоп/планшет + мобильное бургер-меню).
      Порядок повторяющихся секций (Home, node 405:2033): Hero →
-     Testimonial → Divider(тёмный) → Services-L → Divider(light) →
-     Brands → Divider → CTA → Divider(edge-secondary) → Footer. Сайт
-     чередует тёмные и светлые секции — светлая здесь только Services,
-     поэтому светлый только ОДИН дивайдер: тот, что после Services
-     (перед Brands). Дивайдер между Testimonial и Services — обычный
-     тёмный (Figma называет его просто "Divider", без "-L"), не путать
-     с следующим "Divider - L". Последний дивайдер (после CTA) виден
-     только с 1000px (secondary фон, тёмный). Testimonial: node
-     480:2828 и Services: node 472:3113 — обе только на Home
-     (isHome=true в index.njk). Brands: node 462:2019. CTA: node
-     416:1812. Footer: node 157:3735 #}
+     Areas-L → Divider(light) → Testimonial → Divider(тёмный) →
+     Services-L → Divider(light) → Brands → Divider → CTA →
+     Divider(edge-secondary) → Footer. Сайт чередует тёмные и светлые
+     секции — светлые здесь Areas и Services, у каждой светлый только
+     дивайдер СРАЗУ ПОСЛЕ неё (перед следующей тёмной секцией); дивайдер
+     ПЕРЕД светлой секцией (то есть после предыдущей тёмной) остаётся
+     тёмным. Не путать "Divider" (тёмный) и "Divider - L" (светлый) —
+     Figma различает их именно так. Последний дивайдер (после CTA)
+     виден только с 1000px (secondary фон, тёмный). Areas: node
+     491:2875, Testimonial: node 480:2828, Services: node 472:3113 —
+     все три только на Home (isHome=true в index.njk). Brands: node
+     462:2019. CTA: node 416:1812. Footer: node 157:3735 #}
   {% include "header.njk" %}
   <main>
     {{ content | safe }}
   </main>
   {% if isHome %}
+    {% include "areas.njk" %}
+    {% set dividerVariant = "light" %}
+    {% include "divider.njk" %}
+    {% set dividerVariant = "" %}
     {% include "testimonial.njk" %}
     {% include "divider.njk" %}
     {% include "services.njk" %}
