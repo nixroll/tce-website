@@ -1,0 +1,35 @@
+<section class="testimonial" data-figma-node="480:2828" data-figma-name="Testimonial">
+  <div class="testimonial__container">
+    <div class="testimonial__content">
+      <div class="testimonial__image">
+        <picture>
+          <source
+            type="image/webp"
+            srcset="{{ '/images/testimonials/andrey-kovalev-400.webp' | url }} 400w, {{ '/images/testimonials/andrey-kovalev-656.webp' | url }} 656w"
+            sizes="(min-width: 1000px) 328px, 200px">
+          <img
+            src="{{ '/images/testimonials/andrey-kovalev-656.png' | url }}"
+            srcset="{{ '/images/testimonials/andrey-kovalev-400.png' | url }} 400w, {{ '/images/testimonials/andrey-kovalev-656.png' | url }} 656w"
+            sizes="(min-width: 1000px) 328px, 200px"
+            width="656" height="656"
+            alt="Андрей Ковалёв, главный инженер «ТеплоСтрой»"
+            loading="lazy">
+        </picture>
+      </div>
+      <div class="testimonial__body">
+        <div class="testimonial__quote-block">
+          <div class="testimonial__stars">
+            {% for i in range(5) %}
+            <img class="testimonial__star" src="{{ '/images/testimonials/star.svg' | url }}" alt="" width="20" height="20">
+            {% endfor %}
+          </div>
+          <p class="testimonial__quote">Собрали котельную под ключ: расчёт, поставка, монтаж, пусконаладка. Сроки выдержали, на сервис реагируют быстро.</p>
+        </div>
+        <div class="testimonial__attribution">
+          <p class="testimonial__name">— Андрей Ковалёв</p>
+          <p class="testimonial__role">Главный инженер, «ТеплоСтрой»</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

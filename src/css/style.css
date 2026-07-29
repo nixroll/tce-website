@@ -75,6 +75,7 @@
   --header-height: 62px; /* высота свёрнутого Header, 72px на >=768 (см. media query ниже) */
 
   --spacing-xxs: 2px;
+  --spacing-xs: 4px;
   --spacing-md: 8px;
   --spacing-lg: 12px;
   --spacing-xl: 16px;
@@ -863,6 +864,203 @@ body {
     border-left-width: 0.5px;
     border-right-width: 1px;
   }
+}
+
+/* Testimonial (node 480:2828). Только на Home, сразу после Hero, до
+   Divider→Services-L. Тёмная секция (как и обычные Divider/Brands/CTA).
+   Фото — self-hosted WebP+PNG (picture/srcset, 400w/656w под retina
+   для контейнеров 200px/328px), PNG как fallback для браузеров без
+   поддержки WebP. Оригинал с прозрачным альфа-каналом, поэтому и
+   WebP/PNG сохраняют прозрачность — контейнер снизу даёт фон
+   (--background-secondary) и рамку. -1px inset у самого <img> — приём
+   из макета, чтобы фото перекрывало 1px рамку контейнера без
+   субпиксельного зазора. Звёзды — self-hosted SVG (Figma не даёт
+   экспортировать этот компонент, файл прислан пользователем
+   напрямую). */
+.testimonial {
+  width: 100%;
+  background-color: var(--background-primary);
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (min-width: 1000px) {
+  .testimonial {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+.testimonial__container {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-7xl) var(--spacing-3xl);
+}
+
+@media (min-width: 768px) {
+  .testimonial__container {
+    padding: var(--spacing-8xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .testimonial__container {
+    padding: var(--spacing-9xl) var(--spacing-7xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+.testimonial__content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-5xl);
+}
+
+@media (min-width: 1000px) {
+  .testimonial__content {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1440px) {
+  .testimonial__content {
+    gap: var(--spacing-10xl);
+  }
+}
+
+.testimonial__image {
+  width: 200px;
+  height: 200px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border-primary);
+}
+
+@media (min-width: 1000px) {
+  .testimonial__image {
+    width: 328px;
+    height: 328px;
+  }
+}
+
+.testimonial__image img {
+  position: absolute;
+  inset: -1px;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  object-fit: cover;
+  pointer-events: none;
+  display: block;
+}
+
+.testimonial__body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-4xl);
+  max-width: 580px;
+}
+
+@media (min-width: 1000px) {
+  .testimonial__body {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 732px;
+  }
+}
+
+.testimonial__quote-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-xl);
+}
+
+@media (min-width: 1440px) {
+  .testimonial__quote-block {
+    gap: var(--spacing-3xl);
+  }
+}
+
+.testimonial__stars {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.testimonial__star {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.testimonial__quote {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 32px;
+  line-height: 32px;
+  letter-spacing: -0.32px;
+}
+
+@media (min-width: 1000px) {
+  .testimonial__quote {
+    font-size: 36px;
+    line-height: 36px;
+    letter-spacing: -0.36px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .testimonial__quote {
+    font-size: 40px;
+    line-height: 40px;
+    letter-spacing: -0.4px;
+  }
+}
+
+.testimonial__attribution {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.testimonial__name {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.09px;
+  color: var(--text-primary);
+}
+
+.testimonial__role {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.08px;
+  color: var(--text-tertiary);
 }
 
 /* Services (node 472:3113). Только на Home, между первым и вторым
