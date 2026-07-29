@@ -62,7 +62,7 @@
   --text-primary: #f7f7f7;      /* text/primary-text */
   --text-secondary: #cecfd2;    /* text/secondary-text */
   --text-tertiary: #94979c;     /* text/tertiary-text */
-  --text-quaternary: #717680;   /* text/quaternary-text */
+  --text-quaternary: #94979c;   /* text/quaternary-text (тёмная тема — совпадает с tertiary) */
   --border-primary: #2f3238;    /* borders/primary-border */
   --brand: #fdb022;             /* base/brand */
 
@@ -426,6 +426,13 @@ body {
 
 .divider--secondary {
   background-color: var(--background-secondary);
+}
+
+/* Вокруг Services — светлая секция, переопределяем токены фона/бордера
+   локально (значения из столбика Light в таблице цветов) */
+.divider--light {
+  --background-primary: #fafafb;
+  --border-primary: #e5e7ec;
 }
 
 /* CTA (node 416:1812). Тоже повторяющийся элемент на всех страницах. */
@@ -864,11 +871,29 @@ body {
    естественный, по ширине). Сетка карточек: 1 колонка на 390,
    2 на 768, 3 на 1000/1440 — те же самые 6 карточек, просто
    переставляются в разное число колонок, поэтому границы заданы через
-   nth-child. Цвет приглушённого текста — новый токен
-   --text-quaternary (#717680), отдельный от --text-tertiary, значение
-   подтверждено пользователем напрямую (Figma API отдавал только
-   светлый fallback). */
+   nth-child.
+
+   ВАЖНО: Services — первая СВЕТЛАЯ секция сайта (остальное сделанное
+   до сих пор — тёмные секции). У каждого токена есть Light- и
+   Dark-значение; секция переключает тему, переопределяя переменные
+   локально прямо на .services — все дочерние правила (.services__*,
+   а также переиспользуемые .btn/.btn--secondary у кнопки
+   "Подробнее") продолжают ссылаться на те же имена переменных
+   (var(--text-primary) и т.д.), но благодаря каскаду резолвятся уже
+   в светлые значения внутри этого блока. Два Divider вокруг Services
+   светлые по той же причине — см. .divider--light. */
 .services {
+  --background-primary: #fafafb;
+  --background-secondary: #f3f4f6;
+  --text-primary: #181d27;
+  --text-secondary: #414651;
+  --text-tertiary: #535862;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+  --border-secondary: #cbd0d8;
+  --button-primary: #e5e7ec;
+  --button-primary-hover: #e9ebee;
+
   width: 100%;
   background-color: var(--background-primary);
   border-top: 1px solid var(--border-primary);

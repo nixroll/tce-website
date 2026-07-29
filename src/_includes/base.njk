@@ -9,19 +9,28 @@
 <body>
   {# Header: node 157:3721 (десктоп/планшет + мобильное бургер-меню).
      Порядок повторяющихся секций (Home, node 405:2033): Hero →
-     Divider → [Services → Divider] (только Home) → Brands → Divider
-     → CTA → Divider(edge-secondary) → Footer. Первые три Divider
-     всегда видны (primary фон), последний — только с 1000px
-     (secondary фон). Services: node 472:3113 (только Home,
-     isHome=true в index.njk). Brands: node 462:2019. CTA: node
-     416:1812. Footer: node 157:3735 #}
+     Divider(light) → Services(light) → Divider(light) → Brands →
+     Divider → CTA → Divider(edge-secondary) → Footer. Сайт
+     чередует тёмные и светлые секции — Services первая светлая
+     секция, поэтому два дивайдера вокруг неё тоже светлые
+     (dividerVariant="light"), остальные дивайдеры остаются тёмными.
+     Последний дивайдер (после CTA) виден только с 1000px (secondary
+     фон, тёмный). Services: node 472:3113 (только Home, isHome=true
+     в index.njk). Brands: node 462:2019. CTA: node 416:1812.
+     Footer: node 157:3735 #}
   {% include "header.njk" %}
   <main>
     {{ content | safe }}
   </main>
-  {% include "divider.njk" %}
   {% if isHome %}
+    {% set dividerVariant = "light" %}
+    {% include "divider.njk" %}
+    {% set dividerVariant = "" %}
     {% include "services.njk" %}
+    {% set dividerVariant = "light" %}
+    {% include "divider.njk" %}
+    {% set dividerVariant = "" %}
+  {% else %}
     {% include "divider.njk" %}
   {% endif %}
   {% include "brands.njk" %}
