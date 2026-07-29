@@ -69,9 +69,11 @@
   --button-primary-hover: #40464e;   /* button/hover-primary-button */
   --border-secondary: #525966;       /* borders/secondary-border */
   --white: #ffffff;                  /* base/white */
+  --radius-md: 8px;
   --radius-lg: 10px;
   --header-height: 62px; /* высота свёрнутого Header, 72px на >=768 (см. media query ниже) */
 
+  --spacing-xxs: 2px;
   --spacing-md: 8px;
   --spacing-lg: 12px;
   --spacing-xl: 16px;
@@ -83,6 +85,7 @@
   --spacing-7xl: 64px;
   --spacing-8xl: 80px;
   --spacing-9xl: 96px;
+  --spacing-10xl: 128px;
 }
 
 * {
@@ -370,26 +373,34 @@ body {
   word-break: break-word;
 }
 
-/* Divider (node 416:1773). Повторяющийся элемент между секциями —
-   в макете-шаблоне встречается дважды вокруг CTA. Декоративные
-   боковые линии — только на >=1000px, как у Footer. */
+/* Divider (node 416:1773). Повторяющийся элемент, теперь встречается
+   в 3 позициях на странице (Home, node 405:2033): перед Brands, между
+   Brands и CTA, после CTA. Только "между Brands и CTA" виден на всех
+   брейкпоинтах (.divider по умолчанию) — два других видны только
+   с 1000px (модификатор .divider--edge). Цвет фона: primary у первых
+   двух позиций, secondary — только у последней (после CTA), см.
+   .divider--secondary. Декоративные боковые линии — только с 1000px. */
 .divider {
-  /* На 390/768 Divider убран из макета (Home, node 405:2033) — остаётся
-     только на 1000/1440, где он стоит вокруг CTA. */
-  display: none;
+  display: flex;
   width: 100%;
-  background-color: var(--background-secondary);
+  background-color: var(--background-primary);
   justify-content: center;
 }
 
 .divider__inner {
   width: 100%;
   max-width: 1392px;
+  height: 64px;
+}
+
+@media (min-width: 768px) {
+  .divider__inner {
+    height: 80px;
+  }
 }
 
 @media (min-width: 1000px) {
   .divider {
-    display: flex;
     padding: 0 var(--spacing-3xl);
   }
 
@@ -398,6 +409,21 @@ body {
     border-left: 1px solid var(--border-primary);
     border-right: 1px solid var(--border-primary);
   }
+}
+
+/* Перед Brands и после CTA — показываются только с 1000px */
+.divider--edge {
+  display: none;
+}
+
+@media (min-width: 1000px) {
+  .divider--edge {
+    display: flex;
+  }
+}
+
+.divider--secondary {
+  background-color: var(--background-secondary);
 }
 
 /* CTA (node 416:1812). Тоже повторяющийся элемент на всех страницах. */
@@ -557,6 +583,273 @@ body {
 
 .btn--secondary:hover {
   border-color: var(--border-secondary);
+}
+
+/* Brands (node 462:2019). Повторяющийся элемент на всех страницах,
+   как Divider/CTA. Важно: на 390/768 в сетке только 8 брендов (без
+   Wilo/Elco) — так сделано в самом макете на этих брейкпоинтах,
+   не путём урезания вёрстки. Каждая ячейка логотипа имеет свой
+   индивидуальный padding-top/bottom для оптического выравнивания
+   между собой (значения из Figma, одинаковые на всех брейкпоинтах). */
+.brands {
+  width: 100%;
+  background-color: var(--background-primary);
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.brands__inner {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-4xl);
+  padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-7xl);
+}
+
+@media (min-width: 768px) {
+  .brands__inner {
+    padding: var(--spacing-10xl) var(--spacing-7xl) var(--spacing-8xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .brands__inner {
+    padding: var(--spacing-10xl) var(--spacing-4xl) var(--spacing-9xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+.brands__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-2xl);
+  width: 100%;
+}
+
+.brands__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(253, 176, 34, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: var(--brand);
+}
+
+.brands__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 36px;
+  letter-spacing: -0.36px;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.brands__heading-muted {
+  color: var(--text-tertiary);
+}
+
+@media (min-width: 768px) {
+  .brands__heading {
+    font-size: 40px;
+    line-height: 40px;
+    letter-spacing: -0.4px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .brands__heading {
+    font-size: 50px;
+    line-height: 50px;
+    letter-spacing: -0.5px;
+  }
+}
+
+/* ---------- Сетка логотипов ---------- */
+.brands__grid {
+  width: 100%;
+  max-width: 1392px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 768px) {
+  .brands__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1000px) {
+  .brands__grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.brands__cell {
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-style: solid;
+  border-color: var(--border-primary);
+  border-width: 0;
+}
+
+.brands__cell img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Wilo и Elco — только с 1000px, в самом макете их нет в сетке 390/768 */
+.brands__cell--wilo,
+.brands__cell--elco {
+  display: none;
+}
+
+@media (min-width: 1000px) {
+  .brands__cell--wilo,
+  .brands__cell--elco {
+    display: flex;
+  }
+}
+
+/* Индивидуальные паддинги для оптического выравнивания логотипов —
+   одинаковые на всех брейкпоинтах */
+.brands__cell--viessmann { padding-top: 2px; }
+.brands__cell--meibes { padding-bottom: 10px; }
+.brands__cell--arbonia { padding-bottom: 6px; }
+.brands__cell--flamco { padding-bottom: 5px; }
+.brands__cell--kermi { padding-bottom: 10px; }
+.brands__cell--oventrop { padding-bottom: 1px; }
+.brands__cell--wilo { padding-bottom: 10px; }
+.brands__cell--elco { padding-bottom: 6px; }
+
+/* ---------- Границы сетки: 390px, 2 колонки x 4 строки ---------- */
+.brands__cell {
+  border-top-width: 0.5px;
+}
+
+.brands__cell--viessmann,
+.brands__cell--geberit {
+  border-top-width: 1px;
+}
+
+.brands__cell--viessmann,
+.brands__cell--geberit,
+.brands__cell--meibes,
+.brands__cell--arbonia,
+.brands__cell--tece,
+.brands__cell--flamco {
+  border-bottom-width: 0.5px;
+}
+
+.brands__cell--viessmann,
+.brands__cell--meibes,
+.brands__cell--tece,
+.brands__cell--kermi {
+  border-right-width: 0.5px;
+}
+
+.brands__cell--geberit,
+.brands__cell--arbonia,
+.brands__cell--flamco,
+.brands__cell--oventrop {
+  border-left-width: 0.5px;
+}
+
+/* ---------- Границы сетки: 768px, 4 колонки x 2 строки ---------- */
+@media (min-width: 768px) {
+  .brands__cell {
+    border-top-width: 0.5px;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+  }
+
+  .brands__cell--viessmann,
+  .brands__cell--geberit,
+  .brands__cell--meibes,
+  .brands__cell--arbonia {
+    border-top-width: 1px;
+    border-bottom-width: 0.5px;
+  }
+
+  .brands__cell--viessmann,
+  .brands__cell--tece {
+    border-right-width: 0.5px;
+  }
+
+  .brands__cell--geberit,
+  .brands__cell--meibes,
+  .brands__cell--flamco,
+  .brands__cell--kermi {
+    border-left-width: 0.5px;
+    border-right-width: 0.5px;
+  }
+
+  .brands__cell--arbonia,
+  .brands__cell--oventrop {
+    border-left-width: 0.5px;
+  }
+}
+
+/* ---------- Границы сетки: 1000/1440px, 5 колонок x 2 строки, 10 брендов ---------- */
+@media (min-width: 1000px) {
+  .brands__cell {
+    border-top-width: 0.5px;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+  }
+
+  .brands__cell--viessmann,
+  .brands__cell--geberit,
+  .brands__cell--meibes,
+  .brands__cell--arbonia,
+  .brands__cell--tece {
+    border-top-width: 1px;
+    border-bottom-width: 0.5px;
+  }
+
+  .brands__cell--viessmann,
+  .brands__cell--flamco {
+    border-left-width: 1px;
+    border-right-width: 0.5px;
+  }
+
+  .brands__cell--geberit,
+  .brands__cell--meibes,
+  .brands__cell--arbonia,
+  .brands__cell--kermi,
+  .brands__cell--oventrop,
+  .brands__cell--wilo {
+    border-left-width: 0.5px;
+    border-right-width: 0.5px;
+  }
+
+  .brands__cell--tece,
+  .brands__cell--elco {
+    border-left-width: 0.5px;
+    border-right-width: 1px;
+  }
 }
 
 /* Home — Footer (node 157:3735). Новая архитектура (не совпадает с

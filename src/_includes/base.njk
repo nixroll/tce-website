@@ -8,16 +8,24 @@
 </head>
 <body>
   {# Header: node 157:3721 (десктоп/планшет + мобильное бургер-меню).
-     Divider + CTA: node 416:1773 / 416:1812 — по шаблону-макету идут
-     на каждой странице перед Footer, Divider дважды (до и после CTA).
-     Footer: node 157:3735 #}
+     Порядок повторяющихся секций на каждой странице (Home, node
+     405:2033): Hero → Divider(edge) → Brands → Divider → CTA →
+     Divider(edge-secondary) → Footer. "Edge"-дивайдеры видны только
+     с 1000px, обычный — на всех брейкпоинтах. Brands: node 462:2019.
+     CTA: node 416:1812. Footer: node 157:3735 #}
   {% include "header.njk" %}
   <main>
     {{ content | safe }}
   </main>
+  {% set dividerVariant = "edge" %}
+  {% include "divider.njk" %}
+  {% set dividerVariant = "" %}
+  {% include "brands.njk" %}
   {% include "divider.njk" %}
   {% include "cta.njk" %}
+  {% set dividerVariant = "edge-secondary" %}
   {% include "divider.njk" %}
+  {% set dividerVariant = "" %}
   {% include "footer.njk" %}
   <script src="{{ '/js/header.js' | url }}" defer></script>
 </body>
