@@ -777,12 +777,16 @@ body {
 .brands__cell--kermi { padding-bottom: 2px; }
 .brands__cell--wilo { padding-bottom: 7px; }
 
+/* Хэйрлайны сетки — важно: каждая внутренняя линия задаётся ТОЛЬКО с
+   одной стороны, сразу 1px (не 0.5px+0.5px с двух соседних ячеек).
+   Раньше линия собиралась из двух смежных 0.5px бордеров разных
+   ячеек — на экранах с дробным device pixel ratio (390px, мобильные)
+   браузер округляет каждую половину независимо, и вместо цельной 1px
+   линии получалась тонкая ~0.5px. Single-sourced 1px рендерится
+   стабильно на любом экране. */
+
 /* ---------- Границы сетки: 320/390px, 2 колонки x 4 строки ---------- */
 /* Ряды: Viessmann/Tece, Meibes/Arbonia, Geberit/Kermi, Wilo/Flamco */
-.brands__cell {
-  border-top-width: 0.5px;
-}
-
 .brands__cell--viessmann,
 .brands__cell--tece {
   border-top-width: 1px;
@@ -794,30 +798,22 @@ body {
 .brands__cell--arbonia,
 .brands__cell--geberit,
 .brands__cell--kermi {
-  border-bottom-width: 0.5px;
+  border-bottom-width: 1px;
 }
 
 .brands__cell--viessmann,
 .brands__cell--meibes,
 .brands__cell--geberit,
 .brands__cell--wilo {
-  border-right-width: 0.5px;
-}
-
-.brands__cell--tece,
-.brands__cell--arbonia,
-.brands__cell--kermi,
-.brands__cell--flamco {
-  border-left-width: 0.5px;
+  border-right-width: 1px;
 }
 
 /* ---------- Границы сетки: 768px, 4 колонки x 2 строки, 8 брендов ---------- */
 /* Ряды: Viessmann/Tece/Meibes/Arbonia, Geberit/Kermi/Wilo/Flamco */
 @media (min-width: 768px) {
   .brands__cell {
-    border-top-width: 0.5px;
+    border-top-width: 0;
     border-bottom-width: 0;
-    border-left-width: 0;
     border-right-width: 0;
   }
 
@@ -826,25 +822,16 @@ body {
   .brands__cell--meibes,
   .brands__cell--arbonia {
     border-top-width: 1px;
-    border-bottom-width: 0.5px;
+    border-bottom-width: 1px;
   }
 
   .brands__cell--viessmann,
-  .brands__cell--geberit {
-    border-right-width: 0.5px;
-  }
-
   .brands__cell--tece,
   .brands__cell--meibes,
+  .brands__cell--geberit,
   .brands__cell--kermi,
   .brands__cell--wilo {
-    border-left-width: 0.5px;
-    border-right-width: 0.5px;
-  }
-
-  .brands__cell--arbonia,
-  .brands__cell--flamco {
-    border-left-width: 0.5px;
+    border-right-width: 1px;
   }
 }
 
@@ -852,10 +839,10 @@ body {
 /* Ряды: Viessmann/Tece/Meibes/Arbonia/Geberit, Kermi/Wilo/Flamco/Oventrop/Elco */
 @media (min-width: 1000px) {
   .brands__cell {
-    border-top-width: 0.5px;
+    border-top-width: 0;
     border-bottom-width: 0;
     border-left-width: 0;
-    border-right-width: 0;
+    border-right-width: 1px;
   }
 
   .brands__cell--viessmann,
@@ -864,29 +851,12 @@ body {
   .brands__cell--arbonia,
   .brands__cell--geberit {
     border-top-width: 1px;
-    border-bottom-width: 0.5px;
+    border-bottom-width: 1px;
   }
 
   .brands__cell--viessmann,
   .brands__cell--kermi {
     border-left-width: 1px;
-    border-right-width: 0.5px;
-  }
-
-  .brands__cell--tece,
-  .brands__cell--meibes,
-  .brands__cell--arbonia,
-  .brands__cell--wilo,
-  .brands__cell--flamco,
-  .brands__cell--oventrop {
-    border-left-width: 0.5px;
-    border-right-width: 0.5px;
-  }
-
-  .brands__cell--geberit,
-  .brands__cell--elco {
-    border-left-width: 0.5px;
-    border-right-width: 1px;
   }
 }
 
