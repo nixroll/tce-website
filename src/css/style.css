@@ -1578,12 +1578,26 @@ body {
 }
 
 /* Services (node 472:3113). Только на Home, между первым и вторым
-   Divider. Заголовок содержит принудительный <br> (.services__heading-break)
-   — в макете он есть на 390/768 и скрыт на 1000/1440 (там перенос
-   естественный, по ширине). Сетка карточек: 1 колонка на 390,
-   2 на 768, 3 на 1000/1440 — те же самые 6 карточек, просто
-   переставляются в разное число колонок, поэтому границы заданы через
-   nth-child.
+   Divider. Секция пересоздана с нуля под новый макет (не модернизация
+   старой версии) — см. node 472:3113 (1440), 543:517 (1000),
+   543:718 (768), 543:871 (390), 543:1040 (320).
+
+   Структура: .services__container (бейдж+заголовок+кнопка) и
+   .services__grid (карточки) — СИБЛИНГИ внутри .services, а не один
+   родитель для другого — та же конвенция, что и в Brands
+   (.brands__inner + .brands__grid).
+
+   Заголовок теперь ОДИНАКОВО содержит принудительный <br> на ВСЕХ
+   брейкпоинтах (в отличие от старой версии, где перенос скрывался на
+   1000/1440) — меняется только размер шрифта: 36/36/-0.36 на 1440,
+   32/34/-0.32 на 320/390/768/1000.
+
+   Сетка карточек: 1 колонка на 320/390, 2 на 768, 3 на 1000/1440 —
+   те же самые 6 карточек в одном и том же порядке в DOM (row-major
+   заполнение), поэтому границы каждой карточки заданы через
+   nth-child. Хэйрлайны — как и везде: каждая линия задаётся ТОЛЬКО
+   с одной стороны, сразу 1px (никогда 0.5+0.5 с двух соседних
+   карточек).
 
    ВАЖНО: Services — первая СВЕТЛАЯ секция сайта (остальное сделанное
    до сих пор — тёмные секции). У каждого токена есть Light- и
@@ -1615,14 +1629,20 @@ body {
   align-items: center;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 390px) {
+  .services {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
   .services {
     padding: 0 var(--spacing-3xl);
   }
 }
 
-/* ---------- Intro: бейдж + заголовок + кнопка ---------- */
-.services__intro {
+/* ---------- Container: бейдж + заголовок + кнопка ---------- */
+.services__container {
   width: 100%;
   max-width: 1392px;
   display: flex;
@@ -1632,21 +1652,26 @@ body {
   padding: var(--spacing-8xl) var(--spacing-4xl);
 }
 
+@media (min-width: 390px) {
+  .services__container {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
 @media (min-width: 768px) {
-  .services__intro {
+  .services__container {
     flex-direction: row;
     align-items: flex-end;
     justify-content: space-between;
     gap: 0;
-    padding: var(--spacing-10xl) var(--spacing-7xl) var(--spacing-9xl);
+    padding: var(--spacing-9xl) var(--spacing-6xl);
   }
 }
 
 @media (min-width: 1000px) {
-  .services__intro {
+  .services__container {
     padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
-    border-left: 1px solid var(--border-primary);
-    border-right: 1px solid var(--border-primary);
   }
 }
 
@@ -1656,14 +1681,19 @@ body {
   align-items: flex-start;
   gap: var(--spacing-2xl);
   width: 100%;
-  max-width: 340px;
+  max-width: 500px;
 }
 
 @media (min-width: 768px) {
   .services__title-badge {
-    flex: 1 1 auto;
+    flex: 1 1 0;
     min-width: 0;
-    max-width: 540px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .services__title-badge {
+    max-width: 900px;
   }
 }
 
@@ -1687,19 +1717,21 @@ body {
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 32px;
-  line-height: 32px;
+  line-height: 34px;
   letter-spacing: -0.32px;
   color: var(--text-primary);
 }
 
-.services__heading-muted {
-  color: var(--text-quaternary);
+@media (min-width: 1440px) {
+  .services__heading {
+    font-size: 36px;
+    line-height: 36px;
+    letter-spacing: -0.36px;
+  }
 }
 
-@media (min-width: 1000px) {
-  .services__heading-break {
-    display: none;
-  }
+.services__heading-muted {
+  color: var(--text-quaternary);
 }
 
 .services__btn {
@@ -1733,7 +1765,7 @@ body {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-6xl);
-  padding: var(--spacing-4xl) var(--spacing-3xl);
+  padding: var(--spacing-3xl);
   border-style: solid;
   border-color: var(--border-primary);
   border-width: 0;
@@ -1747,12 +1779,6 @@ body {
 }
 
 @media (min-width: 1000px) {
-  .services__card {
-    gap: var(--spacing-8xl);
-  }
-}
-
-@media (min-width: 1440px) {
   .services__card {
     gap: var(--spacing-9xl);
   }
@@ -1775,7 +1801,13 @@ body {
   flex-direction: column;
   gap: 4px;
   width: 100%;
-  max-width: 300px;
+  max-width: 250px;
+}
+
+@media (min-width: 1440px) {
+  .services__card-text {
+    max-width: none;
+  }
 }
 
 .services__card-title {
@@ -1798,23 +1830,10 @@ body {
   color: var(--text-quaternary);
 }
 
-/* Индивидуальный max-width текстового блока — только на 1000px,
-   на 1000 колонки уже, чем на 1440, поэтому у каждой карточки свой
-   подобранный в макете предел ширины */
-@media (min-width: 1000px) and (max-width: 1439px) {
-  .services__card--teo .services__card-text,
-  .services__card--design .services__card-text,
-  .services__card--install .services__card-text { max-width: 250px; }
-  .services__card--supply .services__card-text { max-width: 240px; }
-  .services__card--commissioning .services__card-text { max-width: 230px; }
-  .services__card--warranty .services__card-text { max-width: 253px; }
-}
-
 /* Хэйрлайны — каждая линия задаётся ТОЛЬКО с одной стороны, сразу 1px
-   (не 0.5px+0.5px с двух соседних карточек) — та же правка, что и в
-   Brands: сплит на два 0.5px рендерится тонкой линией на Retina. */
+   (не 0.5px+0.5px с двух соседних карточек), см. комментарий вверху. */
 
-/* ---------- Границы: 390px, 1 колонка x 6 строк ---------- */
+/* ---------- Границы: 320px, 1 колонка x 6 строк, без боковых ---------- */
 .services__card {
   border-bottom-width: 1px;
 }
@@ -1827,29 +1846,34 @@ body {
   border-bottom-width: 0;
 }
 
+/* ---------- Границы: 390px, добавляются боковые (верх/низ те же) ---------- */
+@media (min-width: 390px) {
+  .services__card {
+    border-left-width: 1px;
+    border-right-width: 1px;
+  }
+}
+
 /* ---------- Границы: 768px, 2 колонки x 3 строки ---------- */
 @media (min-width: 768px) {
   .services__card {
     border-top-width: 0;
     border-bottom-width: 0;
     border-left-width: 0;
-    border-right-width: 0;
-  }
-
-  .services__card:nth-child(1),
-  .services__card:nth-child(2) {
-    border-top-width: 1px;
-  }
-
-  .services__card:nth-child(1),
-  .services__card:nth-child(2),
-  .services__card:nth-child(3),
-  .services__card:nth-child(4) {
-    border-bottom-width: 1px;
+    border-right-width: 1px;
   }
 
   .services__card:nth-child(odd) {
-    border-right-width: 1px;
+    border-left-width: 1px;
+  }
+
+  .services__card:nth-child(-n + 4) {
+    border-top-width: 1px;
+  }
+
+  .services__card:nth-child(3),
+  .services__card:nth-child(4) {
+    border-bottom-width: 1px;
   }
 }
 
@@ -1859,19 +1883,25 @@ body {
     border-top-width: 0;
     border-bottom-width: 0;
     border-left-width: 0;
+    border-right-width: 0;
+  }
+
+  .services__card:nth-child(3n + 1) {
+    border-left-width: 1px;
+  }
+
+  .services__card:nth-child(3n + 2) {
+    border-left-width: 1px;
     border-right-width: 1px;
   }
 
-  .services__card:nth-child(1),
-  .services__card:nth-child(2),
-  .services__card:nth-child(3) {
-    border-top-width: 1px;
-    border-bottom-width: 1px;
+  .services__card:nth-child(3n) {
+    border-right-width: 1px;
   }
 
-  .services__card:nth-child(1),
-  .services__card:nth-child(4) {
-    border-left-width: 1px;
+  .services__card:nth-child(-n + 3) {
+    border-top-width: 1px;
+    border-bottom-width: 1px;
   }
 }
 
