@@ -1926,7 +1926,7 @@ body {
   gap: var(--spacing-7xl);
   width: 100%;
   max-width: 1392px;
-  padding: var(--spacing-7xl) var(--spacing-3xl) var(--spacing-5xl);
+  padding: var(--spacing-7xl) var(--spacing-3xl) var(--spacing-4xl);
 }
 
 @media (min-width: 1000px) {
