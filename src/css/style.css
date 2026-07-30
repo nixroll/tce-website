@@ -1892,11 +1892,25 @@ body {
   }
 }
 
-/* Home — Footer (node 157:3735). Новая архитектура (не совпадает с
-   предыдущей): у мобильной/планшетной и десктопной раскладок разная
-   структура (не просто reorder), поэтому это два отдельных блока
-   разметки внутри одного <footer>, переключаемые через display:
-   .footer__compact — 390/768, .footer__wide — 1000/1440. */
+/* Footer (node 157:3735). На всех страницах. У мобильной/планшетной
+   и десктопной раскладок разная структура (не просто reorder),
+   поэтому это два отдельных блока разметки внутри одного <footer>,
+   переключаемые через display: .footer__compact — 390/768,
+   .footer__wide — 1000/1440.
+
+   Links (.footer__legal): добавлена "Реквизиты" (/rekvizity/) первым
+   пунктом, "Конфиденциальность" переименована в "Приватность" (текст
+   и href /privacy/ не менялись). Gap между пунктами — 12px(lg) на
+   390, 16px(xl) на 768/1000/1440 — общее правило для .footer__legal,
+   работает и в compact, и в wide.
+
+   .footer__compact теперь оборачивает содержимое в два блока Content:
+   .footer__compact-content (Columns + Logo/Contact, между ними
+   постоянный gap 48px) и .footer__compact-bottom (copyright + Links,
+   gap 16px) — а между этими двумя блоками свой, больший gap на
+   уровне Container (64px/390, 80px/768). Нижний padding Container
+   тоже отдельно от верхнего: 40px/390, 64px/768 (было одинаковое
+   с верхним). */
 .site-footer {
   background-color: var(--background-secondary);
   border-top: 1px solid var(--border-primary);
@@ -1909,10 +1923,10 @@ body {
 .footer__compact {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-6xl);
+  gap: var(--spacing-7xl);
   width: 100%;
   max-width: 1392px;
-  padding: var(--spacing-7xl) var(--spacing-3xl);
+  padding: var(--spacing-7xl) var(--spacing-3xl) var(--spacing-5xl);
 }
 
 @media (min-width: 1000px) {
@@ -1923,11 +1937,19 @@ body {
 
 @media (min-width: 768px) {
   .footer__compact {
+    gap: var(--spacing-8xl);
     padding-top: var(--spacing-8xl);
-    padding-bottom: var(--spacing-8xl);
+    padding-bottom: var(--spacing-7xl);
     padding-left: var(--spacing-6xl);
     padding-right: var(--spacing-6xl);
   }
+}
+
+.footer__compact-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6xl);
+  width: 100%;
 }
 
 .footer__compact-columns {
@@ -2010,7 +2032,7 @@ body {
 .footer__compact-bottom {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-xl);
   width: 100%;
 }
 
@@ -2115,4 +2137,10 @@ body {
   display: flex;
   gap: var(--spacing-lg);
   align-items: center;
+}
+
+@media (min-width: 768px) {
+  .footer__legal {
+    gap: var(--spacing-xl);
+  }
 }

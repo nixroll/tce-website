@@ -1,39 +1,47 @@
 <footer class="site-footer" data-figma-node="157:3735" data-figma-name="Footer">
 
-  {# Compact: 390px / 768px — раскладка со списками-строками и разделителями #}
+  {# Compact: 390px / 768px — раскладка со списками-строками и разделителями.
+     Container (.footer__compact) содержит два блока Content:
+     .footer__compact-content (Columns + Logo/Contact, gap 48px) и
+     .footer__compact-bottom (copyright + Links, gap 16px) — между
+     самими этими двумя блоками у Container свой больший gap
+     (64px/390, 80px/768). #}
   <div class="footer__compact">
-    <div class="footer__compact-columns">
-      <ul class="footer__mlist">
-        <li><a class="footer-mlink" href="{{ '/about/' | url }}">О нас</a></li>
-        <li><a class="footer-mlink" href="{{ '/services/' | url }}">Услуги</a></li>
-        <li><a class="footer-mlink" href="{{ '/catalog/' | url }}">Каталог</a></li>
-        <li><a class="footer-mlink" href="{{ '/contact/' | url }}">Контакты</a></li>
-      </ul>
-      <ul class="footer__mlist">
-        <li><a class="footer-mlink" href="https://www.instagram.com/thermoconceptby/" target="_blank" rel="noopener">Instagram</a></li>
-        <li><a class="footer-mlink" href="https://telegram.org/" target="_blank" rel="noopener">Telegram</a></li>
-        <li><a class="footer-mlink" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></li>
-      </ul>
-    </div>
+    <div class="footer__compact-content">
+      <div class="footer__compact-columns">
+        <ul class="footer__mlist">
+          <li><a class="footer-mlink" href="{{ '/about/' | url }}">О нас</a></li>
+          <li><a class="footer-mlink" href="{{ '/services/' | url }}">Услуги</a></li>
+          <li><a class="footer-mlink" href="{{ '/catalog/' | url }}">Каталог</a></li>
+          <li><a class="footer-mlink" href="{{ '/contact/' | url }}">Контакты</a></li>
+        </ul>
+        <ul class="footer__mlist">
+          <li><a class="footer-mlink" href="https://www.instagram.com/thermoconceptby/" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a class="footer-mlink" href="https://telegram.org/" target="_blank" rel="noopener">Telegram</a></li>
+          <li><a class="footer-mlink" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
 
-    <div class="footer__compact-logo-contact">
-      <a href="{{ '/' | url }}" class="footer__logo" aria-label="TCE — на главную">
-        <img src="{{ '/images/logo-mark.svg' | url }}" width="48" height="48" alt="TCE">
-      </a>
-      <div class="footer__mcontact">
-        <a class="footer-mtext" href="https://maps.google.com/?q=Минск, ул. Матусевича, д. 33/2, офис 801" target="_blank" rel="noopener">Республика Беларусь, г. Минск,<br>ул. Матусевича, д. 33/2, офис 801</a>
-        <a class="footer-mtext" href="tel:+375293820829">+375 (29) 382-08-29</a>
-        <a class="footer-mtext" href="mailto:info@tcepro.by">info@tcepro.by</a>
+      <div class="footer__compact-logo-contact">
+        <a href="{{ '/' | url }}" class="footer__logo" aria-label="TCE — на главную">
+          <img src="{{ '/images/logo-mark.svg' | url }}" width="48" height="48" alt="TCE">
+        </a>
+        <div class="footer__mcontact">
+          <a class="footer-mtext" href="https://maps.google.com/?q=Минск, ул. Матусевича, д. 33/2, офис 801" target="_blank" rel="noopener">Республика Беларусь, г. Минск,<br>ул. Матусевича, д. 33/2, офис 801</a>
+          <a class="footer-mtext" href="tel:+375293820829">+375 (29) 382-08-29</a>
+          <a class="footer-mtext" href="mailto:info@tcepro.by">info@tcepro.by</a>
+        </div>
       </div>
     </div>
 
     <div class="footer__compact-bottom">
+      <p class="footer__copyright">&copy; {{ currentYear }} - ООО «Термо Концепт Инжиниринг»</p>
       <div class="footer__legal">
-        <a class="footer-link footer-link--legal" href="{{ '/privacy/' | url }}">Конфиденциальность</a>
+        <a class="footer-link footer-link--legal" href="{{ '/rekvizity/' | url }}">Реквизиты</a>
+        <a class="footer-link footer-link--legal" href="{{ '/privacy/' | url }}">Приватность</a>
         <a class="footer-link footer-link--legal" href="{{ '/rights/' | url }}">Права</a>
         <a class="footer-link footer-link--legal" href="{{ '/cookies/' | url }}">Куки</a>
       </div>
-      <p class="footer__copyright">&copy; {{ currentYear }} - ООО «Термо Концепт Инжиниринг»</p>
     </div>
   </div>
 
@@ -70,7 +78,8 @@
     <div class="footer__wide-bottom">
       <p class="footer__copyright">&copy; {{ currentYear }} - ООО «Термо Концепт Инжиниринг»</p>
       <div class="footer__legal">
-        <a class="footer-link footer-link--legal" href="{{ '/privacy/' | url }}">Конфиденциальность</a>
+        <a class="footer-link footer-link--legal" href="{{ '/rekvizity/' | url }}">Реквизиты</a>
+        <a class="footer-link footer-link--legal" href="{{ '/privacy/' | url }}">Приватность</a>
         <a class="footer-link footer-link--legal" href="{{ '/rights/' | url }}">Права</a>
         <a class="footer-link footer-link--legal" href="{{ '/cookies/' | url }}">Куки</a>
       </div>
