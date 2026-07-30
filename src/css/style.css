@@ -635,7 +635,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-4xl);
-  padding: var(--spacing-9xl) var(--spacing-lg);
+  padding: var(--spacing-8xl) var(--spacing-lg);
 }
 
 @media (min-width: 390px) {
