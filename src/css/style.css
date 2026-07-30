@@ -438,10 +438,11 @@ body {
   --border-primary: #e5e7ec;
 }
 
-/* CTA (node 416:1812). Тоже повторяющийся элемент на всех страницах. */
+/* CTA (node 416:1812). Тоже повторяющийся элемент на всех страницах.
+   Боковые stroke у Container — на всех breakpoints. Border-bottom —
+   только с 1000px, на 390/768 контейнер CTA примыкает к Footer без
+   нижней линии (node 416:1851 / 416:1860). */
 .cta {
-  /* border-bottom только с 1000px — на 390/768 контейнер CTA
-     примыкает к Footer без нижней линии (node 416:1851 / 416:1860) */
   width: 100%;
   background-color: var(--background-secondary);
   border-top: 1px solid var(--border-primary);
@@ -452,12 +453,14 @@ body {
 .cta__inner {
   width: 100%;
   max-width: 1392px;
-  padding: var(--spacing-7xl) var(--spacing-3xl);
+  padding: var(--spacing-9xl) var(--spacing-3xl);
+  border-left: 1px solid var(--border-primary);
+  border-right: 1px solid var(--border-primary);
 }
 
 @media (min-width: 768px) {
   .cta__inner {
-    padding: var(--spacing-8xl) var(--spacing-6xl);
+    padding: var(--spacing-9xl) var(--spacing-6xl);
   }
 }
 
@@ -465,12 +468,6 @@ body {
   .cta {
     padding: 0 var(--spacing-3xl);
     border-bottom: 1px solid var(--border-primary);
-  }
-
-  .cta__inner {
-    padding: var(--spacing-9xl) var(--spacing-6xl);
-    border-left: 1px solid var(--border-primary);
-    border-right: 1px solid var(--border-primary);
   }
 }
 
@@ -534,23 +531,29 @@ body {
 
 .cta__buttons {
   display: flex;
+  flex-direction: column;
   gap: var(--spacing-lg);
-  align-items: center;
+  align-items: flex-start;
+  justify-content: center;
   width: 100%;
-  max-width: 250px;
+  max-width: 300px;
 }
 
 .cta__buttons .btn {
-  flex: 1 0 0;
+  width: 100%;
 }
 
 @media (min-width: 768px) {
   .cta__buttons {
+    flex-direction: row;
+    align-items: center;
     width: 250px;
+    max-width: none;
     flex-shrink: 0;
   }
 
   .cta__buttons .btn {
+    width: auto;
     flex: none;
   }
 
