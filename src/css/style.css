@@ -439,15 +439,18 @@ body {
 }
 
 /* CTA (node 416:1812). Тоже повторяющийся элемент на всех страницах.
-   Боковые stroke у Container — на всех breakpoints. Border-bottom —
-   только с 1000px, на 390/768 контейнер CTA примыкает к Footer без
-   нижней линии (node 416:1851 / 416:1860). */
+   Боковые паддинги у самой секции (.cta) сжимают Container на всех
+   breakpoints — 20px/390, 24px/768, 24px/1000+. Боковые stroke у
+   Container — тоже на всех breakpoints. Border-bottom — только с
+   1000px, на 390/768 контейнер CTA примыкает к Footer без нижней
+   линии (node 416:1851 / 416:1860). */
 .cta {
   width: 100%;
   background-color: var(--background-secondary);
   border-top: 1px solid var(--border-primary);
   display: flex;
   justify-content: center;
+  padding: 0 var(--spacing-2xl);
 }
 
 .cta__inner {
@@ -459,6 +462,10 @@ body {
 }
 
 @media (min-width: 768px) {
+  .cta {
+    padding: 0 var(--spacing-3xl);
+  }
+
   .cta__inner {
     padding: var(--spacing-9xl) var(--spacing-6xl);
   }
