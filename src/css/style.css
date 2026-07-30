@@ -1810,10 +1810,13 @@ body {
   .services__card--warranty .services__card-text { max-width: 253px; }
 }
 
+/* Хэйрлайны — каждая линия задаётся ТОЛЬКО с одной стороны, сразу 1px
+   (не 0.5px+0.5px с двух соседних карточек) — та же правка, что и в
+   Brands: сплит на два 0.5px рендерится тонкой линией на Retina. */
+
 /* ---------- Границы: 390px, 1 колонка x 6 строк ---------- */
 .services__card {
-  border-top-width: 0.5px;
-  border-bottom-width: 0.5px;
+  border-bottom-width: 1px;
 }
 
 .services__card:first-child {
@@ -1827,8 +1830,8 @@ body {
 /* ---------- Границы: 768px, 2 колонки x 3 строки ---------- */
 @media (min-width: 768px) {
   .services__card {
-    border-top-width: 0.5px;
-    border-bottom-width: 0.5px;
+    border-top-width: 0;
+    border-bottom-width: 0;
     border-left-width: 0;
     border-right-width: 0;
   }
@@ -1838,49 +1841,37 @@ body {
     border-top-width: 1px;
   }
 
-  .services__card:nth-child(5),
-  .services__card:nth-child(6) {
-    border-bottom-width: 0;
+  .services__card:nth-child(1),
+  .services__card:nth-child(2),
+  .services__card:nth-child(3),
+  .services__card:nth-child(4) {
+    border-bottom-width: 1px;
   }
 
   .services__card:nth-child(odd) {
-    border-right-width: 0.5px;
-  }
-
-  .services__card:nth-child(even) {
-    border-left-width: 0.5px;
+    border-right-width: 1px;
   }
 }
 
 /* ---------- Границы: 1000/1440px, 3 колонки x 2 строки ---------- */
 @media (min-width: 1000px) {
   .services__card {
-    border-top-width: 0.5px;
-    border-bottom-width: 0.5px;
-    border-left-width: 0.5px;
-    border-right-width: 0.5px;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-right-width: 1px;
   }
 
   .services__card:nth-child(1),
   .services__card:nth-child(2),
   .services__card:nth-child(3) {
     border-top-width: 1px;
-  }
-
-  .services__card:nth-child(4),
-  .services__card:nth-child(5),
-  .services__card:nth-child(6) {
-    border-bottom-width: 0;
+    border-bottom-width: 1px;
   }
 
   .services__card:nth-child(1),
   .services__card:nth-child(4) {
     border-left-width: 1px;
-  }
-
-  .services__card:nth-child(3),
-  .services__card:nth-child(6) {
-    border-right-width: 1px;
   }
 }
 
