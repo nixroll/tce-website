@@ -1,11 +1,13 @@
 <footer class="site-footer" data-figma-node="157:3735" data-figma-name="Footer">
 
-  {# Compact: 390px / 768px — раскладка со списками-строками и разделителями.
-     Container (.footer__compact) содержит два блока Content:
-     .footer__compact-content (Columns + Logo/Contact, gap 48px) и
-     .footer__compact-bottom (copyright + Links, gap 16px) — между
-     самими этими двумя блоками у Container свой больший gap
-     (64px/390, 80px/768). #}
+  {# Compact: 320px / 390px / 768px — раскладка со списками-строками и
+     разделителями. Container (.footer__compact) содержит два блока
+     Content: .footer__compact-content (Columns + Logo/Contact, gap
+     48px) и .footer__compact-bottom (copyright + Links, gap 16px) —
+     между самими этими двумя блоками у Container свой больший gap
+     (64px/320/390, 80px/768). С 390px у Container боковой border, а
+     у .site-footer снаружи — боковой padding 24px (на 320px нет ни
+     того, ни другого). #}
   <div class="footer__compact">
     <div class="footer__compact-content">
       <div class="footer__compact-columns">
@@ -35,7 +37,7 @@
     </div>
 
     <div class="footer__compact-bottom">
-      <p class="footer__copyright">&copy; {{ currentYear }} - ООО «Термо Концепт Инжиниринг»</p>
+      <p class="footer__copyright">&copy; ООО «Термо Концепт Инжиниринг», {{ currentYear }}</p>
       <div class="footer__legal">
         <a class="footer-link footer-link--legal" href="{{ '/bank-details/' | url }}">Реквизиты</a>
         <a class="footer-link footer-link--legal" href="{{ '/privacy/' | url }}">Приватность</a>
@@ -76,7 +78,7 @@
     </div>
 
     <div class="footer__wide-bottom">
-      <p class="footer__copyright">&copy; {{ currentYear }} - ООО «Термо Концепт Инжиниринг»</p>
+      <p class="footer__copyright">&copy; ООО «Термо Концепт Инжиниринг», {{ currentYear }}</p>
       <div class="footer__legal">
         <a class="footer-link footer-link--legal" href="{{ '/bank-details/' | url }}">Реквизиты</a>
         <a class="footer-link footer-link--legal" href="{{ '/privacy/' | url }}">Приватность</a>

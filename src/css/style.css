@@ -206,6 +206,15 @@ body {
   line-height: 20px;
 }
 
+/* На 320px копирайт переносится на две строки естественным образом
+   (последнее слово "2026" не помещается) — так и в Figma. С 390px
+   ширины хватает, там принудительно в одну строку. */
+@media (min-width: 390px) {
+  .footer__copyright {
+    white-space: nowrap;
+  }
+}
+
 /* Header (node 157:3721). Теперь есть мобильная версия — Header показан
    на всех брейкпоинтах. На <768px это бургер-меню (State=Normal/Open),
    на >=768px — привычная строка ссылок + кнопка (одна раскладка на
@@ -2238,28 +2247,44 @@ body {
 /* Footer (node 157:3735). На всех страницах. У мобильной/планшетной
    и десктопной раскладок разная структура (не просто reorder),
    поэтому это два отдельных блока разметки внутри одного <footer>,
-   переключаемые через display: .footer__compact — 390/768,
+   переключаемые через display: .footer__compact — 320/390/768,
    .footer__wide — 1000/1440.
 
    Links (.footer__legal): добавлена "Реквизиты" (/rekvizity/) первым
    пунктом, "Конфиденциальность" переименована в "Приватность" (текст
    и href /privacy/ не менялись). Gap между пунктами — 12px(lg) на
-   390, 16px(xl) на 768/1000/1440 — общее правило для .footer__legal,
+   320/390, 16px(xl) на 768/1000/1440 — общее правило для .footer__legal,
    работает и в compact, и в wide.
 
    .footer__compact теперь оборачивает содержимое в два блока Content:
    .footer__compact-content (Columns + Logo/Contact, между ними
    постоянный gap 48px) и .footer__compact-bottom (copyright + Links,
    gap 16px) — а между этими двумя блоками свой, больший gap на
-   уровне Container (64px/390, 80px/768). Нижний padding Container
-   тоже отдельно от верхнего: 40px/390, 64px/768 (было одинаковое
-   с верхним). */
+   уровне Container (64px/320/390, 80px/768). Нижний padding Container
+   тоже отдельно от верхнего: 32px/320, 40px/390, 64px/768 (было
+   одинаковое с верхним).
+
+   Обновление: на .site-footer добавлен боковой padding 24px(3xl) с
+   390px (раньше был только с 1000px), на 320px паддинга нет — как и
+   на .footer__wide. У самого Container (.footer__compact) с 390px
+   появился border-left/right (как у .footer__wide) — на 320px его
+   нет. Боковой padding Container на 320px — 20px(2xl), с 390px —
+   24px(3xl) (раньше 24px был задан как база для всех, включая 320 —
+   это было неверно). .footer__compact-bottom с 390px получил
+   min-width: 320px (минимальная ширина блока copyright+Links в
+   Figma). */
 .site-footer {
   background-color: var(--background-secondary);
   border-top: 1px solid var(--border-primary);
   display: flex;
   justify-content: center;
   width: 100%;
+}
+
+@media (min-width: 390px) {
+  .site-footer {
+    padding: 0 var(--spacing-3xl);
+  }
 }
 
 /* ---------- Compact: <1000px ---------- */
@@ -2269,12 +2294,21 @@ body {
   gap: var(--spacing-7xl);
   width: 100%;
   max-width: 1392px;
-  padding: var(--spacing-7xl) var(--spacing-3xl) var(--spacing-4xl);
+  padding: var(--spacing-7xl) var(--spacing-2xl) var(--spacing-4xl);
 }
 
 @media (min-width: 1000px) {
   .footer__compact {
     display: none;
+  }
+}
+
+@media (min-width: 390px) {
+  .footer__compact {
+    padding-left: var(--spacing-3xl);
+    padding-right: var(--spacing-3xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
   }
 }
 
@@ -2379,6 +2413,12 @@ body {
   width: 100%;
 }
 
+@media (min-width: 390px) {
+  .footer__compact-bottom {
+    min-width: 320px;
+  }
+}
+
 .footer__compact-bottom .footer__legal {
   width: 100%;
 }
@@ -2395,10 +2435,6 @@ body {
 }
 
 @media (min-width: 1000px) {
-  .site-footer {
-    padding: 0 var(--spacing-3xl);
-  }
-
   .footer__wide {
     display: flex;
     flex-direction: column;
