@@ -691,7 +691,7 @@ body {
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 36px;
-  line-height: 36px;
+  line-height: 38px;
   letter-spacing: -0.36px;
   text-align: center;
   color: var(--text-primary);
@@ -704,7 +704,7 @@ body {
 @media (min-width: 768px) {
   .brands__heading {
     font-size: 40px;
-    line-height: 40px;
+    line-height: 42px;
     letter-spacing: -0.4px;
   }
 }
@@ -712,7 +712,7 @@ body {
 @media (min-width: 1000px) {
   .brands__heading {
     font-size: 50px;
-    line-height: 50px;
+    line-height: 52px;
     letter-spacing: -0.5px;
   }
 }
