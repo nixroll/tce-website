@@ -425,8 +425,12 @@ body {
    видны на всех брейкпоинтах (.divider по умолчанию, primary фон,
    прогрессивная высота 64→80→96px). Только последняя позиция (после
    CTA) видна исключительно с 1000px (модификатор .divider--edge) и
-   имеет secondary фон (.divider--secondary). Декоративные боковые
-   линии — только с 1000px. */
+   имеет secondary фон (.divider--secondary). 320px (572:3606) — без
+   боковых паддингов и без stroke у Container. С 390px (416:1794)
+   появляются боковой паддинг 20px и stroke; с 768px (416:1780)
+   паддинг растёт до 24px. Цвет stroke берётся из var(--border-primary)
+   — он уже переопределяется у светлых дивайдеров через .divider--light,
+   так что отдельной логики цвета для 390/768 не нужно. */
 .divider {
   display: flex;
   width: 100%;
@@ -440,21 +444,30 @@ body {
   height: 64px;
 }
 
+@media (min-width: 390px) {
+  .divider {
+    padding: 0 var(--spacing-2xl);
+  }
+
+  .divider__inner {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
 @media (min-width: 768px) {
+  .divider {
+    padding: 0 var(--spacing-3xl);
+  }
+
   .divider__inner {
     height: 80px;
   }
 }
 
 @media (min-width: 1000px) {
-  .divider {
-    padding: 0 var(--spacing-3xl);
-  }
-
   .divider__inner {
     height: 96px;
-    border-left: 1px solid var(--border-primary);
-    border-right: 1px solid var(--border-primary);
   }
 }
 
