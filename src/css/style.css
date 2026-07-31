@@ -1247,16 +1247,39 @@ body {
   }
 }
 
-/* Areas - L (node 491:2875). Только на Home, между Hero и Divider(light)
-   → Testimonial. Светлая секция (как Services) — переопределяю токены
-   локально на .areas, тот же приём, что и на .services. Фото карточек
-   — self-hosted WebP+JPEG (picture/srcset 400w/700w/1000w), обрезаны
-   по центру под требуемое соотношение 615:460 из макета. Иконка
-   arrow-narrow-right у Figma не экспортируется через MCP (сетевой
-   доступ к их asset-серверу заблокирован в песочнице) — визуально
-   сверился по скриншоту, это стандартная иконка из Untitled UI Icons,
-   вручную восстановил path 1:1, встроил инлайн-SVG с stroke="currentColor",
-   чтобы наследовать цвет текста кнопки. */
+/* Areas - L (node 491:2875). Только на Home, между Hero и новым тёмным
+   Divider(hidden-320) → Testimonial. Секция ПЕРЕСОЗДАНА С НУЛЯ под
+   новый макет 31.07 (не модернизация старой версии) — см. node
+   491:2875 (1440), 491:2876 (1000), 492:2903 (768), 492:2957 (390),
+   584:4329 (320). Светлая секция (как Services) — переопределяю
+   токены локально на .areas, тот же приём. Фото карточек
+   переиспользованы из старой версии без изменений — self-hosted
+   WebP+JPEG (picture/srcset 400w/700w/1000w), 615:460. Иконка
+   arrow-narrow-right — тоже переиспользована из старой версии (тот же
+   компонент; Figma не экспортирует её через MCP, инлайн-SVG с path
+   восстановлен вручную ещё тогда, цвет управляется через CSS var на
+   <path>, не хардкожен).
+
+   Структура: .areas__intro (бейдж+заголовок) и .areas__grid (две
+   карточки) — сиблинги внутри .areas, та же конвенция, что и в
+   Services/Brands.
+
+   Хэйрлайны — конвенция "один источник на линию", но её реализация
+   меняется по брейкпоинтам вместе со структурой макета:
+   - 320: карточки в столбик, у .areas__grid своей рамки нет. Верх/низ
+     рисует border-top/bottom только у карточки Engineering — линия
+     между карточками это её border-bottom, у Supply границ нет.
+   - 390: карточки всё ещё в столбик, но левую/правую границу теперь
+     рисует сама обёртка .areas__grid; у карточек своих боковых линий
+     нет. Разделение между карточками — паддингом (pb у Engineering +
+     pt у Supply), без линии. Плюс только на этом брейкпоинте картинка
+     идёт впритык к краям (0 бокового паддинга у карточки), а текстовый
+     контент получает свой инсет в 24px — единственное место, где
+     паддинг картинки и паддинг текста расходятся.
+   - 768/1000/1440: карточки в ряд, границы возвращаются на сами
+     карточки (border-top у обеих, border-left только у Engineering,
+     border-right у обеих — Supply не рисует left, чтобы не задваивать
+     среднюю линию). */
 .areas {
   --background-primary: #fafafb;
   --background-secondary: #f3f4f6;
@@ -1278,7 +1301,13 @@ body {
   align-items: center;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 390px) {
+  .areas {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
   .areas {
     padding: 0 var(--spacing-3xl);
   }
@@ -1290,20 +1319,26 @@ body {
   max-width: 1392px;
   display: flex;
   align-items: flex-end;
-  padding: var(--spacing-8xl) var(--spacing-4xl);
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .areas__intro {
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
 }
 
 @media (min-width: 768px) {
   .areas__intro {
-    padding: var(--spacing-10xl) var(--spacing-7xl) var(--spacing-9xl);
+    padding: var(--spacing-9xl) var(--spacing-7xl);
   }
 }
 
 @media (min-width: 1000px) {
   .areas__intro {
     padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
-    border-left: 1px solid var(--border-primary);
-    border-right: 1px solid var(--border-primary);
   }
 }
 
@@ -1312,9 +1347,15 @@ body {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-2xl);
-  max-width: 480px;
-  flex: 1 1 auto;
+  flex: 1 0 0;
   min-width: 0;
+  max-width: 480px;
+}
+
+@media (min-width: 1440px) {
+  .areas__title-badge {
+    max-width: 540px;
+  }
 }
 
 .areas__badge {
@@ -1342,6 +1383,14 @@ body {
   color: var(--text-primary);
 }
 
+@media (min-width: 1440px) {
+  .areas__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
+}
+
 .areas__heading-muted {
   color: var(--text-quaternary);
 }
@@ -1355,9 +1404,18 @@ body {
   align-items: flex-start;
 }
 
+@media (min-width: 390px) {
+  .areas__grid {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
 @media (min-width: 768px) {
   .areas__grid {
     flex-direction: row;
+    border-left-width: 0;
+    border-right-width: 0;
   }
 }
 
@@ -1365,22 +1423,33 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing-4xl);
+  gap: 32px;
   width: 100%;
   padding: var(--spacing-3xl);
   border-style: solid;
   border-color: var(--border-primary);
   border-width: 0;
-  border-top-width: 0.5px;
-  border-bottom-width: 0.5px;
 }
 
 .areas__card--engineering {
   border-top-width: 1px;
+  border-bottom-width: 1px;
 }
 
-.areas__card--supply {
-  border-bottom-width: 0;
+@media (min-width: 390px) {
+  .areas__card--engineering {
+    padding: 0 0 var(--spacing-3xl);
+    border-top-width: 0;
+    border-bottom-width: 0;
+  }
+
+  .areas__card--supply {
+    padding: var(--spacing-3xl) 0 var(--spacing-6xl);
+  }
+
+  .areas__content {
+    padding: 0 var(--spacing-3xl);
+  }
 }
 
 @media (min-width: 768px) {
@@ -1388,29 +1457,28 @@ body {
     flex: 1 1 0;
     min-width: 0;
     width: auto;
-    padding: var(--spacing-5xl);
-    border-top-width: 1px;
-    border-bottom-width: 0;
-    border-left-width: 0;
-    border-right-width: 0;
+    padding: var(--spacing-3xl);
+  }
+
+  .areas__content {
+    padding: 0;
   }
 
   .areas__card--engineering {
-    border-right-width: 0.5px;
+    border-top-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
   }
 
   .areas__card--supply {
-    border-left-width: 0.5px;
+    border-top-width: 1px;
+    border-right-width: 1px;
   }
 }
 
 @media (min-width: 1000px) {
-  .areas__card--engineering {
-    border-left-width: 1px;
-  }
-
-  .areas__card--supply {
-    border-right-width: 1px;
+  .areas__card {
+    padding: var(--spacing-5xl);
   }
 }
 
@@ -1435,7 +1503,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing-2xl);
+  gap: var(--spacing-3xl);
   width: 100%;
 }
 
@@ -1487,10 +1555,8 @@ body {
 
 /* Hover (node 494:2958, state=Hover): бордер primary -> secondary,
    текст secondary -> primary. Иконка в Normal — text-tertiary
-   (#535862, задано пользователем напрямую в SVG), на Hover решил по
-   аналогии с текстом/бордером — сгущается до text-primary; в самой
-   Figma-иконке для состояния Hover цвет не проверить напрямую (только
-   растровый превью), если не совпадёт — поправим. */
+   (#535862), на Hover сгущается до text-primary — то же поведение,
+   что было в старой версии кнопки, компонент не менялся. */
 .areas__btn:hover {
   border-color: var(--border-secondary);
   color: var(--text-primary);
