@@ -990,20 +990,36 @@ body {
 }
 
 /* Stats - L (node 494:2782). Только на Home, первая секция после Hero
-   (перед Divider(light) → Areas-L). Светлая секция — тот же приём
-   локального переопределения токенов, что и у .services/.areas.
+   (перед Divider(light) → Areas-L). Секция ПЕРЕСОЗДАНА С НУЛЯ под
+   новый макет (не модернизация старой версии) — см. node 494:2782
+   (1440), 495:1953 (1000), 495:1977 (768), 498:2001 (390), 606:976
+   (320). Светлая секция — тот же приём локального переопределения
+   токенов, что и у .services/.areas.
 
-   Порядок число/подпись в ячейке разный на каждой группе брейкпоинтов:
-   390 — подпись сверху, число снизу; 768 — подпись слева, число
-   справа; 1000/1440 — число сверху, подпись снизу. Вместо дублирования
+   Порядок число/подпись в ячейке разный по брейкпоинтам: 320/390 —
+   подпись сверху, число снизу; 768 — подпись слева, число справа;
+   1000/1440 — число сверху, подпись снизу. Вместо дублирования
    разметки держу DOM-порядок постоянным (подпись, потом число) и
-   переключаю на 1000+ через flex-direction: column-reverse — это
-   визуально переставляет число наверх без второй копии разметки.
+   переключаю через flex-direction: row на 768 и column-reverse на
+   1000+ — визуально переставляет число без второй копии разметки.
 
    Заголовок: между основной (primary) и приглушённой (quaternary)
-   частью всегда жёсткий перенос (обычный <br>), плюс два переноса,
-   видимых ТОЛЬКО на 768px (.stats__break-tablet) — на 390/1000/1440
-   эти строки везде идут одним потоком и переносятся по ширине сами. */
+   частью — ВСЕГДА жёсткий перенос (обычный <br>, на всех
+   брейкпоинтах). Плюс ВНУТРИ приглушённой части — ещё один жёсткий
+   перенос, но видимый ТОЛЬКО на 320/390 (.stats__heading-break-mobile,
+   после "запущенных "), скрыт с 768px — на 768/1000/1440 эта часть
+   идёт одной строкой без переносов.
+
+   Кнопка "Подробнее" — обычный .btn.btn--secondary, стили 1:1
+   совпадают с тем, что нарисовано в Figma (padding/radius/шрифт),
+   переиспользую без изменений.
+
+   Кнопка/бейдж/имена ячеек не содержат предлогов, но в описаниях
+   ячеек и добавил &nbsp; на "на", "и", "в" — без этого их естественный
+   перенос по ширине (особенно узкий на 1000px: 224/225/187px)
+   оставлял предлог в конце строки. Количество строк в каждой ячейке
+   на каждом брейкпоинте сверено через get_metadata (высоту текстового
+   блока) и совпадает 1:1 после добавления &nbsp;. */
 .stats {
   --background-primary: #fafafb;
   --background-secondary: #f3f4f6;
@@ -1025,7 +1041,13 @@ body {
   align-items: center;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 390px) {
+  .stats {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
   .stats {
     padding: 0 var(--spacing-3xl);
   }
@@ -1039,24 +1061,30 @@ body {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-4xl);
-  padding: var(--spacing-8xl) var(--spacing-4xl);
+  padding: var(--spacing-8xl) var(--spacing-2xl);
+}
+
+@media (min-width: 390px) {
+  .stats__intro {
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
 }
 
 @media (min-width: 768px) {
   .stats__intro {
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 0;
-    padding: var(--spacing-10xl) var(--spacing-7xl) var(--spacing-9xl);
+    padding: var(--spacing-9xl) var(--spacing-6xl);
   }
 }
 
 @media (min-width: 1000px) {
   .stats__intro {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0;
     padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
-    border-left: 1px solid var(--border-primary);
-    border-right: 1px solid var(--border-primary);
   }
 }
 
@@ -1071,9 +1099,14 @@ body {
 
 @media (min-width: 768px) {
   .stats__title-badge {
-    flex: 1 1 auto;
-    min-width: 0;
     max-width: none;
+  }
+}
+
+@media (min-width: 1000px) {
+  .stats__title-badge {
+    flex: 1 0 0;
+    min-width: 0;
   }
 }
 
@@ -1096,23 +1129,27 @@ body {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: var(--h3-size);
-  line-height: var(--h3-line);
-  letter-spacing: var(--h3-tracking);
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
   color: var(--text-primary);
+}
+
+@media (min-width: 1440px) {
+  .stats__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
 }
 
 .stats__heading-muted {
   color: var(--text-quaternary);
 }
 
-.stats__break-tablet {
-  display: none;
-}
-
-@media (min-width: 768px) and (max-width: 999px) {
-  .stats__break-tablet {
-    display: inline;
+@media (min-width: 768px) {
+  .stats__heading-break-mobile {
+    display: none;
   }
 }
 
@@ -1126,11 +1163,21 @@ body {
   max-width: 1392px;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+}
+
+@media (min-width: 390px) {
+  .stats__grid {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
 }
 
 @media (min-width: 1000px) {
   .stats__grid {
     flex-direction: row;
+    border-left-width: 0;
+    border-right-width: 0;
   }
 }
 
@@ -1140,27 +1187,20 @@ body {
   align-items: flex-start;
   gap: var(--spacing-7xl);
   width: 100%;
-  padding: var(--spacing-4xl);
+  padding: var(--spacing-3xl);
   border-style: solid;
   border-color: var(--border-primary);
   border-width: 0;
-  border-top-width: 0.5px;
-  border-bottom-width: 0.5px;
-}
-
-.stats__cell:first-child {
   border-top-width: 1px;
 }
 
-.stats__cell:last-child {
-  border-bottom-width: 0;
-}
-
-@media (min-width: 768px) and (max-width: 999px) {
+@media (min-width: 768px) and (max-width: 999.98px) {
   .stats__cell {
     flex-direction: row;
+    align-items: flex-end;
     justify-content: space-between;
     gap: 0;
+    padding: var(--spacing-4xl);
   }
 }
 
@@ -1171,18 +1211,17 @@ body {
     width: auto;
     flex-direction: column-reverse;
     gap: var(--spacing-9xl);
-    border-top-width: 1px;
-    border-bottom-width: 0;
-    border-left-width: 0.5px;
-    border-right-width: 0.5px;
+    padding: var(--spacing-5xl);
+    border-left-width: 1px;
+    border-right-width: 1px;
   }
 
   .stats__cell:first-child {
-    border-left-width: 1px;
+    border-right-width: 0;
   }
 
   .stats__cell:last-child {
-    border-right-width: 1px;
+    border-left-width: 0;
   }
 }
 
