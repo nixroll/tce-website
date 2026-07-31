@@ -90,6 +90,48 @@
   --spacing-9xl: 96px;
   --spacing-10xl: 128px;
   --spacing-11xl: 160px;
+
+  /* Типографика — общая шкала из Figma (Heading: node 157:268,
+     Body: node 157:316). Значения size/line-height/tracking у каждого
+     уровня одинаковы для всех начертаний (Medium/Semibold/Bold) —
+     конкретный font-weight остаётся в правиле самой секции, здесь
+     только геометрия. Логика подбора: letter-spacing в Figma задан
+     в процентах от размера (-1.5% у Heading 1, -1% у Heading 2-5,
+     -0.5% у Heading 6 и Body), поэтому у каждого уровня свой % и
+     итоговый px получается разным. Заголовки/тексты кнопок, ссылок,
+     Header и Footer сюда не входят — у них свои, не привязанные к
+     этой шкале размеры. */
+  --h1-size: 60px;
+  --h1-line: 62px;
+  --h1-tracking: -0.9px;
+
+  --h2-size: 50px;
+  --h2-line: 52px;
+  --h2-tracking: -0.5px;
+
+  --h3-size: 40px;
+  --h3-line: 42px;
+  --h3-tracking: -0.4px;
+
+  --h4-size: 36px;
+  --h4-line: 38px;
+  --h4-tracking: -0.36px;
+
+  --h5-size: 32px;
+  --h5-line: 34px;
+  --h5-tracking: -0.32px;
+
+  --h6-size: 18px;
+  --h6-line: 24px;
+  --h6-tracking: -0.09px;
+
+  --body1-size: 18px;
+  --body1-line: 24px;
+  --body1-tracking: -0.09px;
+
+  --body2-size: 16px;
+  --body2-line: 22px;
+  --body2-tracking: -0.08px;
 }
 
 * {
@@ -366,11 +408,11 @@ body {
 
 .hero__title {
   margin: 0;
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-body);
   font-weight: 600;
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: -0.09px;
+  font-size: var(--h6-size);
+  line-height: var(--h6-line);
+  letter-spacing: var(--h6-tracking);
   color: var(--text-primary);
   text-align: center;
   white-space: nowrap;
@@ -498,9 +540,9 @@ body {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 36px;
-  line-height: 36px;
-  letter-spacing: -0.36px;
+  font-size: var(--h4-size);
+  line-height: var(--h4-line);
+  letter-spacing: var(--h4-tracking);
   color: var(--text-primary);
   text-align: center;
 }
@@ -513,26 +555,26 @@ body {
   .cta__heading {
     flex: 1 0 0;
     min-width: 0;
-    font-size: 40px;
-    line-height: 40px;
-    letter-spacing: -0.4px;
+    font-size: var(--h3-size);
+    line-height: var(--h3-line);
+    letter-spacing: var(--h3-tracking);
     text-align: left;
   }
 }
 
 @media (min-width: 1000px) {
   .cta__heading {
-    font-size: 50px;
-    line-height: 50px;
-    letter-spacing: -0.5px;
+    font-size: var(--h2-size);
+    line-height: var(--h2-line);
+    letter-spacing: var(--h2-tracking);
   }
 }
 
 @media (min-width: 1440px) {
   .cta__heading {
-    font-size: 60px;
-    line-height: 60px;
-    letter-spacing: -0.9px;
+    font-size: var(--h1-size);
+    line-height: var(--h1-line);
+    letter-spacing: var(--h1-tracking);
   }
 }
 
@@ -690,9 +732,9 @@ body {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 36px;
-  line-height: 38px;
-  letter-spacing: -0.36px;
+  font-size: var(--h4-size);
+  line-height: var(--h4-line);
+  letter-spacing: var(--h4-tracking);
   text-align: center;
   color: var(--text-primary);
 }
@@ -703,17 +745,17 @@ body {
 
 @media (min-width: 768px) {
   .brands__heading {
-    font-size: 40px;
-    line-height: 42px;
-    letter-spacing: -0.4px;
+    font-size: var(--h3-size);
+    line-height: var(--h3-line);
+    letter-spacing: var(--h3-tracking);
   }
 }
 
 @media (min-width: 1000px) {
   .brands__heading {
-    font-size: 50px;
-    line-height: 52px;
-    letter-spacing: -0.5px;
+    font-size: var(--h2-size);
+    line-height: var(--h2-line);
+    letter-spacing: var(--h2-tracking);
   }
 }
 
@@ -967,9 +1009,9 @@ body {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 40px;
-  line-height: 40px;
-  letter-spacing: -0.4px;
+  font-size: var(--h3-size);
+  line-height: var(--h3-line);
+  letter-spacing: var(--h3-tracking);
   color: var(--text-primary);
 }
 
@@ -1085,9 +1127,9 @@ body {
   margin: 0;
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: -0.09px;
+  font-size: var(--h6-size);
+  line-height: var(--h6-line);
+  letter-spacing: var(--h6-tracking);
   color: var(--text-primary);
 }
 
@@ -1095,9 +1137,9 @@ body {
   margin: 0;
   font-family: var(--font-body);
   font-weight: 500;
-  font-size: 16px;
-  line-height: 22px;
-  letter-spacing: -0.08px;
+  font-size: var(--body2-size);
+  line-height: var(--body2-line);
+  letter-spacing: var(--body2-tracking);
   color: var(--text-quaternary);
 }
 
@@ -1105,9 +1147,9 @@ body {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 40px;
-  line-height: 40px;
-  letter-spacing: -0.4px;
+  font-size: var(--h3-size);
+  line-height: var(--h3-line);
+  letter-spacing: var(--h3-tracking);
   color: var(--brand);
   white-space: nowrap;
 }
@@ -1207,9 +1249,9 @@ body {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 32px;
-  line-height: 32px;
-  letter-spacing: -0.32px;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
   color: var(--text-primary);
 }
 
@@ -1321,9 +1363,9 @@ body {
   margin: 0;
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: -0.09px;
+  font-size: var(--h6-size);
+  line-height: var(--h6-line);
+  letter-spacing: var(--h6-tracking);
   color: var(--text-primary);
 }
 
@@ -1331,9 +1373,9 @@ body {
   margin: 0;
   font-family: var(--font-body);
   font-weight: 500;
-  font-size: 16px;
-  line-height: 22px;
-  letter-spacing: -0.08px;
+  font-size: var(--body2-size);
+  line-height: var(--body2-line);
+  letter-spacing: var(--body2-tracking);
   color: var(--text-quaternary);
 }
 
@@ -1529,24 +1571,24 @@ body {
   font-family: var(--font-display);
   font-weight: 600;
   color: var(--text-primary);
-  font-size: 32px;
-  line-height: 32px;
-  letter-spacing: -0.32px;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
 }
 
 @media (min-width: 1000px) {
   .testimonial__quote {
-    font-size: 36px;
-    line-height: 36px;
-    letter-spacing: -0.36px;
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
   }
 }
 
 @media (min-width: 1440px) {
   .testimonial__quote {
-    font-size: 40px;
-    line-height: 40px;
-    letter-spacing: -0.4px;
+    font-size: var(--h3-size);
+    line-height: var(--h3-line);
+    letter-spacing: var(--h3-tracking);
   }
 }
 
@@ -1561,9 +1603,9 @@ body {
   margin: 0;
   font-family: var(--font-body);
   font-weight: 500;
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: -0.09px;
+  font-size: var(--body1-size);
+  line-height: var(--body1-line);
+  letter-spacing: var(--body1-tracking);
   color: var(--text-primary);
 }
 
@@ -1571,9 +1613,9 @@ body {
   margin: 0;
   font-family: var(--font-body);
   font-weight: 500;
-  font-size: 16px;
-  line-height: 22px;
-  letter-spacing: -0.08px;
+  font-size: var(--body2-size);
+  line-height: var(--body2-line);
+  letter-spacing: var(--body2-tracking);
   color: var(--text-tertiary);
 }
 
@@ -1716,17 +1758,17 @@ body {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 32px;
-  line-height: 34px;
-  letter-spacing: -0.32px;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
   color: var(--text-primary);
 }
 
 @media (min-width: 1440px) {
   .services__heading {
-    font-size: 36px;
-    line-height: 38px;
-    letter-spacing: -0.36px;
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
   }
 }
 
@@ -1830,9 +1872,9 @@ body {
   margin: 0;
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: -0.09px;
+  font-size: var(--h6-size);
+  line-height: var(--h6-line);
+  letter-spacing: var(--h6-tracking);
   color: var(--text-primary);
 }
 
@@ -1840,9 +1882,9 @@ body {
   margin: 0;
   font-family: var(--font-body);
   font-weight: 500;
-  font-size: 16px;
-  line-height: 22px;
-  letter-spacing: -0.08px;
+  font-size: var(--body2-size);
+  line-height: var(--body2-line);
+  letter-spacing: var(--body2-tracking);
   color: var(--text-quaternary);
 }
 
