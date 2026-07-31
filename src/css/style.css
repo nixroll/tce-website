@@ -481,26 +481,35 @@ body {
 }
 
 /* CTA (node 416:1812). Тоже повторяющийся элемент на всех страницах.
-   Боковые паддинги у самой секции (.cta) сжимают Container на всех
-   breakpoints — 20px/390, 24px/768, 24px/1000+. Боковые stroke у
-   Container — тоже на всех breakpoints. Border-bottom — только с
-   1000px, на 390/768 контейнер CTA примыкает к Footer без нижней
-   линии (node 416:1851 / 416:1860). */
+   320px — база: без боковых паддингов у секции (.cta) и без боковых
+   stroke у Container (см. 571:3597). С 390px появляются боковые
+   паддинги секции (20px/390, 24px/768, 24px/1000+) и боковые stroke
+   у Container. Вертикальный паддинг Container — 80px на 320/390,
+   96px с 768px. Border-bottom — только с 1000px, на 390/768/320
+   контейнер CTA примыкает к Footer без нижней линии. */
 .cta {
   width: 100%;
   background-color: var(--background-secondary);
   border-top: 1px solid var(--border-primary);
   display: flex;
   justify-content: center;
-  padding: 0 var(--spacing-2xl);
 }
 
 .cta__inner {
   width: 100%;
   max-width: 1392px;
-  padding: var(--spacing-9xl) var(--spacing-3xl);
-  border-left: 1px solid var(--border-primary);
-  border-right: 1px solid var(--border-primary);
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .cta {
+    padding: 0 var(--spacing-2xl);
+  }
+
+  .cta__inner {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
 }
 
 @media (min-width: 768px) {
@@ -540,15 +549,23 @@ body {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: var(--h4-size);
-  line-height: var(--h4-line);
-  letter-spacing: var(--h4-tracking);
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
   color: var(--text-primary);
   text-align: center;
 }
 
 .cta__accent {
   color: var(--brand);
+}
+
+@media (min-width: 390px) {
+  .cta__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
 }
 
 @media (min-width: 768px) {
