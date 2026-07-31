@@ -681,27 +681,31 @@ body {
 }
 
 @media (min-width: 390px) {
+  .brands {
+    padding: 0 var(--spacing-2xl);
+  }
+
   .brands__inner {
     padding-left: var(--spacing-3xl);
     padding-right: var(--spacing-3xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
   }
 }
 
 @media (min-width: 768px) {
+  .brands {
+    padding: 0 var(--spacing-3xl);
+  }
+
   .brands__inner {
     padding: var(--spacing-9xl) var(--spacing-6xl);
   }
 }
 
 @media (min-width: 1000px) {
-  .brands {
-    padding: 0 var(--spacing-3xl);
-  }
-
   .brands__inner {
     padding: var(--spacing-10xl) var(--spacing-4xl) var(--spacing-9xl);
-    border-left: 1px solid var(--border-primary);
-    border-right: 1px solid var(--border-primary);
   }
 }
 
@@ -850,6 +854,28 @@ body {
   border-right-width: 1px;
 }
 
+/* ---------- Границы сетки: 390px, боковые (внешний край каждой
+   строки из 2 колонок) — Container с этого брейкпоинта тоже получил
+   свой border-left/right, ряды логотипов теперь дополнительно
+   обводятся своей рамкой изнутри (тот же приём "вложенной рамки",
+   что и у Services на 390/320: два разных бордера на разной глубине
+   вложенности, не сливаются, потому что между ними паддинг). ---------- */
+@media (min-width: 390px) {
+  .brands__cell--viessmann,
+  .brands__cell--meibes,
+  .brands__cell--geberit,
+  .brands__cell--wilo {
+    border-left-width: 1px;
+  }
+
+  .brands__cell--tece,
+  .brands__cell--arbonia,
+  .brands__cell--kermi,
+  .brands__cell--flamco {
+    border-right-width: 1px;
+  }
+}
+
 /* ---------- Границы сетки: 768px, 4 колонки x 2 строки, 8 брендов ---------- */
 /* Ряды: Viessmann/Tece/Meibes/Arbonia, Geberit/Kermi/Wilo/Flamco */
 @media (min-width: 768px) {
@@ -857,6 +883,25 @@ body {
     border-top-width: 0;
     border-bottom-width: 0;
     border-right-width: 0;
+  }
+
+  /* Meibes и Wilo были левой колонкой на 390 (2 колонки) и получили
+     border-left оттуда — на 768 (4 колонки) они уже внутренние, этот
+     border-left нужно явно снять, иначе он протечёт по каскаду
+     (правило с 390 не менее специфичное и остаётся активным). */
+  .brands__cell--meibes,
+  .brands__cell--wilo {
+    border-left-width: 0;
+  }
+
+  .brands__cell--viessmann,
+  .brands__cell--geberit {
+    border-left-width: 1px;
+  }
+
+  .brands__cell--arbonia,
+  .brands__cell--flamco {
+    border-right-width: 1px;
   }
 
   .brands__cell--viessmann,
