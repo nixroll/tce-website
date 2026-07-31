@@ -1005,10 +1005,10 @@ body {
 
    Заголовок: между основной (primary) и приглушённой (quaternary)
    частью — ВСЕГДА жёсткий перенос (обычный <br>, на всех
-   брейкпоинтах). Плюс ВНУТРИ приглушённой части — ещё один жёсткий
-   перенос, но видимый ТОЛЬКО на 320/390 (.stats__heading-break-mobile,
-   после "запущенных "), скрыт с 768px — на 768/1000/1440 эта часть
-   идёт одной строкой без переносов.
+   брейкпоинтах). Внутри приглушённой части перенос не нужен нигде —
+   текст короткий ("Мегаватты котельных и годы опыта."), на 320/390
+   переносится по ширине сам (естественным word-wrap, без принудительных
+   <br>), а на 768+ помещается в одну строку.
 
    Кнопка "Подробнее" — обычный .btn.btn--secondary, стили 1:1
    совпадают с тем, что нарисовано в Figma (padding/radius/шрифт),
@@ -1061,7 +1061,7 @@ body {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-4xl);
-  padding: var(--spacing-8xl) var(--spacing-2xl);
+  padding: var(--spacing-8xl) var(--spacing-3xl);
 }
 
 @media (min-width: 390px) {
@@ -1145,12 +1145,6 @@ body {
 
 .stats__heading-muted {
   color: var(--text-quaternary);
-}
-
-@media (min-width: 768px) {
-  .stats__heading-break-mobile {
-    display: none;
-  }
 }
 
 .stats__btn {
