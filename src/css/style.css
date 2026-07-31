@@ -486,6 +486,18 @@ body {
   background-color: var(--background-secondary);
 }
 
+/* Перед Testimonial — отсутствует на 320px, появляется с 390px
+   (см. divider.njk, dividerVariant="hidden-320") */
+.divider--hidden-320 {
+  display: none;
+}
+
+@media (min-width: 390px) {
+  .divider--hidden-320 {
+    display: flex;
+  }
+}
+
 /* Вокруг Services — светлая секция, переопределяем токены фона/бордера
    локально (значения из столбика Light в таблице цветов) */
 .divider--light {
@@ -1497,8 +1509,17 @@ body {
   stroke: var(--text-primary);
 }
 
-/* Testimonial (node 480:2828). Только на Home, сразу после Hero, до
-   Divider→Services-L. Тёмная секция (как и обычные Divider/Brands/CTA).
+/* Testimonial (node 480:2828). Только на Home, сразу после нового
+   тёмного Divider (см. divider.njk, dividerVariant="hidden-320"),
+   до Divider→Services-L. Тёмная секция (как и обычные
+   Divider/Brands/CTA). 320px (573:3609) — без боковых паддингов у
+   .testimonial и без stroke у Container. С 390px (483:2480)
+   появляются боковой паддинг секции (20px/390, 24px/768+) и stroke
+   у Container; паддинг самого Container растёт 24→32→48→80px по
+   горизонтали и 64→64→80→96px по вертикали (320/390/768/1000+).
+   Была ошибка: горизонтальный паддинг Container на 1000/1440 стоял
+   64px (--spacing-7xl) вместо верных 80px (--spacing-8xl) — поправил
+   при сверке.
    Фото — self-hosted WebP+PNG (picture/srcset, 400w/656w под retina
    для контейнеров 200px/328px), PNG как fallback для браузеров без
    поддержки WebP. Оригинал с прозрачным альфа-каналом, поэтому и
@@ -1518,7 +1539,13 @@ body {
   align-items: center;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 390px) {
+  .testimonial {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
   .testimonial {
     padding: 0 var(--spacing-3xl);
   }
@@ -1533,6 +1560,14 @@ body {
   padding: var(--spacing-7xl) var(--spacing-3xl);
 }
 
+@media (min-width: 390px) {
+  .testimonial__container {
+    padding: var(--spacing-7xl) var(--spacing-4xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
 @media (min-width: 768px) {
   .testimonial__container {
     padding: var(--spacing-8xl) var(--spacing-6xl);
@@ -1541,9 +1576,7 @@ body {
 
 @media (min-width: 1000px) {
   .testimonial__container {
-    padding: var(--spacing-9xl) var(--spacing-7xl);
-    border-left: 1px solid var(--border-primary);
-    border-right: 1px solid var(--border-primary);
+    padding: var(--spacing-9xl) var(--spacing-8xl);
   }
 }
 
@@ -1643,12 +1676,21 @@ body {
 .testimonial__quote {
   margin: 0;
   width: 100%;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 600;
   color: var(--text-primary);
-  font-size: var(--h5-size);
-  line-height: var(--h5-line);
-  letter-spacing: var(--h5-tracking);
+  font-size: var(--h6-size);
+  line-height: var(--h6-line);
+  letter-spacing: var(--h6-tracking);
+}
+
+@media (min-width: 390px) {
+  .testimonial__quote {
+    font-family: var(--font-display);
+    font-size: var(--h5-size);
+    line-height: var(--h5-line);
+    letter-spacing: var(--h5-tracking);
+  }
 }
 
 @media (min-width: 1000px) {

@@ -15,7 +15,14 @@
   "Divider" (тёмный) и "Divider - L" (светлый) в Figma. Не забудь
   сбросить {% set dividerVariant = "" %} после использования, иначе
   значение утечёт в следующий include.
+
+  dividerVariant = "hidden-320": обычный тёмный Divider, который стоит
+  между Divider-L (после Areas) и Testimonial (node 578:4165@390,
+  578:4162@768, 578:4159@1000, 566:3397@1440). На 320px этого
+  дивайдера в Figma НЕТ ВООБЩЕ (573:3647 Divider-L идёт сразу в
+  573:3648 Testimonial) — модификатор скрывает элемент на 320px и
+  показывает с 390px.
 #}
-<div class="divider{% if dividerVariant == 'edge-secondary' %} divider--edge divider--secondary{% elif dividerVariant == 'light' %} divider--light{% endif %}" data-figma-node="416:1773" data-figma-name="Divider">
+<div class="divider{% if dividerVariant == 'edge-secondary' %} divider--edge divider--secondary{% elif dividerVariant == 'light' %} divider--light{% elif dividerVariant == 'hidden-320' %} divider--hidden-320{% endif %}" data-figma-node="416:1773" data-figma-name="Divider">
   <div class="divider__inner"></div>
 </div>

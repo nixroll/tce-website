@@ -9,8 +9,9 @@
 <body>
   {# Header: node 157:3721 (десктоп/планшет + мобильное бургер-меню).
      Порядок повторяющихся секций (Home, node 405:2033): Hero →
-     Stats-L → Divider(light) → Areas-L → Divider(light) → Testimonial
-     → Divider(тёмный) → Services-L → Divider(light) → Brands →
+     Stats-L → Divider(light) → Areas-L → Divider(light) →
+     Divider(тёмный, скрыт на 320px, см. hidden-320) → Testimonial →
+     Divider(тёмный) → Services-L → Divider(light) → Brands →
      Divider → CTA → Divider(edge-secondary) → Footer. Сайт чередует
      тёмные и светлые секции — светлые здесь Stats, Areas и Services,
      у каждой светлый только дивайдер СРАЗУ ПОСЛЕ неё (перед следующей
@@ -33,6 +34,9 @@
     {% set dividerVariant = "" %}
     {% include "areas.njk" %}
     {% set dividerVariant = "light" %}
+    {% include "divider.njk" %}
+    {% set dividerVariant = "" %}
+    {% set dividerVariant = "hidden-320" %}
     {% include "divider.njk" %}
     {% set dividerVariant = "" %}
     {% include "testimonial.njk" %}
