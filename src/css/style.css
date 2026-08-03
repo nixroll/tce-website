@@ -719,6 +719,123 @@ body {
   display: block;
 }
 
+/* Social (node 702:4876). Тёмная секция сразу под Hero — бесконечная
+   лента логотипов клиентов. Сама лента логотипов (.social__track) не
+   имеет брейкпоинт-версий: геометрия одинакова везде (166 / 203.02 /
+   190.82 / 227 / 166.85 / 195.46px, высота 96px — см. .social__logo--*
+   ниже), потому что ряд из 6 логотипов (1149.15px) заведомо шире
+   любого вьюпорта и создан только чтобы бесконечно скроллиться.
+   Различаются по брейкпоинтам только паддинг/бордер секции-обёртки
+   и Container вокруг ленты (см. таблицу в комментариях у .social и
+   .social__container).
+
+   Каждый логотип — в своём контейнере с собственным паддингом (как в
+   Brands): ширина = 40px слева + ширина отметки + 40px справа. По
+   вертикали большинство отметок отцентрованы (верх=низ у A100/Alutech/
+   Great Stone/Amkodor), но Bolma и Scmitz по Figma смещены выше центра
+   (проверено по pixel-данным get_metadata: Bolma верх 24.5/низ 33.5,
+   Scmitz верх 22.5/низ 35.5) — поэтому у них асимметричный
+   padding-top/-bottom вместо чистого центрирования.
+
+   Анимация — бесшовный CSS-марквиз: трек составлен из 3 одинаковых
+   копий ряда (только 2 недостаточно — ряд 1149px уже, чем Container
+   на 1440px (1392px), поэтому при 2 копиях в момент разворота
+   анимации была бы видна пустота), translateX всего трека на ровно
+   -100%/3 = ширина одной копии. Копии 2 и 3 — aria-hidden.
+   prefers-reduced-motion полностью останавливает анимацию. */
+.social {
+  width: 100%;
+  background-color: var(--background-primary);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.social__container {
+  width: 100%;
+  max-width: 1392px;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: var(--spacing-5xl) 0;
+}
+
+@media (min-width: 390px) {
+  .social__container {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .social__container {
+    padding: var(--spacing-6xl) 0;
+  }
+}
+
+@media (min-width: 1000px) {
+  .social__container {
+    padding: var(--spacing-7xl) 0;
+  }
+}
+
+/* Боковой паддинг у секции-обёртки (снаружи Container): 0 на 320,
+   20px на 390 (вне шкалы --spacing-*, отдельное значение из Figma),
+   24px с 768px. */
+@media (min-width: 390px) {
+  .social {
+    padding: 0 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .social {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+.social__track {
+  display: flex;
+  width: max-content;
+  animation: social-marquee 42s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .social__track {
+    animation: none;
+  }
+}
+
+@keyframes social-marquee {
+  to {
+    transform: translate3d(calc(-100% / 3), 0, 0);
+  }
+}
+
+.social__group {
+  display: flex;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+.social__logo {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  height: 96px;
+}
+
+.social__logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.social__logo--a100 { width: 166px; padding: 32px 40px; }
+.social__logo--alutech { width: 203.02px; padding: 32px 40px; }
+.social__logo--great-stone { width: 190.82px; padding: 32px 40px; }
+.social__logo--amkodor { width: 227px; padding: 30px 40px; }
+.social__logo--bolma { width: 166.85px; padding: 24.5px 40px 33.5px; }
+.social__logo--scmitz { width: 195.46px; padding: 22.5px 40px 35.5px; }
+
 /* Divider (node 416:1773). Повторяющийся элемент, встречается в 4
    позициях на странице (Home, node 405:2033): перед Services/Brands,
    после Services, между Brands и CTA, после CTA. Первые три всегда

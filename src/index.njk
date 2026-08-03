@@ -41,3 +41,66 @@ isHome: true
     </div>
   </div>
 </section>
+
+{# Social (node 702:4876) — бесконечная лента логотипов клиентов,
+   сразу под Hero, только на Home. Геометрия ряда логотипов (166 /
+   203.02 / 190.82 / 227 / 166.85 / 195.46px, все высотой 96px) в
+   Figma ОДИНАКОВА на всех брейкпоинтах — ряд шире любого вьюпорта и
+   существует только чтобы бесконечно скроллиться, поэтому у трека нет
+   отдельных брейкпоинт-версий, различается только паддинг/бордер
+   секции-обёртки и Container вокруг него.
+   Как и в Brands, каждый логотип — в своём контейнере с собственными
+   паддингами (см. .social__logo--*), чтобы точно повторить выравнивание
+   Figma: ширина контейнера = 40px слева + ширина отметки + 40px справа;
+   по вертикали большинство отметок отцентрованы (верх=низ), но Bolma и
+   Scmitz сдвинуты выше центра (проверено по pixel-данным Figma) —
+   поэтому у них асимметричный padding-top/-bottom, а не center.
+   Анимация — бесшовный CSS-марквиз (translateX трека на -100%/3,
+   трек = 3 одинаковые копии ряда; обычные 2 копии не годятся — ряд
+   1149px уже, чем Container на 1440px (1392px), и в момент разворота
+   анимации была бы видна пустота). Дубли помечены aria-hidden.
+   prefers-reduced-motion останавливает анимацию. #}
+<section class="social" data-figma-node="702:4876" data-figma-name="Social">
+  <div class="social__container">
+    <div class="social__track">
+      <div class="social__group">
+        <div class="social__logo social__logo--a100"><img src="{{ '/images/social/a100.svg' | url }}" alt="A100"></div>
+        <div class="social__logo social__logo--alutech"><img src="{{ '/images/social/alutech.svg' | url }}" alt="Alutech"></div>
+        <div class="social__logo social__logo--great-stone"><img src="{{ '/images/social/great-stone.svg' | url }}" alt="Great Stone"></div>
+        <div class="social__logo social__logo--amkodor"><img src="{{ '/images/social/amkodor.svg' | url }}" alt="Amkodor"></div>
+        <div class="social__logo social__logo--bolma"><img src="{{ '/images/social/bolma.svg' | url }}" alt="Bolma"></div>
+        <div class="social__logo social__logo--scmitz"><img src="{{ '/images/social/scmitz.svg' | url }}" alt="Scmitz"></div>
+      </div>
+      <div class="social__group" aria-hidden="true">
+        <div class="social__logo social__logo--a100"><img src="{{ '/images/social/a100.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--alutech"><img src="{{ '/images/social/alutech.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--great-stone"><img src="{{ '/images/social/great-stone.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--amkodor"><img src="{{ '/images/social/amkodor.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--bolma"><img src="{{ '/images/social/bolma.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--scmitz"><img src="{{ '/images/social/scmitz.svg' | url }}" alt="" aria-hidden="true"></div>
+      </div>
+      <div class="social__group" aria-hidden="true">
+        <div class="social__logo social__logo--a100"><img src="{{ '/images/social/a100.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--alutech"><img src="{{ '/images/social/alutech.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--great-stone"><img src="{{ '/images/social/great-stone.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--amkodor"><img src="{{ '/images/social/amkodor.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--bolma"><img src="{{ '/images/social/bolma.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--scmitz"><img src="{{ '/images/social/scmitz.svg' | url }}" alt="" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# Тёмный Divider сразу под Social, перед Stats-L (который base.njk
+   подключает первым в блоке isHome). В общем layout-обзоре (node
+   405:2033) на 1000/768/390/320 в этом месте инстанс назван
+   "Divider - L" (обычно означает светлый вариант), но проверка
+   get_design_context по факту показала светлый фон (#fafafb) там —
+   что противоречит и правилу "дивайдер перед светлой секцией остаётся
+   тёмным по умолчанию", и самому 1440px (там на этом месте обычный
+   тёмный Divider, #101010, node 702:4711). Похоже, обзорная страница
+   405:2033 не синхронизирована на остальных брейкпоинтах (там и Hero —
+   везде, кроме 1440px, просто плейсхолдер "Heading", а не готовая
+   секция) — поэтому взят тёмный вариант (без модификатора) по аналогии
+   с 1440px и общим правилом. #}
+{% include "divider.njk" %}
