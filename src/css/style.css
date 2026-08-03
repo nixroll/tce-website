@@ -441,117 +441,126 @@ body {
   word-break: break-word;
 }
 
-/* Hero главной (node 657:3442). Тёмная секция на весь первый экран.
+/* Hero главной (node 657:3442). ПЕРЕСОБРАНА С НУЛЯ 03.08 — от старой
+   версии остался только сам видеофон, вся структура и паддинги
+   другие. Тёмная секция на весь первый экран, фон — градиент сверху
+   вниз от --background-secondary (#181818) к --background-primary
+   (#101010) (bg-gradient-to-b в Figma, одинаково на всех
+   брейкпоинтах).
 
-   Модель высоты: height = 100dvh минус фиксированный Header
-   (var(--header-height): 62px / 72px с 768px), но не меньше
-   min-height своего брейкпоинта (660/660/800/860/860). Когда экран
-   ВЫШЕ min-height, всё лишнее пространство уходит в Cover с видео
-   (flex-grow у Cover) — паддинги Container и контент остаются как в
-   Figma. Поэтому у Cover высоты по брейкпоинтам — это МИНИМУМЫ
-   (посчитаны из min-height минус паддинги/гэпы/контент по Figma):
-   440px (1000/1440 — одинаковые), 340px (768), 272px (390), 220px
-   (320 — на этом брейкпоинте Cover тоже не квадрат, у дизайнера нет
-   aspect-ratio 1:1, тот же min-height-флекс, что и у остальных).
+   Высота: height = 100vh минус фиксированный Header, но не меньше
+   min-height своего брейкпоинта (660 на 320/390, 860 с 768px). Раньше
+   здесь была доп. подстраховка через 100dvh для iOS Safari (баг со
+   сворачивающейся нижней панелью, из-под секции выглядывала Stats) —
+   но секция сразу под Hero (Social) теперь тоже тёмная, так что даже
+   если Safari покажет пару лишних пикселей снизу, ничего не будет
+   видно; по явной просьбе оставлен стандартный 100vh без него.
 
-   100dvh, а не 100svh: на iOS Safari сворачивающаяся нижняя панель
-   увеличивает видимую область уже ПОСЛЕ первой отрисовки, а svh
-   фиксирует высоту на состоянии "панель развёрнута" — из-под секции
-   снизу выглядывала Stats. dvh отслеживает актуальную видимую высоту
-   в реальном времени, поэтому Hero всегда закрывает экран целиком.
-   100vh оставлен первой строкой как фолбэк для браузеров без dvh
-   (каскад — валидное дальнейшее объявление переопределяет).
+   Внутри — ДВА независимых блока Container друг под другом (в Figma
+   это два разных инстанса с одинаковым именем "Container", не один
+   на двоих, как было в старой версии):
+   1. .hero-main__container — контент (заголовок/подводка/кнопки),
+      flex-shrink: 0, паддинги растут по брейкпоинтам;
+   2. .hero-main__cover-container — обёртка вокруг видео, flex: 1 0 0
+      (забирает всё оставшееся вертикальное пространство экрана, так
+      что высоту Cover больше не нужно вручную считать по брейкпоинтам
+      таблицей минимумов, как в старой версии).
+   У обоих одинаковый max-width:1392px и border-left/right (с 768px,
+   на 320/390 бордера нет — совпадает с Figma на обоих Container).
 
-   Паддинги Container (актуальное состояние из Figma):
-   - верх: 96px на 320/390/768, 128px (10xl) с 1000px;
-   - низ: 48px(6xl) на 320/390, 64px(7xl) с 768px (включая 1000/1440);
-   - бок: 24px(3xl) на 320/390/768/1000, 0 с 1440px (Container
-     становится полностью full-bleed от края до края секции).
-   Border-left/right у Container нигде не задан (на 320 его никогда и
-   не было, на остальных — убран); Container всегда идёт от края до
-   края секции.
+   Паддинги Container 1 (контент):
+   - верх: 96px(9xl) на 320/390, 128px(10xl) с 768px;
+   - низ: 48px(6xl) на 320/390, 96px(9xl) с 768px;
+   - бок: 24px(3xl) на 320/390, 48px(6xl) на 768px, 80px(8xl) с 1000px
+     (одинаково на 1000 и 1440 — больше нет отдельного full-bleed
+     состояния на 1440px, как было в старой версии).
+   Паддинг у самой секции (.hero-main, снаружи Container): 0 на
+   320/390, 24px(3xl) с 768px.
 
-   Боковой паддинг у самой секции (.hero-main, снаружи Container) не
-   задан ни на одном брейкпоинте — 0 везде. Вся горизонтальная
-   геометрия управляется исключительно паддингом Container.
+   Content: колонка с gap 32px(4xl) на 320/390/768, строка (items-end,
+   justify-between) с 1000px — та же логика, что и в старой версии.
 
-   Заголовок: h4(36) на 320-389, h2(50) на 390-1439, h1(60) с 1440px —
-   единственная секция на сайте, где используется полная шкала h1.
+   Heading and supporting text: gap 12px(lg) на 320/390, 16px(xl) с
+   768px. Заголовок — ВСЕГДА white-space:nowrap, включая 320px
+   (проверено пошрифтовой симуляцией через fontTools по реальным
+   .woff2 файлам: "Один подрядчик." ≈258px и "Весь проект." ≈190px
+   против доступных 272px на 320 — помещается с запасом; в старой
+   версии на 320 разрешался естественный перенос в 3 строки, теперь
+   Figma явно требует nowrap на всех брейкпоинтах). Шкала размеров:
+   h5(32) на 320, h4(36) с 390px, h2(50) с 768px — h1 (как было в
+   старой версии на 1440) больше не используется, h2 остаётся вплоть
+   до 1440px.
 
-   Переносы (проверены пошрифтовой симуляцией против Figma):
-   заголовок nowrap с 390px (принудительный <br> после первого
-   предложения), на 320 — естественный перенос ("Один" /
-   "подрядчик." / "Весь проект."); подводка: на 320/390 естественный
-   перенос с nbsp у "и сервис" / "для зданий" (3 строки), с 768px —
-   принудительный <br> после "сервис" (класс .hero-main__br).
+   Подводка — max-width:380px и 100% ширины на всех брейкпоинтах (в
+   Figma это min-w-full + max-w-380px: на узких экранах побеждает
+   100%, на широких — потолок 380px); принудительных <br> в Figma
+   больше нет — просто естественный перенос, nbsp у "и сервис" /
+   "для зданий" оставлен для типографики (не влияет на точку
+   переноса, просто убирает висячий предлог). Шрифт: body2(16) на
+   320, body1(18) с 390px.
 
-   Кнопки: hover обёрнут в @media (hover: hover), чтобы на тач-
-   устройствах (iPad/iPhone) состояние :hover не залипало после тапа —
-   то же решение, что и у .projects__nav-btn. */
+   Кнопки: "Кто мы" — как в старой версии, якорь на #about (Stats).
+   Вторая кнопка теперь ДВЕ разные ссылки в разметке (тот же приём,
+   что и с дублирующимися кнопками навигации в Projects) — какая
+   видна, определяет CSS через display: .hero-main__cta--desktop
+   ("Направления", якорь на #areas — секция Areas, тот же плавный
+   скролл, что и "Кто мы") видна с 768px; .hero-main__cta--mobile
+   ("Связаться", ссылка на /contact/) видна до 768px — так каждая
+   ведёт туда, куда нужно для своего брейкпоинта, а не просто меняет
+   подпись.
+
+   Cover: границы теперь ТОЛЬКО сверху и снизу (не по всем 4 сторонам
+   и без border-radius, как в старой версии) — по горизонтали видео
+   идёт от края до края Container 2 (у которого своя обводка слева/
+   справа с 768px). Автоматическая Figma→код конвертация показала
+   только border-top; нижнюю границу подтвердил пользователь визуально
+   в Figma после проверки — доверяю его сверке макета. Обе линии — по
+   той же причине, что и в старой версии, оверлеем (::before/::after),
+   а не свойством border: реальный border занял бы место в потоке,
+   поджал бы видео на 1px и линия могла бы потеряться на светлых
+   кадрах. */
 .hero-main {
   width: 100%;
-  background-color: var(--background-secondary);
+  padding: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--background-secondary), var(--background-primary));
   height: calc(100vh - var(--header-height));
-  height: calc(100dvh - var(--header-height));
   min-height: 660px;
-}
-
-@media (min-width: 390px) {
-  .hero-main {
-    min-height: 660px;
-  }
 }
 
 @media (min-width: 768px) {
   .hero-main {
-    min-height: 800px;
-  }
-}
-
-@media (min-width: 1000px) {
-  .hero-main {
     min-height: 860px;
+    padding: 0 var(--spacing-3xl);
   }
 }
 
 .hero-main__container {
   width: 100%;
   max-width: 1392px;
-  flex: 1 0 auto;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing-5xl);
+  gap: var(--spacing-7xl);
   padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-6xl);
-}
-
-@media (min-width: 390px) {
-  .hero-main__container {
-    gap: var(--spacing-6xl);
-    padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-6xl);
-  }
 }
 
 @media (min-width: 768px) {
   .hero-main__container {
-    gap: var(--spacing-7xl);
-    padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-7xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+    padding: var(--spacing-10xl) var(--spacing-6xl) var(--spacing-9xl);
   }
 }
 
 @media (min-width: 1000px) {
   .hero-main__container {
-    padding: var(--spacing-10xl) var(--spacing-3xl) var(--spacing-7xl);
-  }
-}
-
-@media (min-width: 1440px) {
-  .hero-main__container {
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: var(--spacing-8xl);
+    padding-right: var(--spacing-8xl);
   }
 }
 
@@ -560,14 +569,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing-3xl);
-  flex-shrink: 0;
-}
-
-@media (min-width: 768px) {
-  .hero-main__content {
-    gap: var(--spacing-4xl);
-  }
+  gap: var(--spacing-4xl);
 }
 
 @media (min-width: 1000px) {
@@ -579,14 +581,22 @@ body {
 }
 
 .hero-main__text {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-lg);
 }
 
+@media (min-width: 768px) {
+  .hero-main__text {
+    gap: var(--spacing-xl);
+  }
+}
+
 @media (min-width: 1000px) {
   .hero-main__text {
+    width: auto;
     flex: 1 0 0;
     min-width: 0;
   }
@@ -596,15 +606,18 @@ body {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: var(--h4-size);
-  line-height: var(--h4-line);
-  letter-spacing: var(--h4-tracking);
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
   color: var(--text-primary);
+  white-space: nowrap;
 }
 
 @media (min-width: 390px) {
   .hero-main__heading {
-    white-space: nowrap;
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
   }
 }
 
@@ -616,20 +629,14 @@ body {
   }
 }
 
-@media (min-width: 1440px) {
-  .hero-main__heading {
-    font-size: var(--h1-size);
-    line-height: var(--h1-line);
-    letter-spacing: var(--h1-tracking);
-  }
-}
-
 .hero-main__accent {
   color: var(--brand);
 }
 
 .hero-main__support {
   margin: 0;
+  width: 100%;
+  max-width: 380px;
   font-family: var(--font-body);
   font-weight: 500;
   font-size: var(--body2-size);
@@ -638,22 +645,11 @@ body {
   color: var(--text-secondary);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 390px) {
   .hero-main__support {
     font-size: var(--body1-size);
     line-height: var(--body1-line);
     letter-spacing: var(--body1-tracking);
-  }
-}
-
-/* <br> в подводке активен только с 768px */
-.hero-main__br {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .hero-main__br {
-    display: inline;
   }
 }
 
@@ -664,53 +660,74 @@ body {
   flex-shrink: 0;
 }
 
-.hero-main__cover {
-  position: relative;
-  width: 100%;
-  background-color: var(--background-primary);
-  border-radius: 12px; /* в Figma радиус 12 (вне шкалы --radius-*) */
-  overflow: hidden;
-  display: flex;
-  /* лишняя высота экрана сверх min-height секции уходит сюда;
-     basis 0 (а не auto), иначе базовой высотой стала бы интринсик-
-     высота видео (16:9 от ширины), а не минимум по Figma */
-  flex: 1 0 0;
-  min-height: 220px;
+/* Вторая кнопка продублирована под разные брейкпоинты (см. комментарий
+   выше) — ведёт в разные места и подписана по-разному, переключение
+   видимости через display, не просто смена текста. */
+.hero-main__cta--desktop {
+  display: none;
 }
 
-/* Обводка Cover — белый 10% и строго INSIDE (как в Figma): рисуем
-   оверлеем поверх видео, а не свойством border. Обычный border занял
-   бы место в потоке и поджал видео на 1px внутрь — линия легла бы на
-   фон, а не поверх кадра, и на светлых кадрах была бы не видна. */
-.hero-main__cover::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-@media (min-width: 390px) {
-  .hero-main__cover {
-    min-height: 272px;
-  }
+.hero-main__cta--mobile {
+  display: inline-flex;
 }
 
 @media (min-width: 768px) {
-  .hero-main__cover {
-    min-height: 340px;
+  .hero-main__cta--desktop {
+    display: inline-flex;
+  }
+
+  .hero-main__cta--mobile {
+    display: none;
   }
 }
 
-@media (min-width: 1000px) {
-  .hero-main__cover {
-    min-height: 440px;
+.hero-main__cover-container {
+  width: 100%;
+  max-width: 1392px;
+  flex: 1 0 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .hero-main__cover-container {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
   }
 }
 
-/* Фоновое видео Cover: заполняет бокс целиком с обрезкой по центру
-   (сам бокс на разных брейкпоинтах и широкий, и квадратный) */
+.hero-main__cover {
+  position: relative;
+  width: 100%;
+  flex: 1 0 0;
+  min-height: 0;
+  background-color: var(--background-primary);
+  display: flex;
+  overflow: hidden;
+}
+
+.hero-main__cover::before,
+.hero-main__cover::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+.hero-main__cover::before {
+  top: 0;
+}
+
+.hero-main__cover::after {
+  bottom: 0;
+}
+
+/* Фоновое видео Cover: заполняет бокс целиком с обрезкой по центру */
 .hero-main__video {
   flex: 1 1 0;
   min-width: 0;
@@ -1784,6 +1801,10 @@ body {
      отдельным свойством, поэтому дублирую явно вместо того, чтобы
      полагаться на совпадение с фактической шириной карточки. */
 .areas {
+  /* якорь "Направления" из Hero (кнопка на десктопе/планшете, с
+     768px): при скролле к #areas секция встаёт впритык под
+     фиксированный Header — тот же приём, что и у .stats/#about */
+  scroll-margin-top: var(--header-height);
   --background-primary: #fafafb;
   --background-secondary: #f3f4f6;
   --text-primary: #181d27;

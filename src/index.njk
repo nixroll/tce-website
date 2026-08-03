@@ -3,33 +3,51 @@ title: Thermo Concept Engineering
 layout: base.njk
 isHome: true
 ---
-{# Hero главной (node 657:3442). Только на Home — на остальных
+{# Hero главной (node 657:3442) — ПЕРЕСОБРАНА С НУЛЯ 03.08, от старой
+   версии остался только сам видеофон. Только на Home — на остальных
    страницах пока остаётся старый плейсхолдер .hero.
-   Высота — 100% первого экрана (100svh минус фиксированный Header),
-   у каждого брейкпоинта свой min-height; когда экран выше min-height,
-   контент прижат к низу — растёт верхний паддинг Container (см. CSS).
-   Переносы: в заголовке принудительный <br> после "Один подрядчик."
-   (на 320 "Один подрядчик." дополнительно переносится естественно);
-   в подводке <br> только с 768px (класс hero-main__br), на 320/390
-   перенос естественный, предлоги привязаны через nbsp.
+   Высота — 100vh минус фиксированный Header, не меньше min-height
+   брейкпоинта (660 на 320/390, 860 с 768px); лишнее пространство
+   уходит в .hero-main__cover-container/.hero-main__cover (flex:1 0 0,
+   Container с контентом — flex-shrink:0). Раньше здесь был доп.
+   "улавливатель" 100dvh для iOS Safari, но секция сразу под Hero
+   (Social) теперь тоже тёмная — по просьбе оставлен стандартный
+   100vh без него.
+   Внутри — ДВА независимых Container подряд (в Figma это два разных
+   инстанса с одинаковым именем): первый — контент (заголовок/
+   подводка/кнопки), второй — обёртка вокруг видео.
+   Заголовок: принудительный <br> после "Один подрядчик." — как и
+   раньше, но теперь nowrap на ВСЕХ брейкпоинтах включая 320 (Figma
+   явно требует; поместится — проверено пошрифтовой симуляцией через
+   fontTools по .woff2, см. комментарий в CSS). Подводка — без
+   принудительных <br> (в Figma их больше нет), просто естественный
+   перенос с nbsp у "и сервис" / "для зданий" для типографики.
+   Кнопка "Кто мы" — как раньше, плавный скролл к Stats (#about).
+   Вторая кнопка — теперь ДВЕ ссылки в разметке под разные брейкпоинты
+   (видимость переключается в CSS): "Направления" (десктоп/планшет,
+   с 768px) — плавный скролл к Areas (#areas, id добавлен в
+   areas.njk, scroll-margin-top как у Stats); "Связаться" (мобилки,
+   до 768px) — обычная ссылка на страницу контактов, это уместнее для
+   мобильного сценария.
    Cover — фоновое видео (Artlist, пережато в 1080p ~1.8MB, без
    звука): autoplay+muted+loop+playsinline, object-fit: cover, постер
-   из первого кадра на время загрузки. #}
+   из первого кадра на время загрузки; тонкие горизонтальные линии
+   сверху и снизу — см. комментарий в CSS. #}
 <section class="hero-main" data-figma-node="657:3442" data-figma-name="Hero">
   <div class="hero-main__container">
     <div class="hero-main__content">
       <div class="hero-main__text">
         <h1 class="hero-main__heading">Один подрядчик.<br> <span class="hero-main__accent">Весь проект.</span></h1>
-        <p class="hero-main__support">Проектирование, поставка, монтаж и&nbsp;сервис<br class="hero-main__br"> инженерных систем для&nbsp;зданий.</p>
+        <p class="hero-main__support">Проектирование, поставка, монтаж и&nbsp;сервис инженерных систем для&nbsp;зданий.</p>
       </div>
       <div class="hero-main__buttons">
-        {# "Кто мы" — не ссылка на страницу, а плавный скролл к секции
-           Stats (id="about") на этой же странице; секция встаёт
-           впритык под фиксированный Header (scroll-margin-top) #}
         <a class="btn btn--secondary" href="#about">Кто мы</a>
-        <a class="btn btn--primary" href="{{ '/contact/' | url }}">Связаться</a>
+        <a class="btn btn--primary hero-main__cta--desktop" href="#areas">Направления</a>
+        <a class="btn btn--primary hero-main__cta--mobile" href="{{ '/contact/' | url }}">Связаться</a>
       </div>
     </div>
+  </div>
+  <div class="hero-main__cover-container">
     <div class="hero-main__cover">
       <video class="hero-main__video"
         src="{{ '/videos/hero.mp4' | url }}"
