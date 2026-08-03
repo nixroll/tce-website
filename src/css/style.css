@@ -456,20 +456,19 @@ body {
 
    Паддинги Container (актуальное состояние из Figma):
    - верх: 96px на 320/390/768, 128px (10xl) с 1000px;
-   - низ: 24px(3xl) на 320/390, 64px(7xl) с 768px (включая 1000/1440,
-     было отдельно 80px(8xl) на 1000/1440 — дизайнер выровнял их с
-     768);
-   - бок: 24px(3xl) на 320/390, 64px(7xl) с 768px (включая 1000/1440,
-     было 80px(8xl) там же).
-   Border-left/right у Container — убран везде, кроме 320 (где его и
-   не было). Раньше был на 1000/1440, теперь Container идёт от края
-   до края без рамки на всех брейкпоинтах.
+   - низ: 24px(3xl) на 320/390, 64px(7xl) с 768px (включая 1000/1440);
+   - бок: 24px(3xl) на 320/390, 64px(7xl) на 768/1000, 24px(3xl) снова
+     с 1440px (дизайнер уменьшил обратно).
+   Border-left/right у Container нигде не задан (на 320 его никогда и
+   не было, на остальных — убран); Container всегда идёт от края до
+   края секции.
 
-   Боковой паддинг у самой секции (.hero-main, снаружи Container):
-   0 на 320-999px, 20px(2xl) только с 1440px (на 1000px убран
-   полностью — раньше был 24px(3xl)). Из-за этого на 1000/1440
-   Container снова визуально liquid/full-bleed, обрамлённый только
-   этим внешним паддингом на 1440.
+   Боковой паддинг у самой секции (.hero-main, снаружи Container) не
+   задан ни на одном брейкпоинте — 0 везде. Вся горизонтальная
+   геометрия управляется исключительно паддингом Container.
+
+   Заголовок: h4(36) на 320-389, h2(50) на 390-1439, h1(60) с 1440px —
+   единственная секция на сайте, где используется полная шкала h1.
 
    Переносы (проверены пошрифтовой симуляцией против Figma):
    заголовок nowrap с 390px (принудительный <br> после первого
@@ -506,12 +505,6 @@ body {
   }
 }
 
-@media (min-width: 1440px) {
-  .hero-main {
-    padding: 0 var(--spacing-2xl);
-  }
-}
-
 .hero-main__container {
   width: 100%;
   max-width: 1392px;
@@ -540,6 +533,13 @@ body {
 @media (min-width: 1000px) {
   .hero-main__container {
     padding: var(--spacing-10xl) var(--spacing-7xl) var(--spacing-7xl);
+  }
+}
+
+@media (min-width: 1440px) {
+  .hero-main__container {
+    padding-left: var(--spacing-3xl);
+    padding-right: var(--spacing-3xl);
   }
 }
 
@@ -601,6 +601,14 @@ body {
     font-size: var(--h2-size);
     line-height: var(--h2-line);
     letter-spacing: var(--h2-tracking);
+  }
+}
+
+@media (min-width: 1440px) {
+  .hero-main__heading {
+    font-size: var(--h1-size);
+    line-height: var(--h1-line);
+    letter-spacing: var(--h1-tracking);
   }
 }
 
