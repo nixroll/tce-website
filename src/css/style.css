@@ -457,8 +457,8 @@ body {
    Паддинги Container (актуальное состояние из Figma):
    - верх: 96px на 320/390/768, 128px (10xl) с 1000px;
    - низ: 24px(3xl) на 320/390, 64px(7xl) с 768px (включая 1000/1440);
-   - бок: 24px(3xl) на 320/390, 64px(7xl) на 768/1000, 24px(3xl) снова
-     с 1440px (дизайнер уменьшил обратно).
+   - бок: 24px(3xl) на 320/390/768/1000, 0 с 1440px (Container
+     становится полностью full-bleed от края до края секции).
    Border-left/right у Container нигде не задан (на 320 его никогда и
    не было, на остальных — убран); Container всегда идёт от края до
    края секции.
@@ -526,20 +526,20 @@ body {
 @media (min-width: 768px) {
   .hero-main__container {
     gap: var(--spacing-7xl);
-    padding: var(--spacing-9xl) var(--spacing-7xl) var(--spacing-7xl);
+    padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-7xl);
   }
 }
 
 @media (min-width: 1000px) {
   .hero-main__container {
-    padding: var(--spacing-10xl) var(--spacing-7xl) var(--spacing-7xl);
+    padding: var(--spacing-10xl) var(--spacing-3xl) var(--spacing-7xl);
   }
 }
 
 @media (min-width: 1440px) {
   .hero-main__container {
-    padding-left: var(--spacing-3xl);
-    padding-right: var(--spacing-3xl);
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
