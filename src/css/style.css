@@ -2244,6 +2244,294 @@ body {
   }
 }
 
+/* Projects - L (node 622:4042). Светлая секция с галереей-каруселью.
+   Пока только на Home (между Services-L и Brands, оба соседних
+   дивайдера светлые). Локальный override токенов на светлую палитру —
+   тот же приём, что в Stats/Areas/Services.
+
+   Три контейнера друг под другом (см. projects.njk):
+   .projects__intro / .projects__gallery / .projects__bottom.
+
+   Границы по брейкпоинтам (у секции всегда border-top+bottom):
+   - 320: боковых рамок нет нигде, у галереи только border-top+bottom,
+     внешнего паддинга нет.
+   - 390: внешний паддинг 20(2xl); intro и bottom — border-l/r;
+     галерея — рамка со ВСЕХ четырёх сторон.
+   - 768+: внешний паддинг 24(3xl); intro — border-l/r; галерея —
+     border-l/r/t (низ закрывает border-bottom секции); .projects__bottom
+     скрыт (кнопки переезжают в intro).
+
+   Карусель: ширина слайда задаётся через flex-basis от ширины
+   вьюпорта — 1 фото (базово), 2 (с 768px), 3 (с 1440px); gap всегда
+   32(4xl). Сдвиг — transform на .projects__track (JS), плавность —
+   transition здесь; при prefers-reduced-motion анимация отключена. */
+.projects {
+  --background-primary: #fafafb;
+  --background-secondary: #f3f4f6;
+  --text-primary: #181d27;
+  --text-secondary: #414651;
+  --text-tertiary: #535862;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+  --border-secondary: #cbd0d8;
+  --button-primary: #e5e7ec;
+  --button-primary-hover: #e9ebee;
+  width: 100%;
+  background-color: var(--background-primary);
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (min-width: 390px) {
+  .projects {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .projects {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+.projects__intro {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .projects__intro {
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .projects__intro {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--spacing-4xl);
+    padding: var(--spacing-9xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .projects__intro {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+  }
+}
+
+.projects__title-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  width: 100%;
+  min-width: 296px;
+}
+
+@media (min-width: 390px) {
+  .projects__title-badge {
+    min-width: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .projects__title-badge {
+    flex: 1 0 0;
+    max-width: 460px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .projects__title-badge {
+    max-width: 480px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .projects__title-badge {
+    max-width: none;
+  }
+}
+
+.projects__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  color: #325abc;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+}
+
+.projects__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
+  color: var(--text-primary);
+}
+
+@media (min-width: 1440px) {
+  .projects__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
+}
+
+.projects__heading-muted {
+  color: var(--text-quaternary);
+}
+
+/* Кнопки-стрелки: в intro видны только с 768px, в нижнем контейнере —
+   только до 768px. */
+.projects__intro .projects__buttons {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .projects__intro .projects__buttons {
+    display: flex;
+  }
+}
+
+.projects__buttons {
+  display: flex;
+  gap: var(--spacing-lg);
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+.projects__nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.projects__nav-btn:hover {
+  border-color: var(--border-secondary);
+}
+
+.projects__nav-btn svg {
+  display: block;
+  stroke: currentColor;
+}
+
+.projects__gallery {
+  width: 100%;
+  max-width: 1392px;
+  background-color: var(--background-secondary);
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  padding: var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .projects__gallery {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .projects__gallery {
+    border-bottom: none;
+    padding: var(--spacing-4xl);
+  }
+}
+
+.projects__viewport {
+  width: 100%;
+  overflow: hidden;
+}
+
+.projects__track {
+  display: flex;
+  gap: var(--spacing-4xl);
+  transition: transform 480ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .projects__track {
+    transition: none;
+  }
+}
+
+.projects__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  aspect-ratio: 1 / 1;
+}
+
+@media (min-width: 768px) {
+  .projects__slide {
+    flex-basis: calc((100% - var(--spacing-4xl)) / 2);
+  }
+}
+
+@media (min-width: 1440px) {
+  .projects__slide {
+    flex-basis: calc((100% - 2 * var(--spacing-4xl)) / 3);
+  }
+}
+
+.projects__slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.projects__bottom {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--spacing-4xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .projects__bottom {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .projects__bottom {
+    display: none;
+  }
+}
+
 /* Footer (node 157:3735). На всех страницах. У мобильной/планшетной
    и десктопной раскладок разная структура (не просто reorder),
    поэтому это два отдельных блока разметки внутри одного <footer>,

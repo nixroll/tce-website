@@ -11,8 +11,13 @@
      Порядок повторяющихся секций (Home, node 405:2033): Hero →
      Stats-L → Divider(light) → Areas-L → Divider(light) →
      Divider(тёмный, скрыт на 320px, см. hidden-320) → Testimonial →
-     Divider(тёмный) → Services-L → Divider(light) → Brands →
-     Divider → CTA → Divider(edge-secondary) → Footer. Сайт чередует
+     Divider(тёмный) → Services-L → Divider(light) → Projects-L →
+     Divider(light) → Brands → Divider → CTA →
+     Divider(edge-secondary) → Footer. Projects-L (node 622:4042) —
+     светлая секция с каруселью, оба соседних дивайдера светлые.
+     NB: в Figma-фрейме Mobile 320 инстанс Projects-L оставлен ПОСЛЕ
+     Footer (похоже, не поставлен в поток) — реализован тот же порядок,
+     что на остальных брейкпоинтах. Сайт чередует
      тёмные и светлые секции — светлые здесь Stats, Areas и Services,
      у каждой светлый только дивайдер СРАЗУ ПОСЛЕ неё (перед следующей
      тёмной секцией); дивайдер ПЕРЕД светлой секцией (то есть после
@@ -45,6 +50,10 @@
     {% set dividerVariant = "light" %}
     {% include "divider.njk" %}
     {% set dividerVariant = "" %}
+    {% include "projects.njk" %}
+    {% set dividerVariant = "light" %}
+    {% include "divider.njk" %}
+    {% set dividerVariant = "" %}
   {% else %}
     {% include "divider.njk" %}
   {% endif %}
@@ -56,5 +65,8 @@
   {% set dividerVariant = "" %}
   {% include "footer.njk" %}
   <script src="{{ '/js/header.js' | url }}" defer></script>
+  {% if isHome %}
+    <script src="{{ '/js/gallery.js' | url }}" defer></script>
+  {% endif %}
 </body>
 </html>

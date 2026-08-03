@@ -1,0 +1,82 @@
+{# Projects - L (node 622:4042). Светлая секция с галереей-каруселью
+   работ. Пока только на Home Page (позже будет и на других страницах,
+   и фото подтянем из CMS — сейчас 9 статичных фото в
+   src/images/gallery/).
+
+   Структура по Figma — три «контейнера» друг под другом:
+   1. .projects__intro — бейдж + заголовок (+ кнопки навигации с 768px,
+      справа, в одной строке с заголовком).
+   2. .projects__gallery — контейнер с фоном secondary и рамкой, внутри
+      вьюпорт карусели. Фото квадратные (1:1), высота hug.
+   3. .projects__bottom — кнопки навигации на 320/390 (скрыт с 768px).
+      Кнопки продублированы в DOM (intro + bottom), видима всегда
+      только одна пара; JS вешает обработчики на обе.
+
+   Карусель: видно 1 фото (320/390), 2 (768/1000), 3 (1440); клик по
+   стрелке всегда сдвигает ровно на ОДНО фото с плавной анимацией;
+   зациклена в обе стороны (клоны по краям + мгновенный «перескок»
+   после анимации — см. src/js/gallery.js).
+
+   Кнопки-стрелки: компонент Icon Button (node 252:2937): 48x48,
+   рамка border-primary, radius 10; hover — рамка border-secondary.
+   Иконки-стрелки инлайн (stroke: currentColor). #}
+{% macro navButtons() %}
+  <div class="projects__buttons">
+    <button class="projects__nav-btn" type="button" data-gallery-prev aria-label="Предыдущее фото">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M19 12H5M12 5L5 12L12 19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="projects__nav-btn" type="button" data-gallery-next aria-label="Следующее фото">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M5 12H19M12 19L19 12L12 5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+{% endmacro %}
+{% macro slide(n, alt) %}
+  <div class="projects__slide">
+    <picture>
+      <source
+        type="image/webp"
+        srcset="{{ ('/images/gallery/project-' + n + '-400.webp') | url }} 400w, {{ ('/images/gallery/project-' + n + '-700.webp') | url }} 700w, {{ ('/images/gallery/project-' + n + '-1000.webp') | url }} 1000w"
+        sizes="(min-width: 1440px) 421px, (min-width: 768px) calc((100vw - 146px) / 2), (min-width: 390px) calc(100vw - 90px), calc(100vw - 48px)">
+      <img
+        src="{{ ('/images/gallery/project-' + n + '-1000.jpg') | url }}"
+        srcset="{{ ('/images/gallery/project-' + n + '-400.jpg') | url }} 400w, {{ ('/images/gallery/project-' + n + '-700.jpg') | url }} 700w, {{ ('/images/gallery/project-' + n + '-1000.jpg') | url }} 1000w"
+        sizes="(min-width: 1440px) 421px, (min-width: 768px) calc((100vw - 146px) / 2), (min-width: 390px) calc(100vw - 90px), calc(100vw - 48px)"
+        width="1000" height="1000"
+        alt="{{ alt }}"
+        loading="lazy">
+    </picture>
+  </div>
+{% endmacro %}
+<section class="projects" data-figma-node="622:4042" data-figma-name="Projects - L">
+  <div class="projects__intro">
+    <div class="projects__title-badge">
+      <span class="projects__badge">Проекты</span>
+      <p class="projects__heading">Сделано TCE.<br>
+        <span class="projects__heading-muted">Промышленность, девелопмент, частные дома.</span>
+      </p>
+    </div>
+    {{ navButtons() }}
+  </div>
+  <div class="projects__gallery" data-gallery>
+    <div class="projects__viewport">
+      <div class="projects__track" data-gallery-track>
+        {{ slide('1', 'Вертикальный трубчатый радиатор у панорамного окна') }}
+        {{ slide('2', 'Здание инженерно-технического центра с колоннадой') }}
+        {{ slide('3', 'Рабочие чертежи системы водоснабжения на объекте') }}
+        {{ slide('4', 'Образцы декоративных конвекторных решёток Möhlenhoff') }}
+        {{ slide('5', 'Коллекторный шкаф системы отопления в сборе') }}
+        {{ slide('6', 'Монтаж инженерных систем и теплоизоляции пола') }}
+        {{ slide('7', 'Поставка оборудования Viessmann на объект') }}
+        {{ slide('8', 'Коллектор системы отопления с расходомерами') }}
+        {{ slide('9', 'Въездная группа жилого квартала «Мируар»') }}
+      </div>
+    </div>
+  </div>
+  <div class="projects__bottom">
+    {{ navButtons() }}
+  </div>
+</section>
