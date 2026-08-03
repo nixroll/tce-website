@@ -10,6 +10,10 @@
  *   мгновенно и незаметно «перескакивает» на реальный слайд;
  * - при быстрых кликах текущая анимация мгновенно доводится до конца
  *   и сразу начинается следующая (клики не игнорируются);
+ * - drag-перелистывание (Pointer Events — палец на мобилке/планшете,
+ *   мышь на десктопе): тянем трек за фото, на отпускании доводим до
+ *   ближайшего слайда; лёгкий свайп (>40px) листает на один слайд;
+ *   вертикальный скролл страницы не блокируется (touch-action: pan-y);
  * - на resize позиция пересчитывается без анимации;
  * - при prefers-reduced-motion CSS отключает transition — перелистывание
  *   становится мгновенным, логика та же.
@@ -22,6 +26,7 @@
 
   var track = root.querySelector('[data-gallery-track]');
   if (!track) return;
+  var viewport = track.parentElement;
 
   var realSlides = Array.prototype.slice.call(track.children);
   var realCount = realSlides.length;
@@ -49,13 +54,17 @@
     return first.getBoundingClientRect().width + gap;
   }
 
-  function apply(instant) {
+  function setTransform(px, instant) {
     if (instant) track.style.transition = 'none';
-    track.style.transform = 'translate3d(' + -index * step() + 'px, 0, 0)';
+    track.style.transform = 'translate3d(' + px + 'px, 0, 0)';
     if (instant) {
       void track.getBoundingClientRect(); /* форсируем reflow */
       track.style.transition = '';
     }
+  }
+
+  function apply(instant) {
+    setTransform(-index * step(), instant);
   }
 
   /* Если ушли в зону клонов — незаметно возвращаемся на реальные слайды. */
@@ -69,13 +78,15 @@
     }
   }
 
+  function settle() {
+    /* мгновенно довести текущее движение до конца */
+    animating = false;
+    apply(true);
+    normalize();
+  }
+
   function move(dir) {
-    if (animating) {
-      /* мгновенно доводим предыдущий сдвиг до конца */
-      animating = false;
-      apply(true);
-      normalize();
-    }
+    if (animating) settle();
     index += dir;
     animating = true;
     apply(false);
@@ -96,10 +107,94 @@
     btn.addEventListener('click', function () { move(1); });
   });
 
+  /* ---- Drag-перелистывание (палец / мышь / стилус) ---- */
+  var SWIPE_MIN = 40;   /* минимальный сдвиг для перелистывания, px */
+  var DRAG_DEAD = 6;    /* меньше — считаем случайным касанием */
+  var dragging = false;
+  var dragPointerId = null;
+  var dragStartX = 0;
+  var dragStartOffset = 0;
+  var dragDx = 0;
+  var dragStep = 0;
+  var dragMaxLeft = 0;  /* насколько можно утащить влево (dx < 0), px */
+  var dragMaxRight = 0; /* насколько вправо (dx > 0), px */
+
+  viewport.addEventListener('pointerdown', function (e) {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if (animating) settle();
+    dragging = true;
+    dragPointerId = e.pointerId;
+    dragStartX = e.clientX;
+    dragStep = step();
+    dragStartOffset = -index * dragStep;
+    dragDx = 0;
+    /* Пределы: позиция не должна выйти за реально существующие слайды
+       (с учётом клонов и числа видимых), иначе в кадре будет пустота. */
+    var total = realCount + 2 * CLONES;
+    var visible = Math.max(
+      1,
+      Math.round(viewport.getBoundingClientRect().width / dragStep)
+    );
+    dragMaxLeft = (total - visible - index) * dragStep;
+    dragMaxRight = index * dragStep;
+    viewport.classList.add('is-dragging');
+    track.style.transition = 'none';
+    if (viewport.setPointerCapture) viewport.setPointerCapture(e.pointerId);
+  });
+
+  viewport.addEventListener('pointermove', function (e) {
+    if (!dragging || e.pointerId !== dragPointerId) return;
+    dragDx = e.clientX - dragStartX;
+    if (dragDx < -dragMaxLeft) dragDx = -dragMaxLeft;
+    if (dragDx > dragMaxRight) dragDx = dragMaxRight;
+    track.style.transform =
+      'translate3d(' + (dragStartOffset + dragDx) + 'px, 0, 0)';
+  });
+
+  function endDrag(e) {
+    if (!dragging || (e && e.pointerId !== dragPointerId)) return;
+    dragging = false;
+    dragPointerId = null;
+    viewport.classList.remove('is-dragging');
+    track.style.transition = '';
+
+    var s = dragStep || step();
+    var target = index;
+    if (Math.abs(dragDx) >= DRAG_DEAD) {
+      /* к ближайшему слайду от точки отпускания… */
+      target = Math.round(-(dragStartOffset + dragDx) / s);
+      /* …а лёгкий, но уверенный свайп листает минимум на один */
+      if (target === index && Math.abs(dragDx) >= SWIPE_MIN) {
+        target = index + (dragDx < 0 ? 1 : -1);
+      }
+    }
+
+    if (target === index) {
+      /* возврат на место (или почти не двигали) */
+      if (Math.abs(dragDx) < 1) {
+        apply(true);
+      } else {
+        animating = true;
+        apply(false);
+      }
+      return;
+    }
+    index = target;
+    animating = true;
+    apply(false);
+  }
+
+  viewport.addEventListener('pointerup', endDrag);
+  viewport.addEventListener('pointercancel', endDrag);
+
+  /* нативный drag картинок мешает pointer-события мыши */
+  track.addEventListener('dragstart', function (e) { e.preventDefault(); });
+
   var resizeTimer = null;
   window.addEventListener('resize', function () {
     if (resizeTimer) clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function () {
+      if (dragging) return;
       animating = false;
       apply(true);
       normalize();
