@@ -445,24 +445,36 @@ body {
 
    Модель высоты: height = 100svh минус фиксированный Header
    (var(--header-height): 62px / 72px с 768px), но не меньше
-   min-height своего брейкпоинта (696/680/800/860/860). Когда экран
+   min-height своего брейкпоинта (640/640/800/860/860). Когда экран
    ВЫШЕ min-height, всё лишнее пространство уходит в Cover с видео
    (flex-grow у Cover) — паддинги Container и контент остаются как в
    Figma. Поэтому у Cover высоты по брейкпоинтам — это МИНИМУМЫ
    (посчитаны из min-height минус паддинги/гэпы/контент по Figma):
-   424px (1000/1440), 354px (768), 268px (390); на 320 естественный
-   минимум — квадрат (aspect-ratio 1:1), дальше тоже растёт.
-   Верхний паддинг Container обновлён дизайнером: 96px на 320/390/768,
-   128px (10xl) с 1000px. NB: на 320 в Figma после этой правки
-   Container стал h=712 при min-height секции 696 (не обновлён) —
-   у нас на 320 высота контентная (aspect-квадрат Cover), что даёт
-   те же ~712, расхождение не воспроизводится.
+   424px (1000/1440), 340px (768), 276px (390), 224px (320 — на этом
+   брейкпоинте Cover тоже больше не квадрат, дизайнер убрал
+   aspect-ratio 1:1, теперь у него такой же min-height-флекс, как и у
+   остальных брейкпоинтов).
+   Верхний паддинг Container: 96px на 320/390/768, 128px (10xl) с
+   1000px. Нижний паддинг Container обновлён дизайнером ещё раз:
+   24px(3xl) на 320/390 (было 48), 64px(7xl) на 768 (было 48) — из-за
+   этого пересчитан и min-height секции на 320/390 (696→640, 680→640;
+   768 не изменился, там min-height по-прежнему 800).
 
    Обновление: боковые паддинг секции (.hero-main) и border-l/r
    Container убраны на 390/768 — теперь они есть только на 320
    (паддинга нет изначально) и с 1000px (паддинг 24px + border, как
    было). На 390/768 Container идёт вплотную к краям экрана без
    рамки.
+
+   NB (не применено, требует уточнения у дизайнера): при последней
+   сверке на 1000px и 1440px в Figma тоже обнаружены расхождения с
+   прошлой версией — на 1000px боковой паддинг Container стал
+   асимметричным (pl 48/6xl, pr 80/8xl вместо симметричных 80/80), а
+   на 1440px паддинг секции снаружи сменился с 24px(3xl) на 20px(2xl)
+   и паддинг Container — с 80px(8xl) на 64px(7xl) равномерно. Пользователь
+   просил поправить только нижний паддинг на 320/390/768, поэтому эти
+   1000/1440 изменения оставлены как есть (не воспроизведены) — похоже
+   на непреднамеренный сдвиг в макете, а не осознанную правку.
 
    Переносы (проверены пошрифтовой симуляцией против Figma):
    заголовок nowrap с 390px (принудительный <br> после первого
@@ -478,12 +490,12 @@ body {
   align-items: center;
   height: calc(100vh - var(--header-height));
   height: calc(100svh - var(--header-height));
-  min-height: 696px;
+  min-height: 640px;
 }
 
 @media (min-width: 390px) {
   .hero-main {
-    min-height: 680px;
+    min-height: 640px;
   }
 }
 
@@ -508,20 +520,20 @@ body {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-5xl);
-  padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-6xl);
+  padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-3xl);
 }
 
 @media (min-width: 390px) {
   .hero-main__container {
     gap: var(--spacing-6xl);
-    padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-6xl);
+    padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-3xl);
   }
 }
 
 @media (min-width: 768px) {
   .hero-main__container {
     gap: var(--spacing-7xl);
-    padding: var(--spacing-9xl) var(--spacing-7xl) var(--spacing-6xl);
+    padding: var(--spacing-9xl) var(--spacing-7xl) var(--spacing-7xl);
   }
 }
 
@@ -637,13 +649,15 @@ body {
 .hero-main__cover {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
   background-color: var(--background-primary);
   border-radius: 12px; /* в Figma радиус 12 (вне шкалы --radius-*) */
   overflow: hidden;
   display: flex;
-  /* лишняя высота экрана сверх min-height секции уходит сюда */
-  flex: 1 0 auto;
+  /* лишняя высота экрана сверх min-height секции уходит сюда;
+     basis 0 (а не auto), иначе базовой высотой стала бы интринсик-
+     высота видео (16:9 от ширины), а не минимум по Figma */
+  flex: 1 0 0;
+  min-height: 224px;
 }
 
 /* Обводка Cover — белый 10% и строго INSIDE (как в Figma): рисуем
@@ -661,17 +675,13 @@ body {
 
 @media (min-width: 390px) {
   .hero-main__cover {
-    aspect-ratio: auto;
-    /* basis 0 (а не auto): иначе базовой высотой стала бы
-       интринсик-высота видео (16:9 от ширины), а не минимум по Figma */
-    flex-basis: 0;
-    min-height: 268px;
+    min-height: 276px;
   }
 }
 
 @media (min-width: 768px) {
   .hero-main__cover {
-    min-height: 354px;
+    min-height: 340px;
   }
 }
 
