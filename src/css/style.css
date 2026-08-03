@@ -662,21 +662,26 @@ body {
 
 /* Вторая кнопка продублирована под разные брейкпоинты (см. комментарий
    выше) — ведёт в разные места и подписана по-разному, переключение
-   видимости через display, не просто смена текста. */
-.hero-main__cta--desktop {
+   видимости через display, не просто смена текста.
+   Селектор через родителя (.hero-main__buttons ...), а не голый
+   класс: у .btn ниже по каскаду тоже есть display:inline-flex с той
+   же специфичностью (0,1,0) — без усиления она бы выигрывала по
+   порядку в файле и обе кнопки были бы видны одновременно на всех
+   брейкпоинтах. */
+.hero-main__buttons .hero-main__cta--desktop {
   display: none;
 }
 
-.hero-main__cta--mobile {
+.hero-main__buttons .hero-main__cta--mobile {
   display: inline-flex;
 }
 
 @media (min-width: 768px) {
-  .hero-main__cta--desktop {
+  .hero-main__buttons .hero-main__cta--desktop {
     display: inline-flex;
   }
 
-  .hero-main__cta--mobile {
+  .hero-main__buttons .hero-main__cta--mobile {
     display: none;
   }
 }
