@@ -12,8 +12,9 @@ isHome: true
    (на 320 "Один подрядчик." дополнительно переносится естественно);
    в подводке <br> только с 768px (класс hero-main__br), на 320/390
    перенос естественный, предлоги привязаны через nbsp.
-   Cover — место под видео (подключим позже, когда будет файл):
-   пока тёмный бокс с фоном primary, как плейсхолдер Video в Figma. #}
+   Cover — фоновое видео (Artlist, пережато в 1080p ~1.8MB, без
+   звука): autoplay+muted+loop+playsinline, object-fit: cover, постер
+   из первого кадра на время загрузки. #}
 <section class="hero-main" data-figma-node="657:3442" data-figma-name="Hero">
   <div class="hero-main__container">
     <div class="hero-main__content">
@@ -27,7 +28,13 @@ isHome: true
       </div>
     </div>
     <div class="hero-main__cover">
-      <div class="hero-main__video" aria-hidden="true"></div>
+      <video class="hero-main__video"
+        src="{{ '/videos/hero.mp4' | url }}"
+        poster="{{ '/videos/hero-poster.jpg' | url }}"
+        autoplay muted loop playsinline
+        preload="metadata"
+        aria-hidden="true"
+        tabindex="-1"></video>
     </div>
   </div>
 </section>

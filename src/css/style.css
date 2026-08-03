@@ -647,13 +647,14 @@ body {
   }
 }
 
-/* Слот под будущее видео: пока пустой тёмный бокс, как плейсхолдер
-   Video в Figma. Когда появится файл — заменить на <video autoplay
-   muted loop playsinline> с object-fit: cover. */
+/* Фоновое видео Cover: заполняет бокс целиком с обрезкой по центру
+   (сам бокс на разных брейкпоинтах и широкий, и квадратный) */
 .hero-main__video {
   flex: 1 1 0;
   min-width: 0;
   height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* Divider (node 416:1773). Повторяющийся элемент, встречается в 4
