@@ -458,6 +458,12 @@ body {
    у нас на 320 высота контентная (aspect-квадрат Cover), что даёт
    те же ~712, расхождение не воспроизводится.
 
+   Обновление: боковые паддинг секции (.hero-main) и border-l/r
+   Container убраны на 390/768 — теперь они есть только на 320
+   (паддинга нет изначально) и с 1000px (паддинг 24px + border, как
+   было). На 390/768 Container идёт вплотную к краям экрана без
+   рамки.
+
    Переносы (проверены пошрифтовой симуляцией против Figma):
    заголовок nowrap с 390px (принудительный <br> после первого
    предложения), на 320 — естественный перенос ("Один" /
@@ -478,20 +484,19 @@ body {
 @media (min-width: 390px) {
   .hero-main {
     min-height: 680px;
-    padding: 0 var(--spacing-2xl);
   }
 }
 
 @media (min-width: 768px) {
   .hero-main {
     min-height: 800px;
-    padding: 0 var(--spacing-3xl);
   }
 }
 
 @media (min-width: 1000px) {
   .hero-main {
     min-height: 860px;
+    padding: 0 var(--spacing-3xl);
   }
 }
 
@@ -510,8 +515,6 @@ body {
   .hero-main__container {
     gap: var(--spacing-6xl);
     padding: var(--spacing-9xl) var(--spacing-4xl) var(--spacing-6xl);
-    border-left: 1px solid var(--border-primary);
-    border-right: 1px solid var(--border-primary);
   }
 }
 
@@ -525,6 +528,8 @@ body {
 @media (min-width: 1000px) {
   .hero-main__container {
     padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-8xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
   }
 }
 
