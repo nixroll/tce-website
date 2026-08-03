@@ -5,9 +5,11 @@
      Content: .footer__compact-content (Columns + Logo/Contact, gap
      48px) и .footer__compact-bottom (copyright + Links, gap 16px) —
      между самими этими двумя блоками у Container свой больший gap
-     (64px/320/390, 80px/768). С 390px у Container боковой border, а
-     у .site-footer снаружи — боковой padding 24px (на 320px нет ни
-     того, ни другого). #}
+     (64px/320/390, 80px/768). Боковой border у Container — только в
+     диапазоне 390–767px (на 768px его снова нет). У .site-footer
+     border-top — только на 320px и с 1000px (на 390/768 его нет);
+     боковой padding у .site-footer — только с 1000px, как у
+     .footer__wide. #}
   <div class="footer__compact">
     <div class="footer__compact-content">
       <div class="footer__compact-columns">

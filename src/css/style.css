@@ -2264,15 +2264,15 @@ body {
    тоже отдельно от верхнего: 32px/320, 40px/390, 64px/768 (было
    одинаковое с верхним).
 
-   Обновление: на .site-footer добавлен боковой padding 24px(3xl) с
-   390px (раньше был только с 1000px), на 320px паддинга нет — как и
-   на .footer__wide. У самого Container (.footer__compact) с 390px
-   появился border-left/right (как у .footer__wide) — на 320px его
-   нет. Боковой padding Container на 320px — 20px(2xl), с 390px —
-   24px(3xl) (раньше 24px был задан как база для всех, включая 320 —
-   это было неверно). .footer__compact-bottom с 390px получил
-   min-width: 320px (минимальная ширина блока copyright+Links в
-   Figma). */
+   Обновление (раунд 2, пользователь поправил 390px и 768px в Figma):
+   боковой padding и border-top на .site-footer остаются ТОЛЬКО на
+   320px (border-top) и с 1000px (оба) — на 390/768 их снова нет
+   (первая версия с padding+border-top с 390px была неверной, откатил).
+   Border-left/right у Container (.footer__compact) теперь только в
+   диапазоне 390–767px — на 768px его тоже убрали (раньше добавил
+   ошибочно на весь диапазон 390+). Боковой padding Container:
+   20px(2xl)/320, 24px(3xl)/390, 48px(6xl)/768 — без изменений.
+   .footer__compact-bottom с 390px по-прежнему min-width: 320px. */
 .site-footer {
   background-color: var(--background-secondary);
   border-top: 1px solid var(--border-primary);
@@ -2281,9 +2281,9 @@ body {
   width: 100%;
 }
 
-@media (min-width: 390px) {
+@media (min-width: 390px) and (max-width: 999.98px) {
   .site-footer {
-    padding: 0 var(--spacing-3xl);
+    border-top: none;
   }
 }
 
@@ -2307,6 +2307,11 @@ body {
   .footer__compact {
     padding-left: var(--spacing-3xl);
     padding-right: var(--spacing-3xl);
+  }
+}
+
+@media (min-width: 390px) and (max-width: 767.98px) {
+  .footer__compact {
     border-left: 1px solid var(--border-primary);
     border-right: 1px solid var(--border-primary);
   }
@@ -2435,6 +2440,10 @@ body {
 }
 
 @media (min-width: 1000px) {
+  .site-footer {
+    padding: 0 var(--spacing-3xl);
+  }
+
   .footer__wide {
     display: flex;
     flex-direction: column;
