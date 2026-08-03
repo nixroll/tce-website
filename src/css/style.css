@@ -630,17 +630,28 @@ body {
 }
 
 .hero-main__cover {
+  position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
   background-color: var(--background-primary);
-  /* белый 10% (по Figma), а не токен border-primary — рамка должна
-     чуть светиться поверх видео */
-  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px; /* в Figma радиус 12 (вне шкалы --radius-*) */
   overflow: hidden;
   display: flex;
   /* лишняя высота экрана сверх min-height секции уходит сюда */
   flex: 1 0 auto;
+}
+
+/* Обводка Cover — белый 10% и строго INSIDE (как в Figma): рисуем
+   оверлеем поверх видео, а не свойством border. Обычный border занял
+   бы место в потоке и поджал видео на 1px внутрь — линия легла бы на
+   фон, а не поверх кадра, и на светлых кадрах была бы не видна. */
+.hero-main__cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 @media (min-width: 390px) {
