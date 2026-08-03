@@ -438,8 +438,13 @@ body {
    (flex-grow у Cover) — паддинги Container и контент остаются как в
    Figma. Поэтому у Cover высоты по брейкпоинтам — это МИНИМУМЫ
    (посчитаны из min-height минус паддинги/гэпы/контент по Figma):
-   456px (1000/1440), 354px (768), 284px (390); на 320 естественный
+   424px (1000/1440), 354px (768), 268px (390); на 320 естественный
    минимум — квадрат (aspect-ratio 1:1), дальше тоже растёт.
+   Верхний паддинг Container обновлён дизайнером: 96px на 320/390/768,
+   128px (10xl) с 1000px. NB: на 320 в Figma после этой правки
+   Container стал h=712 при min-height секции 696 (не обновлён) —
+   у нас на 320 высота контентная (aspect-квадрат Cover), что даёт
+   те же ~712, расхождение не воспроизводится.
 
    Переносы (проверены пошрифтовой симуляцией против Figma):
    заголовок nowrap с 390px (принудительный <br> после первого
@@ -486,13 +491,13 @@ body {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-5xl);
-  padding: var(--spacing-8xl) var(--spacing-3xl) var(--spacing-6xl);
+  padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-6xl);
 }
 
 @media (min-width: 390px) {
   .hero-main__container {
     gap: var(--spacing-6xl);
-    padding: var(--spacing-8xl) var(--spacing-4xl) var(--spacing-6xl);
+    padding: var(--spacing-9xl) var(--spacing-4xl) var(--spacing-6xl);
     border-left: 1px solid var(--border-primary);
     border-right: 1px solid var(--border-primary);
   }
@@ -507,7 +512,7 @@ body {
 
 @media (min-width: 1000px) {
   .hero-main__container {
-    padding: var(--spacing-9xl) var(--spacing-8xl) var(--spacing-8xl);
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-8xl);
   }
 }
 
@@ -630,7 +635,7 @@ body {
     /* basis 0 (а не auto): иначе базовой высотой стала бы
        интринсик-высота видео (16:9 от ширины), а не минимум по Figma */
     flex-basis: 0;
-    min-height: 284px;
+    min-height: 268px;
   }
 }
 
@@ -642,7 +647,7 @@ body {
 
 @media (min-width: 1000px) {
   .hero-main__cover {
-    min-height: 456px;
+    min-height: 424px;
   }
 }
 
