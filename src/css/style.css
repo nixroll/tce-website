@@ -443,20 +443,28 @@ body {
 
 /* Hero главной (node 657:3442). Тёмная секция на весь первый экран.
 
-   Модель высоты: height = 100svh минус фиксированный Header
+   Модель высоты: height = 100dvh минус фиксированный Header
    (var(--header-height): 62px / 72px с 768px), но не меньше
-   min-height своего брейкпоинта (640/640/800/860/860). Когда экран
+   min-height своего брейкпоинта (660/660/800/860/860). Когда экран
    ВЫШЕ min-height, всё лишнее пространство уходит в Cover с видео
    (flex-grow у Cover) — паддинги Container и контент остаются как в
    Figma. Поэтому у Cover высоты по брейкпоинтам — это МИНИМУМЫ
    (посчитаны из min-height минус паддинги/гэпы/контент по Figma):
-   440px (1000/1440 — одинаковые), 340px (768), 276px (390), 224px
+   440px (1000/1440 — одинаковые), 340px (768), 272px (390), 220px
    (320 — на этом брейкпоинте Cover тоже не квадрат, у дизайнера нет
    aspect-ratio 1:1, тот же min-height-флекс, что и у остальных).
 
+   100dvh, а не 100svh: на iOS Safari сворачивающаяся нижняя панель
+   увеличивает видимую область уже ПОСЛЕ первой отрисовки, а svh
+   фиксирует высоту на состоянии "панель развёрнута" — из-под секции
+   снизу выглядывала Stats. dvh отслеживает актуальную видимую высоту
+   в реальном времени, поэтому Hero всегда закрывает экран целиком.
+   100vh оставлен первой строкой как фолбэк для браузеров без dvh
+   (каскад — валидное дальнейшее объявление переопределяет).
+
    Паддинги Container (актуальное состояние из Figma):
    - верх: 96px на 320/390/768, 128px (10xl) с 1000px;
-   - низ: 24px(3xl) на 320/390, 64px(7xl) с 768px (включая 1000/1440);
+   - низ: 48px(6xl) на 320/390, 64px(7xl) с 768px (включая 1000/1440);
    - бок: 24px(3xl) на 320/390/768/1000, 0 с 1440px (Container
      становится полностью full-bleed от края до края секции).
    Border-left/right у Container нигде не задан (на 320 его никогда и
@@ -475,7 +483,11 @@ body {
    предложения), на 320 — естественный перенос ("Один" /
    "подрядчик." / "Весь проект."); подводка: на 320/390 естественный
    перенос с nbsp у "и сервис" / "для зданий" (3 строки), с 768px —
-   принудительный <br> после "сервис" (класс .hero-main__br). */
+   принудительный <br> после "сервис" (класс .hero-main__br).
+
+   Кнопки: hover обёрнут в @media (hover: hover), чтобы на тач-
+   устройствах (iPad/iPhone) состояние :hover не залипало после тапа —
+   то же решение, что и у .projects__nav-btn. */
 .hero-main {
   width: 100%;
   background-color: var(--background-secondary);
@@ -483,13 +495,13 @@ body {
   flex-direction: column;
   align-items: center;
   height: calc(100vh - var(--header-height));
-  height: calc(100svh - var(--header-height));
-  min-height: 640px;
+  height: calc(100dvh - var(--header-height));
+  min-height: 660px;
 }
 
 @media (min-width: 390px) {
   .hero-main {
-    min-height: 640px;
+    min-height: 660px;
   }
 }
 
@@ -513,13 +525,13 @@ body {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-5xl);
-  padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-3xl);
+  padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-6xl);
 }
 
 @media (min-width: 390px) {
   .hero-main__container {
     gap: var(--spacing-6xl);
-    padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-3xl);
+    padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-6xl);
   }
 }
 
@@ -663,7 +675,7 @@ body {
      basis 0 (а не auto), иначе базовой высотой стала бы интринсик-
      высота видео (16:9 от ширины), а не минимум по Figma */
   flex: 1 0 0;
-  min-height: 224px;
+  min-height: 220px;
 }
 
 /* Обводка Cover — белый 10% и строго INSIDE (как в Figma): рисуем
@@ -681,7 +693,7 @@ body {
 
 @media (min-width: 390px) {
   .hero-main__cover {
-    min-height: 276px;
+    min-height: 272px;
   }
 }
 
@@ -943,7 +955,13 @@ body {
 
 /* Кнопки — переиспользуемый компонент (Button, node 17:97).
    Primary визуально совпадает с .header__cta, но вынесена в общий
-   класс, т.к. теперь используется не только в Header. */
+   класс, т.к. теперь используется не только в Header.
+   Hover обёрнут в @media (hover: hover): на тач-устройствах (iPad/
+   iPhone) эмулированный :hover, вызванный тапом, залипал бы до
+   следующего тапа по другому элементу — media-запрос со значением
+   hover:none у тач-устройств полностью убирает :hover-правила.
+   touch-action: manipulation убирает задержку/двойной тап-зум при
+   быстрых нажатиях. Решение идентично .projects__nav-btn. */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -958,6 +976,7 @@ body {
   color: var(--text-primary);
   text-decoration: none;
   white-space: nowrap;
+  touch-action: manipulation;
 }
 
 .btn--primary {
@@ -965,9 +984,11 @@ body {
   border-color: var(--border-secondary);
 }
 
-.btn--primary:hover {
-  background-color: var(--button-primary-hover);
-  color: var(--white);
+@media (hover: hover) {
+  .btn--primary:hover {
+    background-color: var(--button-primary-hover);
+    color: var(--white);
+  }
 }
 
 .btn--secondary {
@@ -975,8 +996,10 @@ body {
   border-color: var(--border-primary);
 }
 
-.btn--secondary:hover {
-  border-color: var(--border-secondary);
+@media (hover: hover) {
+  .btn--secondary:hover {
+    border-color: var(--border-secondary);
+  }
 }
 
 /* Brands (node 462:2019). Повторяющийся элемент на всех страницах,
