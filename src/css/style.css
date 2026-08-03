@@ -403,7 +403,8 @@ body {
   color: var(--white);
 }
 
-/* Home — Hero (node 308:1917) */
+/* Hero-плейсхолдер (node 308:1917) — теперь только на внутренних
+   страницах (About/Services/…). Home использует .hero-main ниже. */
 .hero {
   width: 100%;
   height: 100vh;
@@ -426,6 +427,233 @@ body {
   text-align: center;
   white-space: nowrap;
   word-break: break-word;
+}
+
+/* Hero главной (node 657:3442). Тёмная секция на весь первый экран.
+
+   Модель высоты: height = 100svh минус фиксированный Header
+   (var(--header-height): 62px / 72px с 768px), но не меньше
+   min-height своего брейкпоинта (696/680/800/860/860). Когда экран
+   ВЫШЕ min-height, всё лишнее пространство уходит в верхний паддинг
+   Container — реализовано через justify-content: flex-end: контент
+   прижат к низу, заданный padding-top является минимумом, а зазор
+   между ним и контентом растягивается. Поэтому у Cover высота
+   ФИКСИРОВАННАЯ по брейкпоинтам (посчитана из min-height минус
+   паддинги/гэпы/контент по Figma): 456px (1000/1440), 354px (768),
+   284px (390); на 320 Cover — квадрат (aspect-ratio 1:1) и контейнер
+   по контенту.
+
+   Переносы (проверены пошрифтовой симуляцией против Figma):
+   заголовок nowrap с 390px (принудительный <br> после первого
+   предложения), на 320 — естественный перенос ("Один" /
+   "подрядчик." / "Весь проект."); подводка: на 320/390 естественный
+   перенос с nbsp у "и сервис" / "для зданий" (3 строки), с 768px —
+   принудительный <br> после "сервис" (класс .hero-main__br). */
+.hero-main {
+  width: 100%;
+  background-color: var(--background-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: calc(100vh - var(--header-height));
+  height: calc(100svh - var(--header-height));
+  min-height: 696px;
+}
+
+@media (min-width: 390px) {
+  .hero-main {
+    min-height: 680px;
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-main {
+    min-height: 800px;
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .hero-main {
+    min-height: 860px;
+  }
+}
+
+.hero-main__container {
+  width: 100%;
+  max-width: 1392px;
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* контент у нижней границы: свободное место превращается в
+     дополнительный верхний паддинг */
+  justify-content: flex-end;
+  gap: var(--spacing-5xl);
+  padding: var(--spacing-8xl) var(--spacing-3xl) var(--spacing-6xl);
+}
+
+@media (min-width: 390px) {
+  .hero-main__container {
+    gap: var(--spacing-6xl);
+    padding: var(--spacing-8xl) var(--spacing-4xl) var(--spacing-6xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-main__container {
+    gap: var(--spacing-7xl);
+    padding: var(--spacing-9xl) var(--spacing-6xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .hero-main__container {
+    padding: var(--spacing-9xl) var(--spacing-8xl) var(--spacing-8xl);
+  }
+}
+
+.hero-main__content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-3xl);
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .hero-main__content {
+    gap: var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .hero-main__content {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+.hero-main__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-lg);
+}
+
+@media (min-width: 1000px) {
+  .hero-main__text {
+    flex: 1 0 0;
+    min-width: 0;
+  }
+}
+
+.hero-main__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h4-size);
+  line-height: var(--h4-line);
+  letter-spacing: var(--h4-tracking);
+  color: var(--text-primary);
+}
+
+@media (min-width: 390px) {
+  .hero-main__heading {
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-main__heading {
+    font-size: var(--h2-size);
+    line-height: var(--h2-line);
+    letter-spacing: var(--h2-tracking);
+  }
+}
+
+.hero-main__accent {
+  color: var(--brand);
+}
+
+.hero-main__support {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--body2-size);
+  line-height: var(--body2-line);
+  letter-spacing: var(--body2-tracking);
+  color: var(--text-secondary);
+}
+
+@media (min-width: 768px) {
+  .hero-main__support {
+    font-size: var(--body1-size);
+    line-height: var(--body1-line);
+    letter-spacing: var(--body1-tracking);
+  }
+}
+
+/* <br> в подводке активен только с 768px */
+.hero-main__br {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hero-main__br {
+    display: inline;
+  }
+}
+
+.hero-main__buttons {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  flex-shrink: 0;
+}
+
+.hero-main__cover {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: var(--background-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px; /* в Figma радиус 12 (вне шкалы --radius-*) */
+  overflow: hidden;
+  display: flex;
+  flex-shrink: 0;
+}
+
+@media (min-width: 390px) {
+  .hero-main__cover {
+    aspect-ratio: auto;
+    height: 284px;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-main__cover {
+    height: 354px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .hero-main__cover {
+    height: 456px;
+  }
+}
+
+/* Слот под будущее видео: пока пустой тёмный бокс, как плейсхолдер
+   Video в Figma. Когда появится файл — заменить на <video autoplay
+   muted loop playsinline> с object-fit: cover. */
+.hero-main__video {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
 }
 
 /* Divider (node 416:1773). Повторяющийся элемент, встречается в 4

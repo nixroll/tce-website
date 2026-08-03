@@ -3,6 +3,31 @@ title: Thermo Concept Engineering
 layout: base.njk
 isHome: true
 ---
-<section class="hero" data-figma-node="308:1917" data-figma-name="Hero">
-  <p class="hero__title">Главная</p>
+{# Hero главной (node 657:3442). Только на Home — на остальных
+   страницах пока остаётся старый плейсхолдер .hero.
+   Высота — 100% первого экрана (100svh минус фиксированный Header),
+   у каждого брейкпоинта свой min-height; когда экран выше min-height,
+   контент прижат к низу — растёт верхний паддинг Container (см. CSS).
+   Переносы: в заголовке принудительный <br> после "Один подрядчик."
+   (на 320 "Один подрядчик." дополнительно переносится естественно);
+   в подводке <br> только с 768px (класс hero-main__br), на 320/390
+   перенос естественный, предлоги привязаны через nbsp.
+   Cover — место под видео (подключим позже, когда будет файл):
+   пока тёмный бокс с фоном primary, как плейсхолдер Video в Figma. #}
+<section class="hero-main" data-figma-node="657:3442" data-figma-name="Hero">
+  <div class="hero-main__container">
+    <div class="hero-main__content">
+      <div class="hero-main__text">
+        <h1 class="hero-main__heading">Один подрядчик.<br> <span class="hero-main__accent">Весь проект.</span></h1>
+        <p class="hero-main__support">Проектирование, поставка, монтаж и&nbsp;сервис<br class="hero-main__br"> инженерных систем для&nbsp;зданий.</p>
+      </div>
+      <div class="hero-main__buttons">
+        <a class="btn btn--secondary" href="{{ '/about/' | url }}">О нас</a>
+        <a class="btn btn--primary" href="{{ '/contact/' | url }}">Связаться</a>
+      </div>
+    </div>
+    <div class="hero-main__cover">
+      <div class="hero-main__video" aria-hidden="true"></div>
+    </div>
+  </div>
 </section>
