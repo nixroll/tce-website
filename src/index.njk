@@ -23,7 +23,10 @@ isHome: true
         <p class="hero-main__support">Проектирование, поставка, монтаж и&nbsp;сервис<br class="hero-main__br"> инженерных систем для&nbsp;зданий.</p>
       </div>
       <div class="hero-main__buttons">
-        <a class="btn btn--secondary" href="{{ '/about/' | url }}">О нас</a>
+        {# "Кто мы" — не ссылка на страницу, а плавный скролл к секции
+           Stats (id="about") на этой же странице; секция встаёт
+           впритык под фиксированный Header (scroll-margin-top) #}
+        <a class="btn btn--secondary" href="#about">Кто мы</a>
         <a class="btn btn--primary" href="{{ '/contact/' | url }}">Связаться</a>
       </div>
     </div>

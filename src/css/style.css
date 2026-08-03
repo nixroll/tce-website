@@ -138,6 +138,18 @@
   box-sizing: border-box;
 }
 
+html {
+  /* Плавный скролл для якорных переходов (кнопка "Кто мы" в Hero →
+     секция Stats и любые будущие якоря) */
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -621,7 +633,9 @@ body {
   width: 100%;
   aspect-ratio: 1 / 1;
   background-color: var(--background-primary);
-  border: 1px solid var(--border-primary);
+  /* белый 10% (по Figma), а не токен border-primary — рамка должна
+     чуть светиться поверх видео */
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px; /* в Figma радиус 12 (вне шкалы --radius-*) */
   overflow: hidden;
   display: flex;
@@ -1263,6 +1277,9 @@ body {
    на каждом брейкпоинте сверено через get_metadata (высоту текстового
    блока) и совпадает 1:1 после добавления &nbsp;. */
 .stats {
+  /* якорь "Кто мы" из Hero: при скролле к #about секция встаёт
+     впритык под фиксированный Header */
+  scroll-margin-top: var(--header-height);
   --background-primary: #fafafb;
   --background-secondary: #f3f4f6;
   --text-primary: #181d27;
