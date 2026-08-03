@@ -114,15 +114,10 @@ isHome: true
   </div>
 </section>
 
-{# Тёмный Divider сразу под Social, перед Stats-L (который base.njk
-   подключает первым в блоке isHome) — но НЕ на 320px: пользователь
-   убрал этот Divider на брейкпоинте 320 в Figma (node 573:3641,
-   Mobile 320 — Social сразу переходит в Stats-L, инстанса дивайдера
-   между ними нет), на 390px (405:2034) он остался (обычный тёмный
-   "Divider", не "Divider - L"). Тот же приём, что и у аналогичного
-   случая между Areas-L и Testimonial — dividerVariant="hidden-320"
-   (см. divider.njk и .divider--hidden-320 в CSS): display:none на
-   320, display:flex с 390px. #}
-{% set dividerVariant = "hidden-320" %}
-{% include "divider.njk" %}
-{% set dividerVariant = "" %}
+{# Divider между Social и Stats-L убран пользователем в Figma теперь
+   уже на ВСЕХ брейкпоинтах (проверено по node 405:2033 "Home": на
+   320/390/768/1000/1440 Social вплотную примыкает к Stats-L, инстанса
+   дивайдера между ними больше нет нигде) — раньше он был скрыт только
+   на 320px (dividerVariant="hidden-320"), теперь просто убран из
+   разметки полностью, Social переходит в Stats-L (который base.njk
+   подключает сразу после контента isHome) без какого-либо разделителя. #}
