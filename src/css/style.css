@@ -514,14 +514,14 @@ body {
 @media (min-width: 390px) {
   .hero-main__container {
     gap: var(--spacing-6xl);
-    padding: var(--spacing-9xl) var(--spacing-4xl) var(--spacing-6xl);
+    padding: var(--spacing-9xl) var(--spacing-3xl) var(--spacing-6xl);
   }
 }
 
 @media (min-width: 768px) {
   .hero-main__container {
     gap: var(--spacing-7xl);
-    padding: var(--spacing-9xl) var(--spacing-6xl) var(--spacing-6xl);
+    padding: var(--spacing-9xl) var(--spacing-7xl) var(--spacing-6xl);
   }
 }
 
