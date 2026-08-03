@@ -2418,6 +2418,9 @@ body {
   gap: var(--spacing-lg);
   align-items: flex-start;
   flex-shrink: 0;
+  /* и на самой обёртке тоже — тапы «мимо кнопки на пару пикселей»
+     не должны триггерить двойной-тап-зум браузера */
+  touch-action: manipulation;
 }
 
 .projects__nav-btn {
@@ -2433,10 +2436,17 @@ body {
   color: var(--text-secondary);
   cursor: pointer;
   transition: border-color 0.15s ease;
+  /* без задержки/зума по двойному тапу при быстром листании на тач-
+     устройствах */
+  touch-action: manipulation;
 }
 
-.projects__nav-btn:hover {
-  border-color: var(--border-secondary);
+/* Hover только на устройствах с настоящим ховером (мышь/трекпад) —
+   на iPhone/iPad эмулированный :hover «залипал» на кнопке после тапа */
+@media (hover: hover) {
+  .projects__nav-btn:hover {
+    border-color: var(--border-secondary);
+  }
 }
 
 .projects__nav-btn svg {
@@ -2486,11 +2496,20 @@ body {
   cursor: grabbing;
 }
 
+/* Gap между фото: на 320/390 — 24px (как боковые паддинги галереи на
+   мобилке), с 768px — 32px (по правкам после ревью, в Figma на
+   390 указан 32 — устно уточнено, что должно быть 24). */
 .projects__track {
   display: flex;
-  gap: var(--spacing-4xl);
+  gap: var(--spacing-3xl);
   transition: transform 480ms cubic-bezier(0.25, 0.8, 0.25, 1);
   will-change: transform;
+}
+
+@media (min-width: 768px) {
+  .projects__track {
+    gap: var(--spacing-4xl);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
