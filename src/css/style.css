@@ -434,14 +434,12 @@ body {
    Модель высоты: height = 100svh минус фиксированный Header
    (var(--header-height): 62px / 72px с 768px), но не меньше
    min-height своего брейкпоинта (696/680/800/860/860). Когда экран
-   ВЫШЕ min-height, всё лишнее пространство уходит в верхний паддинг
-   Container — реализовано через justify-content: flex-end: контент
-   прижат к низу, заданный padding-top является минимумом, а зазор
-   между ним и контентом растягивается. Поэтому у Cover высота
-   ФИКСИРОВАННАЯ по брейкпоинтам (посчитана из min-height минус
-   паддинги/гэпы/контент по Figma): 456px (1000/1440), 354px (768),
-   284px (390); на 320 Cover — квадрат (aspect-ratio 1:1) и контейнер
-   по контенту.
+   ВЫШЕ min-height, всё лишнее пространство уходит в Cover с видео
+   (flex-grow у Cover) — паддинги Container и контент остаются как в
+   Figma. Поэтому у Cover высоты по брейкпоинтам — это МИНИМУМЫ
+   (посчитаны из min-height минус паддинги/гэпы/контент по Figma):
+   456px (1000/1440), 354px (768), 284px (390); на 320 естественный
+   минимум — квадрат (aspect-ratio 1:1), дальше тоже растёт.
 
    Переносы (проверены пошрифтовой симуляцией против Figma):
    заголовок nowrap с 390px (принудительный <br> после первого
@@ -487,9 +485,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  /* контент у нижней границы: свободное место превращается в
-     дополнительный верхний паддинг */
-  justify-content: flex-end;
   gap: var(--spacing-5xl);
   padding: var(--spacing-8xl) var(--spacing-3xl) var(--spacing-6xl);
 }
@@ -625,25 +620,29 @@ body {
   border-radius: 12px; /* в Figma радиус 12 (вне шкалы --radius-*) */
   overflow: hidden;
   display: flex;
-  flex-shrink: 0;
+  /* лишняя высота экрана сверх min-height секции уходит сюда */
+  flex: 1 0 auto;
 }
 
 @media (min-width: 390px) {
   .hero-main__cover {
     aspect-ratio: auto;
-    height: 284px;
+    /* basis 0 (а не auto): иначе базовой высотой стала бы
+       интринсик-высота видео (16:9 от ширины), а не минимум по Figma */
+    flex-basis: 0;
+    min-height: 284px;
   }
 }
 
 @media (min-width: 768px) {
   .hero-main__cover {
-    height: 354px;
+    min-height: 354px;
   }
 }
 
 @media (min-width: 1000px) {
   .hero-main__cover {
-    height: 456px;
+    min-height: 456px;
   }
 }
 
