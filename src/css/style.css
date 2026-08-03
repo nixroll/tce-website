@@ -3062,27 +3062,22 @@ body {
    тоже отдельно от верхнего: 32px/320, 40px/390, 64px/768 (было
    одинаковое с верхним).
 
-   Обновление (раунд 2, пользователь поправил 390px и 768px в Figma):
-   боковой padding и border-top на .site-footer остаются ТОЛЬКО на
-   320px (border-top) и с 1000px (оба) — на 390/768 их снова нет
-   (первая версия с padding+border-top с 390px была неверной, откатил).
-   Border-left/right у Container (.footer__compact) теперь только в
-   диапазоне 390–767px — на 768px его тоже убрали (раньше добавил
-   ошибочно на весь диапазон 390+). Боковой padding Container:
-   20px(2xl)/320, 24px(3xl)/390, 48px(6xl)/768 — без изменений.
-   .footer__compact-bottom с 390px по-прежнему min-width: 320px. */
+   Обновление (раунд 3, пользователь поправил 390/768/320 в Figma):
+   border-top у .site-footer теперь везде (320/390/768/1000/1440) —
+   раньше на 390-999.98 его отключали, теперь просто убрали то
+   исключение. Border-left/right у Container (.footer__compact) убрали
+   совсем — раньше был в диапазоне 390-767px, теперь его нет ни на
+   320, ни на 390, ни на 768 (полностью убран у compact-раскладки;
+   .footer__wide на 1000/1440 не затронут, там сохранён). Боковой
+   padding Container: 20px(2xl)/320, 24px(3xl)/390, 48px(6xl)/768 —
+   без изменений. .footer__compact-bottom с 390px по-прежнему
+   min-width: 320px. */
 .site-footer {
   background-color: var(--background-secondary);
   border-top: 1px solid var(--border-primary);
   display: flex;
   justify-content: center;
   width: 100%;
-}
-
-@media (min-width: 390px) and (max-width: 999.98px) {
-  .site-footer {
-    border-top: none;
-  }
 }
 
 /* ---------- Compact: <1000px ---------- */
@@ -3105,13 +3100,6 @@ body {
   .footer__compact {
     padding-left: var(--spacing-3xl);
     padding-right: var(--spacing-3xl);
-  }
-}
-
-@media (min-width: 390px) and (max-width: 767.98px) {
-  .footer__compact {
-    border-left: 1px solid var(--border-primary);
-    border-right: 1px solid var(--border-primary);
   }
 }
 
