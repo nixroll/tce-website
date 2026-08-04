@@ -59,8 +59,10 @@ noindex: true
        проверено пошрифтовой симуляцией через fontTools по
        InterDisplay-SemiBold.woff2 на КАЖДОМ брейкпоинте — перенос
        происходит ровно в этом месте естественным образом, без
-       принудительного переноса. Подводка — тоже без ручных <br>/nbsp,
-       как в самом Figma-узле.
+       принудительного переноса. Подводка — без <br>, но с &nbsp; перед
+       "сервис" и "зданий" (04.08: в Figma там неразрывный пробел, на
+       ВСЕХ брейкпоинтах — не даёт словам "и"/"для" оставаться сиротами
+       в конце строки).
        Кнопки — новый компонент "Glass Button" (не .btn, как раньше):
        полупрозрачные, backdrop-blur, с состояниями Normal/Hover для
        Secondary ("Кто мы", ведёт к #about) и Primary ("Направления",
@@ -93,7 +95,7 @@ noindex: true
   <div class="home-hero__content">
     <div class="home-hero__text">
       <h1 class="home-hero__title">Один подрядчик. Весь проект.</h1>
-      <p class="home-hero__support">Проектирование, поставка, монтаж и сервис инженерных систем для зданий.</p>
+      <p class="home-hero__support">Проектирование, поставка, монтаж и&nbsp;сервис инженерных систем для&nbsp;зданий.</p>
     </div>
     <div class="home-hero__buttons">
       <a class="home-hero__btn home-hero__btn--secondary" href="#about">Кто мы</a>
