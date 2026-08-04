@@ -467,6 +467,21 @@ body {
     transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
       border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
+  /* 04.08: подсмотрено на menkind.co (по просьбе пользователя, см.
+     header-home-theme.js) — самый первый переход Hero→Social-L
+     теперь не просто кроссфейд цвета, а "медленный параллакс-снос
+     вверх + мгновенная (без fade) смена цвета, пока Header уже
+     скрыт за верхним краем экрана + быстрый заезд обратно вниз".
+     Мгновенная смена возможна только если на секунду выключить
+     transition — этот класс ставится JS-ом ровно на один кадр вокруг
+     самого свитча класса темы (add → forced reflow → remove на
+     следующем rAF), к остальным переходам (Social-L и ниже —
+     Stats/Areas/Testimonial/... там всё осталось как было, обычный
+     0.25s кроссфейд) не относится. */
+  .site-header.site-header--home.site-header--no-transition {
+    transition: none;
+  }
 }
 
 .header-home__logo {

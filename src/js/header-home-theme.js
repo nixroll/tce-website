@@ -39,16 +39,52 @@
  * порядку следования в разметке, без необходимости их различать
  * поимённо.
  *
- * Момент переключения — не когда Header уже "наехал" на секцию (её
- * верх строго меньше нижней границы Header), а на 1px раньше: когда
- * расстояние между ними ещё только дошло до 0px (по просьбе
- * пользователя — раньше срабатывало на кадре, где Header уже был
- * "над первым пикселем" секции из-за дискретности скролл-события/
- * requestAnimationFrame; +1px компенсирует это и не даёт кадру со
- * "старой" темой проскочить). */
+ * Для ВСЕХ переходов, начиная с Social-L и ниже (Stats/Areas/
+ * Testimonial/...), сохранён исходный простой механизм: как только
+ * секция дошла до нижней границы Header (+1px запаса — раньше
+ * срабатывало на кадре, где Header уже был "над первым пикселем"
+ * секции из-за дискретности scroll/rAF), класс темы переключается,
+ * дальше цвет плавно кроссфейдится 0.25s (см. style.css).
+ *
+ * 04.08, отдельное уточнение пользователя (изучили menkind.co): ТОЛЬКО
+ * самый первый переход, Hero→Social-L, теперь устроен иначе —
+ * повторяет механику Menkind:
+ *   1) Пока Header ещё не долистали до Social — он медленно "сносится"
+ *      вверх (translateY), с явно МЕНЬШЕЙ скоростью, чем скроллится
+ *      страница (коэффициент DRIFT_K = 0.2, т.е. в 5 раз медленнее) —
+ *      этим и достигается то самое "будто ниже скорости скролла"
+ *      ощущение. Замерено у них через getComputedStyle/inline-style на
+ *      живом сайте (DevTools): у них тот же коэффициент, линейно, без
+ *      всякого easing — сглаженность там даёт не сам transform, а
+ *      их Lenis (smooth-scroll библиотека на весь сайт, сглаживает
+ *      сам scrollY). Полноценный Lenis себе не тащим (это меняло бы
+ *      поведение скролла всего сайта, а остальная механика Header
+ *      пользователя устраивает) — вместо этого ниже используется
+ *      лёгкое экспоненциальное сглаживание (lerp) самого applied-
+ *      значения на каждом кадре: даёт похожее ощущение "с накатом",
+ *      никак не затрагивая нативный скролл.
+ *   2) Когда снос дотягивает Header до состояния "уже скрыт за верхним
+ *      краем" (т.е. до зоны RECOVERY_WINDOW перед реальным касанием
+ *      Social) — цвет мгновенно (БЕЗ fade — см. .site-header--no-
+ *      transition в style.css) переключается на светлый. Момент
+ *      подобран так, что Header в этот момент не виден на экране —
+ *      сам "скачок" цвета зритель не видит (ровно тот же трюк, что
+ *      подсмотрен у Menkind: у них цвет тоже переключается мгновенно,
+ *      но ровно в момент, когда translateY уже далеко за пределами
+ *      высоты Header).
+ *   3) Дальше, по мере того как Social дотягивается до Header, тот же
+ *      translateY быстро (короче дистанция, чем при сносе вверх)
+ *      возвращается к 0 — уже СВЕТЛЫЙ Header визуально "выезжает"
+ *      сверху вниз на своё место.
+ * Как только Social реально коснулась Header (gap <= 0) — управление
+ * полностью передаётся обычному механизму выше (без transform,
+ * обычный кроссфейд) для всех дальнейших секций до самого конца
+ * страницы. */
 (function () {
   var header = document.querySelector('.site-header--home');
   if (!header) return;
+
+  var social = document.querySelector('.social');
 
   var candidates = document.querySelectorAll(
     '.social, .stats, .divider, .areas, .testimonial, .services, .projects, .brands, .cta, .site-footer'
@@ -76,6 +112,15 @@
     return { el: el, theme: theme };
   });
 
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Параметры menkind-эффекта — подобраны визуально по замерам живого
+     сайта (DRIFT_K) и по высоте Header (RECOVERY_WINDOW), можно
+     подстроить на глаз после ревью. */
+  var DRIFT_K = 0.2; /* во сколько раз медленнее скролла едет Header вверх */
+  var RECOVERY_WINDOW_RATIO = 2.5; /* окно "заезда обратно", в высотах Header */
+  var SMOOTH = 0.2; /* lerp-коэффициент сглаживания (0..1, больше — резче) */
+
   var mq = window.matchMedia('(min-width: 768px)');
 
   function headerHeightPx() {
@@ -83,43 +128,139 @@
     return parseFloat(v) || 72;
   }
 
+  function setThemeClass(theme, instant) {
+    if (instant) {
+      header.classList.add('site-header--no-transition');
+      header.classList.remove('site-header--transparent', 'site-header--light', 'site-header--dark');
+      header.classList.add('site-header--' + theme);
+      /* форсируем reflow, чтобы отключённый transition точно
+         применился ДО смены класса темы, а не после */
+      void header.offsetWidth;
+      window.requestAnimationFrame(function () {
+        header.classList.remove('site-header--no-transition');
+      });
+    } else {
+      header.classList.remove('site-header--transparent', 'site-header--light', 'site-header--dark');
+      header.classList.add('site-header--' + theme);
+    }
+  }
+
   function currentTheme() {
-    var threshold = headerHeightPx() + 1; /* +1px — см. комментарий выше */
+    var threshold = headerHeightPx() + 1;
     var theme = 'transparent';
     for (var i = 0; i < sections.length; i++) {
       if (sections[i].el.getBoundingClientRect().top <= threshold) {
         theme = sections[i].theme;
       } else {
-        /* Секции идут в порядке документа сверху вниз — как только
-           одна ещё не дошла до границы, все следующие тем более не
-           дошли, дальше можно не проверять. */
         break;
       }
     }
     return theme;
   }
 
-  var ticking = false;
-  var current = null;
+  var current = null; /* последняя применённая тема (общий механизм, после hero-фазы) */
+  var heroSwapped = false; /* уже переключили на light в offscreen-момент этого захода? */
+  var smoothedY = 0; /* сглаженное (lerp) значение translateY */
+  var SETTLE_EPSILON = 0.05;
 
-  function update() {
-    ticking = false;
-    if (!mq.matches) return;
-    var theme = currentTheme();
-    if (theme === current || !THEMES[theme]) return;
-    current = theme;
-    header.classList.remove('site-header--transparent', 'site-header--light', 'site-header--dark');
-    header.classList.add('site-header--' + theme);
+  function heroPhase() {
+    /* Возвращает { inHero, settled }: inHero — Header ещё "в зоне
+       ответственности" menkind-эффекта (Social ещё не коснулась);
+       settled — smoothedY уже практически догнал цель (можно
+       останавливать rAF-цикл до следующего скролла). */
+    if (!social || reducedMotion) {
+      return { inHero: false, settled: true };
+    }
+    var H = headerHeightPx();
+    var gap = social.getBoundingClientRect().top - H;
+    if (gap <= 0) {
+      return { inHero: false, settled: true };
+    }
+
+    var recoveryWindow = H * RECOVERY_WINDOW_RATIO;
+    var targetY;
+    if (gap > recoveryWindow) {
+      /* Фаза 1: медленный снос вверх, ещё прозрачный. Обрабатывает и
+         обратный скролл: если до этого уже успели переключиться на
+         light (фаза 2) и теперь снова поднимаемся выше recoveryWindow —
+         возвращаем прозрачную тему, тоже мгновенно (в этой точке
+         Header всё ещё почти полностью скрыт за верхним краем — как
+         и при переключении вперёд, скачок цвета не виден). */
+      targetY = -DRIFT_K * window.scrollY;
+      if (current !== 'transparent') {
+        setThemeClass('transparent', true);
+        current = 'transparent';
+      }
+      heroSwapped = false;
+    } else {
+      /* Фаза 2: "заезд" обратно на 0 по мере приближения Social */
+      if (!heroSwapped) {
+        setThemeClass('light', true);
+        heroSwapped = true;
+        current = 'light';
+      }
+      var progress = 1 - gap / recoveryWindow; /* 0 на входе в окно, 1 у gap=0 */
+      if (progress < 0) progress = 0;
+      if (progress > 1) progress = 1;
+      var entryY = -DRIFT_K * (window.scrollY - (recoveryWindow - gap)); /* значение сноса в момент входа в окно, пересчитанное без резкого скачка */
+      targetY = entryY * (1 - progress);
+    }
+
+    var settled = Math.abs(targetY - smoothedY) <= SETTLE_EPSILON;
+    smoothedY += (targetY - smoothedY) * SMOOTH;
+    header.style.transform = 'translateY(' + smoothedY.toFixed(2) + 'px)';
+    return { inHero: true, settled: settled };
   }
 
-  function onScrollOrResize() {
-    if (ticking) return;
-    ticking = true;
-    window.requestAnimationFrame(update);
+  /* heroPhase() лерпит smoothedY к цели КАЖДЫЙ кадр — чтобы догон
+     (сглаживание) реально доигрывался, а не замирал на значении
+     последнего scroll-события, нужен НЕПРЕРЫВНЫЙ rAF-цикл, а не
+     разовый вызов на каждое событие (как у остального механизма
+     ниже по странице — там достаточно одного пересчёта на событие,
+     никакого сглаживания нет). Цикл сам себя останавливает, как
+     только либо Header вышел из hero-зоны (gap <= 0), либо просто
+     нет скролла и smoothedY уже сошёлся к своей текущей цели (иначе
+     он крутился бы бесконечно даже когда страница неподвижна на
+     самом верху) — следующий scroll/resize снова его будит. */
+  var rafId = null;
+
+  function tick() {
+    rafId = null;
+    if (!mq.matches) {
+      header.style.transform = '';
+      smoothedY = 0;
+      return;
+    }
+    var state = heroPhase();
+
+    if (!state.inHero) {
+      header.style.transform = '';
+      smoothedY = 0;
+      var theme = currentTheme();
+      if (theme !== current && THEMES[theme]) {
+        current = theme;
+        setThemeClass(theme, false);
+      }
+    }
+
+    if (mq.matches && !state.settled) {
+      rafId = window.requestAnimationFrame(tick);
+    }
   }
 
-  window.addEventListener('scroll', onScrollOrResize, { passive: true });
-  window.addEventListener('resize', onScrollOrResize);
-  mq.addEventListener('change', update);
-  update();
+  function ensureLoop() {
+    if (!mq.matches) {
+      header.style.transform = '';
+      smoothedY = 0;
+      return;
+    }
+    if (rafId === null) {
+      rafId = window.requestAnimationFrame(tick);
+    }
+  }
+
+  window.addEventListener('scroll', ensureLoop, { passive: true });
+  window.addEventListener('resize', ensureLoop);
+  mq.addEventListener('change', ensureLoop);
+  ensureLoop();
 })();
