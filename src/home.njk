@@ -80,13 +80,44 @@ noindex: true
    задумывалась буквально фиксированная высота 900px — поправь, я это
    не проверял напрямую в Figma (там нет способа задать "100vh"
    буквально, только конкретные px). #}
+{# 04.08, доп. правка по запросу пользователя: "качество видео сильно
+   сжимается, особенно на десктопе" — двухступенчатая (progressive)
+   загрузка видео, как у крупных студийных сайтов. Изначальный h264
+   был ~1.1Mbps на 1920x1080 — заметно занижено для детальной съёмки
+   (трубы, мелкие детали, тени), особенно на большом десктопном
+   вьюпорте, где ролик рендерится в разы крупнее. Раньше: два <source
+   media> без JS. Теперь: то же переключение по ориентации остаётся,
+   но добавлен ВТОРОЙ, качественный тайм-код каждого ролика:
+     - hero-home-{horizontal,vertical}.mp4 — быстрый LQ-тир (тот же
+       файл, что был и раньше, ~1.1-1.2Mbps, ~1.4-1.7MB) — грузится и
+       проигрывается первым, чтобы видео стартовало мгновенно без
+       ожидания;
+     - hero-home-{horizontal,vertical}-hq.mp4 (НОВОЕ) — пережаты из
+       исходных Artlist-файлов заново, CRF19/slow, ~3-3.3Mbps
+       (~2.6-3x выше по битрейту), 3.8MB/4.9MB — заметно чище на
+       глаз (проверено покадровым сравнением), но всё ещё компактны
+       для веба.
+   Сам своп LQ→HQ без built-in HTML — нужен JS (см.
+   /js/hero-video-upgrade.js): после старта LQ-видео скрипт в фоне
+   подгружает HQ-версию нужной ориентации (та же логика брейкпоинта
+   999.98px, что и у <source media>, только продублирована в JS через
+   matchMedia — сам <video> не даёт узнать, какой source браузер
+   выбрал), и когда она готова проиграться без буферизации —
+   подменяет src на лету с сохранением currentTime (без перезапуска/
+   мигания). При медленном соединении (Save-Data / об этом сообщает
+   navigator.connection) апгрейд просто не запускается, юзер смотрит
+   LQ — тоже вполне прилично по качеству, никакого сломанного UX.
+   HQ-адреса переданы через data-атрибуты на video, а не жёстко в JS,
+   чтобы верстка и логика не дублировали пути. #}
 <section class="home-hero" data-figma-node="765:4734" data-figma-name="Home Hero">
   <div class="home-hero__media" aria-hidden="true">
     <video class="home-hero__video"
       poster="{{ '/videos/hero-poster-horizontal.jpg' | url }}"
       autoplay muted loop playsinline
       preload="metadata"
-      tabindex="-1">
+      tabindex="-1"
+      data-hq-vertical="{{ '/videos/hero-home-vertical-hq.mp4' | url }}"
+      data-hq-horizontal="{{ '/videos/hero-home-horizontal-hq.mp4' | url }}">
       <source src="{{ '/videos/hero-home-vertical.mp4' | url }}" media="(max-width: 999.98px)">
       <source src="{{ '/videos/hero-home-horizontal.mp4' | url }}">
     </video>
