@@ -450,29 +450,48 @@ body {
    (т.е. на <768px) Header использует ИСХОДНЫЕ стили .site-header
    (тёмный сплошной фон, var(--border-primary)) — 1:1 как у живого
    Header, ничего не переопределяется. */
+/* 04.08: длительность/кривая транзишена (0.25s cubic-bezier(0.4, 0,
+   0.2, 1)) сверена с attio.com через DevTools (getComputedStyle их
+   <header>) по просьбе пользователя — у них ровно та же
+   длительность (250ms), отличалась только кривая (у нас был обычный
+   ease) и, что важнее, СОГЛАСОВАННОСТЬ: у них фон/бордер/цвет всех
+   вложенных элементов анимируются одной transition-colors утилитой
+   (одна длительность на всё), а у нас были разнобой (0.25s/0.2s/
+   0.15s на разных элементах) и мгновенный, без анимации, свитч
+   логотипа (display:none/block) — это и создавало ощущение "не так
+   гладко/быстро". Ниже везде одна и та же пара значений. */
 @media (min-width: 768px) {
   .site-header.site-header--home {
     background-color: transparent;
     border-bottom-color: transparent;
-    transition: background-color 0.25s ease, border-color 0.25s ease;
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
 .header-home__logo {
   display: block;
+  position: relative;
   width: 151px;
   height: 28px;
   flex-shrink: 0;
 }
 
+/* Кроссфейд вместо мгновенного display:none/block — обе картинки
+   уложены друг на друга (position:absolute) и переключаются через
+   opacity, той же длительностью/кривой, что и остальной Header. */
 .header-home__logo-img {
   display: block;
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
+  opacity: 1;
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .header-home__logo-img--light {
-  display: none;
+  opacity: 0;
 }
 
 .header-home__right {
@@ -500,7 +519,7 @@ body {
   line-height: 24px;
   text-decoration: none;
   white-space: nowrap;
-  transition: color 0.15s ease;
+  transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .header-home__cta {
@@ -516,7 +535,9 @@ body {
   line-height: 24px;
   text-decoration: none;
   white-space: nowrap;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (min-width: 768px) {
@@ -557,11 +578,11 @@ body {
   }
 
   .site-header--home.site-header--light .header-home__logo-img--dark {
-    display: none;
+    opacity: 0;
   }
 
   .site-header--home.site-header--light .header-home__logo-img--light {
-    display: block;
+    opacity: 1;
   }
 
   .site-header--home.site-header--light .header-home__link {

@@ -53,8 +53,15 @@
 <header class="site-header site-header--home site-header--transparent" data-figma-node="335:2092" data-figma-name="Desktop and Tablet Header (Home)">
   <div class="header__inner">
     <a href="{{ '/' | url }}" class="header-home__logo" aria-label="TCE — на главную">
-      <img class="header-home__logo-img header-home__logo-img--dark" src="{{ '/images/logo-text.svg' | url }}" width="151" height="28" alt="Thermo Concept Engineering">
-      <img class="header-home__logo-img header-home__logo-img--light" src="{{ '/images/logo-text-light.svg' | url }}" width="151" height="28" alt="Thermo Concept Engineering">
+      {# alt="" + aria-hidden на обеих картинках: доступное имя уже
+         даёт aria-label на ссылке-обёртке; раньше alt дублировался на
+         каждой картинке отдельно — не страшно было при display:none/
+         block (скринридер видел только видимую), но с кроссфейдом
+         (04.08, обе теперь просто opacity 0/1, физически в DOM и
+         видимы для AT одновременно) дублирование стало бы озвучиваться
+         дважды. #}
+      <img class="header-home__logo-img header-home__logo-img--dark" src="{{ '/images/logo-text.svg' | url }}" width="151" height="28" alt="" aria-hidden="true">
+      <img class="header-home__logo-img header-home__logo-img--light" src="{{ '/images/logo-text-light.svg' | url }}" width="151" height="28" alt="" aria-hidden="true">
     </a>
 
     <button class="header__burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">
