@@ -78,7 +78,12 @@ noindex: true
 </section>
 
 {# Social (node 702:4876) — бесконечная лента логотипов клиентов,
-   сразу под Hero, только на Home. Высота (96px) и вертикальный
+   сразу под Hero, только на Home. СВЕТЛАЯ тема (04.08, только здесь,
+   на /home/ — на живой "/" секция осталась тёмной): класс
+   .social--light поверх .social переопределяет фон/бордер (см.
+   style.css), картинки берутся из /images/social-light/ вместо
+   /images/social/ (те же логотипы, только перекрашены пользователем
+   под светлый фон, геометрия не менялась). Высота (96px) и вертикальный
    паддинг внутри каждого логотипного контейнера одинаковы на всех
    брейкпоинтах, но горизонтальный паддинг — нет (правка в Figma сразу
    на всех брейкпоинтах): 32px слева/справа на 320/390/768, 48px с
@@ -100,32 +105,32 @@ noindex: true
    1440px (1392px), и в момент разворота анимации была бы видна
    пустота). Дубли помечены aria-hidden. prefers-reduced-motion
    останавливает анимацию. #}
-<section class="social" data-figma-node="702:4876" data-figma-name="Social">
+<section class="social social--light" data-figma-node="702:4876" data-figma-name="Social">
   <div class="social__container">
     <div class="social__track">
       <div class="social__group">
-        <div class="social__logo social__logo--a100"><img src="{{ '/images/social/a100.svg' | url }}" alt="A100"></div>
-        <div class="social__logo social__logo--alutech"><img src="{{ '/images/social/alutech.svg' | url }}" alt="Alutech"></div>
-        <div class="social__logo social__logo--great-stone"><img src="{{ '/images/social/great-stone.svg' | url }}" alt="Great Stone"></div>
-        <div class="social__logo social__logo--amkodor"><img src="{{ '/images/social/amkodor.svg' | url }}" alt="Amkodor"></div>
-        <div class="social__logo social__logo--bolma"><img src="{{ '/images/social/bolma.svg' | url }}" alt="Bolma"></div>
-        <div class="social__logo social__logo--scmitz"><img src="{{ '/images/social/scmitz.svg' | url }}" alt="Scmitz"></div>
+        <div class="social__logo social__logo--a100"><img src="{{ '/images/social-light/a100.svg' | url }}" alt="A100"></div>
+        <div class="social__logo social__logo--alutech"><img src="{{ '/images/social-light/alutech.svg' | url }}" alt="Alutech"></div>
+        <div class="social__logo social__logo--great-stone"><img src="{{ '/images/social-light/great-stone.svg' | url }}" alt="Great Stone"></div>
+        <div class="social__logo social__logo--amkodor"><img src="{{ '/images/social-light/amkodor.svg' | url }}" alt="Amkodor"></div>
+        <div class="social__logo social__logo--bolma"><img src="{{ '/images/social-light/bolma.svg' | url }}" alt="Bolma"></div>
+        <div class="social__logo social__logo--scmitz"><img src="{{ '/images/social-light/scmitz.svg' | url }}" alt="Scmitz"></div>
       </div>
       <div class="social__group" aria-hidden="true">
-        <div class="social__logo social__logo--a100"><img src="{{ '/images/social/a100.svg' | url }}" alt="" aria-hidden="true"></div>
-        <div class="social__logo social__logo--alutech"><img src="{{ '/images/social/alutech.svg' | url }}" alt="" aria-hidden="true"></div>
-        <div class="social__logo social__logo--great-stone"><img src="{{ '/images/social/great-stone.svg' | url }}" alt="" aria-hidden="true"></div>
-        <div class="social__logo social__logo--amkodor"><img src="{{ '/images/social/amkodor.svg' | url }}" alt="" aria-hidden="true"></div>
-        <div class="social__logo social__logo--bolma"><img src="{{ '/images/social/bolma.svg' | url }}" alt="" aria-hidden="true"></div>
-        <div class="social__logo social__logo--scmitz"><img src="{{ '/images/social/scmitz.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--a100"><img src="{{ '/images/social-light/a100.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--alutech"><img src="{{ '/images/social-light/alutech.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--great-stone"><img src="{{ '/images/social-light/great-stone.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--amkodor"><img src="{{ '/images/social-light/amkodor.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--bolma"><img src="{{ '/images/social-light/bolma.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--scmitz"><img src="{{ '/images/social-light/scmitz.svg' | url }}" alt="" aria-hidden="true"></div>
       </div>
       <div class="social__group" aria-hidden="true">
-        <div class="social__logo social__logo--a100"><img src="{{ '/images/social/a100.svg' | url }}" alt="" aria-hidden="true"></div>
-        <div class="social__logo social__logo--alutech"><img src="{{ '/images/social/alutech.svg' | url }}" alt="" aria-hidden="true"></div>
-        <div class="social__logo social__logo--great-stone"><img src="{{ '/images/social/great-stone.svg' | url }}" alt="" aria-hidden="true"></div>
-        <div class="social__logo social__logo--amkodor"><img src="{{ '/images/social/amkodor.svg' | url }}" alt="" aria-hidden="true"></div>
-        <div class="social__logo social__logo--bolma"><img src="{{ '/images/social/bolma.svg' | url }}" alt="" aria-hidden="true"></div>
-        <div class="social__logo social__logo--scmitz"><img src="{{ '/images/social/scmitz.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--a100"><img src="{{ '/images/social-light/a100.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--alutech"><img src="{{ '/images/social-light/alutech.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--great-stone"><img src="{{ '/images/social-light/great-stone.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--amkodor"><img src="{{ '/images/social-light/amkodor.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--bolma"><img src="{{ '/images/social-light/bolma.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--scmitz"><img src="{{ '/images/social-light/scmitz.svg' | url }}" alt="" aria-hidden="true"></div>
       </div>
     </div>
   </div>
