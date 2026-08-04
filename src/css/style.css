@@ -415,6 +415,204 @@ body {
   color: var(--white);
 }
 
+/* ============================================================
+   Header — НОВАЯ версия, ПОКА ТОЛЬКО для /home/ (04.08). Полностью
+   отдельный компонент (см. header-home.njk) — ничего из .header__ /
+   .header-link выше этим не переиспользуется и не меняется, живой
+   Header ("/") остаётся как есть. Общий класс .site-header
+   переиспользован ТОЛЬКО ради структурных/бесцветных правил
+   (position:fixed, бургер <768px — см. выше) и работы header.js
+   без изменений; всё, что касается цвета/темы на >=768px, — новые
+   правила ниже под .site-header--home, которые НИКОГДА не
+   применяются к живому Header (там нет класса site-header--home).
+
+   Три темы (Theme в Figma, node 335:2092): Dark — 1:1 копия
+   палитры живого Header, но с новым hover (см. ниже); Light —
+   белый фон; Home Hero — прозрачный, только нижний stroke
+   rgba(255,255,255,0.1). Сейчас на /home/ используются только
+   Home Hero (транспарентный, изначально) и Light (после скролла до
+   Social - L, переключает /js/header-home-theme.js) — Dark пока
+   нигде не подключена, оставлена про запас под будущую
+   светлую/тёмную переключалку на других страницах (п.8 запроса
+   пользователя).
+
+   ВАЖНО: все цветовые/темовые правила ниже (фон/бордер Header,
+   цвет ссылок и hover, вид кнопки, переключение логотипа)
+   специально обёрнуты в @media (min-width: 768px). "Mobile Header
+   пока не трогаем" по ТЗ — по умолчанию у этого нового <header>
+   в разметке уже стоит класс site-header--transparent (см.
+   header-home.njk), и header-home-theme.js на <768px сознательно
+   не переключает тему (проверяет matchMedia и рано выходит) — но
+   сам класс --transparent в разметке остаётся всегда, поэтому без
+   этого @media transparent-стили применились бы и на мобилке,
+   Header стал бы прозрачным поверх контента вместо привычного
+   тёмного сплошного — ровно то, чего просили не делать. Без темы
+   (т.е. на <768px) Header использует ИСХОДНЫЕ стили .site-header
+   (тёмный сплошной фон, var(--border-primary)) — 1:1 как у живого
+   Header, ничего не переопределяется. */
+@media (min-width: 768px) {
+  .site-header.site-header--home {
+    background-color: transparent;
+    border-bottom-color: transparent;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+  }
+}
+
+.header-home__logo {
+  display: block;
+  width: 151px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.header-home__logo-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.header-home__logo-img--light {
+  display: none;
+}
+
+.header-home__right {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .header-home__right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4xl);
+  }
+}
+
+.header-home__links {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3xl);
+}
+
+.header-home__link {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 24px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.header-home__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md) var(--spacing-2xl);
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 24px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  /* ---------- Theme = Home Hero (прозрачный, по умолчанию на /home/) ---------- */
+  .site-header--home.site-header--transparent {
+    background-color: transparent;
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .site-header--home.site-header--transparent .header-home__link {
+    color: var(--text-secondary); /* #cecfd2, как у Dark темы */
+  }
+
+  .site-header--home.site-header--transparent .header-home__link:hover {
+    color: var(--text-primary); /* #f7f7f7 — новый hover, п.2 запроса (раньше был --brand/оранжевый) */
+  }
+
+  /* "Glass Button" — 1:1 по значениям с .home-hero__btn--primary
+     (нарочно продублировано, а не переиспользован класс, чтобы
+     компоненты Header и Home Hero не были связаны друг с другом). */
+  .site-header--home.site-header--transparent .header-home__cta {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    color: #181d27;
+  }
+
+  .site-header--home.site-header--transparent .header-home__cta:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-color: #fff;
+  }
+
+  /* ---------- Theme = Light (белый фон, после скролла до Social - L) ---------- */
+  .site-header--home.site-header--light {
+    background-color: var(--white);
+    border-bottom-color: #e5e7ec;
+  }
+
+  .site-header--home.site-header--light .header-home__logo-img--dark {
+    display: none;
+  }
+
+  .site-header--home.site-header--light .header-home__logo-img--light {
+    display: block;
+  }
+
+  .site-header--home.site-header--light .header-home__link {
+    color: #414651; /* text/secondary-text у светлой темы */
+  }
+
+  .site-header--home.site-header--light .header-home__link:hover {
+    color: #181d27; /* text/primary-text у светлой темы, п.2 запроса */
+  }
+
+  /* ---------- Theme = Dark (про запас, см. комментарий блока выше — пока не подключена) ---------- */
+  .site-header--home.site-header--dark {
+    background-color: var(--background-secondary);
+    border-bottom-color: var(--border-primary);
+  }
+
+  .site-header--home.site-header--dark .header-home__link {
+    color: var(--text-secondary);
+  }
+
+  .site-header--home.site-header--dark .header-home__link:hover {
+    color: var(--text-primary); /* новый hover, п.2 запроса — совпадает с Home Hero */
+  }
+
+  /* Кнопка у Light и Dark — одинаковая тёмно-серая (п.4 запроса:
+     "на Light Header кнопка того же цвета, что и у Dark"), только у
+     Home Hero/--transparent она стеклянная (см. выше). */
+  .site-header--home.site-header--light .header-home__cta,
+  .site-header--home.site-header--dark .header-home__cta {
+    background-color: #373c43;
+    border-color: #525966;
+    color: #f7f7f7;
+  }
+
+  .site-header--home.site-header--light .header-home__cta:hover,
+  .site-header--home.site-header--dark .header-home__cta:hover {
+    background-color: #40464e;
+  }
+}
+
+/* body--header-overlay (04.08) — на /home/ (transparentHeader:true
+   в front matter, см. base.njk) с 768px больше нет резерва под
+   Header в потоке: Header лежит поверх Hero (position:fixed), а не
+   выше него. На <768px "Mobile Header пока не трогаем" — резерв
+   (padding-top) остаётся прежним, там всё как было. */
+@media (min-width: 768px) {
+  body.body--header-overlay {
+    padding-top: 0;
+  }
+}
+
 /* Hero-плейсхолдер (node 308:1917) — теперь только на внутренних
    страницах (About/Services/…). Home использует .hero-main ниже. */
 .hero {
@@ -800,6 +998,22 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
+}
+
+/* 04.08: новый прозрачный Header (см. header-home.njk) — с 768px
+   body больше не резервирует место под Header (padding-top:0, см.
+   .body--header-overlay), Header лежит поверх Hero через
+   position:fixed. Раньше высота секции считалась как 100vh минус
+   header-height, чтобы вместе с зарезервированным местом в сумме
+   получался ровно 100vh экрана; теперь резерва нет — сама секция
+   должна быть на все 100vh/100lvh без вычитания. На <768px "Mobile
+   Header пока не трогаем" — там резерв остаётся, поэтому вычитание
+   header-height тоже остаётся (правило выше, до этого override). */
+@media (min-width: 768px) {
+  .home-hero {
+    height: calc(100vh + var(--hero-overshoot));
+    height: calc(100lvh + var(--hero-overshoot));
+  }
 }
 
 /* 04.08: подтверждено пользователем на iPhone 17 Pro Max (iPad и

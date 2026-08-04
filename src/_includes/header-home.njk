@@ -1,0 +1,87 @@
+{# Header — НОВАЯ отдельная версия, пока ТОЛЬКО для /home/ (04.08,
+   запрос пользователя). В Figma это тот же компонент "Desktop and
+   Tablet Header" (node 335:2092), но с тремя темами (Theme):
+   Dark (11:140, = текущий живой Header), Light (807:4952, белый фон,
+   node 335:2092 доп. вариант) и Home Hero (808:4982 — прозрачный,
+   только нижний stroke rgba(255,255,255,0.1), поверх видео Hero).
+
+   ВАЖНО: это ПОЛНОСТЬЮ отдельный компонент, не модификация
+   header.njk — специально, чтобы точно не задеть живую "/" (там
+   по-прежнему header.njk без изменений) и чтобы потом (когда решим
+   интегрировать эту версию везде) можно было безопасно заменить.
+   Мобильная часть (бургер, <768px, "Mobile Header пока не трогаем")
+   — 1:1 копия из header.njk, те же классы (.site-header,
+   .header__burger, .header__mobile-panel, .header-mlink,
+   .header__mobile-cta), header.js их уже обслуживает через
+   querySelector('.site-header')/('.header__burger') — работает без
+   изменений, т.к. класс .site-header переиспользован (это чистая
+   структурная/allowed-to-share часть, без цвета). Часть с
+   Links+CTA+логотипом на >=768px — полностью новая, под классами
+   .header-home__*, никогда не пересекается с .header__*/.header-link
+   живого Header.
+
+   Три темы переключаются модификатором на корневом <header>:
+   .site-header--home.site-header--transparent (Home Hero, по
+   умолчанию при загрузке /home/), .site-header--home.site-header--light
+   (после того как Header "коснулся" секции Social - L, см.
+   /js/header-home-theme.js) и .site-header--home.site-header--dark
+   (заложено на будущее по просьбе пользователя — "у других страниц
+   будет переключение между тёмной и светлой темами" — пока нигде не
+   используется, но компонент уже её поддерживает).
+
+   Логотип — двумя <img>, показывается нужный через display (тот же
+   приём, что и у бургер-иконок menu/close в этом же Header): Text
+   Logo Dark (белый текст, .../logo-text.svg — тот же файл, что и у
+   живого Header, цвет не менялся) для Dark/Home Hero тем, Text Logo
+   Light (тёмно-синий текст, .../logo-text-light.svg, НОВЫЙ файл,
+   прислан пользователем 04.08) для Light темы.
+
+   Hover у ссылок (04.08, п.2 запроса) — раньше в проекте hover был
+   var(--brand) (оранжевый), в новой Figma-версии это text/primary-text
+   темы: #f7f7f7 у Dark/Home Hero, #181d27 у Light. Это касается
+   только ЭТОГО нового компонента — live header.js/header.njk
+   /header-link:hover остаётся оранжевым, не трогали.
+
+   Кнопка "Связаться" (CTA) — у Light И Dark одинаковая (тёмно-серая,
+   #373c43/#525966/#f7f7f7, п.4 запроса: "на Light Header кнопка
+   того же цвета, что и у Dark"), у Home Hero — "Glass Button"
+   (полупрозрачная, backdrop-blur), в точности как
+   .home-hero__btn--primary — специально продублировано в
+   .header-home__cta под темой --transparent отдельными правилами
+   (не переиспользует класс home-hero__btn напрямую, чтобы компоненты
+   не были связаны друг с другом). #}
+<header class="site-header site-header--home site-header--transparent" data-figma-node="335:2092" data-figma-name="Desktop and Tablet Header (Home)">
+  <div class="header__inner">
+    <a href="{{ '/' | url }}" class="header-home__logo" aria-label="TCE — на главную">
+      <img class="header-home__logo-img header-home__logo-img--dark" src="{{ '/images/logo-text.svg' | url }}" width="151" height="28" alt="Thermo Concept Engineering">
+      <img class="header-home__logo-img header-home__logo-img--light" src="{{ '/images/logo-text-light.svg' | url }}" width="151" height="28" alt="Thermo Concept Engineering">
+    </a>
+
+    <button class="header__burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">
+      <svg class="header__burger-icon header__burger-icon--menu" width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M3.75 10.625H26.25M3.75 19.375H26.25" stroke="#CECFD2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <svg class="header__burger-icon header__burger-icon--close" width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M22.5 7.5L7.5 22.5M7.5 7.5L22.5 22.5" stroke="#CECFD2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="header-home__right">
+      <nav class="header-home__links">
+        <a class="header-home__link" href="{{ '/about/' | url }}">О нас</a>
+        <a class="header-home__link" href="{{ '/services/' | url }}">Услуги</a>
+        <a class="header-home__link" href="{{ '/catalog/' | url }}">Каталог</a>
+      </nav>
+      <a class="header-home__cta" href="{{ '/contact/' | url }}">Связаться</a>
+    </div>
+  </div>
+
+  <div class="header__mobile-panel" id="mobile-menu">
+    <nav class="header__mobile-links">
+      <a class="header-mlink" href="{{ '/about/' | url }}">О нас</a>
+      <a class="header-mlink" href="{{ '/services/' | url }}">Услуги</a>
+      <a class="header-mlink" href="{{ '/catalog/' | url }}">Каталог</a>
+    </nav>
+    <a class="header__mobile-cta" href="{{ '/contact/' | url }}">Связаться</a>
+  </div>
+</header>
