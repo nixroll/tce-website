@@ -196,6 +196,21 @@ body {
   :root {
     --header-height: 72px;
   }
+
+  /* 04.08: реальная высота Header на /home/ теперь 64px (см. правку
+     .site-header--home .header__inner ниже — py-12 вместо py-16),
+     а не общие 72px. --header-height используется не только для
+     отступа body (тот на /home/ и так занулён через
+     .body--header-overlay), но и для scroll-margin-top у якорных
+     секций — если оставить 72, при переходе по якорю (например,
+     кнопка "Кто мы" в Hero) появится лишний зазор в 8px под Header.
+     Правим значение переменной ТОЛЬКО в рамках документа /home/ —
+     html:has(body.body--header-overlay) матчит корень именно этой
+     страницы (класс .body--header-overlay ставится только в
+     home.njk), на живой "/" это правило не сработает. */
+  html:has(body.body--header-overlay) {
+    --header-height: 64px;
+  }
 }
 
 /* Общий стиль текстовых ссылок футера (компонент Footer Link) */
@@ -494,6 +509,20 @@ body {
      0.25s кроссфейд) не относится. */
   .site-header.site-header--home.site-header--no-transition {
     transition: none;
+  }
+
+  /* 04.08: пользователь уменьшил высоту этого Header в Figma —
+     вертикальный padding "Container" теперь py-12 (--spacing-lg)
+     вместо py-16 (--spacing-xl), одинаково на 768/1000/1440 (node
+     335:2092, "Container" у тем Home Hero/Light — 808:5001/
+     808:4992/808:4983 и 807:*). У живого Header (.header__inner
+     без --home, используется и в header.njk) padding не менялся —
+     переопределяем только внутри .site-header--home, чтобы живую
+     "/" не задеть (там своя копия .header__inner с исходным py-16,
+     см. комментарий над media-блоком выше). */
+  .site-header--home .header__inner {
+    padding-top: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
   }
 }
 
