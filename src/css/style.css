@@ -162,6 +162,19 @@ html, body {
   background-color: var(--background-secondary);
 }
 
+/* 04.08, пользователь: на /home/ у страницы теперь свой светлый Header
+   поверх Hero (см. .body--header-overlay ниже), так что тёмный фон
+   документа больше не совпадает с тем, что видно в начале страницы —
+   меняем just для /home/ (класс .body--header-overlay ставится только
+   в home.njk, на живой "/" его не бывает) на тот же цвет, что и у
+   светлых секций (--background-primary: #fafafb, см. .social--light
+   и остальные "-L" секции). html выбран через :has(), т.к. именно у
+   html, а не body, браузер берёт цвет под overscroll/pull-to-refresh. */
+body.body--header-overlay,
+html:has(body.body--header-overlay) {
+  background-color: #fafafb;
+}
+
 body {
   font-family: "Inter", sans-serif;
   /* Приближает рендер шрифта к тому, что видно в Figma —
