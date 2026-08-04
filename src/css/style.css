@@ -812,6 +812,12 @@ body {
 .social--light {
   --background-primary: #fafafb;
   --border-primary: #e5e7ec;
+
+  /* 04.08: пользователь убрал border-bottom секции в Figma (только
+     у светлой версии, node 702:4876) — низа больше нет, но левый/
+     правый stroke у .social__container (border-l border-r в Figma)
+     остался как был, т.к. использует ту же var(--border-primary). */
+  border-bottom: none;
 }
 
 .social__container {
