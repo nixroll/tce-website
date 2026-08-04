@@ -756,6 +756,228 @@ body {
   display: block;
 }
 
+/* Home Hero (node 765:4734) — "Home Hero", ПОЛНОСТЬЮ отдельный от
+   .hero-main* (та версия используется на живой "/" в index.njk и не
+   трогалась). Только на /home/, см. подробный комментарий в home.njk.
+
+   Высота секции — по аналогии с предыдущим Hero: в Figma фиксированные
+   h-900/min-h-720 на каждом брейкпоинте — типичный для Figma способ
+   изобразить "почти полный экран" (сам инструмент не умеет "100vh").
+   Реализовано как calc(100vh - header) с тем же min-height 720px, что
+   и в макете. Если задумывалась буквально фиксированная высота 900px —
+   поправь, это предположение по аналогии, не подтверждено напрямую.
+
+   Видео — через <source media> у одного <video> (не JS, не два
+   элемента): вертикальная композиция (hero-home-vertical.mp4) до
+   999.98px (планшет/телефон), горизонтальная (hero-home-horizontal.mp4)
+   с 1000px (десктоп/лэптоп) — см. комментарий в home.njk про сами
+   футажи и пережатие. object-fit: cover одинаково в обоих случаях.
+
+   Blur — вопреки имени слоя в Figma, это НЕ blur-фильтр, а обычный
+   линейный градиент-затемнение поверх видео (rgba(4,22,65,0.05) сверху
+   → rgba(4,22,65,0.5) снизу), для контраста текста с видео. */
+.home-hero {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - var(--header-height));
+  min-height: 720px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.home-hero__media {
+  position: absolute;
+  inset: 0;
+}
+
+.home-hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.home-hero__blur {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(4, 22, 65, 0.05), rgba(4, 22, 65, 0.5));
+  pointer-events: none;
+}
+
+/* Content: 320/390 — паддинг 20px/24px, столбик, gap 32px (4xl);
+   768 — паддинг 64px, столбик, gap 40px (5xl); с 1000px — паддинг
+   64px, в РЯД (items-end), gap возвращается на 32px (4xl). py везде
+   80px (8xl), не меняется по брейкпоинтам. */
+.home-hero__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: var(--spacing-4xl);
+  padding: var(--spacing-8xl) var(--spacing-2xl);
+}
+
+@media (min-width: 390px) {
+  .home-hero__content {
+    padding: var(--spacing-8xl) var(--spacing-3xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .home-hero__content {
+    gap: var(--spacing-5xl);
+    padding: var(--spacing-8xl) var(--spacing-7xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .home-hero__content {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: var(--spacing-4xl);
+  }
+}
+
+.home-hero__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-lg);
+  width: 100%;
+  color: #f7f7f7;
+}
+
+@media (min-width: 390px) {
+  .home-hero__text {
+    /* с 390px в Figma items-start; на 320px — items-center. Визуально
+       не отличается, т.к. оба child-элемента width:100%, но повторяем
+       за макетом на случай изменения текста в будущем. */
+    align-items: flex-start;
+  }
+}
+
+@media (min-width: 1000px) {
+  .home-hero__text {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+/* Заголовок — БЕЗ принудительного <br>, естественный перенос по
+   max-width (проверено пошрифтовой симуляцией fontTools по
+   InterDisplay-SemiBold.woff2 на каждом брейкпоинте — совпадает 1:1 с
+   Figma). */
+.home-hero__title {
+  margin: 0;
+  width: 100%;
+  max-width: 350px;
+  font-family: "Inter Display", "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 35px;
+  line-height: 35px;
+  letter-spacing: -0.525px;
+}
+
+@media (min-width: 390px) {
+  .home-hero__title {
+    font-size: 43px;
+    line-height: 43px;
+    letter-spacing: -0.645px;
+  }
+}
+
+@media (min-width: 768px) {
+  .home-hero__title {
+    max-width: 500px;
+    font-size: 60px;
+    line-height: 60px;
+    letter-spacing: -0.9px;
+  }
+}
+
+.home-hero__support {
+  margin: 0;
+  width: 100%;
+  max-width: 350px;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.08px;
+}
+
+@media (min-width: 768px) {
+  .home-hero__support {
+    max-width: 400px;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: -0.09px;
+  }
+}
+
+.home-hero__buttons {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  flex-shrink: 0;
+}
+
+/* Glass Button (node 765:4929) — 4 состояния (Secondary/Primary ×
+   Normal/Hover), полупрозрачные с backdrop-blur. Не переиспользует
+   .btn (тот компонент для непрозрачных секций сайта) — здесь свои
+   токены цветов, напрямую из Figma (rgba, не var(--border-primary) и
+   т.п., т.к. компонент задуман поверх произвольного видео, а не
+   секции с фиксированным фоном). */
+.home-hero__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md) var(--spacing-2xl);
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 24px;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.home-hero__btn--secondary {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f7f7f7;
+}
+
+.home-hero__btn--secondary:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.home-hero__btn--primary {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.9);
+  color: #181d27;
+}
+
+.home-hero__btn--primary:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: #fff;
+}
+
 /* Social (node 702:4876). Бесконечная лента логотипов клиентов сразу
    под Hero. На живой "/" секция ОСТАЁТСЯ тёмной (как была) — тема
    сюда не трогалась. На /home/ (04.08: пользователь перевёл секцию

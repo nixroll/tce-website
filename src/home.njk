@@ -15,64 +15,89 @@ noindex: true
    noindex: true в front matter добавляет <meta name="robots"
    content="noindex, nofollow"> (см. base.njk), чтобы её не проиндексировали
    поисковики. #}
-{# Hero главной (node 657:3442) — ПЕРЕСОБРАНА С НУЛЯ 03.08, от старой
-   версии остался только сам видеофон. Только на Home — на остальных
-   страницах пока остаётся старый плейсхолдер .hero.
-   Высота — 100vh (прогрессивно улучшено до 100lvh) минус фиксированный
-   Header, не меньше min-height брейкпоинта (660 на 320/390, 860 с
-   768px); лишнее пространство уходит в .hero-main__cover-container/
-   .hero-main__cover (flex:1 0 0, Container с контентом — flex-shrink:0).
-   Раньше здесь был доп. "улавливатель" 100dvh для iOS Safari, но
-   секция сразу под Hero (Social) теперь тоже тёмная — по просьбе
-   оставлен стандартный 100vh. lvh — обратный по смыслу приём: он
-   считает высоту экрана целиком (как если бы панели Safari были
-   свёрнуты), поэтому видео Cover визуально дотягивает до самого низа
-   экрана и проглядывает сквозь полупрозрачную нижнюю панель iOS
-   Safari, а не обрывается по её верхнему краю (см. подробный
-   комментарий в style.css).
-   Внутри — ДВА независимых Container подряд (в Figma это два разных
-   инстанса с одинаковым именем): первый — контент (заголовок/
-   подводка/кнопки), второй — обёртка вокруг видео.
-   Заголовок: принудительный <br> после "Один подрядчик." — как и
-   раньше, но теперь nowrap на ВСЕХ брейкпоинтах включая 320 (Figma
-   явно требует; поместится — проверено пошрифтовой симуляцией через
-   fontTools по .woff2, см. комментарий в CSS). Подводка — без
-   принудительных <br> (в Figma их больше нет), просто естественный
-   перенос с nbsp у "и сервис" / "для зданий" для типографики.
-   Кнопка "Кто мы" — как раньше, плавный скролл к Stats (#about).
-   Вторая кнопка — теперь ДВЕ ссылки в разметке под разные брейкпоинты
-   (видимость переключается в CSS): "Направления" (десктоп/планшет,
-   с 768px) — плавный скролл к Areas (#areas, id добавлен в
-   areas.njk, scroll-margin-top как у Stats); "Связаться" (мобилки,
-   до 768px) — обычная ссылка на страницу контактов, это уместнее для
-   мобильного сценария.
-   Cover — фоновое видео (Artlist, пережато в 1080p ~1.8MB, без
-   звука): autoplay+muted+loop+playsinline, object-fit: cover, постер
-   из первого кадра на время загрузки; тонкие горизонтальные линии
-   сверху и снизу — см. комментарий в CSS. #}
-<section class="hero-main" data-figma-node="657:3442" data-figma-name="Hero">
-  <div class="hero-main__container">
-    <div class="hero-main__content">
-      <div class="hero-main__text">
-        <h1 class="hero-main__heading">Один подрядчик.<br> <span class="hero-main__accent">Весь проект.</span></h1>
-        <p class="hero-main__support">Проектирование, поставка, монтаж и&nbsp;сервис инженерных систем для&nbsp;зданий.</p>
-      </div>
-      <div class="hero-main__buttons">
-        <a class="btn btn--secondary" href="#about">Кто мы</a>
-        <a class="btn btn--primary hero-main__cta--desktop" href="#areas">Направления</a>
-        <a class="btn btn--primary hero-main__cta--mobile" href="{{ '/contact/' | url }}">Связаться</a>
-      </div>
-    </div>
+{# Hero главной — "Home Hero" (node 765:4734), ПЕРЕСОБРАНА С НУЛЯ 04.08
+   ВЗАМЕН предыдущей версии (та, в свою очередь, заменила первоначальный
+   Hero 03.08 — см. историю в git). Только на /home/, index.njk (живая
+   "/") не трогается — новый namespace классов .home-hero__* специально
+   не пересекается с .hero-main__* из старой версии, которая всё ещё
+   живёт в CSS ради "/".
+
+   Структура (одинаковая на всех брейкпоинтах, отличаются только
+   размеры/паддинги — см. комментарий у .home-hero в style.css):
+   .home-hero
+     .home-hero__media (Video and blur, absolute inset:0, под контентом)
+       video.home-hero__video — ДВА источника через <source media>,
+         переключение по ширине вьюпорта БЕЗ JS (нативный браузерный
+         выбор source у <video>, как у <picture>): вертикальное видео
+         (hero-home-vertical.mp4) для планшета/телефона (<1000px, т.е.
+         320/390/768 — "Tablet" и "Mobile" в терминологии проекта),
+         горизонтальное (hero-home-horizontal.mp4) для десктопа/лэптопа
+         (>=1000px). Оба варианта — исходно landscape 1920x1080 футажи
+         от Artlist (тот, что named "Vertical", — с более узкой/вертикальной
+         композицией кадра, рассчитанной на портретный object-fit:cover
+         кроп, а не пилларбокс — проверено покадрово через ffmpeg, чистый
+         полнокадровый landscape, никакого чёрного/блюр-заполнения по
+         бокам). Пережаты в 1080p (h264, ~1.2Mbps, без звука, ~1.4-1.7MB)
+         тем же способом, что и старое hero.mp4. object-fit: cover в
+         обоих случаях — ровно как раньше, просто теперь на выбор два
+         сорса. ВАЖНО: браузер выбирает <source> у <video> только один
+         раз при загрузке страницы, не переоценивает его при ресайзе
+         окна (в отличие от <picture> в некоторых браузерах) — это
+         штатное поведение, не баг.
+       .home-hero__blur — градиентная заливка поверх видео (НЕ blur-фильтр,
+         несмотря на имя слоя в Figma "Blur" — обычный линейный градиент
+         rgba(4,22,65,0.05)→rgba(4,22,65,0.5) сверху вниз, затемняет низ
+         кадра под текстом/кнопками для контраста; имя сохранено из
+         Figma для трассируемости).
+     .home-hero__content (Content) — заголовок+подводка и кнопки;
+       на 1440/1000px — в ряд (items-end, gap 32px), с 768px и ниже —
+       в столбик (gap 40px на 768, 32px на 390/320).
+       Заголовок — БЕЗ принудительного <br> (в отличие от предыдущей
+       версии): в этом Figma-фрейме это один текстовый узел без разрыва,
+       перенос на "Один подрядчик." / "Весь проект." — естественный,
+       по max-width контейнера (500px на 1440-768, 350px на 390/320);
+       проверено пошрифтовой симуляцией через fontTools по
+       InterDisplay-SemiBold.woff2 на КАЖДОМ брейкпоинте — перенос
+       происходит ровно в этом месте естественным образом, без
+       принудительного переноса. Подводка — тоже без ручных <br>/nbsp,
+       как в самом Figma-узле.
+       Кнопки — новый компонент "Glass Button" (не .btn, как раньше):
+       полупрозрачные, backdrop-blur, с состояниями Normal/Hover для
+       Secondary ("Кто мы", ведёт к #about) и Primary ("Направления",
+       ведёт к #areas) — см. .home-hero__btn* в style.css. В отличие от
+       предыдущей версии, кнопка "Направления"/"Связаться" здесь ОДНА и
+       та же на всех брейкпоинтах (мобильного варианта "Связаться" в
+       этом макете нет — Figma показывает "Направления" от 320 до 1440).
+
+   Высота секции — предположение по аналогии с предыдущим Hero: в Figma
+   у фрейма фиксированные h-900/min-h-720 на каждом брейкпоинте (типичный
+   для Figma способ обозначить "почти полный экран" — так же было и в
+   предыдущей версии, где фиксированные px из макета осознанно
+   превратились в calc(100vh - header). Реализовано аналогично:
+   height: calc(100vh - var(--header-height)); min-height: 720px. Если
+   задумывалась буквально фиксированная высота 900px — поправь, я это
+   не проверял напрямую в Figma (там нет способа задать "100vh"
+   буквально, только конкретные px). #}
+<section class="home-hero" data-figma-node="765:4734" data-figma-name="Home Hero">
+  <div class="home-hero__media" aria-hidden="true">
+    <video class="home-hero__video"
+      poster="{{ '/videos/hero-poster-horizontal.jpg' | url }}"
+      autoplay muted loop playsinline
+      preload="metadata"
+      tabindex="-1">
+      <source src="{{ '/videos/hero-home-vertical.mp4' | url }}" media="(max-width: 999.98px)">
+      <source src="{{ '/videos/hero-home-horizontal.mp4' | url }}">
+    </video>
+    <div class="home-hero__blur"></div>
   </div>
-  <div class="hero-main__cover-container">
-    <div class="hero-main__cover">
-      <video class="hero-main__video"
-        src="{{ '/videos/hero.mp4' | url }}"
-        poster="{{ '/videos/hero-poster.jpg' | url }}"
-        autoplay muted loop playsinline
-        preload="metadata"
-        aria-hidden="true"
-        tabindex="-1"></video>
+  <div class="home-hero__content">
+    <div class="home-hero__text">
+      <h1 class="home-hero__title">Один подрядчик. Весь проект.</h1>
+      <p class="home-hero__support">Проектирование, поставка, монтаж и сервис инженерных систем для зданий.</p>
+    </div>
+    <div class="home-hero__buttons">
+      <a class="home-hero__btn home-hero__btn--secondary" href="#about">Кто мы</a>
+      <a class="home-hero__btn home-hero__btn--primary" href="#areas">Направления</a>
     </div>
   </div>
 </section>
