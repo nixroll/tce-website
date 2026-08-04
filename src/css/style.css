@@ -847,6 +847,16 @@ body {
   }
 }
 
+/* 04.08: пользователь убрал max-width у Content именно на 1440px в
+   Figma (на 1000px max-w-[1392px] остался как был) — с 1440px
+   Content теперь тянется на всю ширину секции (минус боковой паддинг
+   64px), а не ограничивается/центрируется в 1392px. */
+@media (min-width: 1440px) {
+  .home-hero__content {
+    max-width: none;
+  }
+}
+
 .home-hero__text {
   display: flex;
   flex-direction: column;
