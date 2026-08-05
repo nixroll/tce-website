@@ -643,6 +643,25 @@ body {
   border-color: #fff;
 }
 
+/* 05.08, багфикс: при открытии мобильного меню у прозрачного Header
+   должен становиться белым САМ Header (не только пункты меню внутри
+   него) — раньше это правило отсутствовало вовсе, поэтому фон
+   оставался transparent и сквозь открытую панель было видно
+   Hero-видео/фото за ней вместо белого. Тот же логотип, что и у
+   Light — на белом фоне тёмный (--dark) вариант логотипа, не белый. */
+.site-header--home.site-header--transparent.is-open {
+  background-color: var(--white);
+  border-bottom-color: #e5e7ec;
+}
+
+.site-header--home.site-header--transparent.is-open .header-home__logo-img--dark {
+  opacity: 0;
+}
+
+.site-header--home.site-header--transparent.is-open .header-home__logo-img--light {
+  opacity: 1;
+}
+
 /* ---------- Theme = Light (белый фон, после скролла до Social - L) ---------- */
 .site-header--home.site-header--light {
   background-color: var(--white);
@@ -740,36 +759,24 @@ body {
   justify-content: center;
   width: 24px;
   height: 24px;
-  border-radius: 50%;
   color: var(--text-tertiary); /* #94979c — как у присланных иконок (fill было hardcoded этим же цветом) */
-  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-    color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .header-home__social-icon {
   display: block;
   width: 24px;
   height: 24px;
-  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-    height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* У Light/Home Hero(открытого) иконки — не просто другого цвета, а
-   на тёмном кружке-подложке (см. скриншот Figma) — тот же тёмно-серый
-   тон, что и у кнопки "Связаться" (--button-primary), тоже уже
-   переиспользуемое в проекте значение. Сама подложка — просто фон
-   .header-home__social-link (уже 24x24 круг), иконка внутри
-   уменьшается, чтобы вокруг был видимый "бублик" фона, как в Figma. */
+/* 05.08, багфикс: иконки у Light/прозрачного(открытого) — БЕЗ подложки
+   и без изменения размера, ровно как у Dark темы (плоская иконка,
+   currentColor) — просто перекрашены под светлый фон. #535862 — тот же
+   тёмно-серый тон, что используется как --text-tertiary в других
+   светлых секциях проекта (см. соответствующие блоки переменных). */
 .site-header--home.site-header--light .header-home__social-link,
 .site-header--home.site-header--transparent.is-open .header-home__social-link {
-  background-color: var(--button-primary);
-  color: var(--white);
-}
-
-.site-header--home.site-header--light .header-home__social-icon,
-.site-header--home.site-header--transparent.is-open .header-home__social-icon {
-  width: 14px;
-  height: 14px;
+  color: #535862;
 }
 
 /* body--header-overlay (04.08, расширено 05.08) — на /home/
