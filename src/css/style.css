@@ -233,18 +233,24 @@ body {
     --header-height: 72px;
   }
 
-  /* 04.08: реальная высота Header на /home/ теперь 64px (см. правку
-     .site-header--home .header__inner ниже — py-12 вместо py-16),
-     а не общие 72px. --header-height используется не только для
-     отступа body (тот на /home/ и так занулён через
-     .body--header-overlay), но и для scroll-margin-top у якорных
-     секций — если оставить 72, при переходе по якорю (например,
-     кнопка "Кто мы" в Hero) появится лишний зазор в 8px под Header.
-     Правим значение переменной ТОЛЬКО в рамках документа /home/ —
-     html:has(body.body--header-overlay) матчит корень именно этой
-     страницы (класс .body--header-overlay ставится только в
-     home.njk), на живой "/" это правило не сработает. */
-  html:has(body.body--header-overlay) {
+  /* 04.08: реальная высота НОВОГО Header (.site-header--home, см.
+     header-home.njk) — 64px (см. правку .site-header--home
+     .header__inner ниже — py-12 вместо py-16), а не общие 72px.
+     --header-height используется не только для отступа body (на
+     /home/ он и так занулён через .body--header-overlay, но на
+     остальных страницах с новым Header — обычный document-flow
+     Header, отступ реально нужен), но и для scroll-margin-top у
+     якорных секций — если оставить 72, будет лишний зазор в 8px.
+
+     05.08: раньше матчили только по .body--header-overlay (тогда
+     новый Header был только на /home/) — теперь новый Header
+     раскатан на все страницы, кроме живой "/" (та по-прежнему на
+     header.njk, см. base.njk), поэтому матчим напрямую по наличию
+     самого нового Header в документе — html:has(.site-header--home)
+     верно захватывает оба случая (и /home/, и остальные страницы),
+     а на живой "/" (там всегда header.njk, .site-header--home там
+     просто не существует) не сработает вообще. */
+  html:has(.site-header--home) {
     --header-height: 64px;
   }
 }

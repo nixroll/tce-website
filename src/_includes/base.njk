@@ -16,11 +16,18 @@
   <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
 </head>
 <body{% if transparentHeader %} class="body--header-overlay"{% endif %}>
-  {# 04.08: transparentHeader (пока только у home.njk) — новый
-     прозрачный Header поверх Home Hero без резерва места в потоке
-     (см. .body--header-overlay в style.css и header-home.njk).
-     Остальные страницы (и живая "/") этот флаг не выставляют —
-     подключается обычный header.njk, ничего не меняется. #}
+  {# 05.08: новый Header (header-home.njk) раскатан на ВСЕ страницы,
+     кроме живой "/" (index.njk) — ту пользователь просил не трогать
+     совсем, она по-прежнему на старом header.njk без единого изменения.
+     Различаем по page.filePathStem — это тождественно "какой .njk файл
+     сейчас рендерится", а не зависит от pathPrefix/URL: у index.njk
+     он всегда "/index", у любой другой страницы — что угодно другое
+     (проверено сборкой). transparentHeader (только у home.njk)
+     дополнительно решает, в какой теме стартует новый Header —
+     прозрачный поверх Home Hero (без резерва места в потоке, см.
+     .body--header-overlay) или обычный тёмный в потоке документа, как
+     раньше был header.njk (см. header-home.njk — тема выбирается той
+     же переменной transparentHeader). #}
   {# Header: node 157:3721 (десктоп/планшет + мобильное бургер-меню).
      Порядок повторяющихся секций (Home, node 405:2033): Hero →
      Stats-L → Divider(light) → Areas-L → Divider(light) →
@@ -42,10 +49,10 @@
      Testimonial: node 480:2828, Services: node 472:3113 — все четыре
      только на Home (isHome=true в index.njk). Brands: node 462:2019.
      CTA: node 416:1812. Footer: node 157:3735 #}
-  {% if transparentHeader %}
-    {% include "header-home.njk" %}
-  {% else %}
+  {% if page.filePathStem == "/index" %}
     {% include "header.njk" %}
+  {% else %}
+    {% include "header-home.njk" %}
   {% endif %}
   <main>
     {{ content | safe }}
