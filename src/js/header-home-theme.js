@@ -304,4 +304,31 @@
   window.addEventListener('scroll', ensureLoop, { passive: true });
   window.addEventListener('resize', ensureLoop);
   ensureLoop();
+
+  /* 05.08, ещё один баг-фикс: открытие/закрытие мобильного меню
+     переключает .is-open (header.js, общий с живой "/" — не трогаем),
+     а фон прозрачного Header при этом меняется transparent → white
+     через тот же .25s transition, что и обычная смена темы по
+     скроллу — из-за этого казалось, что панель открывается/
+     закрывается "с плавной перекраской". У Light/Dark тем это
+     незаметно (там фон и так один и тот же что открыто что закрыто),
+     но пользователь явно попросил, чтобы здесь тоже было мгновенно.
+     Вешаем свой click-listener на тот же .header__burger и оборачиваем
+     сам toggle (которым управляет header.js) уже существующим приёмом
+     — .site-header--no-transition на один кадр (см. setThemeClass
+     выше). Оба listener'а на одном элементе срабатывают синхронно в
+     рамках одного и того же click-события без ухода в новый таск —
+     порядок регистрации (наш добавлен позже) значения не имеет: до
+     первого реального repaint класс no-transition уже выставлен
+     вместе с is-open/без него. */
+  var burger = header.querySelector('.header__burger');
+  if (burger) {
+    burger.addEventListener('click', function () {
+      header.classList.add('site-header--no-transition');
+      void header.offsetWidth;
+      window.requestAnimationFrame(function () {
+        header.classList.remove('site-header--no-transition');
+      });
+    });
+  }
 })();

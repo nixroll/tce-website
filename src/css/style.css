@@ -526,6 +526,18 @@ body {
   transition: none;
 }
 
+/* 05.08: тот же приём переиспользован для мгновенного открытия/закрытия
+   мобильного меню (см. header-home-theme.js, click на .header__burger) —
+   помимо фона самого Header (правило выше) у прозрачной темы ещё и
+   бургер-иконка, и иконки соцсетей меняют цвет (--transparent.is-open
+   в style.css), а у них у самих задан свой transition: color 0.25s —
+   без этого он бы всё равно плавно докрашивался, даже когда фон Header
+   уже мгновенно переключился. */
+.site-header--home.site-header--no-transition .header__burger-icon,
+.site-header--home.site-header--no-transition .header-home__social-link {
+  transition: none;
+}
+
 @media (min-width: 768px) {
   /* 04.08: пользователь уменьшил высоту этого Header в Figma —
      вертикальный padding "Container" теперь py-12 (--spacing-lg)
