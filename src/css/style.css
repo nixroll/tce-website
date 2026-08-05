@@ -211,6 +211,26 @@ html:has(body.body--header-overlay) {
   overscroll-behavior-y: none;
 }
 
+/* 05.08: побочный эффект overscroll-behavior-y: none выше — вместе с
+   отскоком пропал и pull-to-refresh (в Safari на iOS это ровно тот же
+   резиновый жест снизу-вверх на самом верху страницы; в мобильном
+   Chrome это отдельный, независимый от overscroll-behavior механизм,
+   поэтому там всё было в порядке). Пользователь хочет вернуть именно
+   pull-to-refresh, не жертвуя при этом исходной целью — не видеть фон
+   документа при быстром флике к границе. Разруливается через JS
+   (см. pull-to-refresh.js): класс .allow-pull-refresh ставится на body
+   только когда скролл РЕАЛЬНО устоялся на scrollY=0 (с небольшой
+   задержкой после остановки — отдельно от инерции долистывания),
+   снимается сразу при первом же scrollY>0. Пока идёт быстрый флик к
+   верху — класса ещё нет, overscroll-behavior-y остаётся none (отскока
+   не будет); как только страница спокойно стоит на самом верху —
+   класс появляется, новый (уже отдельный) потягивающий жест браузер
+   обрабатывает как обычно, включая pull-to-refresh. */
+body.body--header-overlay.allow-pull-refresh,
+html:has(body.body--header-overlay.allow-pull-refresh) {
+  overscroll-behavior-y: auto;
+}
+
 body {
   font-family: "Inter", sans-serif;
   /* Приближает рендер шрифта к тому, что видно в Figma —
