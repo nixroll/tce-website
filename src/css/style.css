@@ -1595,11 +1595,29 @@ body.body--header-overlay {
   }
 }
 
+/* 05.08: базовая автопрокрутка остаётся чистым CSS @keyframes — это
+   рабочее состояние по умолчанию (без JS, и то, что видят пользователи
+   с prefers-reduced-motion: reduce, см. ниже). js/social-drag.js (если
+   !prefers-reduced-motion) на старте подхватывает ТЕКУЩУЮ позицию этой
+   анимации (через getComputedStyle, чтобы не было прыжка), замораживает
+   её (инлайновый animation: none) и дальше сам ведёт transform по
+   кадрам — так добавлены drag мышью/свайп пальцем с инерцией при
+   отпускании (подробности — в самом JS-файле). cursor/touch-action/
+   user-select ниже нужны уже для самого драга: touch-action: pan-y
+   явно оставляет вертикальный скролл страницы браузеру нативным, а
+   горизонтальные жесты забирает себе JS. */
 .social__track {
   display: flex;
   width: max-content;
   animation: social-marquee 42s linear infinite;
   will-change: transform;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.social__track.is-dragging {
+  cursor: grabbing;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1631,6 +1649,12 @@ body.body--header-overlay {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  /* pointer-events: none — клики/драг всегда всплывают сразу до
+     .social__track, картинка не мешает и не ловит нативный drag-ghost
+     браузера (см. -webkit-user-drag ниже, дублирует то же для Safari) */
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-drag: none;
 }
 
 /* Боковой паддинг внутри каждого логотипного контейнера: 32px на
