@@ -5,3 +5,4 @@ _site/
 netlify-test/
 *.old
 _git_junk/
+_preview_check/

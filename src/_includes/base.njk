@@ -4,30 +4,35 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {% if noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
-  {# 05.08: только для /home/ (transparentHeader) — область под
-     статус-баром/чёлкой на iOS Safari подсвечивается по этому тегу.
-     Начальное значение — белый (дефолтная тема Header на загрузке —
-     Home Hero, для которой пользователь попросил именно белый верх,
-     см. header-home-theme.js), дальше JS обновляет content динамически
-     по мере скролла/смены темы Header (там же — MutationObserver).
-     Живую "/" не трогаем — тега там нет вообще. #}
+  {# только для страниц с transparentHeader (сейчас это живая "/",
+     новая Home Hero) — область под статус-баром/чёлкой на iOS Safari
+     подсвечивается по этому тегу. Начальное значение — белый
+     (дефолтная тема Header на загрузке — Home Hero, для которой
+     пользователь попросил именно белый верх, см. header-home-theme.js),
+     дальше JS обновляет content динамически по мере скролла/смены
+     темы Header (там же — MutationObserver). У страниц без
+     transparentHeader (в т.ч. архивной /old-home/) тега вообще нет. #}
   {% if transparentHeader %}<meta name="theme-color" content="#ffffff">{% endif %}
   <title>{{ title or "Thermo Concept Engineering" }}</title>
   <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
 </head>
 <body{% if transparentHeader %} class="body--header-overlay"{% endif %}>
-  {# 05.08: новый Header (header-home.njk) раскатан на ВСЕ страницы,
-     кроме живой "/" (index.njk) — ту пользователь просил не трогать
-     совсем, она по-прежнему на старом header.njk без единого изменения.
-     Различаем по page.filePathStem — это тождественно "какой .njk файл
-     сейчас рендерится", а не зависит от pathPrefix/URL: у index.njk
-     он всегда "/index", у любой другой страницы — что угодно другое
-     (проверено сборкой). transparentHeader (только у home.njk)
-     дополнительно решает, в какой теме стартует новый Header —
-     прозрачный поверх Home Hero (без резерва места в потоке, см.
-     .body--header-overlay) или обычный тёмный в потоке документа, как
-     раньше был header.njk (см. header-home.njk — тема выбирается той
-     же переменной transparentHeader). #}
+  {# 05.08 (изначальный раскат) + 05.08 (промоушен новой Home на живую
+     "/"): новый Header (header-home.njk) используется на ВСЕХ
+     страницах, КРОМЕ тех, что явно помечены legacyHeader: true в
+     front matter — сейчас это только архивная /old-home.njk (там
+     сохранён старый вид как было раньше на живой "/", включая старый
+     header.njk без единого изменения). Раньше здесь стояла проверка
+     "page.filePathStem == /index" (тогда это было равносильно "живая
+     /") — но после переноса новой Home НА живую "/" (тот же index.njk,
+     просто с другим содержимым) этот признак стал давать неверный
+     результат, поэтому заменили на явный флаг legacyHeader, который
+     не зависит от того, какой физический файл/URL сейчас что отдаёт.
+     transparentHeader (сейчас true только у живой "/") решает, в какой
+     теме стартует новый Header — прозрачный поверх Home Hero (без
+     резерва места в потоке, см. .body--header-overlay) или обычный
+     тёмный в потоке документа (остальные страницы, см. header-home.njk
+     — тема выбирается той же переменной transparentHeader). #}
   {# Header: node 157:3721 (десктоп/планшет + мобильное бургер-меню).
      Порядок повторяющихся секций (Home, node 405:2033): Hero →
      Stats-L → Divider(light) → Areas-L → Divider(light) →
@@ -49,7 +54,7 @@
      Testimonial: node 480:2828, Services: node 472:3113 — все четыре
      только на Home (isHome=true в index.njk). Brands: node 462:2019.
      CTA: node 416:1812. Footer: node 157:3735 #}
-  {% if page.filePathStem == "/index" %}
+  {% if legacyHeader %}
     {% include "header.njk" %}
   {% else %}
     {% include "header-home.njk" %}

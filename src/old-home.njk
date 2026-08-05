@@ -1,0 +1,142 @@
+---
+title: Thermo Concept Engineering — архив
+layout: base.njk
+isHome: true
+noindex: true
+legacyHeader: true
+---
+{# 05.08: АРХИВ прежней главной страницы. Клиент одобрил новую версию
+   Home (был node 765:4734, "Home Hero" — рабочая копия велась на
+   /home/, см. историю в git), она перенесена на живую "/" (см.
+   index.njk). Этот файл — точная копия того, что раньше было в
+   index.njk (старый Hero "hero-main", старый Header, т.е. header.njk
+   через legacyHeader — см. base.njk), сохранена как есть по просьбе
+   пользователя на случай проверки, ничего в разметке/стилях НЕ
+   менялось при переносе сюда. noindex: true — не должна попадать в
+   поиск и не участвует в навигации (ссылок на неё нигде на сайте
+   нет, только прямой URL /old-home/). Пользователь отдельной командой
+   попросит удалить этот файл после финальной проверки — до этого
+   момента файл не трогать. #}
+{# Hero главной (node 657:3442) — ПЕРЕСОБРАНА С НУЛЯ 03.08, от старой
+   версии остался только сам видеофон. Только на Home — на остальных
+   страницах пока остаётся старый плейсхолдер .hero.
+   Высота — 100vh (прогрессивно улучшено до 100lvh) минус фиксированный
+   Header, не меньше min-height брейкпоинта (660 на 320/390, 860 с
+   768px); лишнее пространство уходит в .hero-main__cover-container/
+   .hero-main__cover (flex:1 0 0, Container с контентом — flex-shrink:0).
+   Раньше здесь был доп. "улавливатель" 100dvh для iOS Safari, но
+   секция сразу под Hero (Social) теперь тоже тёмная — по просьбе
+   оставлен стандартный 100vh. lvh — обратный по смыслу приём: он
+   считает высоту экрана целиком (как если бы панели Safari были
+   свёрнуты), поэтому видео Cover визуально дотягивает до самого низа
+   экрана и проглядывает сквозь полупрозрачную нижнюю панель iOS
+   Safari, а не обрывается по её верхнему краю (см. подробный
+   комментарий в style.css).
+   Внутри — ДВА независимых Container подряд (в Figma это два разных
+   инстанса с одинаковым именем): первый — контент (заголовок/
+   подводка/кнопки), второй — обёртка вокруг видео.
+   Заголовок: принудительный <br> после "Один подрядчик." — как и
+   раньше, но теперь nowrap на ВСЕХ брейкпоинтах включая 320 (Figma
+   явно требует; поместится — проверено пошрифтовой симуляцией через
+   fontTools по .woff2, см. комментарий в CSS). Подводка — без
+   принудительных <br> (в Figma их больше нет), просто естественный
+   перенос с nbsp у "и сервис" / "для зданий" для типографики.
+   Кнопка "Кто мы" — как раньше, плавный скролл к Stats (#about).
+   Вторая кнопка — теперь ДВЕ ссылки в разметке под разные брейкпоинты
+   (видимость переключается в CSS): "Направления" (десктоп/планшет,
+   с 768px) — плавный скролл к Areas (#areas, id добавлен в
+   areas.njk, scroll-margin-top как у Stats); "Связаться" (мобилки,
+   до 768px) — обычная ссылка на страницу контактов, это уместнее для
+   мобильного сценария.
+   Cover — фоновое видео (Artlist, пережато в 1080p ~1.8MB, без
+   звука): autoplay+muted+loop+playsinline, object-fit: cover, постер
+   из первого кадра на время загрузки; тонкие горизонтальные линии
+   сверху и снизу — см. комментарий в CSS. #}
+<section class="hero-main" data-figma-node="657:3442" data-figma-name="Hero">
+  <div class="hero-main__container">
+    <div class="hero-main__content">
+      <div class="hero-main__text">
+        <h1 class="hero-main__heading">Один подрядчик.<br> <span class="hero-main__accent">Весь проект.</span></h1>
+        <p class="hero-main__support">Проектирование, поставка, монтаж и&nbsp;сервис инженерных систем для&nbsp;зданий.</p>
+      </div>
+      <div class="hero-main__buttons">
+        <a class="btn btn--secondary" href="#about">Кто мы</a>
+        <a class="btn btn--primary hero-main__cta--desktop" href="#areas">Направления</a>
+        <a class="btn btn--primary hero-main__cta--mobile" href="{{ '/contact/' | url }}">Связаться</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-main__cover-container">
+    <div class="hero-main__cover">
+      <video class="hero-main__video"
+        src="{{ '/videos/hero.mp4' | url }}"
+        poster="{{ '/videos/hero-poster.jpg' | url }}"
+        autoplay muted loop playsinline
+        preload="metadata"
+        aria-hidden="true"
+        tabindex="-1"></video>
+    </div>
+  </div>
+</section>
+
+{# Social (node 702:4876) — бесконечная лента логотипов клиентов,
+   сразу под Hero, только на Home. Высота (96px) и вертикальный
+   паддинг внутри каждого логотипного контейнера одинаковы на всех
+   брейкпоинтах, но горизонтальный паддинг — нет (правка в Figma сразу
+   на всех брейкпоинтах): 32px слева/справа на 320/390/768, 48px с
+   1000px (см. .social__logo--* в CSS, там же таблица итоговых
+   ширин). Из-за этого ширина ряда тоже разная (1053.15px /
+   1245.15px), но в обоих случаях он шире реального вьюпорта и создан
+   только чтобы бесконечно скроллиться — у самого трека нет отдельных
+   брейкпоинт-версий разметки, только паддинг/бордер секции-обёртки
+   и Container вокруг него.
+   Как и в Brands, каждый логотип — в своём контейнере с собственными
+   паддингами (см. .social__logo--*), чтобы точно повторить выравнивание
+   Figma. По вертикали большинство отметок отцентрованы (верх=низ), но
+   Bolma и Scmitz сдвинуты выше центра (проверено по pixel-данным
+   Figma) — поэтому у них асимметричный padding-top/-bottom, а не
+   center; это не зависит от брейкпоинта.
+   Анимация — бесшовный CSS-марквиз (translateX трека на -100%/3,
+   трек = 3 одинаковые копии ряда; обычные 2 копии не годятся — даже
+   более широкий ряд с 1000px (1245.15px) всё ещё уже Container на
+   1440px (1392px), и в момент разворота анимации была бы видна
+   пустота). Дубли помечены aria-hidden. prefers-reduced-motion
+   останавливает анимацию. #}
+<section class="social" data-figma-node="702:4876" data-figma-name="Social">
+  <div class="social__container">
+    <div class="social__track">
+      <div class="social__group">
+        <div class="social__logo social__logo--a100"><img src="{{ '/images/social/a100.svg' | url }}" alt="A100"></div>
+        <div class="social__logo social__logo--alutech"><img src="{{ '/images/social/alutech.svg' | url }}" alt="Alutech"></div>
+        <div class="social__logo social__logo--great-stone"><img src="{{ '/images/social/great-stone.svg' | url }}" alt="Great Stone"></div>
+        <div class="social__logo social__logo--amkodor"><img src="{{ '/images/social/amkodor.svg' | url }}" alt="Amkodor"></div>
+        <div class="social__logo social__logo--bolma"><img src="{{ '/images/social/bolma.svg' | url }}" alt="Bolma"></div>
+        <div class="social__logo social__logo--scmitz"><img src="{{ '/images/social/scmitz.svg' | url }}" alt="Scmitz"></div>
+      </div>
+      <div class="social__group" aria-hidden="true">
+        <div class="social__logo social__logo--a100"><img src="{{ '/images/social/a100.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--alutech"><img src="{{ '/images/social/alutech.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--great-stone"><img src="{{ '/images/social/great-stone.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--amkodor"><img src="{{ '/images/social/amkodor.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--bolma"><img src="{{ '/images/social/bolma.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--scmitz"><img src="{{ '/images/social/scmitz.svg' | url }}" alt="" aria-hidden="true"></div>
+      </div>
+      <div class="social__group" aria-hidden="true">
+        <div class="social__logo social__logo--a100"><img src="{{ '/images/social/a100.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--alutech"><img src="{{ '/images/social/alutech.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--great-stone"><img src="{{ '/images/social/great-stone.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--amkodor"><img src="{{ '/images/social/amkodor.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--bolma"><img src="{{ '/images/social/bolma.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--scmitz"><img src="{{ '/images/social/scmitz.svg' | url }}" alt="" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# Divider между Social и Stats-L убран пользователем в Figma теперь
+   уже на ВСЕХ брейкпоинтах (проверено по node 405:2033 "Home": на
+   320/390/768/1000/1440 Social вплотную примыкает к Stats-L, инстанса
+   дивайдера между ними больше нет нигде) — раньше он был скрыт только
+   на 320px (dividerVariant="hidden-320"), теперь просто убран из
+   разметки полностью, Social переходит в Stats-L (который base.njk
+   подключает сразу после контента isHome) без какого-либо разделителя. #}
