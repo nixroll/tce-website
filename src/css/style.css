@@ -175,6 +175,22 @@ html:has(body.body--header-overlay) {
   background-color: #fafafb;
 }
 
+/* 05.08: у самого низа документа этот же светлый фон создавал видимый
+   стык с тёмным Footer — в safe-area/под домашним индикатором iOS
+   (ровно то же место снизу, что и статус-бар сверху) было видно
+   светлую полосу сразу под тёмным Footer. Класс .is-footer-bottom
+   ставится JS-ом (header-home-theme.js, IntersectionObserver на
+   .site-footer) как только Footer хоть немного показался снизу
+   экрана — с этого момента и до конца документа (после Footer в
+   разметке ничего нет) фон безопасно перекрашивается в цвет самого
+   Footer (--background-secondary), не трогая остальной документ выше
+   (там остаётся #fafafb). Правило ниже по каскаду, поэтому
+   переопределяет светлый фон, когда оба класса на body. */
+body.body--header-overlay.is-footer-bottom,
+html:has(body.body--header-overlay.is-footer-bottom) {
+  background-color: var(--background-secondary);
+}
+
 /* 04.08: пользователю понравилось у menkind.co именно то, что при
    быстром скролле в самый верх/низ нельзя "отскочить" за пределы
    страницы и увидеть родной фон документа (elastic/rubber-band
