@@ -484,20 +484,16 @@ body {
    светлую/тёмную переключалку на других страницах (п.8 запроса
    пользователя).
 
-   ВАЖНО: все цветовые/темовые правила ниже (фон/бордер Header,
-   цвет ссылок и hover, вид кнопки, переключение логотипа)
-   специально обёрнуты в @media (min-width: 768px). "Mobile Header
-   пока не трогаем" по ТЗ — по умолчанию у этого нового <header>
-   в разметке уже стоит класс site-header--transparent (см.
-   header-home.njk), и header-home-theme.js на <768px сознательно
-   не переключает тему (проверяет matchMedia и рано выходит) — но
-   сам класс --transparent в разметке остаётся всегда, поэтому без
-   этого @media transparent-стили применились бы и на мобилке,
-   Header стал бы прозрачным поверх контента вместо привычного
-   тёмного сплошного — ровно то, чего просили не делать. Без темы
-   (т.е. на <768px) Header использует ИСХОДНЫЕ стили .site-header
-   (тёмный сплошной фон, var(--border-primary)) — 1:1 как у живого
-   Header, ничего не переопределяется. */
+   05.08: цветовые/темовые правила ниже раньше были обёрнуты в
+   @media (min-width: 768px) — "Mobile Header пока не трогаем" было
+   действующим ТЗ на тот момент. Теперь пользователь явно попросил
+   аналогичное поведение и на мобилке (node 384:2287, три темы + та же
+   логика переключения) — @media убран у ВСЕХ цветовых правил (фон/
+   бордер Header, цвет ссылок/hover, кнопка, логотип): та же тема
+   применяется на любой ширине. Из-под @media НЕ убирали только
+   структурные/desktop-only правила ниже (например .header-home__right
+   { display }, .header__inner padding-py-12) — они как раз ДОЛЖНЫ
+   остаться десктопными, к цвету отношения не имеют. */
 /* 04.08: длительность/кривая транзишена (0.25s cubic-bezier(0.4, 0,
    0.2, 1)) сверена с attio.com через DevTools (getComputedStyle их
    <header>) по просьбе пользователя — у них ровно та же
@@ -508,29 +504,29 @@ body {
    0.15s на разных элементах) и мгновенный, без анимации, свитч
    логотипа (display:none/block) — это и создавало ощущение "не так
    гладко/быстро". Ниже везде одна и та же пара значений. */
+.site-header.site-header--home {
+  background-color: transparent;
+  border-bottom-color: transparent;
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 04.08: подсмотрено на menkind.co (по просьбе пользователя, см.
+   header-home-theme.js) — самый первый переход Hero→Social-L
+   теперь не просто кроссфейд цвета, а "медленный параллакс-снос
+   вверх + мгновенная (без fade) смена цвета, пока Header уже
+   скрыт за верхним краем экрана + быстрый заезд обратно вниз".
+   Мгновенная смена возможна только если на секунду выключить
+   transition — этот класс ставится JS-ом ровно на один кадр вокруг
+   самого свитча класса темы (add → forced reflow → remove на
+   следующем rAF), к остальным переходам (Social-L и ниже —
+   Stats/Areas/Testimonial/... там всё осталось как было, обычный
+   0.25s кроссфейд) не относится. */
+.site-header.site-header--home.site-header--no-transition {
+  transition: none;
+}
+
 @media (min-width: 768px) {
-  .site-header.site-header--home {
-    background-color: transparent;
-    border-bottom-color: transparent;
-    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-      border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* 04.08: подсмотрено на menkind.co (по просьбе пользователя, см.
-     header-home-theme.js) — самый первый переход Hero→Social-L
-     теперь не просто кроссфейд цвета, а "медленный параллакс-снос
-     вверх + мгновенная (без fade) смена цвета, пока Header уже
-     скрыт за верхним краем экрана + быстрый заезд обратно вниз".
-     Мгновенная смена возможна только если на секунду выключить
-     transition — этот класс ставится JS-ом ровно на один кадр вокруг
-     самого свитча класса темы (add → forced reflow → remove на
-     следующем rAF), к остальным переходам (Social-L и ниже —
-     Stats/Areas/Testimonial/... там всё осталось как было, обычный
-     0.25s кроссфейд) не относится. */
-  .site-header.site-header--home.site-header--no-transition {
-    transition: none;
-  }
-
   /* 04.08: пользователь уменьшил высоту этого Header в Figma —
      вертикальный padding "Container" теперь py-12 (--spacing-lg)
      вместо py-16 (--spacing-xl), одинаково на 768/1000/1440 (node
@@ -617,98 +613,174 @@ body {
     color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@media (min-width: 768px) {
-  /* ---------- Theme = Home Hero (прозрачный, по умолчанию на /home/) ---------- */
-  .site-header--home.site-header--transparent {
-    background-color: transparent;
-    border-bottom-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .site-header--home.site-header--transparent .header-home__link {
-    color: var(--text-secondary); /* #cecfd2, как у Dark темы */
-  }
-
-  .site-header--home.site-header--transparent .header-home__link:hover {
-    color: var(--text-primary); /* #f7f7f7 — новый hover, п.2 запроса (раньше был --brand/оранжевый) */
-  }
-
-  /* "Glass Button" — 1:1 по значениям с .home-hero__btn--primary
-     (нарочно продублировано, а не переиспользован класс, чтобы
-     компоненты Header и Home Hero не были связаны друг с другом). */
-  .site-header--home.site-header--transparent .header-home__cta {
-    background-color: rgba(255, 255, 255, 0.8);
-    border-color: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    color: #181d27;
-  }
-
-  .site-header--home.site-header--transparent .header-home__cta:hover {
-    background-color: rgba(255, 255, 255, 0.9);
-    border-color: #fff;
-  }
-
-  /* ---------- Theme = Light (белый фон, после скролла до Social - L) ---------- */
-  .site-header--home.site-header--light {
-    background-color: var(--white);
-    border-bottom-color: #e5e7ec;
-  }
-
-  .site-header--home.site-header--light .header-home__logo-img--dark {
-    opacity: 0;
-  }
-
-  .site-header--home.site-header--light .header-home__logo-img--light {
-    opacity: 1;
-  }
-
-  .site-header--home.site-header--light .header-home__link {
-    color: #414651; /* text/secondary-text у светлой темы */
-  }
-
-  .site-header--home.site-header--light .header-home__link:hover {
-    color: #181d27; /* text/primary-text у светлой темы, п.2 запроса */
-  }
-
-  /* ---------- Theme = Dark (про запас, см. комментарий блока выше — пока не подключена) ---------- */
-  .site-header--home.site-header--dark {
-    background-color: var(--background-secondary);
-    border-bottom-color: var(--border-primary);
-  }
-
-  .site-header--home.site-header--dark .header-home__link {
-    color: var(--text-secondary);
-  }
-
-  .site-header--home.site-header--dark .header-home__link:hover {
-    color: var(--text-primary); /* новый hover, п.2 запроса — совпадает с Home Hero */
-  }
-
-  /* Кнопка у Light и Dark — одинаковая тёмно-серая (п.4 запроса:
-     "на Light Header кнопка того же цвета, что и у Dark"), только у
-     Home Hero/--transparent она стеклянная (см. выше). */
-  .site-header--home.site-header--light .header-home__cta,
-  .site-header--home.site-header--dark .header-home__cta {
-    background-color: #373c43;
-    border-color: #525966;
-    color: #f7f7f7;
-  }
-
-  .site-header--home.site-header--light .header-home__cta:hover,
-  .site-header--home.site-header--dark .header-home__cta:hover {
-    background-color: #40464e;
-  }
+/* ---------- Theme = Home Hero (прозрачный, по умолчанию на /home/) ---------- */
+.site-header--home.site-header--transparent {
+  background-color: transparent;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
-/* body--header-overlay (04.08) — на /home/ (transparentHeader:true
-   в front matter, см. base.njk) с 768px больше нет резерва под
-   Header в потоке: Header лежит поверх Hero (position:fixed), а не
-   выше него. На <768px "Mobile Header пока не трогаем" — резерв
-   (padding-top) остаётся прежним, там всё как было. */
-@media (min-width: 768px) {
-  body.body--header-overlay {
-    padding-top: 0;
-  }
+.site-header--home.site-header--transparent .header-home__link {
+  color: var(--text-secondary); /* #cecfd2, как у Dark темы */
+}
+
+.site-header--home.site-header--transparent .header-home__link:hover {
+  color: var(--text-primary); /* #f7f7f7 — новый hover, п.2 запроса (раньше был --brand/оранжевый) */
+}
+
+/* "Glass Button" — 1:1 по значениям с .home-hero__btn--primary
+   (нарочно продублировано, а не переиспользован класс, чтобы
+   компоненты Header и Home Hero не были связаны друг с другом). */
+.site-header--home.site-header--transparent .header-home__cta {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: #181d27;
+}
+
+.site-header--home.site-header--transparent .header-home__cta:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: #fff;
+}
+
+/* ---------- Theme = Light (белый фон, после скролла до Social - L) ---------- */
+.site-header--home.site-header--light {
+  background-color: var(--white);
+  border-bottom-color: #e5e7ec;
+}
+
+.site-header--home.site-header--light .header-home__logo-img--dark {
+  opacity: 0;
+}
+
+.site-header--home.site-header--light .header-home__logo-img--light {
+  opacity: 1;
+}
+
+.site-header--home.site-header--light .header-home__link {
+  color: #414651; /* text/secondary-text у светлой темы */
+}
+
+.site-header--home.site-header--light .header-home__link:hover {
+  color: #181d27; /* text/primary-text у светлой темы, п.2 запроса */
+}
+
+/* ---------- Theme = Dark (про запас, см. комментарий блока выше — пока не подключена) ---------- */
+.site-header--home.site-header--dark {
+  background-color: var(--background-secondary);
+  border-bottom-color: var(--border-primary);
+}
+
+.site-header--home.site-header--dark .header-home__link {
+  color: var(--text-secondary);
+}
+
+.site-header--home.site-header--dark .header-home__link:hover {
+  color: var(--text-primary); /* новый hover, п.2 запроса — совпадает с Home Hero */
+}
+
+/* Кнопка у Light и Dark — одинаковая тёмно-серая (п.4 запроса:
+   "на Light Header кнопка того же цвета, что и у Dark"), только у
+   Home Hero/--transparent она стеклянная (см. выше). */
+.site-header--home.site-header--light .header-home__cta,
+.site-header--home.site-header--dark .header-home__cta {
+  background-color: #373c43;
+  border-color: #525966;
+  color: #f7f7f7;
+}
+
+.site-header--home.site-header--light .header-home__cta:hover,
+.site-header--home.site-header--dark .header-home__cta:hover {
+  background-color: #40464e;
+}
+
+/* ============================================================
+   Mobile Header (05.08, node 384:2287) — те же три темы, что и у
+   Desktop/Tablet выше, для бургера/панели/ссылок/иконок соцсетей.
+   Живого header.njk эти правила не касаются: .header__burger-icon,
+   .header-mlink и т.д. — общие структурные классы, но здесь они
+   уточняются через .site-header--home в селекторе, поэтому цвет
+   реально меняется ТОЛЬКО у нашего нового Header.
+
+   Открытая панель у Home Hero/Light выглядит идентично (белая) — в
+   Figma это буквально одна и та же картинка ("Open, Theme=Light" и
+   "Open, Theme=Home Hero" пиксель-в-пиксель совпадают). Технически
+   не стали заводить отдельный "белый при открытии" класс — просто у
+   каждого темового правила добавлен второй селектор
+   .site-header--home.site-header--transparent.is-open (у Light он и
+   так уже белый, доп. селектор для него избыточен, но безвреден).
+   У Dark открытие панели ничего не меняет (нет самой Dark в этом
+   списке — там всё уже тёмное и без открытия, ничего переопределять
+   не нужно). */
+.header__burger-icon {
+  color: var(--text-secondary); /* #cecfd2 — то же значение, что было hardcoded раньше */
+  transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site-header--home.site-header--light .header__burger-icon,
+.site-header--home.site-header--transparent.is-open .header__burger-icon {
+  color: #181d27;
+}
+
+.site-header--home.site-header--light .header-mlink,
+.site-header--home.site-header--transparent.is-open .header-mlink {
+  color: #181d27;
+  border-bottom-color: #e5e7ec;
+}
+
+.header-home__socials {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3xl);
+}
+
+.header-home__social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: var(--text-tertiary); /* #94979c — как у присланных иконок (fill было hardcoded этим же цветом) */
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header-home__social-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* У Light/Home Hero(открытого) иконки — не просто другого цвета, а
+   на тёмном кружке-подложке (см. скриншот Figma) — тот же тёмно-серый
+   тон, что и у кнопки "Связаться" (--button-primary), тоже уже
+   переиспользуемое в проекте значение. Сама подложка — просто фон
+   .header-home__social-link (уже 24x24 круг), иконка внутри
+   уменьшается, чтобы вокруг был видимый "бублик" фона, как в Figma. */
+.site-header--home.site-header--light .header-home__social-link,
+.site-header--home.site-header--transparent.is-open .header-home__social-link {
+  background-color: var(--button-primary);
+  color: var(--white);
+}
+
+.site-header--home.site-header--light .header-home__social-icon,
+.site-header--home.site-header--transparent.is-open .header-home__social-icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* body--header-overlay (04.08, расширено 05.08) — на /home/
+   (transparentHeader:true в front matter, см. base.njk) нет резерва
+   под Header в потоке: Header лежит поверх Hero (position:fixed), а
+   не выше него. Раньше было только с 768px ("Mobile Header пока не
+   трогаем"), теперь пользователь попросил то же самое поведение и на
+   мобилке (node 384:2287) — @media убран, действует на любой ширине;
+   см. также .home-hero ниже (там та же логика для высоты секции). */
+body.body--header-overlay {
+  padding-top: 0;
 }
 
 /* Hero-плейсхолдер (node 308:1917) — теперь только на внутренних
@@ -1098,20 +1170,18 @@ body {
   justify-content: flex-end;
 }
 
-/* 04.08: новый прозрачный Header (см. header-home.njk) — с 768px
+/* 04.08, расширено 05.08: прозрачный Header (см. header-home.njk) —
    body больше не резервирует место под Header (padding-top:0, см.
    .body--header-overlay), Header лежит поверх Hero через
    position:fixed. Раньше высота секции считалась как 100vh минус
    header-height, чтобы вместе с зарезервированным местом в сумме
    получался ровно 100vh экрана; теперь резерва нет — сама секция
-   должна быть на все 100vh/100lvh без вычитания. На <768px "Mobile
-   Header пока не трогаем" — там резерв остаётся, поэтому вычитание
-   header-height тоже остаётся (правило выше, до этого override). */
-@media (min-width: 768px) {
-  .home-hero {
-    height: calc(100vh + var(--hero-overshoot));
-    height: calc(100lvh + var(--hero-overshoot));
-  }
+   должна быть на все 100vh/100lvh без вычитания. Раньше это было
+   только с 768px ("Mobile Header пока не трогаем"), теперь то же
+   самое и на мобилке — @media убран, действует везде. */
+.home-hero {
+  height: calc(100vh + var(--hero-overshoot));
+  height: calc(100lvh + var(--hero-overshoot));
 }
 
 /* 04.08: подтверждено пользователем на iPhone 17 Pro Max (iPad и

@@ -4,6 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {% if noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
+  {# 05.08: только для /home/ (transparentHeader) — область под
+     статус-баром/чёлкой на iOS Safari подсвечивается по этому тегу.
+     Начальное значение — белый (дефолтная тема Header на загрузке —
+     Home Hero, для которой пользователь попросил именно белый верх,
+     см. header-home-theme.js), дальше JS обновляет content динамически
+     по мере скролла/смены темы Header (там же — MutationObserver).
+     Живую "/" не трогаем — тега там нет вообще. #}
+  {% if transparentHeader %}<meta name="theme-color" content="#ffffff">{% endif %}
   <title>{{ title or "Thermo Concept Engineering" }}</title>
   <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
 </head>

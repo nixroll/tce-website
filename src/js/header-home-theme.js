@@ -79,7 +79,31 @@
  * Как только Social реально коснулась Header (gap <= 0) — управление
  * полностью передаётся обычному механизму выше (без transform,
  * обычный кроссфейд) для всех дальнейших секций до самого конца
- * страницы. */
+ * страницы.
+ *
+ * 05.08: раньше вся эта логика (весь файл) работала только на
+ * >=768px — "Mobile Header пока не трогаем" было действующим ТЗ,
+ * матчился matchMedia('(min-width: 768px)') и ниже него скрипт
+ * просто ничего не делал. Теперь пользователь явно попросил то же
+ * поведение и на мобилке (node 384:2287) — проверку по ширине убрали
+ * полностью, скрипт активен на любом брейкпоинте одинаково.
+ *
+ * Плюс новое: <meta name="theme-color"> (см. base.njk, добавлен
+ * только под transparentHeader, живую "/" не касается) — на iOS
+ * Safari область под "чёлкой"/статус-баром подсвечивается именно по
+ * этому тегу. Пользователь заметил, что у Attio эта область всегда
+ * светлая, даже когда Header прозрачный поверх тёмного Hero — то же
+ * самое сделано и здесь: белая ВСЕГДА, кроме случаев, когда сам
+ * Header реально тёмный (site-header--dark). Обновляется через
+ * MutationObserver за classList Header'а — так одним местом
+ * покрываются оба источника смены класса: наш собственный
+ * setThemeClass() (скролл) И переключение .is-open из header.js
+ * (открытие мобильного меню) — второе мы напрямую не вызываем, но
+ * поймать нужно и его, т.к. по требованию пользователя открытая
+ * панель у прозрачного Header выглядит белой (см. style.css,
+ * .site-header--home.site-header--transparent.is-open), а значит и
+ * статус-бар над ней должен посветлеть, хотя тема (--transparent)
+ * формально не меняется. */
 (function () {
   var header = document.querySelector('.site-header--home');
   if (!header) return;
@@ -130,12 +154,31 @@
   var RECOVERY_WINDOW_RATIO = 4.5; /* окно "заезда обратно", в высотах Header */
   var SMOOTH = 0.15; /* lerp-коэффициент сглаживания (0..1, больше — резче) */
 
-  var mq = window.matchMedia('(min-width: 768px)');
-
   function headerHeightPx() {
     var v = getComputedStyle(document.documentElement).getPropertyValue('--header-height');
     return parseFloat(v) || 72;
   }
+
+  var metaThemeColor = document.querySelector('meta[name="theme-color"]');
+  var DARK_COLOR = '#181818'; /* var(--background-secondary) */
+  var LIGHT_COLOR = '#ffffff'; /* var(--white) — используется и для Light, и для Home Hero (см. комментарий выше) */
+
+  function syncMetaThemeColor() {
+    if (!metaThemeColor) return;
+    metaThemeColor.setAttribute(
+      'content',
+      header.classList.contains('site-header--dark') ? DARK_COLOR : LIGHT_COLOR
+    );
+  }
+
+  /* Ловит смену темы (наш setThemeClass) И is-open (header.js) —
+     единая точка синхронизации статус-бара, см. комментарий вверху
+     файла. */
+  new MutationObserver(syncMetaThemeColor).observe(header, {
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+  syncMetaThemeColor();
 
   function setThemeClass(theme, instant) {
     if (instant) {
@@ -235,11 +278,6 @@
 
   function tick() {
     rafId = null;
-    if (!mq.matches) {
-      header.style.transform = '';
-      smoothedY = 0;
-      return;
-    }
     var state = heroPhase();
 
     if (!state.inHero) {
@@ -252,17 +290,12 @@
       }
     }
 
-    if (mq.matches && !state.settled) {
+    if (!state.settled) {
       rafId = window.requestAnimationFrame(tick);
     }
   }
 
   function ensureLoop() {
-    if (!mq.matches) {
-      header.style.transform = '';
-      smoothedY = 0;
-      return;
-    }
     if (rafId === null) {
       rafId = window.requestAnimationFrame(tick);
     }
@@ -270,6 +303,5 @@
 
   window.addEventListener('scroll', ensureLoop, { passive: true });
   window.addEventListener('resize', ensureLoop);
-  mq.addEventListener('change', ensureLoop);
   ensureLoop();
 })();
