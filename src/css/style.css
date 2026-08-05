@@ -1271,10 +1271,10 @@ body.body--header-overlay {
   pointer-events: none;
 }
 
-/* Content: 320/390 — паддинг 20px/24px, столбик, gap 32px (4xl);
-   768 — паддинг 64px, столбик, gap 40px (5xl); с 1000px — паддинг
-   64px, в РЯД (items-end), gap возвращается на 32px (4xl). py везде
-   80px (8xl), не меняется по брейкпоинтам. */
+/* Content: 320/390 — паддинг 20px/24px, столбик, gap 32px (4xl), py
+   80px (8xl); 768 — паддинг 64px, столбик, gap 40px (5xl), py 96px
+   (9xl, см. 05.08 ниже); с 1000px — паддинг 64px, в РЯД (items-end),
+   gap возвращается на 32px (4xl), py остаётся 96px. */
 .home-hero__content {
   position: relative;
   z-index: 1;
@@ -1307,7 +1307,16 @@ body.body--header-overlay {
 @media (min-width: 768px) {
   .home-hero__content {
     gap: var(--spacing-5xl);
-    padding: var(--spacing-8xl) var(--spacing-7xl);
+    /* 05.08: пользователь заметил, что на iPad с открытыми сверху
+       вкладками Safari (уменьшенная высота viewport) кнопки Hero не
+       помещались на экран — решил в Figma увеличить верт. паддинг
+       Content с 80px (8xl) до 96px (9xl) на 768/1000/1440px (node
+       765:4736, Content x=24/0 y=528/448 — top/bottom padding везде
+       96px), это же само по себе даёт больше запаса и выглядит лучше.
+       1000px не переопределяет padding отдельно — наследует это же
+       правило (см. @media(min-width:1000px) ниже, там только
+       flex-direction/gap). */
+    padding: var(--spacing-9xl) var(--spacing-7xl);
   }
 }
 
