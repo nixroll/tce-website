@@ -14,7 +14,17 @@
      transparentHeader (в т.ч. архивной /old-home/) тега вообще нет. #}
   {% if transparentHeader %}<meta name="theme-color" content="#ffffff">{% endif %}
   <title>{{ title or "Thermo Concept Engineering" }}</title>
-  <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
+  {# 06.08: версия в query string — не эстетика, а обход зависшего
+     Fastly-кеша GitHub Pages. У style.css (существующий с самого начала
+     файл) после деплоя Contact-страницы кеш не обновлялся 15+ минут,
+     хотя HTML и новые JS-файлы (contact-form.js) отдавались свежими
+     сразу — то есть сам деплой прошёл нормально, застрял именно кеш
+     конкретного давно существующего URL. У GitHub Pages нет ручного
+     сброса кеша по файлу, только ожидание TTL. ?v=N меняет сам URL —
+     это гарантированный cache miss на любой CDN-ноде, а не просто
+     "авось обновится быстрее". Бампать N при каждом деплое, где
+     реально меняется style.css. #}
+  <link rel="stylesheet" href="{{ '/css/style.css' | url }}?v=2">
 </head>
 <body{% if transparentHeader %} class="body--header-overlay"{% endif %}>
   {# 05.08 (изначальный раскат) + 05.08 (промоушен новой Home на живую
