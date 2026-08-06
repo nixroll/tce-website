@@ -4074,3 +4074,690 @@ body.body--header-overlay {
     gap: var(--spacing-xl);
   }
 }
+
+/* ================================================================
+   Contact page (05.08, node 923:6920). Header → Contact-L →
+   Divider-L → Form-L → Divider-D → Footer-D — БЕЗ Brands/CTA (в
+   отличие от остальных ещё не свёрстанных внутренних страниц,
+   которые пока используют общий хвост "заглушка Hero + Brands + CTA
+   + Footer" из base.njk) — поэтому contact.njk выставляет
+   customSections: true во front matter, и base.njk по этому флагу
+   пропускает автоматический хвост, уходя сразу в footer.njk (см.
+   комментарий в base.njk). Дивайдеры между секциями — тот же
+   переиспользуемый .divider/.divider--light компонент, что и везде
+   на сайте, свой не потребовался.
+
+   Иконки (phone/mail-01/marker-pin-01 в Contact, file-plus-02 в Form)
+   — SVG прислал пользователь напрямую (Figma download_assets тут
+   недоступен — сеть на figma.com/api/mcp/asset/* блокируется в этой
+   песочнице, проверено curl и fetch), вставлены инлайн в contact.njk
+   с stroke="currentColor". Цвет phone/mail/marker — var(--brand)
+   (#fdb022), ровно как в присланных файлах (stroke="#FDB022"); у
+   file-plus-02 — var(--text-tertiary) (#535862, тоже 1:1 с
+   присланным файлом).
+
+   Обе секции (.contact, .form) — светлая тема, тот же паттерн
+   локального переопределения токенов, что у .stats/.services/.areas/
+   .projects (см. их комментарии) — --text-*/--border-* переобъявлены
+   ниже в общем правиле на оба класса.
+
+   Заголовки в обеих секциях — тот же приём, что и в Home Hero:
+   первая строка обычным text-primary, вторая приглушённая
+   text-quaternary, разрыв — жёсткий <br> в разметке. Размер — h5
+   (32/34/-0.32) на 320-1000, h4 (36/38/-0.36) с 1440 — те же общие
+   токены шкалы, что и у h1-h6 в :root, переиспользованы напрямую. */
+.contact,
+.form {
+  --text-primary: #181d27;
+  --text-secondary: #414651;
+  --text-tertiary: #535862;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+  --border-secondary: #cbd0d8;
+
+  width: 100%;
+  background-color: #fafafb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+.contact {
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.form {
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+@media (min-width: 390px) {
+  .contact,
+  .form {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .contact,
+  .form {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+/* ---------- Badge + заголовок (общие для Contact-L и Form-L) ---------- */
+.contact__badge,
+.form__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: #325abc;
+}
+
+.contact__intro-inner,
+.form__intro-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  max-width: 900px;
+  width: 100%;
+  flex: 1 0 0;
+  min-width: 0;
+}
+
+.contact__heading,
+.form__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
+}
+
+@media (min-width: 1440px) {
+  .contact__heading,
+  .form__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
+}
+
+.contact__heading-accent,
+.form__heading-accent {
+  color: var(--text-primary);
+}
+
+.contact__heading-muted,
+.form__heading-muted {
+  color: var(--text-quaternary);
+}
+
+/* ---------- Contact-L: Container 1 (заголовок/бейдж) ---------- */
+.contact__intro {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-4xl);
+  width: 100%;
+  max-width: 1392px;
+  overflow: hidden;
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .contact__intro {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .contact__intro {
+    padding: var(--spacing-9xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .contact__intro {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+  }
+}
+
+/* ---------- Contact-L: карточки (Container 2 — Телефон/Email,
+   Container 3 — Физический/Юридический адрес). Figma собирает эти 4
+   карточки то одним flex-контейнером (320/390, колонка), то двумя
+   раздельными (768+, по 2 в ряд) — визуально разницы нет, поэтому
+   здесь всегда 2 отдельных .contact__cards (не зависящих от
+   брейкпоинта) — так проще и без потери точности.
+
+   Границы между карточками/рядами: НЕ повторяем поячеечно ассиметричные
+   border-l/r/t/b из Figma (там каждая карточка "экономит" ту грань,
+   которую уже нарисовал сосед, чтобы не было двойной линии) — вместо
+   этого у ВСЕХ карточек одинаковая рамка 1px по всем сторонам и
+   отрицательный margin (-1px) у каждой карточки/ряда, кроме первой(го)
+   — оверлей даёт ровно тот же визуальный результат (одна линия на
+   стыке), но без ручного отслеживания, какой стороне где "принадлежит"
+   рамка. gap между карточками/рядами намеренно НЕ задан (0) — иначе
+   отрицательный margin проваливался бы в пустоту вместо стыка. */
+.contact__cards {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1392px;
+}
+
+.contact__cards + .contact__cards {
+  margin-top: -1px;
+}
+
+@media (min-width: 768px) {
+  .contact__cards {
+    flex-direction: row;
+  }
+}
+
+.contact__card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  height: 200px;
+  padding: var(--spacing-3xl);
+  border: 1px solid var(--border-primary);
+  overflow: hidden;
+}
+
+.contact__card:not(:first-child) {
+  margin-top: -1px;
+}
+
+/* 320: в Figma у карточек нет боковых рамок вообще (паддинг секции и
+   так 0 — карточки идут вплотную к краю экрана без обводки). */
+@media (max-width: 389.98px) {
+  .contact__card {
+    border-left: none;
+    border-right: none;
+  }
+}
+
+@media (min-width: 390px) {
+  .contact__card {
+    height: 240px;
+    padding: var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .contact__card {
+    height: 260px;
+    width: auto;
+    flex: 1 0 0;
+    min-width: 0;
+    margin-top: 0;
+  }
+
+  .contact__card:not(:first-child) {
+    margin-left: -1px;
+  }
+}
+
+.contact__card-icon {
+  display: block;
+  width: 28px;
+  height: 28px;
+  color: var(--brand);
+  flex-shrink: 0;
+}
+
+.contact__card-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  max-width: 280px;
+}
+
+@media (min-width: 1000px) {
+  .contact__card-text {
+    max-width: 330px;
+  }
+}
+
+.contact__card-title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.09px;
+  color: var(--text-primary);
+  width: 100%;
+}
+
+.contact__card-value {
+  display: block;
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--body2-size);
+  line-height: var(--body2-line);
+  letter-spacing: var(--body2-tracking);
+  color: var(--text-quaternary);
+  width: 100%;
+  text-decoration: none;
+}
+
+/* ---------- Form-L ---------- */
+.form__container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1392px;
+  overflow: hidden;
+}
+
+@media (min-width: 390px) {
+  .form__container {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 1000px) {
+  .form__container {
+    flex-direction: row;
+  }
+}
+
+.form__intro,
+.form__content {
+  width: 100%;
+  max-width: 1392px;
+  overflow: hidden;
+}
+
+.form__intro {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-4xl);
+  border-right: 1px solid var(--border-primary);
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .form__intro {
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .form__intro {
+    padding: var(--spacing-9xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .form__intro {
+    width: auto;
+    flex: 1 0 0;
+    min-width: 0;
+    align-self: stretch;
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+  }
+}
+
+.form__content {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-4xl);
+  border-top: 1px solid var(--border-primary);
+  padding: var(--spacing-6xl) var(--spacing-3xl);
+}
+
+@media (min-width: 768px) {
+  .form__content {
+    padding: var(--spacing-6xl);
+  }
+}
+
+/* 1000px: намеренно УЖЕ горизонтальный паддинг (48px/6xl), чем у
+   .form__intro на том же брейкпоинте (80px/8xl) — так в Figma,
+   перепроверено дважды по get_design_context, не опечатка. */
+@media (min-width: 1000px) {
+  .form__content {
+    width: auto;
+    flex: 1 0 0;
+    min-width: 0;
+    border-top: none;
+    border-right: 1px solid var(--border-primary);
+    padding: var(--spacing-10xl) var(--spacing-6xl) var(--spacing-9xl);
+  }
+}
+
+@media (min-width: 1440px) {
+  .form__content {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+  }
+}
+
+.form__form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: var(--spacing-4xl);
+  width: 100%;
+  min-width: 0;
+  flex: 1 0 0;
+  max-width: 620px;
+}
+
+/* 768px: единственный брейкпоинт без потолка ширины формы (720 в
+   Figma убирает max-w здесь и только здесь — 1000/1440 снова его
+   применяют, так же как у .form__form выше по остальным правилам). */
+@media (min-width: 768px) {
+  .form__form {
+    max-width: none;
+  }
+}
+
+@media (min-width: 1000px) {
+  .form__form {
+    max-width: 620px;
+  }
+}
+
+.form__fields {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  width: 100%;
+}
+
+/* Имя+Телефон в ряд — НЕмонотонный брейкпоинт по Figma (проверено
+   дважды через get_design_context): в ряд на 768 И 1440, но обратно в
+   столбик на 1000 (там своя, более узкая раскладка Form Content, см.
+   .form__content выше) — поэтому 3 отдельных переключения, а не одно
+   "с такой-то ширины". */
+.form__row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .form__row {
+    flex-direction: row;
+  }
+
+  .form__row .form__field {
+    flex: 1 0 0;
+    min-width: 0;
+  }
+}
+
+@media (min-width: 1000px) {
+  .form__row {
+    flex-direction: column;
+  }
+
+  .form__row .form__field {
+    flex: none;
+    min-width: auto;
+  }
+}
+
+@media (min-width: 1440px) {
+  .form__row {
+    flex-direction: row;
+  }
+
+  .form__row .form__field {
+    flex: 1 0 0;
+    min-width: 0;
+  }
+}
+
+.form__field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
+.form__label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-xxs);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-secondary);
+}
+
+.form__required {
+  color: var(--text-primary);
+}
+
+.form__input {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  width: 100%;
+  padding: 10px 14px;
+  background-color: var(--white);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 1px rgba(10, 13, 18, 0.05);
+}
+
+.form__input:focus-within {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(253, 176, 34, 0.15);
+}
+
+.form__input-field {
+  flex: 1 0 0;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--text-primary);
+}
+
+.form__input-field::placeholder {
+  color: var(--text-quaternary);
+}
+
+.form__textarea {
+  display: block;
+  width: 100%;
+  height: 134px;
+  padding: 12px 14px;
+  background-color: var(--white);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 2px rgba(10, 13, 18, 0.05);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--text-primary);
+  resize: vertical;
+}
+
+.form__textarea::placeholder {
+  color: var(--text-quaternary);
+}
+
+.form__textarea:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(253, 176, 34, 0.15);
+}
+
+.form__file-trigger {
+  cursor: pointer;
+}
+
+.form__file-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.form__file-text {
+  flex: 1 0 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--text-quaternary);
+}
+
+.form__file-text.is-filled {
+  color: var(--text-primary);
+}
+
+.form__checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-lg);
+  width: 100%;
+  cursor: pointer;
+}
+
+.form__checkbox-pad {
+  display: flex;
+  align-items: center;
+  padding-top: 1px;
+  flex-shrink: 0;
+}
+
+.form__checkbox-box {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 22px;
+  background-color: var(--white);
+  border: 1px solid var(--border-secondary);
+  /* border-radius 6px — в Figma этот радиус переиспользует токен
+     spacing-sm (тоже 6px), а не отдельный radius-токен; здесь просто
+     буквальное значение, заводить ради одного места отдельную
+     переменную --radius-sm не стали. */
+  border-radius: 6px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.form__checkbox-check {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.form__checkbox-input:checked + .form__checkbox-box {
+  background-color: var(--brand);
+  border-color: var(--brand);
+}
+
+.form__checkbox-input:checked + .form__checkbox-box .form__checkbox-check {
+  opacity: 1;
+}
+
+.form__checkbox-input:focus-visible + .form__checkbox-box {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.form__checkbox-label {
+  flex: 1 0 0;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--text-tertiary);
+}
+
+.form__checkbox-link {
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-decoration-skip-ink: none;
+  text-underline-position: from-font;
+}
+
+/* Кнопка "Отправить" — переиспользует .btn (padding/radius/шрифт 1:1
+   с компонентом Button из Figma), но цвет ВСЕГДА тёмный (#373c43 bg
+   / #525966 border / #f7f7f7 текст), даже внутри светлой секции —
+   тот же приём, что и у .header-home__cta ("у Light И Dark
+   одинаковая"), поэтому не полагаемся на локальные --button-primary/
+   --border-secondary/--text-primary токены (они здесь
+   переопределены под светлую тему) — задаём цвета буквально. */
+.form__submit {
+  flex-shrink: 0;
+  background-color: #373c43;
+  border-color: #525966;
+  color: #f7f7f7;
+}
+
+@media (hover: hover) {
+  .form__submit:hover:not(:disabled) {
+    background-color: #40464e;
+  }
+}
+
+.form__submit:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+
+/* Утилита для нативных input'ов, скрытых визуально, но доступных для
+   клавиатуры/скринридеров (чекбокс, file input в поле "Документы") */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

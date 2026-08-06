@@ -84,15 +84,26 @@
     {% set dividerVariant = "light" %}
     {% include "divider.njk" %}
     {% set dividerVariant = "" %}
-  {% else %}
+  {% elif not customSections %}
     {% include "divider.njk" %}
   {% endif %}
-  {% include "brands.njk" %}
-  {% include "divider.njk" %}
-  {% include "cta.njk" %}
-  {% set dividerVariant = "edge-secondary" %}
-  {% include "divider.njk" %}
-  {% set dividerVariant = "" %}
+  {# customSections (05.08, добавлено для contact.njk) — страницы с
+     полностью свёрстанным по Figma контентом (свои секции + свои
+     дивайдеры прямо в разметке страницы, см. contact.njk) выставляют
+     этот флаг, чтобы пропустить общий хвост "Divider + Brands + Divider
+     + CTA + Divider(edge-secondary)" ниже — он был задуман как
+     заглушка-наполнитель для ещё не свёрстанных внутренних страниц
+     (About/Services/Каталог сейчас), а не обязательная часть каждой
+     страницы; на Contact по Figma (node 923:6920) вообще нет Brands/
+     CTA — сразу после Form - L идёт Divider - D и Footer - D. #}
+  {% if not customSections %}
+    {% include "brands.njk" %}
+    {% include "divider.njk" %}
+    {% include "cta.njk" %}
+    {% set dividerVariant = "edge-secondary" %}
+    {% include "divider.njk" %}
+    {% set dividerVariant = "" %}
+  {% endif %}
   {% include "footer.njk" %}
   <script src="{{ '/js/header.js' | url }}" defer></script>
   {% if isHome %}
@@ -101,9 +112,23 @@
     <script src="{{ '/js/hero-video-upgrade.js' | url }}" defer></script>
     <script src="{{ '/js/social-drag.js' | url }}" defer></script>
   {% endif %}
+  {# 05.08: header-home-theme.js раньше грузился ТОЛЬКО под
+     transparentHeader (тогда это было равносильно "только на живой /",
+     единственной странице со светлыми секциями) — теперь у Contact
+     тоже есть светлая тема (Contact - L/Form - L) и скролл-спай должен
+     переключать Header между --light/--dark и там. Скрипт сам
+     no-op'ается на страницах без .site-header--home (сейчас таких
+     нет — legacyHeader был только у удалённой /old-home/) — грузим
+     его безусловно на каждой странице. pull-to-refresh.js остаётся
+     только под transparentHeader — это Home-специфичный обход
+     overscroll, сам себя гасит через body--header-overlay, но на
+     страницах без него просто не нужен. #}
+  <script src="{{ '/js/header-home-theme.js' | url }}" defer></script>
   {% if transparentHeader %}
-    <script src="{{ '/js/header-home-theme.js' | url }}" defer></script>
     <script src="{{ '/js/pull-to-refresh.js' | url }}" defer></script>
+  {% endif %}
+  {% if hasContactForm %}
+    <script src="{{ '/js/contact-form.js' | url }}" defer></script>
   {% endif %}
 </body>
 </html>

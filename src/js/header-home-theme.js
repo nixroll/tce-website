@@ -111,8 +111,12 @@
 
   var social = document.querySelector('.social');
 
+  /* 05.08: .contact/.form добавлены — то же самое расширение, которое
+     было анонсировано ниже в комментарии про "если позже на этих
+     страницах появятся светлые секции" — теперь есть (Contact - L/
+     Form - L на странице /contact/). */
   var candidates = document.querySelectorAll(
-    '.social, .stats, .divider, .areas, .testimonial, .services, .projects, .brands, .cta, .site-footer'
+    '.social, .stats, .divider, .areas, .testimonial, .services, .projects, .brands, .cta, .site-footer, .contact, .form'
   );
   if (!candidates.length) return;
 
@@ -145,7 +149,9 @@
       el.classList.contains('stats') ||
       el.classList.contains('areas') ||
       el.classList.contains('services') ||
-      el.classList.contains('projects')
+      el.classList.contains('projects') ||
+      el.classList.contains('contact') ||
+      el.classList.contains('form')
     ) {
       theme = 'light';
     } else {
@@ -216,9 +222,22 @@
     }
   }
 
+  /* 05.08: раньше скрипт грузился только на transparentHeader-странице
+     (живая /), поэтому дефолт "пока ничего не докрутили" мог быть
+     жёстко 'transparent'. Теперь скрипт общий для всех страниц —
+     на страницах БЕЗ transparentHeader (Contact и другие внутренние)
+     Header в начале страницы должен оставаться --dark (как отрисован
+     сервером, см. header-home.njk), а не мгновенно дёргаться в
+     --transparent, для которой здесь физически нет ни видео, ни
+     .body--header-overlay (без него Header просто наложился бы поверх
+     контента). body--header-overlay ставится в base.njk той же
+     переменной transparentHeader, что и стартовый класс Header —
+     самый надёжный способ узнать это в JS без отдельного флага. */
+  var DEFAULT_THEME = document.body.classList.contains('body--header-overlay') ? 'transparent' : 'dark';
+
   function currentTheme() {
     var threshold = headerHeightPx() + 1;
-    var theme = 'transparent';
+    var theme = DEFAULT_THEME;
     for (var i = 0; i < sections.length; i++) {
       if (sections[i].el.getBoundingClientRect().top <= threshold) {
         theme = sections[i].theme;

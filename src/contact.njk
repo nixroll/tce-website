@@ -1,7 +1,181 @@
 ---
 title: Контакты — Thermo Concept Engineering
 layout: base.njk
+customSections: true
+hasContactForm: true
 ---
-<section class="hero" data-figma-node="308:1917" data-figma-name="Hero">
-  <p class="hero__title">Контакты</p>
+{# 05.08. Первая страница, свёрстанная с "боевого" Figma-макета (не
+   заглушки .hero) — адаптивы под все 5 брейкпоинтов пользователь
+   подготовил заранее в Figma и передал ссылками на каждый компонент
+   отдельно. node 923:6920 ("Contact"), порядок секций сверху вниз:
+   Header → Contact - L → Divider - L → Form - L → Divider - D →
+   Footer - D. На этой странице НЕТ Brands/CTA (в отличие от
+   остальных ещё не свёрстанных внутренних страниц — About/Services/
+   Каталог — у которых пока общий хвост "заглушка Hero + Brands + CTA
+   + Footer" из base.njk) — поэтому здесь customSections: true во
+   front matter, base.njk по этому флагу пропускает свой автоматический
+   хвост целиком и уходит сразу в footer.njk после того, что здесь, в
+   контенте (см. комментарий в base.njk).
+
+   Header/Footer — общие переиспользуемые компоненты, ничего своего
+   тут нет. Светлая тема (L) секций подхватывается header-home-theme.js
+   автоматически — он уже сканирует все секции с классами light/dark
+   на странице по порядку в DOM (тот же скролл-спай, что и на Home),
+   классы .contact/.form добавлены в его список (см. комментарий там).
+
+   Иконки (phone/mail-01/marker-pin-01, file-plus-02 в Form) — SVG
+   прислал пользователь напрямую (Figma download_assets недоступен из
+   этой песочницы), вставлены инлайн с stroke="currentColor" — цвет
+   задаётся в CSS (.contact__card-icon, .form__file-icon). #}
+
+<section class="contact" data-figma-node="924:9666" data-figma-name="Contact - L">
+  <div class="contact__intro">
+    <div class="contact__intro-inner">
+      <span class="contact__badge">Контакты</span>
+      <h1 class="contact__heading">
+        <span class="contact__heading-accent">На связи.</span><br>
+        <span class="contact__heading-muted">Телефон, почта и адрес.</span>
+      </h1>
+    </div>
+  </div>
+
+  <div class="contact__cards">
+    <div class="contact__card">
+      <svg class="contact__card-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M9.77699 10.3288C10.589 12.02 11.6959 13.6051 13.0977 15.0069C14.4996 16.4088 16.0847 17.5157 17.7759 18.3277C17.9214 18.3975 17.9941 18.4325 18.0861 18.4593C18.4132 18.5546 18.8149 18.4862 19.0919 18.2878C19.1698 18.232 19.2365 18.1653 19.3699 18.0319C19.7777 17.6241 19.9817 17.4201 20.1867 17.2868C20.9601 16.784 21.9571 16.784 22.7305 17.2868C22.9356 17.4201 23.1395 17.6241 23.5474 18.0319L23.7747 18.2593C24.3947 18.8793 24.7047 19.1893 24.8731 19.5223C25.2081 20.1844 25.2081 20.9664 24.8731 21.6285C24.7047 21.9615 24.3947 22.2715 23.7747 22.8915L23.5908 23.0754C22.9729 23.6933 22.664 24.0023 22.2439 24.2382C21.7778 24.5 21.0539 24.6883 20.5194 24.6867C20.0376 24.6853 19.7083 24.5918 19.0498 24.4049C15.5108 23.4004 12.1714 21.5052 9.38544 18.7192C6.59946 15.9333 4.70424 12.5938 3.69977 9.05489C3.51287 8.39637 3.41941 8.0671 3.41798 7.58533C3.41639 7.05074 3.60464 6.32683 3.86647 5.86074C4.10242 5.44071 4.41137 5.13176 5.02926 4.51387L5.21317 4.32996C5.83319 3.70994 6.14319 3.39994 6.47614 3.23153C7.13829 2.89662 7.92027 2.89662 8.58242 3.23153C8.91537 3.39993 9.22538 3.70994 9.84539 4.32996L10.0727 4.55731C10.4806 4.96518 10.6846 5.16912 10.8179 5.37419C11.3207 6.14756 11.3207 7.14458 10.8179 7.91795C10.6846 8.12302 10.4806 8.32696 10.0727 8.73483C9.93938 8.8682 9.8727 8.93488 9.81688 9.01283C9.61853 9.28983 9.55005 9.69146 9.64539 10.0185C9.67222 10.1106 9.70715 10.1833 9.77699 10.3288Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="contact__card-text">
+        <p class="contact__card-title">Телефон</p>
+        <a class="contact__card-value" href="tel:+375293820829">+375 (29) 382-08-29</a>
+      </div>
+    </div>
+    <div class="contact__card">
+      <svg class="contact__card-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M2.33331 8.16669L11.8591 14.8347C12.6304 15.3747 13.0161 15.6446 13.4356 15.7492C13.8062 15.8416 14.1938 15.8416 14.5643 15.7492C14.9839 15.6446 15.3695 15.3747 16.1409 14.8347L25.6666 8.16669M7.93331 23.3334H20.0666C22.0268 23.3334 23.0069 23.3334 23.7556 22.9519C24.4142 22.6163 24.9496 22.0809 25.2852 21.4223C25.6666 20.6736 25.6666 19.6935 25.6666 17.7334V10.2667C25.6666 8.3065 25.6666 7.32641 25.2852 6.57772C24.9496 5.91915 24.4142 5.38372 23.7556 5.04816C23.0069 4.66669 22.0268 4.66669 20.0666 4.66669H7.93331C5.97313 4.66669 4.99304 4.66669 4.24435 5.04816C3.58578 5.38372 3.05035 5.91915 2.71479 6.57772C2.33331 7.32641 2.33331 8.3065 2.33331 10.2667V17.7334C2.33331 19.6935 2.33331 20.6736 2.71479 21.4223C3.05035 22.0809 3.58578 22.6163 4.24435 22.9519C4.99304 23.3334 5.97313 23.3334 7.93331 23.3334Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="contact__card-text">
+        <p class="contact__card-title">Email</p>
+        <a class="contact__card-value" href="mailto:info@tcepro.by">info@tcepro.by</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact__cards">
+    <div class="contact__card">
+      <svg class="contact__card-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M14 15.1666C15.933 15.1666 17.5 13.5996 17.5 11.6666C17.5 9.73365 15.933 8.16665 14 8.16665C12.067 8.16665 10.5 9.73365 10.5 11.6666C10.5 13.5996 12.067 15.1666 14 15.1666Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M14 25.6666C18.6667 21 23.3333 16.8213 23.3333 11.6666C23.3333 6.51199 19.1547 2.33331 14 2.33331C8.84535 2.33331 4.66667 6.51199 4.66667 11.6666C4.66667 16.8213 9.33334 21 14 25.6666Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="contact__card-text">
+        <p class="contact__card-title">Физический адрес</p>
+        <p class="contact__card-value">Республика Беларусь, 220091, г. Минск, ул. Матусевича, д. 33/2, офис 801</p>
+      </div>
+    </div>
+    <div class="contact__card">
+      <svg class="contact__card-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M14 15.1666C15.933 15.1666 17.5 13.5996 17.5 11.6666C17.5 9.73365 15.933 8.16665 14 8.16665C12.067 8.16665 10.5 9.73365 10.5 11.6666C10.5 13.5996 12.067 15.1666 14 15.1666Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M14 25.6666C18.6667 21 23.3333 16.8213 23.3333 11.6666C23.3333 6.51199 19.1547 2.33331 14 2.33331C8.84535 2.33331 4.66667 6.51199 4.66667 11.6666C4.66667 16.8213 9.33334 21 14 25.6666Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="contact__card-text">
+        <p class="contact__card-title">Юридический адрес</p>
+        <p class="contact__card-value">Республика Беларусь, 220091, г. Минск, ул. Матусевича, д. 33/2, офис 801</p>
+      </div>
+    </div>
+  </div>
 </section>
+
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+
+{# Form - L (node 937:4840). Форма пока НИКУДА не отправляется (по
+   прямой просьбе пользователя) — только клиентская "заглушка успеха":
+   contact-form.js перехватывает submit, гасит его (preventDefault),
+   если обязательные поля/чекбокс прошли нативную HTML5-валидацию —
+   меняет текст кнопки на "Отправлено" и блокирует кнопку от повторной
+   отправки. Поле "Документы" — реальный <input type="file"> (открывает
+   системный пикер), визуально спрятан, стилизованная обёртка —
+   <label>; contact-form.js подставляет имя выбранного файла вместо
+   плейсхолдера "Загрузить документ". Чекбокс — тоже настоящий <input
+   type="checkbox">, спрятан визуально, состояние Selected из Figma
+   (заливка var(--brand) + белая галочка) через :checked + sibling в
+   CSS — доступно с клавиатуры, не просто div с JS. #}
+<section class="form" data-figma-node="937:4840" data-figma-name="Form - L">
+  <div class="form__container">
+    <div class="form__intro">
+      <div class="form__intro-inner">
+        <span class="form__badge">Форма</span>
+        <h2 class="form__heading">
+          <span class="form__heading-accent">Есть вопрос?</span><br>
+          <span class="form__heading-muted">Оставьте заявку.</span>
+        </h2>
+      </div>
+    </div>
+
+    <div class="form__content">
+      <form class="form__form" id="contact-form" novalidate>
+        <div class="form__fields">
+          <div class="form__row">
+            <div class="form__field">
+              <span class="form__label">
+                <span>Имя</span><span class="form__required">*</span>
+              </span>
+              <span class="form__input">
+                <input class="form__input-field" type="text" name="name" placeholder="Имя" autocomplete="name" required>
+              </span>
+            </div>
+            <div class="form__field">
+              <span class="form__label">
+                <span>Телефон</span><span class="form__required">*</span>
+              </span>
+              <span class="form__input">
+                <input class="form__input-field" type="tel" name="phone" placeholder="+375 (29) 000-00-00" autocomplete="tel" required>
+              </span>
+            </div>
+          </div>
+
+          <div class="form__field">
+            <span class="form__label"><span>Email</span></span>
+            <span class="form__input">
+              <input class="form__input-field" type="email" name="email" placeholder="you@company.com" autocomplete="email">
+            </span>
+          </div>
+
+          <div class="form__field">
+            <span class="form__label">
+              <span>Сообщение</span><span class="form__required">*</span>
+            </span>
+            <textarea class="form__textarea" name="message" placeholder="Оставьте нам сообщение..." required></textarea>
+          </div>
+
+          <div class="form__field">
+            <span class="form__label"><span>Документы</span></span>
+            <label class="form__input form__file-trigger">
+              <svg class="form__file-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M16.6666 8.74996V5.66663C16.6666 4.26649 16.6666 3.56643 16.3942 3.03165C16.1545 2.56124 15.772 2.17879 15.3016 1.93911C14.7668 1.66663 14.0668 1.66663 12.6666 1.66663H7.33331C5.93318 1.66663 5.23312 1.66663 4.69834 1.93911C4.22793 2.17879 3.84548 2.56124 3.6058 3.03165C3.33331 3.56643 3.33331 4.26649 3.33331 5.66663V14.3333C3.33331 15.7334 3.33331 16.4335 3.6058 16.9683C3.84548 17.4387 4.22793 17.8211 4.69834 18.0608C5.23312 18.3333 5.93318 18.3333 7.33331 18.3333H9.99998M11.6666 9.16663H6.66665M8.33331 12.5H6.66665M13.3333 5.83329H6.66665M15 17.5V12.5M12.5 15H17.5" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="form__file-text" data-empty-text="Загрузить документ">Загрузить документ</span>
+              <input class="visually-hidden" type="file" name="document">
+            </label>
+          </div>
+
+          <label class="form__checkbox-row">
+            <span class="form__checkbox-pad">
+              <input class="form__checkbox-input visually-hidden" type="checkbox" name="consent" required>
+              <span class="form__checkbox-box" aria-hidden="true">
+                <svg class="form__checkbox-check" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M3 7.3L5.8 10L11 4" stroke="white" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </span>
+            <span class="form__checkbox-label">Вы соглашаетесь с <a class="form__checkbox-link" href="{{ '/privacy/' | url }}">политикой конфиденциальности</a>.</span>
+          </label>
+        </div>
+
+        <button class="btn form__submit" type="submit" data-default-text="Отправить" data-success-text="Отправлено">Отправить</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% include "divider.njk" %}
