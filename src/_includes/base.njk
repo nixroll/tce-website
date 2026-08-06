@@ -14,19 +14,7 @@
      transparentHeader (в т.ч. архивной /old-home/) тега вообще нет. #}
   {% if transparentHeader %}<meta name="theme-color" content="#ffffff">{% endif %}
   <title>{{ title or "Thermo Concept Engineering" }}</title>
-  {# 06.08: имя файла с версией вместо style.css — обход зависшего
-     Fastly-кеша GitHub Pages. Сначала пробовали ?v=N в query string —
-     не сработало: Fastly у GitHub Pages кеширует статику по пути,
-     игнорируя query string, так что после деплоя style.css оставался
-     старым 15+ минут при ЛЮБОЙ query-строке (проверено — HTML и новые
-     JS-файлы вроде contact-form.js отдавались свежими сразу, деплой
-     прошёл нормально, залип именно кеш конкретного давно
-     существующего URL /css/style.css). У GitHub Pages нет ручного
-     сброса кеша файла, только ожидание TTL. Смена самого ИМЕНИ файла —
-     единственный гарантированный cache miss на любой CDN-ноде. Если
-     когда-нибудь снова понадобится форсировать обновление —
-     переименовать style.N.css в style.(N+1).css и обновить путь тут. #}
-  <link rel="stylesheet" href="{{ '/css/style.2.css' | url }}">
+  <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
 </head>
 <body{% if transparentHeader %} class="body--header-overlay"{% endif %}>
   {# 05.08 (изначальный раскат) + 05.08 (промоушен новой Home на живую
