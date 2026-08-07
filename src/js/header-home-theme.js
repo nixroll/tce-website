@@ -224,16 +224,31 @@
 
   /* 05.08: раньше скрипт грузился только на transparentHeader-странице
      (живая /), поэтому дефолт "пока ничего не докрутили" мог быть
-     жёстко 'transparent'. Теперь скрипт общий для всех страниц —
-     на страницах БЕЗ transparentHeader (Contact и другие внутренние)
-     Header в начале страницы должен оставаться --dark (как отрисован
-     сервером, см. header-home.njk), а не мгновенно дёргаться в
-     --transparent, для которой здесь физически нет ни видео, ни
-     .body--header-overlay (без него Header просто наложился бы поверх
-     контента). body--header-overlay ставится в base.njk той же
-     переменной transparentHeader, что и стартовый класс Header —
-     самый надёжный способ узнать это в JS без отдельного флага. */
-  var DEFAULT_THEME = document.body.classList.contains('body--header-overlay') ? 'transparent' : 'dark';
+     жёстко 'transparent'. body--header-overlay ставится в base.njk той
+     же переменной transparentHeader, что и стартовый класс Header —
+     самый надёжный способ узнать это в JS без отдельного флага.
+
+     07.08, багфикс (пользователь, Safari mobile/Mac/iPad: "при быстром
+     скролле на секунду переключается на тёмный Header", не
+     воспроизводилось в Chrome): раньше дефолт для страниц БЕЗ
+     transparentHeader был жёстко 'dark' — это был fallback ТОЛЬКО на
+     случай, если currentTheme() ниже не найдёт вообще ни одной секции
+     с top <= threshold (т.е. страница выше самой первой секции). На
+     /contact/ первая секция (.contact) светлая и практически всегда
+     удовлетворяет этому условию — НО в Safari при быстром флик-скролле
+     getBoundingClientRect() иногда на один кадр отдаёт устаревшее
+     значение (не успевает за реальной позицией скролла, известная
+     особенность тайминга layout/rAF у WebKit при инерционном скролле —
+     в Chrome не воспроизводится) — на этот один кадр цикл ниже не
+     находил ни одной подходящей секции и откатывался на жёстко
+     'dark' — отсюда видимая вспышка. Теперь дефолт берётся из темы
+     САМОЙ ПЕРВОЙ найденной секции на странице (sections[0].theme) —
+     на /contact/ это 'light', так что даже на том самом "потерянном"
+     кадре Safari фон fallback совпадает с уже видимой темой и вспышки
+     не видно. */
+  var DEFAULT_THEME = document.body.classList.contains('body--header-overlay')
+    ? 'transparent'
+    : (sections.length ? sections[0].theme : 'dark');
 
   function currentTheme() {
     var threshold = headerHeightPx() + 1;

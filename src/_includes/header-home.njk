@@ -10,19 +10,29 @@
    "/" — на остальных страницах нет Hero-видео под Header, поэтому
    темы transparent там просто не бывает).
 
-   Тема стартового рендера — та же переменная transparentHeader, что
-   уже решает .body--header-overlay/резерв места в потоке (см. ниже
-   по файлу, класс на корневом <header>): true (сейчас только у живой
-   "/", бывший home.njk) → --transparent, иначе (все остальные
-   страницы, включая архивную /old-home/ — там, впрочем, свой
-   legacyHeader) → --dark статически, без JS — light/dark переключение
-   по скроллу (header-home-theme.js) пока подключено ТОЛЬКО там, где
-   transparentHeader (там есть Hero, ради которого и написан этот
-   скролл-спай); у остальных страниц пока только тёмные секции,
-   переключать не на что, поэтому скрипт там не грузится (см.
-   base.njk) — если позже на этих страницах появятся светлые секции,
-   architecture уже поддерживает light/dark, останется просто
-   расширить скрипт.
+   Тема стартового рендера — переменная transparentHeader (true сейчас
+   только у живой "/", бывший home.njk) → --transparent; иначе, если
+   первая секция страницы светлая, front matter страницы явно
+   выставляет headerTheme: "light" (сейчас — только /contact/, там
+   первая секция Contact - L) → --dark статически НЕ рендерим, сразу
+   --light; иначе (все страницы без явного headerTheme, первая секция
+   тёмная или это ещё не свёрстанный Hero-плейсхолдер) → --dark, как
+   и раньше.
+
+   07.08, багфикс (пользователь: "при загрузке страницы сначала тёмный
+   Header на полсекунды, потом светлый" + "при быстром скролле на
+   Safari на секунду переключается на тёмный"): ДО этой правки здесь
+   безусловно рендерился --dark, а light-тема на /contact/
+   выставлялась ТОЛЬКО через header-home-theme.js уже ПОСЛЕ загрузки —
+   отсюда видимый скачок тёмный→светлый на каждой загрузке страницы
+   (сервер отдаёт --dark, JS чуть погодя перекрашивает через
+   .25s-кроссфейд). headerTheme здесь решает это на уровне разметки —
+   сервер сразу отдаёт правильную тему, JS-кроссфейд на первом кадре
+   становится no-op (remove+add одного и того же класса синхронно, без
+   кадра рендера между ними — визуально ничего не меняется). Второй
+   баг (Safari, только при быстром скролле) — отдельная причина в
+   header-home-theme.js (см. DEFAULT_THEME там), эта правка на него не
+   влияет напрямую, но обе правки шли в одном тикете.
 
    ВАЖНО: это ПОЛНОСТЬЮ отдельный компонент, не модификация
    header.njk — специально, чтобы точно не задеть архивную /old-home/
@@ -76,7 +86,7 @@
    .header-home__cta под темой --transparent отдельными правилами
    (не переиспользует класс home-hero__btn напрямую, чтобы компоненты
    не были связаны друг с другом). #}
-<header class="site-header site-header--home {% if transparentHeader %}site-header--transparent{% else %}site-header--dark{% endif %}" data-figma-node="335:2092" data-figma-name="Desktop and Tablet Header{% if transparentHeader %} (Home){% endif %}">
+<header class="site-header site-header--home {% if transparentHeader %}site-header--transparent{% elif headerTheme %}site-header--{{ headerTheme }}{% else %}site-header--dark{% endif %}" data-figma-node="335:2092" data-figma-name="Desktop and Tablet Header{% if transparentHeader %} (Home){% endif %}">
   <div class="header__inner">
     <a href="{{ '/' | url }}" class="header-home__logo" aria-label="TCE — на главную">
       {# alt="" + aria-hidden на обеих картинках: доступное имя уже
