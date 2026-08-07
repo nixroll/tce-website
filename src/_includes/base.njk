@@ -29,7 +29,16 @@
      style.(N+1).css и обновить путь тут. #}
   <link rel="stylesheet" href="{{ '/css/style.2.css' | url }}">
 </head>
-<body{% if transparentHeader %} class="body--header-overlay"{% endif %}>
+{# lightBodyBg (07.08, для /contact/) — НЕ путать с transparentHeader:
+   этот флаг только красит html/body в светлый у начала документа и
+   обратно в тёмный у Footer (см. .body--light-top в style.2.css),
+   чтобы при быстром скролле/rubber-band не мелькал тёмный фон
+   документа под светлой Contact - L секцией. В отличие от
+   transparentHeader — НЕ убирает padding-top у body и НЕ трогает
+   стартовую тему Header (та остаётся --dark, как отрисована сервером,
+   см. DEFAULT_THEME в header-home-theme.js) — Header на /contact/
+   в обычном потоке документа, а не поверх контента. #}
+<body{% if transparentHeader %} class="body--header-overlay"{% elif lightBodyBg %} class="body--light-top"{% endif %}>
   {# 05.08 (изначальный раскат) + 05.08 (промоушен новой Home на живую
      "/"): новый Header (header-home.njk) используется на ВСЕХ
      страницах, КРОМЕ тех, что явно помечены legacyHeader: true в
