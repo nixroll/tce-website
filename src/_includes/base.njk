@@ -14,7 +14,20 @@
      transparentHeader (в т.ч. архивной /old-home/) тега вообще нет. #}
   {% if transparentHeader %}<meta name="theme-color" content="#ffffff">{% endif %}
   <title>{{ title or "Thermo Concept Engineering" }}</title>
-  <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
+  {# 07.08: имя файла с версией вместо style.css — не эстетика, а
+     единственный ДОКАЗАННЫЙ способ обойти зависающий кеш GitHub Pages
+     (Fastly). ?v=N в query string НЕ сработал: style.css оставался
+     старым 15+ часов при любой query-строке, хотя новые файлы (напр.
+     contact-form.js) отдавались свежими сразу — значит, GitHub Pages
+     нормализует ключ кеша, отбрасывая query string для статики
+     (см. анализ в истории коммитов от 07.08). У GitHub Pages нет
+     ручного сброса кеша по файлу — max-age=600, но на практике
+     зависает на часы (задокументированная проблема самого GitHub:
+     github.com/orgs/community/discussions/11884). Смена ИМЕНИ файла —
+     единственный гарантированный cache miss. Если понадобится снова
+     форсировать обновление — переименовать style.N.css в
+     style.(N+1).css и обновить путь тут. #}
+  <link rel="stylesheet" href="{{ '/css/style.2.css' | url }}">
 </head>
 <body{% if transparentHeader %} class="body--header-overlay"{% endif %}>
   {# 05.08 (изначальный раскат) + 05.08 (промоушен новой Home на живую
