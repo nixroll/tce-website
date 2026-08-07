@@ -4,15 +4,26 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {% if noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
-  {# только для страниц с transparentHeader (сейчас это живая "/",
-     новая Home Hero) — область под статус-баром/чёлкой на iOS Safari
-     подсвечивается по этому тегу. Начальное значение — белый
-     (дефолтная тема Header на загрузке — Home Hero, для которой
-     пользователь попросил именно белый верх, см. header-home-theme.js),
-     дальше JS обновляет content динамически по мере скролла/смены
-     темы Header (там же — MutationObserver). У страниц без
-     transparentHeader (в т.ч. архивной /old-home/) тега вообще нет. #}
-  {% if transparentHeader %}<meta name="theme-color" content="#ffffff">{% endif %}
+  {# Область под статус-баром/чёлкой на iOS Safari подсвечивается по
+     этому тегу — БЕЗ него iOS красит эту область в свой дефолт (белый)
+     независимо от реального фона страницы. Начальное значение — та же
+     тема, с которой стартует Header (transparentHeader → white,
+     headerTheme: light → тоже white, иначе тега нет вообще — страница
+     стартует тёмной, менять не на что), дальше JS обновляет content
+     динамически по мере скролла/смены темы Header (header-home-theme.js,
+     MutationObserver).
+
+     07.08, багфикс (пользователь, /contact/ на iPad: "быстро скроллить
+     вверху виден фон страницы белый, а должен быть фон аналогичный
+     фону секций"): тег раньше рендерился ТОЛЬКО под transparentHeader
+     (тогда это было равносильно "единственная светлая-с-старта
+     страница" — живая "/") — с появлением headerTheme (/contact/,
+     тоже светлая с самого начала, см. header-home.njk) тег для неё не
+     рендерился вообще, и iOS красил область под чёлкой в свой дефолт
+     (белый) вместо нужного #fafafb/светлой темы — на глаз выглядело
+     как "белая вспышка" при быстром скролле вверху, отдельно от уже
+     исправленного тёмного фона html/body (.body--light-top). #}
+  {% if transparentHeader or headerTheme == "light" %}<meta name="theme-color" content="#ffffff">{% endif %}
   <title>{{ title or "Thermo Concept Engineering" }}</title>
   {# 07.08: имя файла с версией вместо style.css — не эстетика, а
      единственный ДОКАЗАННЫЙ способ обойти зависающий кеш GitHub Pages
@@ -151,6 +162,9 @@
   {% endif %}
   {% if hasContactForm %}
     <script src="{{ '/js/contact-form.js' | url }}" defer></script>
+  {% endif %}
+  {% if hasAddressCopy %}
+    <script src="{{ '/js/contact-copy.js' | url }}" defer></script>
   {% endif %}
 </body>
 </html>
