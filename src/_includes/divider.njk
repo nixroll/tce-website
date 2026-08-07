@@ -22,7 +22,16 @@
   дивайдера в Figma НЕТ ВООБЩЕ (573:3647 Divider-L идёт сразу в
   573:3648 Testimonial) — модификатор скрывает элемент на 320px и
   показывает с 390px.
+
+  07.08, добавлено для /contact/: dividerVariant = "secondary" — тот
+  же secondary тёмный фон (#181818), что и у "edge-secondary", но БЕЗ
+  скрытия ниже 1000px (divider--edge) — на /contact/ это дивайдер
+  между Form - L и Footer - D, он не наследует "видимость только с
+  1000px" тега edge (та особенность — специфика хвоста Home/CTA, а не
+  самого secondary-фона), нужен виден на всех брейкпоинтах, просто с
+  правильным цветом (пользователь заметил, что раньше здесь ошибочно
+  стоял primary фон вместо secondary).
 #}
-<div class="divider{% if dividerVariant == 'edge-secondary' %} divider--edge divider--secondary{% elif dividerVariant == 'light' %} divider--light{% elif dividerVariant == 'hidden-320' %} divider--hidden-320{% endif %}" data-figma-node="416:1773" data-figma-name="Divider">
+<div class="divider{% if dividerVariant == 'edge-secondary' %} divider--edge divider--secondary{% elif dividerVariant == 'secondary' %} divider--secondary{% elif dividerVariant == 'light' %} divider--light{% elif dividerVariant == 'hidden-320' %} divider--hidden-320{% endif %}" data-figma-node="416:1773" data-figma-name="Divider">
   <div class="divider__inner"></div>
 </div>
