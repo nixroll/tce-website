@@ -161,6 +161,12 @@
     <script src="{{ '/js/pull-to-refresh.js' | url }}" defer></script>
   {% endif %}
   {% if hasContactForm %}
+    {# confetti.js (self-hosted canvas-confetti, см. сам файл) грузится
+       ПЕРЕД contact-form.js — тот при успешной отправке синхронно
+       вызывает window.confetti(...), скрипты с defer выполняются в
+       порядке объявления в разметке, так что порядок тут гарантирует
+       готовность библиотеки к моменту сабмита. #}
+    <script src="{{ '/js/confetti.js' | url }}" defer></script>
     <script src="{{ '/js/contact-form.js' | url }}" defer></script>
   {% endif %}
   {% if hasAddressCopy %}
