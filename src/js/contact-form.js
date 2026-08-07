@@ -34,7 +34,12 @@
  *    Header (100, см. .site-header) — иначе конфетти могло бы
  *    оказаться визуально ПОД фиксированной шапкой. disableForReducedMotion
  *    — уважает prefers-reduced-motion (тот же принцип, что и
- *    scroll-behavior в style.css). */
+ *    scroll-behavior в style.css).
+ * 4) 07.08 — тост-уведомление (node 1027:4710, Type=Send), В ДОПОЛНЕНИЕ
+ *    к пп.2 и 3 выше (текст кнопки + конфетти), не вместо них —
+ *    прямая просьба пользователя. Общий контроллер с тостом
+ *    "Скопировано" у карточки "Юридический адрес" — contact-toast.js
+ *    (грузится раньше этого скрипта в base.njk), window.showContactToast('send'). */
 (function () {
   var form = document.getElementById('contact-form');
   if (!form) return;
@@ -118,5 +123,9 @@
     }
 
     fireConfetti();
+
+    if (typeof window.showContactToast === 'function') {
+      window.showContactToast('send');
+    }
   });
 })();

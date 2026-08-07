@@ -81,17 +81,14 @@ hasAddressCopy: true
       </svg>
       <div class="contact__card-text">
         <p class="contact__card-title">Юридический адрес</p>
-        {# 07.08: клик — копирует адрес в буфер (contact-copy.js). Не
-           ссылка (адрес юрлица не физическая точка на карте, в отличие
-           от Физического — тому нужна ссылка на Яндекс.Карты, см.
-           выше) — обычная кнопка, но со стилями .contact__card-value
-           (та же типографика, что у ссылок в этой секции). Браузеры не
-           дают вызвать СВОЙ системный тост "Скопировано" из скрипта
-           (это системное поведение работает только для нативного
-           Cmd+C/лонг-тапа) — вместо этого на 1.2с подменяем текст на
-           data-copied-text (тот же приём, что и data-success-text у
-           кнопки "Отправить", см. contact-form.js). #}
-        <button type="button" class="contact__card-value" data-copy-text="Республика Беларусь, 220091, г. Минск, ул. Матусевича, д. 33/2, офис 801" data-copied-text="Скопировано">Республика Беларусь, 220091, г.&nbsp;Минск, ул. Матусевича, д. 33/2, офис 801</button>
+        {# 07.08: клик — копирует адрес в буфер (contact-copy.js), тост
+           показывает contact-toast.js (window.showContactToast('copy')).
+           Не ссылка (адрес юрлица не физическая точка на карте, в
+           отличие от Физического — тому нужна ссылка на Яндекс.Карты,
+           см. выше) — обычная кнопка, но со стилями
+           .contact__card-value (та же типографика, что у ссылок в
+           этой секции). #}
+        <button type="button" class="contact__card-value" data-copy-text="Республика Беларусь, 220091, г. Минск, ул. Матусевича, д. 33/2, офис 801">Республика Беларусь, 220091, г.&nbsp;Минск, ул. Матусевича, д. 33/2, офис 801</button>
       </div>
     </div>
   </div>
@@ -194,3 +191,27 @@ hasAddressCopy: true
 {% set dividerVariant = "secondary" %}
 {% include "divider.njk" %}
 {% set dividerVariant = "" %}
+
+{# 07.08 (node 1027:4710, "Notification"): тост копирования адреса /
+   успешной отправки формы — position: fixed, живёт вне потока
+   документа, поэтому место в разметке роли не играет; управляется
+   contact-toast.js (window.showContactToast('copy'|'send')), вызовы —
+   из contact-copy.js и contact-form.js. Обе иконки (mail-01/check)
+   присланы пользователем напрямую, вставлены как есть — переключение
+   между Type=Copy/Type=Send через модификатор на корне
+   (.contact-toast--copy/--send, см. style.2.css), тот же приём, что и
+   у логотипа/бургер-иконок Header (два элемента, видимость через
+   display). #}
+<div class="contact-toast" id="contact-toast" role="status" aria-live="polite">
+  <span class="contact-toast__icon contact-toast__icon--send" aria-hidden="true">
+    <svg width="22" height="22" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2.33331 8.16669L11.8591 14.8347C12.6304 15.3747 13.0161 15.6446 13.4356 15.7492C13.8062 15.8416 14.1938 15.8416 14.5643 15.7492C14.9839 15.6446 15.3695 15.3747 16.1409 14.8347L25.6666 8.16669M7.93331 23.3334H20.0666C22.0268 23.3334 23.0069 23.3334 23.7556 22.9519C24.4142 22.6163 24.9496 22.0809 25.2852 21.4223C25.6666 20.6736 25.6666 19.6935 25.6666 17.7334V10.2667C25.6666 8.3065 25.6666 7.32641 25.2852 6.57772C24.9496 5.91915 24.4142 5.38372 23.7556 5.04816C23.0069 4.66669 22.0268 4.66669 20.0666 4.66669H7.93331C5.97313 4.66669 4.99304 4.66669 4.24435 5.04816C3.58578 5.38372 3.05035 5.91915 2.71479 6.57772C2.33331 7.32641 2.33331 8.3065 2.33331 10.2667V17.7334C2.33331 19.6935 2.33331 20.6736 2.71479 21.4223C3.05035 22.0809 3.58578 22.6163 4.24435 22.9519C4.99304 23.3334 5.97313 23.3334 7.93331 23.3334Z" stroke="#FDB022" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span class="contact-toast__icon contact-toast__icon--copy" aria-hidden="true">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18.3337 5.5L8.25033 15.5833L3.66699 11" stroke="#CECFD2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span class="contact-toast__text"></span>
+</div>

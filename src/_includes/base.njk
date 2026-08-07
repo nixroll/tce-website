@@ -160,6 +160,13 @@
   {% if transparentHeader %}
     <script src="{{ '/js/pull-to-refresh.js' | url }}" defer></script>
   {% endif %}
+  {% if hasContactForm or hasAddressCopy %}
+    {# contact-toast.js — общий тост-контроллер (window.showContactToast),
+       нужен и contact-form.js, и contact-copy.js (см. оба), поэтому
+       грузится перед ними обоими независимо от того, какой из двух
+       флагов выставлен. #}
+    <script src="{{ '/js/contact-toast.js' | url }}" defer></script>
+  {% endif %}
   {% if hasContactForm %}
     {# confetti.js (self-hosted canvas-confetti, см. сам файл) грузится
        ПЕРЕД contact-form.js — тот при успешной отправке синхронно

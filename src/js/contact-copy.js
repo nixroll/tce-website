@@ -8,28 +8,29 @@
  * скрипта — то системное уведомление работает только для нативного
  * копирования (Cmd/Ctrl+C, лонг-тап "Копировать" в контекстном меню),
  * а не для programmatic navigator.clipboard.writeText(). Вместо этого
- * даём собственную обратную связь — на 1.2с подменяем текст кнопки на
- * data-copied-text ("Скопировано"), тот же приём, что и у кнопки
- * "Отправить" в форме (data-success-text, см. contact-form.js). */
+ * даём собственную обратную связь.
+ *
+ * 07.08, обновлено: раньше здесь на 1.2с подменялся текст самой
+ * кнопки — пользователь посмотрел и попросил вместо этого показывать
+ * тост-уведомление (node 1027:4710, "Notification", Type=Copy), тот
+ * же компонент, что и у успешной отправки формы (contact-form.js,
+ * там — Type=Send, добавляется В ДОПОЛНЕНИЕ к тексту кнопки, а не
+ * вместо; здесь наоборот — тост ВМЕСТО подмены текста). Общий
+ * контроллер — contact-toast.js (грузится раньше этого скрипта в
+ * base.njk), window.showContactToast('copy'). */
 (function () {
   var buttons = document.querySelectorAll('[data-copy-text]');
   if (!buttons.length) return;
 
   Array.prototype.forEach.call(buttons, function (btn) {
-    var originalText = btn.textContent;
-    var copiedText = btn.getAttribute('data-copied-text') || 'Скопировано';
-    var revertTimer = null;
-
     btn.addEventListener('click', function () {
       var text = btn.getAttribute('data-copy-text');
       if (!text) return;
 
       var showCopied = function () {
-        window.clearTimeout(revertTimer);
-        btn.textContent = copiedText;
-        revertTimer = window.setTimeout(function () {
-          btn.textContent = originalText;
-        }, 1200);
+        if (typeof window.showContactToast === 'function') {
+          window.showContactToast('copy');
+        }
       };
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
