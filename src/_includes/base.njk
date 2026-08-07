@@ -138,6 +138,15 @@
     {% set dividerVariant = "" %}
   {% endif %}
   {% include "footer.njk" %}
+  {# Footer Padding (node 1033:4768/4760, "интегрирован на страницу" —
+     923:6920): декоративная полоска СРАЗУ ПОД Footer, виден только с
+     1000px (на 320/390/768 отсутствует полностью — см. .footer-padding
+     в style.2.css). Цвет и stroke сверху совпадают 1:1 с существующими
+     токенами --background-secondary/--border-primary (те же, что у
+     самого .site-footer) — просто ещё одна полоса того же фона под
+     Footer. На ВСЕХ страницах (вне customSections-хвоста), т.к.
+     Footer тоже общий для всех. #}
+  <div class="footer-padding" aria-hidden="true"></div>
   <script src="{{ '/js/header.js' | url }}" defer></script>
   {% if isHome %}
     <script src="{{ '/js/gallery.js' | url }}" defer></script>

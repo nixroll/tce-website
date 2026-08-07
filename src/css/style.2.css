@@ -3876,6 +3876,25 @@ body.body--header-overlay {
   width: 100%;
 }
 
+/* Footer Padding (node 1033:4768, "Footer Padding") — отдельный <div>
+   сразу под <footer> (см. base.njk), только с 1000px (см. Figma
+   923:6920: полоски нет на 320/390/768px фреймах, есть только на
+   1000/1440). Цвет/stroke — те же токены, что у .site-footer выше,
+   просто фиксированная высота 48px вместо контента. */
+.footer-padding {
+  display: none;
+}
+
+@media (min-width: 1000px) {
+  .footer-padding {
+    display: block;
+    width: 100%;
+    height: 48px;
+    background-color: var(--background-secondary);
+    border-top: 1px solid var(--border-primary);
+  }
+}
+
 /* ---------- Compact: <1000px ---------- */
 .footer__compact {
   display: flex;
