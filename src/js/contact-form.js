@@ -19,14 +19,22 @@
  *    свой самописный компонент под тем же паттерном) — конфетти при
  *    успешной отправке. Библиотека — canvas-confetti (см. confetti.js,
  *    грузится перед этим скриптом в base.njk), self-hosted, MIT.
- *    Origin — сама кнопка "Отправить" (переводим её getBoundingClientRect
- *    в доли ширины/высоты окна, как того просит API библиотеки), а не
- *    случайная точка экрана — ощущается как "вылетает из кнопки", а не
- *    "запускается откуда-то ещё". Два залпа (влево и вправо, зеркально
- *    по spread) вместо одного по центру — так плотность частиц выше и
- *    эффект читается как "взрыв", а не как один плоский веер в одну
- *    сторону. disableForReducedMotion — уважает prefers-reduced-motion
- *    (тот же принцип, что и scroll-behavior в style.css). */
+ *
+ *    Первая версия запускала конфетти из самой кнопки "Отправить" —
+ *    пользователь посмотрел и попросил "по всему экрану" вместо этого.
+ *    Теперь — канонический демо-приём самой библиотеки: серия залпов
+ *    из ДВУХ НИЖНИХ УГЛОВ экрана (не абсолютных 0/1 — чуть отступя,
+ *    иначе будет вылетать из-за края и половина конфетти пропадает не
+ *    долетев) с широким spread и небольшим случайным разбросом X/Y на
+ *    каждый залп, растянутая на CONFETTI_DURATION мс через setInterval
+ *    — из-за широкого угла (spread: 360, т.е. частицы летят во все
+ *    стороны от точки старта, а не веером в одном направлении) и двух
+ *    противоположных источников частицы покрывают весь экран, а не
+ *    только область у кнопки. zIndex выставлен явно выше z-index
+ *    Header (100, см. .site-header) — иначе конфетти могло бы
+ *    оказаться визуально ПОД фиксированной шапкой. disableForReducedMotion
+ *    — уважает prefers-reduced-motion (тот же принцип, что и
+ *    scroll-behavior в style.css). */
 (function () {
   var form = document.getElementById('contact-form');
   if (!form) return;
@@ -43,39 +51,57 @@
 
   var submitBtn = form.querySelector('.form__submit');
 
-  function fireConfetti() {
-    if (typeof window.confetti !== 'function' || !submitBtn) return;
+  var CONFETTI_DURATION = 2600; /* мс, суммарная продолжительность залпов */
+  var CONFETTI_HEADER_Z = 1000; /* больше z-index Header (100, см. .site-header) — конфетти должно быть поверх */
 
-    var rect = submitBtn.getBoundingClientRect();
-    var originX = (rect.left + rect.width / 2) / window.innerWidth;
-    var originY = rect.top / window.innerHeight;
+  function fireConfetti() {
+    if (typeof window.confetti !== 'function') return;
 
     /* Брендовый оранжевый (--brand) как основной цвет + несколько
        праздничных дополняющих — чисто оранжевое конфетти выглядело бы
        слишком монотонно. */
     var colors = ['#fdb022', '#fde68a', '#ff5e7e', '#22c55e', '#3b82f6'];
 
-    var base = {
+    var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) return;
+
+    var defaults = {
       colors: colors,
-      disableForReducedMotion: true,
-      startVelocity: 38,
-      ticks: 200,
-      gravity: 0.9,
-      origin: { y: originY }
+      startVelocity: 45,
+      spread: 360,
+      ticks: 90,
+      zIndex: CONFETTI_HEADER_Z,
+      disableForReducedMotion: true
     };
 
-    window.confetti(Object.assign({}, base, {
-      particleCount: 60,
-      angle: 60,
-      spread: 55,
-      origin: { x: Math.max(originX - 0.12, 0), y: originY }
-    }));
-    window.confetti(Object.assign({}, base, {
-      particleCount: 60,
-      angle: 120,
-      spread: 55,
-      origin: { x: Math.min(originX + 0.12, 1), y: originY }
-    }));
+    function randomInRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    var animationEnd = Date.now() + CONFETTI_DURATION;
+
+    (function frame() {
+      var timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) return;
+
+      var particleCount = 40 * (timeLeft / CONFETTI_DURATION);
+
+      /* Два одновременных залпа из противоположных нижних углов —
+         из-за spread: 360 (во все стороны от точки) и разбегающихся
+         навстречу друг другу источников частицы покрывают весь экран
+         по ширине, а не только окрестность одной точки. */
+      window.confetti(Object.assign({}, defaults, {
+        particleCount: particleCount,
+        origin: { x: randomInRange(0.05, 0.25), y: randomInRange(0.7, 0.9) }
+      }));
+      window.confetti(Object.assign({}, defaults, {
+        particleCount: particleCount,
+        origin: { x: randomInRange(0.75, 0.95), y: randomInRange(0.7, 0.9) }
+      }));
+
+      window.setTimeout(frame, 250);
+    })();
   }
 
   form.addEventListener('submit', function (e) {
