@@ -4,20 +4,21 @@
  * все явно попрошены:
  *
  * 1) 08.08 — плавающий label у полей ввода (node 1052:7544/1063:7731,
- *    подробности в contact.njk рядом с разметкой формы): пока поле
- *    пустое, .form__input-label визуально играет роль плейсхолдера;
- *    как только появляется значение, класс .has-value на обёртке
- *    .form__input переключает CSS-переход на маленькую подпись сверху
- *    + раскрывшееся поле под ней. Синхронизация по input (обычный
- *    ввод) — этого достаточно почти всегда, НО автозаполнение браузера
- *    не всегда бьёт input сразу/надёжно, поэтому дополнительно: (а)
- *    проверка сразу при загрузке скрипта — на случай, если браузер уже
- *    что-то подставил ДО того, как скрипт с defer выполнился, (б)
- *    'change' — подстраховка для автозаполнения/автосохранённых
- *    значений, которые иногда бьют только change, не input, (в)
- *    window 'pageshow' — переоткрытие страницы из bfcache (кнопка
- *    "назад" в браузере) с уже заполненной формой, но БЕЗ повторного
- *    выполнения скрипта с нуля.
+ *    подробности в contact.njk/style.2.css рядом с разметкой формы):
+ *    пока поле пустое, .form__input-label визуально играет роль
+ *    плейсхолдера, при появлении значения — сжимается в маленькую
+ *    подпись сверху. Изначально это переключалось классом .has-value,
+ *    который вешал JS (syncField) по событиям input/change/pageshow —
+ *    но входное поле при этом было полностью спрятано (opacity:0,
+ *    height:0) пока пусто, поэтому у него не было видно родного
+ *    мигающего курсора при клике (баг, на который указал пользователь,
+ *    сверяясь с significa.co/get-a-quote/). Второй заход переделал
+ *    это на чистый CSS: input/textarea теперь всегда видимы, у них
+ *    настоящий (но невидимый) placeholder, переключение состояний —
+ *    через родной :placeholder-shown (см. style.2.css). Он сам всегда
+ *    синхронен с реальным значением поля, включая автозаполнение —
+ *    поэтому вся JS-логика has-value/syncField/pageshow, которая была
+ *    здесь, больше не нужна и убрана целиком.
  *
  *    08.08, багфикс (пользователь: "красная рамка просто так
  *    появляется, типа как в прототипировании Figma" — after первая
@@ -78,33 +79,19 @@
   var floatWrappers = form.querySelectorAll('[data-field]');
   var submitAttempted = false; /* до первой попытки отправить — blur ничего не подсвечивает, см. комментарий выше */
 
-  function syncField(wrapper) {
-    var field = wrapper.querySelector('.form__input-field');
-    if (!field) return;
-    wrapper.classList.toggle('has-value', field.value.length > 0);
-  }
-
   Array.prototype.forEach.call(floatWrappers, function (wrapper) {
     var field = wrapper.querySelector('.form__input-field');
     if (!field) return;
 
-    syncField(wrapper); /* уже что-то подставлено до выполнения скрипта */
-
     field.addEventListener('input', function () {
-      syncField(wrapper);
       if (field.validity.valid) {
         wrapper.classList.remove('is-invalid');
       }
     });
-    field.addEventListener('change', function () { syncField(wrapper); }); /* автозаполнение */
     field.addEventListener('blur', function () {
       if (!submitAttempted) return;
       wrapper.classList.toggle('is-invalid', !field.validity.valid);
     });
-  });
-
-  window.addEventListener('pageshow', function () {
-    Array.prototype.forEach.call(floatWrappers, syncField);
   });
 
   var submitBtn = form.querySelector('.form__submit');

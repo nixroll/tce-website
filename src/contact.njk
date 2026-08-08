@@ -118,22 +118,29 @@ hasHeaderLine: true
    Normal/Hover/Focus/Error): раньше был отдельный видимый <label>
    НАД полем + нативный placeholder внутри. Теперь label живёт ВНУТРИ
    самого поля (node 1052:7532 "Content") и играет роль плейсхолдера,
-   пока поле пустое (Data=No, 16px/quaternary, по центру высоты поля),
-   а как только появляется значение — сжимается в маленькую подпись
-   сверху (Data=Yes/Filled, 12px/quaternary) и настоящее значение поля
-   рисуется под ней (16px/500/primary). Реализовано БЕЗ ::placeholder
-   и без :placeholder-shown — не смог обойтись одним CSS, т.к. нужно
-   ДВА независимых кадра текста (маленькая подпись сверху ПОСЛЕ того
-   как появилось значение — сам инпут при этом занимает СВОЮ отдельную
-   строку под ней, а не показывает текст поверх подписи), поэтому
-   <label> — реальный сосед <input>, класс .has-value вешает JS на
-   обёртку (contact-form.js, синхронизируется по input/change/при
-   загрузке — на случай автозаполнения браузером) — переход между
-   двумя раскладками анимируется через CSS transition на font-size у
-   label + height/opacity у самого поля (см. style.2.css), это и есть
-   "красивый переход", который отдельно просил пользователь. Поле
-   "Документы" убрано целиком по прямой просьбе пользователя ("Убрали
-   возможность добавлять файлы"). #}
+   пока поле пустое, а как только появляется значение — сжимается в
+   маленькую подпись сверху.
+
+   08.08, второй заход (пользователь просил проверить блинкающий
+   курсор в пустом поле по образцу significa.co/get-a-quote/): первая
+   версия прятала САМ input (opacity:0/height:0) пока поле пустое и
+   показывала только label как подделку плейсхолдера — из-за этого не
+   было видно родного мигающего текстового курсора при клике в пустое
+   поле, реального input там просто не было видно. Изучил вживую, как
+   сделано на significa.co — их <input> НИКОГДА не прячется, у него
+   есть свой настоящий placeholder (тот же текст, что и в label), но
+   невидимый (::placeholder{color:transparent} в CSS), а видимый текст
+   — это label-сосед ПОСЛЕ input, абсолютно спозиционированный поверх
+   (pointer-events:none). Сделал так же: input/textarea теперь всегда
+   на своём месте с родным курсором, label идёт В РАЗМЕТКЕ ПОСЛЕ него
+   (нужно для CSS-селектора ~), переключение между "большой как
+   плейсхолдер"/"маленькая подпись сверху" — чистый CSS через
+   :placeholder-shown (см. style.2.css), JS для этого больше не нужен
+   — соответственно .has-value/syncField убраны из contact-form.js
+   целиком, включая обработчики под автозаполнение — :placeholder-shown
+   как родной псевдокласс сам всегда синхронен с реальным значением
+   поля. Поле "Документы" убрано целиком по прямой просьбе пользователя
+   ("Убрали возможность добавлять файлы"). #}
 <section class="form" data-figma-node="937:4840" data-figma-name="Form - L">
   <div class="form__container">
     <div class="form__intro">
@@ -152,29 +159,29 @@ hasHeaderLine: true
           <div class="form__row">
             <div class="form__field">
               <span class="form__input" data-field>
+                <input class="form__input-field" type="text" id="contact-name" name="name" autocomplete="name" placeholder="Имя" required>
                 <label class="form__input-label" for="contact-name">Имя</label>
-                <input class="form__input-field" type="text" id="contact-name" name="name" autocomplete="name" required>
               </span>
             </div>
             <div class="form__field">
               <span class="form__input" data-field>
+                <input class="form__input-field" type="tel" id="contact-phone" name="phone" autocomplete="tel" placeholder="Телефон" required>
                 <label class="form__input-label" for="contact-phone">Телефон</label>
-                <input class="form__input-field" type="tel" id="contact-phone" name="phone" autocomplete="tel" required>
               </span>
             </div>
           </div>
 
           <div class="form__field">
             <span class="form__input" data-field>
+              <input class="form__input-field" type="email" id="contact-email" name="email" autocomplete="email" placeholder="Email">
               <label class="form__input-label" for="contact-email">Email</label>
-              <input class="form__input-field" type="email" id="contact-email" name="email" autocomplete="email">
             </span>
           </div>
 
           <div class="form__field">
             <span class="form__input form__input--textarea" data-field>
+              <textarea class="form__input-field form__input-field--textarea" id="contact-message" name="message" placeholder="Сообщение" required></textarea>
               <label class="form__input-label" for="contact-message">Сообщение</label>
-              <textarea class="form__input-field form__input-field--textarea" id="contact-message" name="message" required></textarea>
               <span class="form__resize-handle" aria-hidden="true">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M10 2L2 10" stroke="#E5E7EC" stroke-linecap="round"/>

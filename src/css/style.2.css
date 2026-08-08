@@ -4799,29 +4799,42 @@ body.body--header-overlay {
 
 /* 08.08, поля пересобраны с нуля по новой Figma (node 1052:7544 —
    однострочные Data=No/Yes × Normal/Hover/Focus/Error, 1063:7731 —
-   тот же набор состояний у textarea). label живёт ВНУТРИ поля и
-   исполняет роль плейсхолдера, пока значения нет (.form__input БЕЗ
-   .has-value — центрируется по высоте через justify-content: center,
-   1:1 приём, что и в самом Figma, никакого absolute-позиционирования
-   не потребовалось); как только появляется значение,
-   .has-value (contact-form.js, синхронизируется по input/change +
-   при загрузке страницы — автозаполнение браузера) переключает label
-   на маленькую подпись сверху и "раскрывает" сам инпут под ней —
-   переход анимируется transition на font-size/line-height у label и
-   height/opacity у поля, это и есть плавный переход, который отдельно
-   просил пользователь. Цвет фона/бордера здесь БЕЗ переменных
-   --white/--border-secondary из старой версии — новая Figma указывает
-   ровно те же токены, что уже переопределены на .contact/.form выше
-   (--border-primary: #e5e7ec), поэтому просто var(--border-primary) —
-   отдельного локального токена не заводили. */
+   тот же набор состояний у textarea). Цвет фона/бордера здесь БЕЗ
+   переменных --white/--border-secondary из старой версии — новая
+   Figma указывает ровно те же токены, что уже переопределены на
+   .contact/.form выше (--border-primary: #e5e7ec), поэтому просто
+   var(--border-primary) — отдельного локального токена не заводили.
+
+   08.08, второй заход (пользователь: должен быть виден родной
+   мигающий текстовый курсор в пустом поле, по образцу
+   significa.co/get-a-quote/ — сверил вживую). Первая версия прятала
+   САМ <input>/<textarea> (opacity:0, height:0) пока поле пустое, и
+   роль плейсхолдера играл только соседний <label> — у скрытого поля
+   не может быть видимого курсора, в этом и была причина бага.
+
+   Пересобрано на приёме, который реально использует significa.co:
+   input/textarea НИКОГДА не прячется — у него есть свой настоящий
+   атрибут placeholder (тот же текст, что раньше был в label), но
+   визуально невидимый (::placeholder{color:transparent} ниже), а
+   значит родной курсор всегда на месте и мигает как положено сразу
+   по клику в пустое поле. Видимый текст-подделка — это <label>,
+   идущий ПОСЛЕ input/textarea в разметке (важно для селектора ~
+   ниже) и абсолютно спозиционированный поверх (pointer-events: none —
+   клик всё равно попадает в реальное поле под ним). Переключение
+   между "большой, как плейсхолдер" и "маленькая подпись сверху,
+   значение снизу" состояниями — теперь чистый CSS через родной
+   псевдокласс :placeholder-shown у input/textarea: он истинный, пока
+   значения нет, и автоматически синхронен с реальным состоянием поля
+   (включая автозаполнение браузера) без единой строчки JS — поэтому
+   вся логика .has-value/syncField убрана из contact-form.js целиком.
+   Проверил на significa.co отдельно: фокус на пустое поле САМ ПО
+   СЕБЕ подпись не поднимает, только появление значения — здесь то же
+   самое, переход не завязан на :focus. */
 .form__input {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  display: block;
   width: 100%;
   height: 54px;
-  padding: var(--spacing-md) var(--spacing-xl);
   box-sizing: border-box;
   background-color: var(--white);
   border: 1px solid var(--border-primary);
@@ -4839,10 +4852,48 @@ body.body--header-overlay {
   border-color: #d92d20;
 }
 
+.form__input-field {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  background: none;
+  margin: 0;
+  padding: 0 var(--spacing-xl);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--text-primary);
+  transition: padding 0.15s ease;
+}
+
+.form__input-field::placeholder {
+  /* родной placeholder браузеру нужен только для :placeholder-shown —
+     сам текст показывает .form__input-label поверх, см. выше */
+  color: transparent;
+}
+
+.form__input-field:not(:placeholder-shown) {
+  padding-top: 20px;
+  padding-bottom: 4px;
+}
+
+.form__input.is-invalid .form__input-field:not(:placeholder-shown) {
+  color: #d92d20;
+}
+
 .form__input-label {
+  position: absolute;
+  left: var(--spacing-xl);
+  right: var(--spacing-xl);
+  top: 50%;
+  transform: translateY(-50%);
   display: block;
   overflow: hidden;
-  width: 100%;
   font-family: var(--font-body);
   font-weight: 400;
   font-size: 16px;
@@ -4850,94 +4901,53 @@ body.body--header-overlay {
   color: var(--text-quaternary);
   text-overflow: ellipsis;
   white-space: nowrap;
-  cursor: text;
-  transition: font-size 0.15s ease, line-height 0.15s ease, color 0.15s ease;
+  pointer-events: none;
+  transition: font-size 0.15s ease, line-height 0.15s ease, top 0.15s ease, transform 0.15s ease, color 0.15s ease;
 }
 
-.form__input.is-invalid:not(.has-value) .form__input-label {
-  color: #d92d20;
-}
-
-.form__input.has-value .form__input-label {
+.form__input-field:not(:placeholder-shown) ~ .form__input-label {
+  top: 9px;
+  transform: translateY(0);
   font-size: 12px;
   line-height: 14px;
 }
 
-.form__input-field {
-  display: block;
-  width: 100%;
-  height: 0;
-  min-width: 0;
-  border: none;
-  outline: none;
-  background: none;
-  padding: 0;
-  margin: 0;
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 20px;
-  color: var(--text-primary);
-  opacity: 0;
-  transition: height 0.15s ease, opacity 0.15s ease;
-}
-
-.form__input.has-value .form__input-field {
-  height: 20px;
-  opacity: 1;
-}
-
-.form__input.is-invalid.has-value .form__input-field {
+.form__input.is-invalid .form__input-field:placeholder-shown ~ .form__input-label {
   color: #d92d20;
 }
 
-/* Textarea (node 1063:7731) — тот же компонент, но items-start вместо
-   justify-content: center (контенту нужно расти вниз на несколько
-   строк, а не центрироваться). Верхний паддинг у Figma отдельно
-   меньше в заполненном состоянии (9px вместо 16px).
+/* Textarea (node 1063:7731) — тот же :placeholder-shown приём, что и
+   у однострочных полей выше, но лейбл не по центру высоты, а сверху
+   (контенту нужно расти вниз на несколько строк, а не центрироваться),
+   и белый текст переносится (white-space: normal — у однострочных
+   полей label обрезался в одну строку с ellipsis, здесь так не
+   нужно).
 
-   08.08, багфикс (пользователь: "слетело расстояние между label и
-   data"): gap-[10px] у Figma стоит на ВНЕШНЕМ контейнере поля, но там
-   его сосед по флексу — не сам textarea, а Resize handle (см. ниже),
-   который в самой Figma position:absolute и в раскладке не участвует
-   — то есть у label и текста в оригинале эффективный gap МЕЖДУ НИМИ
-   РАВЕН 0 (оба живут внутри одного общего "Content"), 10px там ни на
-   что не влияет. Я по ошибке повесил gap:10px прямо на обёртку, где
-   у меня label и textarea — ПРЯМЫЕ соседи (без общего Content) — gap
-   в итоге лёг ровно между ними, раздвинув то, что в Figma слитно.
-   Просто убрал gap отсюда.
-
-   08.08, второй багфикс (пользователь: "это же сделано чтобы по
-   высоте окно сообщений регулировать" — резиновая тянущаяся ручка в
-   Figma не декоративная, textarea должен реально тянуться вручную):
-   height:134px раньше был ЖЁСТКИМ на обёртке — при попытке потянуть
-   поле вниз выросший textarea просто обрезался бы по overflow:hidden
-   этой же обёртки. Теперь min-height вместо height (высота обёртки —
-   auto, сама подстраивается под контент) и overflow не задан
-   (default visible) — обёртка растёт вместе с textarea, а не режет
-   его. Сам textarea (ниже) — resize: vertical по-настоящему, задаёт
-   собственную стартовую высоту через height (а не flex:1 0 0 — тогда
-   реальную нативную resize-высоту при auto-высоте родителя браузеру
-   не от чего было бы отсчитывать), пользовательский resize ставит
-   inline style="height:...", у которого специфичность выше классов
-   ниже — has-value эту высоту не перетирает, если поле уже вручную
-   растянуто. */
+   08.08, багфикс (пользователь: "это же сделано чтобы по высоте окно
+   сообщений регулировать" — резиновая тянущаяся ручка не декоративная,
+   textarea должен реально тянуться вручную): высота обёртки —
+   min-height, а не жёсткий height (обёртка растёт вместе с
+   содержимым, overflow по умолчанию visible — не обрезает вручную
+   растянутый textarea). Сам textarea — resize: vertical, задаёт
+   собственную стартовую высоту через явный height (а не flex — тогда
+   реальную resize-высоту при auto-высоте родителя браузеру не от чего
+   было бы отсчитывать); пользовательский drag-resize ставит инлайн
+   style="height:...", у которого специфичность выше класса ниже —
+   переключение :placeholder-shown/не эту высоту не перетирает, если
+   поле уже вручную растянуто. */
 .form__input--textarea {
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  height: auto;
   min-height: 134px;
-  padding: 16px var(--spacing-xl);
-}
-
-.form__input--textarea.has-value {
-  padding-top: 9px;
-  padding-bottom: 9px;
 }
 
 .form__input--textarea .form__input-label {
-  flex-shrink: 0;
+  top: 16px;
+  transform: none;
   white-space: normal;
+}
+
+.form__input-field--textarea:not(:placeholder-shown) ~ .form__input-label {
+  top: 9px;
 }
 
 .form__input-field--textarea {
@@ -4945,12 +4955,16 @@ body.body--header-overlay {
   width: 100%;
   height: 82px;
   min-height: 60px;
+  padding-top: 16px;
+  padding-bottom: 16px;
   resize: vertical;
   line-height: 20px;
 }
 
-.form__input--textarea.has-value .form__input-field--textarea {
+.form__input-field--textarea:not(:placeholder-shown) {
   height: 102px;
+  padding-top: 24px;
+  padding-bottom: 9px;
 }
 
 /* Ручка ресайза (node 1063:7726, SVG прислан пользователем напрямую —
