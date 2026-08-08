@@ -334,11 +334,39 @@ body.body--has-header-line {
 }
 
 .header-line__inner {
+  position: relative;
   width: 100%;
   max-width: 1392px;
   height: 100%;
   border-left: 1px solid var(--border-primary);
   border-right: 1px solid var(--border-primary);
+}
+
+/* 08.08, пользователь: на очень сильном флике/rubber-band страница
+   иногда отлетает вниз больше, чем высота самого Header Line (64-72px)
+   — в этот момент видно область ВЫШЕ него (между верхом Header Line и
+   реальным верхом фиксированного Header, который на таком сильном
+   флике на iOS может на кадр оторваться от своего места, та же
+   природа, что и у самого бага с Header Line). Плоский фон там уже
+   верный (html:has(body.body--light-top), см. выше в файле), но
+   вертикальные stroke обрывались ровно на границе элемента — глазом
+   видно, что линии "не доходят" до Header. ::before — тот же
+   левый/правый border, что и у .header-line__inner, продолжен на
+   500px ВВЕРХ за пределы собственной рамки элемента (position:absolute,
+   bottom:100%) — сам .header-line оverflow не обрезает (изначально
+   visible, ничего специально не убирали), так что этот "хвost" рамки
+   виден только в момент такого сильного скролла, в обычном состоянии
+   полностью перекрыт непрозрачным фиксированным Header поверх. */
+.header-line__inner::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  height: 500px;
+  border-left: 1px solid var(--border-primary);
+  border-right: 1px solid var(--border-primary);
+  pointer-events: none;
 }
 
 /* Contact - L / Form - L (светлая тема, см. .contact/.form ниже) —
@@ -347,7 +375,8 @@ body.body--has-header-line {
   background-color: #fafafb;
 }
 
-.header-line--contact .header-line__inner {
+.header-line--contact .header-line__inner,
+.header-line--contact .header-line__inner::before {
   border-left-color: #e5e7ec;
   border-right-color: #e5e7ec;
 }
