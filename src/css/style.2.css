@@ -329,10 +329,13 @@ body.body--has-header-line {
   padding: 0 var(--spacing-3xl);
   box-sizing: border-box;
   flex-shrink: 0;
+  display: flex;
+  justify-content: center;
 }
 
 .header-line__inner {
   width: 100%;
+  max-width: 1392px;
   height: 100%;
   border-left: 1px solid var(--border-primary);
   border-right: 1px solid var(--border-primary);
