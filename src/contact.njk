@@ -108,13 +108,32 @@ hasHeaderLine: true
    contact-form.js перехватывает submit, гасит его (preventDefault),
    если обязательные поля/чекбокс прошли нативную HTML5-валидацию —
    меняет текст кнопки на "Отправлено" и блокирует кнопку от повторной
-   отправки. Поле "Документы" — реальный <input type="file"> (открывает
-   системный пикер), визуально спрятан, стилизованная обёртка —
-   <label>; contact-form.js подставляет имя выбранного файла вместо
-   плейсхолдера "Загрузить документ". Чекбокс — тоже настоящий <input
-   type="checkbox">, спрятан визуально, состояние Selected из Figma
-   (заливка var(--brand) + белая галочка) через :checked + sibling в
-   CSS — доступно с клавиатуры, не просто div с JS. #}
+   отправки. Чекбокс — настоящий <input type="checkbox">, спрятан
+   визуально, состояние Selected из Figma (заливка var(--brand) +
+   белая галочка) через :checked + sibling в CSS — доступно с
+   клавиатуры, не просто div с JS.
+
+   08.08, поля переделаны с нуля (node 1052:7544 — однострочные,
+   1063:7731 — textarea, оба со state-матрицей Data=No/Yes ×
+   Normal/Hover/Focus/Error): раньше был отдельный видимый <label>
+   НАД полем + нативный placeholder внутри. Теперь label живёт ВНУТРИ
+   самого поля (node 1052:7532 "Content") и играет роль плейсхолдера,
+   пока поле пустое (Data=No, 16px/quaternary, по центру высоты поля),
+   а как только появляется значение — сжимается в маленькую подпись
+   сверху (Data=Yes/Filled, 12px/quaternary) и настоящее значение поля
+   рисуется под ней (16px/500/primary). Реализовано БЕЗ ::placeholder
+   и без :placeholder-shown — не смог обойтись одним CSS, т.к. нужно
+   ДВА независимых кадра текста (маленькая подпись сверху ПОСЛЕ того
+   как появилось значение — сам инпут при этом занимает СВОЮ отдельную
+   строку под ней, а не показывает текст поверх подписи), поэтому
+   <label> — реальный сосед <input>, класс .has-value вешает JS на
+   обёртку (contact-form.js, синхронизируется по input/change/при
+   загрузке — на случай автозаполнения браузером) — переход между
+   двумя раскладками анимируется через CSS transition на font-size у
+   label + height/opacity у самого поля (см. style.2.css), это и есть
+   "красивый переход", который отдельно просил пользователь. Поле
+   "Документы" убрано целиком по прямой просьбе пользователя ("Убрали
+   возможность добавлять файлы"). #}
 <section class="form" data-figma-node="937:4840" data-figma-name="Form - L">
   <div class="form__container">
     <div class="form__intro">
@@ -132,46 +151,37 @@ hasHeaderLine: true
         <div class="form__fields">
           <div class="form__row">
             <div class="form__field">
-              <span class="form__label">
-                <span>Имя</span><span class="form__required">*</span>
-              </span>
-              <span class="form__input">
-                <input class="form__input-field" type="text" name="name" placeholder="Имя" autocomplete="name" required>
+              <span class="form__input" data-field>
+                <label class="form__input-label" for="contact-name">Имя</label>
+                <input class="form__input-field" type="text" id="contact-name" name="name" autocomplete="name" required>
               </span>
             </div>
             <div class="form__field">
-              <span class="form__label">
-                <span>Телефон</span><span class="form__required">*</span>
-              </span>
-              <span class="form__input">
-                <input class="form__input-field" type="tel" name="phone" placeholder="+375 (29) 000-00-00" autocomplete="tel" required>
+              <span class="form__input" data-field>
+                <label class="form__input-label" for="contact-phone">Телефон</label>
+                <input class="form__input-field" type="tel" id="contact-phone" name="phone" autocomplete="tel" required>
               </span>
             </div>
           </div>
 
           <div class="form__field">
-            <span class="form__label"><span>Email</span></span>
-            <span class="form__input">
-              <input class="form__input-field" type="email" name="email" placeholder="you@company.com" autocomplete="email">
+            <span class="form__input" data-field>
+              <label class="form__input-label" for="contact-email">Email</label>
+              <input class="form__input-field" type="email" id="contact-email" name="email" autocomplete="email">
             </span>
           </div>
 
           <div class="form__field">
-            <span class="form__label">
-              <span>Сообщение</span><span class="form__required">*</span>
+            <span class="form__input form__input--textarea" data-field>
+              <label class="form__input-label" for="contact-message">Сообщение</label>
+              <textarea class="form__input-field form__input-field--textarea" id="contact-message" name="message" required></textarea>
+              <span class="form__resize-handle" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11 3L3 11" stroke="#D5D7DA" stroke-width="1.5" stroke-linecap="round"/>
+                  <path d="M11 7.5L7.5 11" stroke="#D5D7DA" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </span>
             </span>
-            <textarea class="form__textarea" name="message" placeholder="Оставьте нам сообщение..." required></textarea>
-          </div>
-
-          <div class="form__field">
-            <span class="form__label"><span>Документы</span></span>
-            <label class="form__input form__file-trigger">
-              <svg class="form__file-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M16.6666 8.74996V5.66663C16.6666 4.26649 16.6666 3.56643 16.3942 3.03165C16.1545 2.56124 15.772 2.17879 15.3016 1.93911C14.7668 1.66663 14.0668 1.66663 12.6666 1.66663H7.33331C5.93318 1.66663 5.23312 1.66663 4.69834 1.93911C4.22793 2.17879 3.84548 2.56124 3.6058 3.03165C3.33331 3.56643 3.33331 4.26649 3.33331 5.66663V14.3333C3.33331 15.7334 3.33331 16.4335 3.6058 16.9683C3.84548 17.4387 4.22793 17.8211 4.69834 18.0608C5.23312 18.3333 5.93318 18.3333 7.33331 18.3333H9.99998M11.6666 9.16663H6.66665M8.33331 12.5H6.66665M13.3333 5.83329H6.66665M15 17.5V12.5M12.5 15H17.5" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span class="form__file-text" data-empty-text="Загрузить документ">Загрузить документ</span>
-              <input class="visually-hidden" type="file" name="document">
-            </label>
           </div>
 
           <label class="form__checkbox-row">
@@ -187,7 +197,12 @@ hasHeaderLine: true
           </label>
         </div>
 
-        <button class="btn form__submit" type="submit" data-default-text="Отправить" data-success-text="Отправлено">Отправить</button>
+        <button class="btn form__submit" type="submit" data-success-text="Отправлено">
+          <svg class="form__submit-icon" width="20" height="20" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M2.33331 8.16669L11.8591 14.8347C12.6304 15.3747 13.0161 15.6446 13.4356 15.7492C13.8062 15.8416 14.1938 15.8416 14.5643 15.7492C14.9839 15.6446 15.3695 15.3747 16.1409 14.8347L25.6666 8.16669M7.93331 23.3334H20.0666C22.0268 23.3334 23.0069 23.3334 23.7556 22.9519C24.4142 22.6163 24.9496 22.0809 25.2852 21.4223C25.6666 20.6736 25.6666 19.6935 25.6666 17.7334V10.2667C25.6666 8.3065 25.6666 7.32641 25.2852 6.57772C24.9496 5.91915 24.4142 5.38372 23.7556 5.04816C23.0069 4.66669 22.0268 4.66669 20.0666 4.66669H7.93331C5.97313 4.66669 4.99304 4.66669 4.24435 5.04816C3.58578 5.38372 3.05035 5.91915 2.71479 6.57772C2.33331 7.32641 2.33331 8.3065 2.33331 10.2667V17.7334C2.33331 19.6935 2.33331 20.6736 2.71479 21.4223C3.05035 22.0809 3.58578 22.6163 4.24435 22.9519C4.99304 23.3334 5.97313 23.3334 7.93331 23.3334Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="form__submit-text">Отправить</span>
+        </button>
       </form>
     </div>
   </div>

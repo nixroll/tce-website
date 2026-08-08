@@ -4794,132 +4794,160 @@ body.body--header-overlay {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing-sm);
   width: 100%;
 }
 
-.form__label {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-xxs);
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 20px;
-  color: var(--text-secondary);
-}
-
-.form__required {
-  color: var(--text-primary);
-}
-
+/* 08.08, поля пересобраны с нуля по новой Figma (node 1052:7544 —
+   однострочные Data=No/Yes × Normal/Hover/Focus/Error, 1063:7731 —
+   тот же набор состояний у textarea). label живёт ВНУТРИ поля и
+   исполняет роль плейсхолдера, пока значения нет (.form__input БЕЗ
+   .has-value — центрируется по высоте через justify-content: center,
+   1:1 приём, что и в самом Figma, никакого absolute-позиционирования
+   не потребовалось); как только появляется значение,
+   .has-value (contact-form.js, синхронизируется по input/change +
+   при загрузке страницы — автозаполнение браузера) переключает label
+   на маленькую подпись сверху и "раскрывает" сам инпут под ней —
+   переход анимируется transition на font-size/line-height у label и
+   height/opacity у поля, это и есть плавный переход, который отдельно
+   просил пользователь. Цвет фона/бордера здесь БЕЗ переменных
+   --white/--border-secondary из старой версии — новая Figma указывает
+   ровно те же токены, что уже переопределены на .contact/.form выше
+   (--border-primary: #e5e7ec), поэтому просто var(--border-primary) —
+   отдельного локального токена не заводили. */
 .form__input {
+  position: relative;
   display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
+  flex-direction: column;
+  justify-content: center;
   width: 100%;
-  padding: 10px 14px;
+  height: 54px;
+  padding: var(--spacing-md) var(--spacing-xl);
+  box-sizing: border-box;
   background-color: var(--white);
-  border: 1px solid var(--border-secondary);
-  border-radius: var(--radius-md);
-  box-shadow: 0 1px 1px rgba(10, 13, 18, 0.05);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--spacing-lg);
+  cursor: text;
+  transition: border-color 0.15s ease;
 }
 
-/* 07.08, багфикс (пользователь: "должен быть Hover State, а его нет" —
-   ни на десктопе, ни через Apple Pencil на iPad): в Figma (node
-   936:4535, State=Hover) у поля просто меняется border-color на
-   var(--brand) — тот же цвет, что и у Focus, но БЕЗ дополнительного
-   кольца box-shadow (то кольцо — только у Focus, см. правило ниже).
-   :hover, а не :focus-within — Hover и Focus разные состояния и в
-   Figma, и здесь. */
-.form__input:hover {
-  border-color: var(--brand);
-}
-
+.form__input:hover,
 .form__input:focus-within {
   border-color: var(--brand);
-  box-shadow: 0 0 0 3px rgba(253, 176, 34, 0.15);
+}
+
+.form__input.is-invalid {
+  border-color: #d92d20;
+}
+
+.form__input-label {
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--text-quaternary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: text;
+  transition: font-size 0.15s ease, line-height 0.15s ease, color 0.15s ease;
+}
+
+.form__input.is-invalid:not(.has-value) .form__input-label {
+  color: #d92d20;
+}
+
+.form__input.has-value .form__input-label {
+  font-size: 12px;
+  line-height: 14px;
 }
 
 .form__input-field {
-  flex: 1 0 0;
+  display: block;
+  width: 100%;
+  height: 0;
   min-width: 0;
   border: none;
   outline: none;
   background: none;
   padding: 0;
+  margin: 0;
   font-family: var(--font-body);
-  font-weight: 400;
+  font-weight: 500;
   font-size: 16px;
-  line-height: 24px;
+  line-height: 20px;
   color: var(--text-primary);
+  opacity: 0;
+  transition: height 0.15s ease, opacity 0.15s ease;
 }
 
-.form__input-field::placeholder {
-  color: var(--text-quaternary);
-}
-
-.form__textarea {
-  display: block;
-  width: 100%;
-  height: 134px;
-  padding: 12px 14px;
-  background-color: var(--white);
-  border: 1px solid var(--border-secondary);
-  border-radius: var(--radius-md);
-  box-shadow: 0 1px 2px rgba(10, 13, 18, 0.05);
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
-  color: var(--text-primary);
-  resize: vertical;
-}
-
-.form__textarea::placeholder {
-  color: var(--text-quaternary);
-}
-
-/* 07.08 — тот же баг-фикс, что и у .form__input выше (node 937:4774,
-   State=Hover у Big Field): та же логика, border-color: var(--brand)
-   без кольца. */
-.form__textarea:hover {
-  border-color: var(--brand);
-}
-
-.form__textarea:focus {
-  outline: none;
-  border-color: var(--brand);
-  box-shadow: 0 0 0 3px rgba(253, 176, 34, 0.15);
-}
-
-.form__file-trigger {
-  cursor: pointer;
-}
-
-.form__file-icon {
-  display: block;
-  width: 20px;
+.form__input.has-value .form__input-field {
   height: 20px;
-  color: var(--text-tertiary);
-  flex-shrink: 0;
+  opacity: 1;
 }
 
-.form__file-text {
-  flex: 1 0 0;
-  min-width: 0;
+.form__input.is-invalid.has-value .form__input-field {
+  color: #d92d20;
+}
+
+/* Textarea (node 1063:7731) — тот же компонент, но items-start вместо
+   justify-content: center (контенту нужно расти вниз на несколько
+   строк, а не центрироваться) и фиксированная высота 134px. Верхний
+   паддинг у Figma отдельно меньше в заполненном состоянии (9px вместо
+   16px) — второй строке (значению) физически нужно чуть больше места
+   под те же 134px, третий gap (10px) между label и textarea — тоже
+   буквальное значение из Figma, отдельного токена под него нет. */
+.form__input--textarea {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+  height: 134px;
+  padding: 16px var(--spacing-xl);
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
-  color: var(--text-quaternary);
 }
 
-.form__file-text.is-filled {
-  color: var(--text-primary);
+.form__input--textarea.has-value {
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
+
+.form__input--textarea .form__input-label {
+  flex-shrink: 0;
+  white-space: normal;
+}
+
+.form__input-field--textarea {
+  flex: 1 0 0;
+  min-width: 100%;
+  width: 100%;
+  height: 0;
+  min-height: 0;
+  resize: none;
+  line-height: 20px;
+}
+
+.form__input--textarea.has-value .form__input-field--textarea {
+  flex: 1 0 0;
+  height: auto;
+}
+
+/* Декоративная иконка resize-ручки (node 1063:7726) — сам textarea
+   специально БЕЗ нативного resize (см. resize: none выше): нативная
+   ручка в разных браузерах/ОС выглядит по-разному и рисуется поверх
+   этой иконки, если оставить resize:vertical — Figma-ассет недоступен
+   напрямую из песочницы (see комментарий в base.njk про figma.com/api/
+   mcp/asset/*), поэтому воссоздана вручную как две диагональные
+   линии — визуально эквивалентный универсальный "resize handle"
+   глиф, тот же приём, что и у остальных SVG на этой странице. */
+.form__resize-handle {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
 }
 
 .form__checkbox-row {
@@ -4942,11 +4970,15 @@ body.body--header-overlay {
   display: block;
   /* 07.08: было 22px — по актуальной Figma (node 937:4676, чекбокс
      переименован в "Agreement" и уменьшен) размер 20px на всех
-     состояниях (Normal/Hover/Selected). */
+     состояниях (Normal/Hover/Selected).
+     08.08: border-color было var(--border-secondary) (#cbd0d8) —
+     пользователь обновил Figma (тот же node 937:4676, State=Normal),
+     новый цвет — var(--border-primary) (#e5e7ec), тот же токен, что
+     теперь и у самих полей ввода выше. */
   width: 20px;
   height: 20px;
   background-color: var(--white);
-  border: 1px solid var(--border-secondary);
+  border: 1px solid var(--border-primary);
   /* border-radius 6px — в Figma этот радиус переиспользует токен
      spacing-sm (тоже 6px), а не отдельный radius-токен; здесь просто
      буквальное значение, заводить ради одного места отдельную
@@ -4993,7 +5025,10 @@ body.body--header-overlay {
   flex: 1 0 0;
   min-width: 0;
   font-family: var(--font-body);
-  font-weight: 500;
+  /* 08.08: было 500 у всего текста — по актуальной Figma (node
+     1008:1144) обычный текст regular (400), медиум (500) только у
+     самой ссылки, см. .form__checkbox-link. */
+  font-weight: 400;
   /* 07.08: было 16px/24px — по актуальной Figma (node 1008:1142,
      "Agreement") текст 15px/20px. */
   font-size: 15px;
@@ -5002,24 +5037,39 @@ body.body--header-overlay {
 }
 
 .form__checkbox-link {
-  color: var(--text-secondary);
+  /* 08.08: было var(--text-secondary) — по актуальной Figma текст
+     ссылки #181d27 (var(--text-primary) в локальной светлой теме
+     .contact/.form), плюс вес medium (родитель .form__checkbox-label
+     теперь regular). */
+  font-weight: 500;
+  color: var(--text-primary);
   text-decoration: underline;
   text-decoration-skip-ink: none;
   text-underline-position: from-font;
 }
 
-/* Кнопка "Отправить" — переиспользует .btn (padding/radius/шрифт 1:1
-   с компонентом Button из Figma), но цвет ВСЕГДА тёмный (#373c43 bg
-   / #525966 border / #f7f7f7 текст), даже внутри светлой секции —
-   тот же приём, что и у .header-home__cta ("у Light И Dark
-   одинаковая"), поэтому не полагаемся на локальные --button-primary/
-   --border-secondary/--text-primary токены (они здесь
-   переопределены под светлую тему) — задаём цвета буквально. */
+/* Кнопка "Отправить" (node 1063:7903/1063:7904) — переиспользует .btn
+   (radius/шрифт 1:1 с компонентом Button из Figma), но переопределяет
+   padding (pl-16/pr-20/py-12 вместо симметричных 8/20 у .btn) и
+   добавляет gap под новую иконку mail-01 слева от текста — цвет
+   ВСЕГДА тёмный (#373c43 bg / #525966 border / #f7f7f7 текст), даже
+   внутри светлой секции — тот же приём, что и у .header-home__cta
+   ("у Light И Dark одинаковая"), поэтому не полагаемся на локальные
+   --button-primary/--border-secondary/--text-primary токены (они
+   здесь переопределены под светлую тему) — задаём цвета буквально. */
 .form__submit {
   flex-shrink: 0;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg) var(--spacing-2xl) var(--spacing-lg) var(--spacing-xl);
   background-color: #373c43;
   border-color: #525966;
   color: #f7f7f7;
+}
+
+.form__submit-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
 }
 
 @media (hover: hover) {

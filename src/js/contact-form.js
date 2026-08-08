@@ -1,20 +1,36 @@
 /* 05.08. Contact - L / Form - L (node 937:4840): форма пока НИКУДА не
  * отправляется — по прямой просьбе пользователя ("Пока мы не
- * подключаем форму никуда"). Этот скрипт добавляет три клиентских
- * штриха, все явно попрошены:
+ * подключаем форму никуда"). Этот скрипт добавляет клиентские штрихи,
+ * все явно попрошены:
  *
- * 1) "Документы" — реальный <input type="file"> (открывает системный
- *    пикер), визуально спрятан (.visually-hidden), кликабельная
- *    обёртка — <label>; после выбора файла подставляем его имя вместо
- *    плейсхолдера "Загрузить документ" (иначе выбор был бы совсем без
- *    обратной связи).
+ * 1) 08.08 — плавающий label у полей ввода (node 1052:7544/1063:7731,
+ *    подробности в contact.njk рядом с разметкой формы): пока поле
+ *    пустое, .form__input-label визуально играет роль плейсхолдера;
+ *    как только появляется значение, класс .has-value на обёртке
+ *    .form__input переключает CSS-переход на маленькую подпись сверху
+ *    + раскрывшееся поле под ней. Синхронизация по input (обычный
+ *    ввод) — этого достаточно почти всегда, НО автозаполнение браузера
+ *    не всегда бьёт input сразу/надёжно, поэтому дополнительно: (а)
+ *    проверка сразу при загрузке скрипта — на случай, если браузер уже
+ *    что-то подставил ДО того, как скрипт с defer выполнился, (б)
+ *    'change' — подстраховка для автозаполнения/автосохранённых
+ *    значений, которые иногда бьют только change, не input, (в)
+ *    window 'pageshow' — переоткрытие страницы из bfcache (кнопка
+ *    "назад" в браузере) с уже заполненной формой, но БЕЗ повторного
+ *    выполнения скрипта с нуля. Ошибка (is-invalid) — вешается на
+ *    blur, если поле не прошло нативную валидацию, снимается сразу
+ *    при вводе, как только поле снова валидно.
  * 2) Success-статус отправки: submit перехватывается, preventDefault
  *    (никакого реального запроса), дальше — нативная HTML5-валидация
  *    формы (form.checkValidity()); если обязательные поля/чекбокс не
- *    заполнены — отдаём управление браузеру (reportValidity(),
- *    подсветит проблемные поля как обычно), иначе имитируем успех:
- *    текст кнопки меняется на "Отправлено" (data-success-text, задан
- *    в contact.njk) и кнопка блокируется от повторной "отправки".
+ *    заполнены — подсвечиваем все невалидные поля (is-invalid, та же
+ *    красная State=Error из Figma) И отдаём управление браузеру
+ *    (reportValidity(), подсветит проблемные поля нативным способом
+ *    тоже — не убираем, доступность/скринридеры), иначе имитируем
+ *    успех: текст кнопки меняется на "Отправлено" (data-success-text,
+ *    задан в contact.njk; меняем ТОЛЬКО .form__submit-text, не весь
+ *    button.textContent — там теперь ещё иконка mail-01 рядом,
+ *    задевать её нельзя) и кнопка блокируется от повторной "отправки".
  * 3) 07.08, по референсу пользователя (significa.co/get-a-quote/, там
  *    свой самописный компонент под тем же паттерном) — конфетти при
  *    успешной отправке. Библиотека — canvas-confetti (см. confetti.js,
@@ -44,17 +60,38 @@
   var form = document.getElementById('contact-form');
   if (!form) return;
 
-  var fileInput = form.querySelector('input[type="file"]');
-  var fileText = form.querySelector('.form__file-text');
-  if (fileInput && fileText) {
-    fileInput.addEventListener('change', function () {
-      var file = fileInput.files && fileInput.files[0];
-      fileText.textContent = file ? file.name : fileText.getAttribute('data-empty-text');
-      fileText.classList.toggle('is-filled', !!file);
-    });
+  var floatWrappers = form.querySelectorAll('[data-field]');
+
+  function syncField(wrapper) {
+    var field = wrapper.querySelector('.form__input-field');
+    if (!field) return;
+    wrapper.classList.toggle('has-value', field.value.length > 0);
   }
 
+  Array.prototype.forEach.call(floatWrappers, function (wrapper) {
+    var field = wrapper.querySelector('.form__input-field');
+    if (!field) return;
+
+    syncField(wrapper); /* уже что-то подставлено до выполнения скрипта */
+
+    field.addEventListener('input', function () {
+      syncField(wrapper);
+      if (field.validity.valid) {
+        wrapper.classList.remove('is-invalid');
+      }
+    });
+    field.addEventListener('change', function () { syncField(wrapper); }); /* автозаполнение */
+    field.addEventListener('blur', function () {
+      wrapper.classList.toggle('is-invalid', !field.validity.valid);
+    });
+  });
+
+  window.addEventListener('pageshow', function () {
+    Array.prototype.forEach.call(floatWrappers, syncField);
+  });
+
   var submitBtn = form.querySelector('.form__submit');
+  var submitBtnText = form.querySelector('.form__submit-text');
 
   var CONFETTI_DURATION = 2600; /* мс, суммарная продолжительность залпов */
   var CONFETTI_HEADER_Z = 1000; /* больше z-index Header (100, см. .site-header) — конфетти должно быть поверх */
@@ -113,12 +150,16 @@
     e.preventDefault();
 
     if (!form.checkValidity()) {
+      Array.prototype.forEach.call(floatWrappers, function (wrapper) {
+        var field = wrapper.querySelector('.form__input-field');
+        if (field) wrapper.classList.toggle('is-invalid', !field.validity.valid);
+      });
       form.reportValidity();
       return;
     }
 
-    if (submitBtn) {
-      submitBtn.textContent = submitBtn.getAttribute('data-success-text') || submitBtn.textContent;
+    if (submitBtn && submitBtnText) {
+      submitBtnText.textContent = submitBtn.getAttribute('data-success-text') || submitBtnText.textContent;
       submitBtn.disabled = true;
     }
 
