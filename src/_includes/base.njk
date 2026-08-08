@@ -171,12 +171,18 @@
      переключать Header между --light/--dark и там. Скрипт сам
      no-op'ается на страницах без .site-header--home (сейчас таких
      нет — legacyHeader был только у удалённой /old-home/) — грузим
-     его безусловно на каждой странице. pull-to-refresh.js остаётся
-     только под transparentHeader — это Home-специфичный обход
-     overscroll, сам себя гасит через body--header-overlay, но на
-     страницах без него просто не нужен. #}
+     его безусловно на каждой странице.
+
+     08.08: pull-to-refresh.js раньше грузился только под
+     transparentHeader (Home-специфичный обход overscroll, гасит себя
+     через body--header-overlay) — расширено на lightBodyBg (/contact/,
+     body--light-top): тот же класс бага (пустой зазор без stroke при
+     сильном флике вверху), только без прозрачного Header поверх —
+     скрипт сам проверяет оба класса и no-op'ается, если нет ни одного
+     (см. сам файл), так что условие тут просто экономит лишний запрос
+     на страницах, где он точно не нужен. #}
   <script src="{{ '/js/header-home-theme.js' | url }}" defer></script>
-  {% if transparentHeader %}
+  {% if transparentHeader or lightBodyBg %}
     <script src="{{ '/js/pull-to-refresh.js' | url }}" defer></script>
   {% endif %}
   {% if hasContactForm or hasAddressCopy %}

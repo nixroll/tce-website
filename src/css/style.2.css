@@ -266,7 +266,9 @@ html:has(body.body--light-top.is-footer-bottom) {
    (весь скролл вниз, включая быстрый флик в самый низ) auto действует
    изначально, никакого JS для этого не требуется. */
 body.body--header-overlay.overscroll-block-top,
-html:has(body.body--header-overlay.overscroll-block-top) {
+html:has(body.body--header-overlay.overscroll-block-top),
+body.body--light-top.overscroll-block-top,
+html:has(body.body--light-top.overscroll-block-top) {
   overscroll-behavior-y: none;
 }
 
