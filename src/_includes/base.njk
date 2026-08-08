@@ -48,8 +48,18 @@
    transparentHeader — НЕ убирает padding-top у body и НЕ трогает
    стартовую тему Header (та остаётся --dark, как отрисована сервером,
    см. DEFAULT_THEME в header-home-theme.js) — Header на /contact/
-   в обычном потоке документа, а не поверх контента. #}
-<body{% if transparentHeader %} class="body--header-overlay"{% elif lightBodyBg %} class="body--light-top"{% endif %}>
+   в обычном потоке документа, а не поверх контента.
+
+   hasHeaderLine (08.08, для /contact/) — обнуляет обычный padding-top
+   у body (.body--has-header-line в style.2.css): страница вместо
+   этого сама вставляет header-line.njk первым элементом контента
+   (см. contact.njk) — видимый отступ той же высоты (--header-height)
+   с вертикальными stroke вместо невидимого padding, см. подробности
+   в самом header-line.njk. #}
+{% set bodyClass = "" %}
+{% if transparentHeader %}{% set bodyClass = "body--header-overlay" %}{% elif lightBodyBg %}{% set bodyClass = "body--light-top" %}{% endif %}
+{% if hasHeaderLine %}{% set bodyClass = (bodyClass + " body--has-header-line") | trim %}{% endif %}
+<body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
   {# 05.08 (изначальный раскат) + 05.08 (промоушен новой Home на живую
      "/"): новый Header (header-home.njk) используется на ВСЕХ
      страницах, КРОМЕ тех, что явно помечены legacyHeader: true в

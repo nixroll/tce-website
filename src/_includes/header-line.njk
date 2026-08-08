@@ -1,0 +1,27 @@
+{# Header Line (node 1040:7382). Раньше отступ под зафиксированным
+   Header был просто padding-top у body (--header-height, невидимый) —
+   при быстром скролле-bounce вверху (особенно iOS rubber-band) под
+   Header был виден голый фон без вертикальных stroke, хотя у секции
+   сразу под этим отступом (напр. Contact - L) такие stroke есть у
+   каждой карточки — несовпадение бросалось в глаза. Header Line —
+   тот же по высоте отступ (height: var(--header-height), автоматически
+   62/64/72px по брейкпоинту, см. :root), но теперь настоящий видимый
+   элемент с двумя вертикальными 1px-бордерами по бокам (инсет 24px,
+   --spacing-3xl — 1:1 контейнер секции ниже), а не пустота.
+
+   Страница, которая его использует, обязана выставить hasHeaderLine:
+   true во front matter (см. contact.njk, base.njk обнуляет body
+   padding-top через .body--has-header-line — иначе отступ задвоится)
+   и вставить этот include первым, перед своей первой секцией.
+
+   Цвет фона/stroke всегда 1:1 совпадает с секцией СРАЗУ ПОД элементом
+   (прямая просьба пользователя, важно для будущих ещё не свёрстанных
+   страниц с другой темой первой секции) — поэтому явный вариант
+   через headerLineVariant, тот же паттерн, что и dividerVariant у
+   divider.njk. Сейчас есть только "contact" (светлая Contact - L/
+   Form - L, #fafafb/#e5e7ec) — для будущих страниц с другой первой
+   секцией добавить свой модификатор .header-line--<variant> в
+   style.2.css по тому же принципу. #}
+<div class="header-line{% if headerLineVariant %} header-line--{{ headerLineVariant }}{% endif %}" aria-hidden="true">
+  <div class="header-line__inner"></div>
+</div>

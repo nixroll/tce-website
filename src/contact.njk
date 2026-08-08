@@ -6,6 +6,7 @@ hasContactForm: true
 lightBodyBg: true
 headerTheme: light
 hasAddressCopy: true
+hasHeaderLine: true
 ---
 {# 05.08. Первая страница, свёрстанная с "боевого" Figma-макета (не
    заглушки .hero) — адаптивы под все 5 брейкпоинтов пользователь
@@ -30,6 +31,10 @@ hasAddressCopy: true
    прислал пользователь напрямую (Figma download_assets недоступен из
    этой песочницы), вставлены инлайн с stroke="currentColor" — цвет
    задаётся в CSS (.contact__card-icon, .form__file-icon). #}
+
+{% set headerLineVariant = "contact" %}
+{% include "header-line.njk" %}
+{% set headerLineVariant = "" %}
 
 <section class="contact" data-figma-node="924:9666" data-figma-name="Contact - L">
   <div class="contact__intro">

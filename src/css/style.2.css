@@ -314,6 +314,41 @@ body {
   }
 }
 
+/* Header Line (node 1040:7382) — см. подробный комментарий в
+   header-line.njk. body.body--has-header-line обнуляет обычный
+   padding-top (строка выше, "Header зафиксирован...") — сам элемент
+   теперь целиком отвечает за высоту отступа под фиксированным Header,
+   вместо невидимого padding. */
+body.body--has-header-line {
+  padding-top: 0;
+}
+
+.header-line {
+  width: 100%;
+  height: var(--header-height);
+  padding: 0 var(--spacing-3xl);
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.header-line__inner {
+  width: 100%;
+  height: 100%;
+  border-left: 1px solid var(--border-primary);
+  border-right: 1px solid var(--border-primary);
+}
+
+/* Contact - L / Form - L (светлая тема, см. .contact/.form ниже) —
+   те же локальные значения #fafafb/#e5e7ec, что и у самих секций. */
+.header-line--contact {
+  background-color: #fafafb;
+}
+
+.header-line--contact .header-line__inner {
+  border-left-color: #e5e7ec;
+  border-right-color: #e5e7ec;
+}
+
 /* Общий стиль текстовых ссылок футера (компонент Footer Link) */
 .footer-link {
   color: var(--text-primary);
