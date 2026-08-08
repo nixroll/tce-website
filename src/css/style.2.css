@@ -4934,7 +4934,20 @@ body.body--header-overlay {
    было бы отсчитывать); пользовательский drag-resize ставит инлайн
    style="height:...", у которого специфичность выше класса ниже —
    переключение :placeholder-shown/не эту высоту не перетирает, если
-   поле уже вручную растянуто. */
+   поле уже вручную растянуто.
+
+   08.08, третий заход (пользователь: видно ДВА значка ресайза в
+   разных местах, и тянуть за видимый значок высоту не меняло) —
+   height textarea (82px/102px) отличалась от min-height обёртки
+   (134px), обёртка при этом ВСЕГДА рендерилась минимум на 134
+   (min-height — это пол, не потолок), а textarea внутри торчала
+   короче, оставляя пустой зазор снизу. Родная ручка ресайза рисуется
+   в НАСТОЯЩЕМ нижнем углу textarea (у короткой 82/102, а не 134) —
+   заметно выше нашего декоративного значка, который сидел у угла
+   ОБЁРТКИ. Убрал разницу совсем: height textarea теперь всегда РОВНО
+   134px, как и min-height обёртки, в обоих состояниях (меняется
+   только padding-top/bottom под подпись, не высота) — низ textarea и
+   низ обёртки теперь всегда совпадают. */
 .form__input--textarea {
   height: auto;
   min-height: 134px;
@@ -4953,7 +4966,7 @@ body.body--header-overlay {
 .form__input-field--textarea {
   display: block;
   width: 100%;
-  height: 82px;
+  height: 134px;
   min-height: 60px;
   padding-top: 16px;
   padding-bottom: 16px;
@@ -4962,25 +4975,30 @@ body.body--header-overlay {
 }
 
 .form__input-field--textarea:not(:placeholder-shown) {
-  height: 102px;
   padding-top: 24px;
   padding-bottom: 9px;
 }
 
-/* Ручка ресайза (node 1063:7726, SVG прислан пользователем напрямую —
-   Figma-ассет недоступен из песочницы, см. комментарий в base.njk про
-   figma.com/api/mcp/asset/*). Чисто визуальная накладка поверх
-   нативной ручки textarea (та в разных браузерах/ОС выглядит
-   по-разному) — pointer-events:none, поэтому реальный drag ресайза
-   всё равно стартует с того же самого угла textarea под ней, эта
-   иконка ничего не перехватывает. */
-.form__resize-handle {
-  position: absolute;
-  right: 6px;
-  bottom: 6px;
-  width: 12px;
-  height: 12px;
-  pointer-events: none;
+/* Ручка ресайза (SVG прислан пользователем напрямую — Figma-ассет
+   недоступен из песочницы, см. комментарий в base.njk про
+   figma.com/api/mcp/asset/*).
+
+   08.08, третий заход: раньше это была отдельная декоративная
+   накладка (<span> с тем же SVG внутри, pointer-events:none) поверх
+   НАСТОЯЩЕЙ родной ручки браузера — из-за рассинхрона высот (см. выше)
+   получалось два явно разных значка. Вместо отдельного слоя красим
+   напрямую САМ родной резайзер через ::-webkit-resizer (Chrome/Safari/
+   Edge) — это одна и та же область, а не два элемента, поэтому больше
+   не может разъехаться с реальным хитбоксом ресайза. Цвет/форма — тот
+   же SVG, что прислал пользователь, инлайн как data URI (внешний файл
+   недоступен по той же причине, см. выше). В Firefox ::-webkit-resizer
+   не поддерживается — просто останется дефолтная браузерная ручка,
+   тоже приемлемо. */
+.form__input-field--textarea::-webkit-resizer {
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 2L2 10' stroke='%23E5E7EC' stroke-linecap='round'/%3E%3Cpath d='M11 7L7 11' stroke='%23E5E7EC' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
 }
 
 .form__checkbox-row {
