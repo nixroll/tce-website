@@ -17,9 +17,24 @@
  *    значений, которые иногда бьют только change, не input, (в)
  *    window 'pageshow' — переоткрытие страницы из bfcache (кнопка
  *    "назад" в браузере) с уже заполненной формой, но БЕЗ повторного
- *    выполнения скрипта с нуля. Ошибка (is-invalid) — вешается на
- *    blur, если поле не прошло нативную валидацию, снимается сразу
- *    при вводе, как только поле снова валидно.
+ *    выполнения скрипта с нуля.
+ *
+ *    08.08, багфикс (пользователь: "красная рамка просто так
+ *    появляется, типа как в прототипировании Figma" — after первая
+ *    версия вешала is-invalid прямо на blur ЛЮБОГО поля, из-за чего
+ *    ошибка загоралась ещё во время обычного заполнения формы, просто
+ *    от перехода к следующему полю, до всякой попытки отправить).
+ *    Сверился с significa.co/get-a-quote/ (тот же референс, что и у
+ *    конфетти) — там при blur невалидного поля (проверено вживую:
+ *    ввести кривой email, кликнуть в соседнее поле) НИКАКОЙ ошибки не
+ *    показывается вообще, подсветка появляется только по факту попытки
+ *    отправить. Теперь так же: is-invalid включается ТОЛЬКО после
+ *    первой попытки submit (см. submitAttempted ниже) — до этого
+ *    момента blur вообще ничего не подсвечивает. После первой попытки
+ *    live-подсказка остаётся полезной: blur продолжает подсвечивать
+ *    ошибку в уже-тронутых полях, а input снимает её сразу, как
+ *    только поле снова валидно — так пользователь не бьётся о ту же
+ *    красную рамку повторно, поправляя поле.
  * 2) Success-статус отправки: submit перехватывается, preventDefault
  *    (никакого реального запроса), дальше — нативная HTML5-валидация
  *    формы (form.checkValidity()); если обязательные поля/чекбокс не
@@ -61,6 +76,7 @@
   if (!form) return;
 
   var floatWrappers = form.querySelectorAll('[data-field]');
+  var submitAttempted = false; /* до первой попытки отправить — blur ничего не подсвечивает, см. комментарий выше */
 
   function syncField(wrapper) {
     var field = wrapper.querySelector('.form__input-field');
@@ -82,6 +98,7 @@
     });
     field.addEventListener('change', function () { syncField(wrapper); }); /* автозаполнение */
     field.addEventListener('blur', function () {
+      if (!submitAttempted) return;
       wrapper.classList.toggle('is-invalid', !field.validity.valid);
     });
   });
@@ -150,6 +167,7 @@
     e.preventDefault();
 
     if (!form.checkValidity()) {
+      submitAttempted = true;
       Array.prototype.forEach.call(floatWrappers, function (wrapper) {
         var field = wrapper.querySelector('.form__input-field');
         if (field) wrapper.classList.toggle('is-invalid', !field.validity.valid);
