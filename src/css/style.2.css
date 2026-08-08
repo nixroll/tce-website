@@ -323,14 +323,34 @@ body.body--has-header-line {
   padding-top: 0;
 }
 
+/* 08.08, по обновлённому Figma (1040:7382, по брейкпоинтам): на 320px
+   у Header Line нет ни бокового паддинга, ни вертикальных stroke
+   вообще (Container там без border-l/r в дизайне) — секция ниже на
+   320 тоже edge-to-edge, без боковых линий. С 390px паддинг 20px
+   (--spacing-2xl) и обе вертикальные линии появляются, с 768px
+   паддинг увеличивается до 24px (--spacing-3xl, тот же, что и на
+   1000/1440) — 1:1 повторяет паддинг/border самой Contact - L/Form - L
+   на каждом брейкпоинте. */
 .header-line {
   width: 100%;
   height: var(--header-height);
-  padding: 0 var(--spacing-3xl);
+  padding: 0;
   box-sizing: border-box;
   flex-shrink: 0;
   display: flex;
   justify-content: center;
+}
+
+@media (min-width: 390px) {
+  .header-line {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .header-line {
+    padding: 0 var(--spacing-3xl);
+  }
 }
 
 .header-line__inner {
@@ -338,36 +358,32 @@ body.body--has-header-line {
   width: 100%;
   max-width: 1392px;
   height: 100%;
-  border-left: 1px solid var(--border-primary);
-  border-right: 1px solid var(--border-primary);
 }
 
-/* 08.08, пользователь: на очень сильном флике/rubber-band страница
-   иногда отлетает вниз больше, чем высота самого Header Line (64-72px)
-   — в этот момент видно область ВЫШЕ него (между верхом Header Line и
-   реальным верхом фиксированного Header, который на таком сильном
-   флике на iOS может на кадр оторваться от своего места, та же
-   природа, что и у самого бага с Header Line). Плоский фон там уже
-   верный (html:has(body.body--light-top), см. выше в файле), но
-   вертикальные stroke обрывались ровно на границе элемента — глазом
-   видно, что линии "не доходят" до Header. ::before — тот же
-   левый/правый border, что и у .header-line__inner, продолжен на
-   500px ВВЕРХ за пределы собственной рамки элемента (position:absolute,
-   bottom:100%) — сам .header-line оverflow не обрезает (изначально
-   visible, ничего специально не убирали), так что этот "хвost" рамки
-   виден только в момент такого сильного скролла, в обычном состоянии
-   полностью перекрыт непрозрачным фиксированным Header поверх. */
-.header-line__inner::before {
-  content: "";
-  position: absolute;
-  bottom: 100%;
-  left: 0;
-  right: 0;
-  height: 500px;
-  border-left: 1px solid var(--border-primary);
-  border-right: 1px solid var(--border-primary);
-  pointer-events: none;
+@media (min-width: 390px) {
+  .header-line__inner {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
 }
+
+/* 08.08: пробовали продолжать stroke на 500px вверх через ::before
+   (position:absolute, bottom:100%) — идея была скрыть возможный
+   разрыв линий при очень сильном флике/rubber-band, когда страница
+   отлетает вниз больше высоты самого Header Line. На реальном
+   iPhone эффекта не дало (пользователь не увидел новых линий), а на
+   быстром скролле по мобильному вместо этого появился новый видимый
+   баг — белое обрезанное поле-призрак сверху секции (скриншот
+   пользователя). Похоже, что 500px "фантомного" абсолютно
+   спозиционированного контента прямо над самым первым элементом
+   документа сбивает логику Safari при схлопывании/раскрытии
+   динамического тулбара во время скролла — сам приём убран целиком,
+   он не решал заявленную проблему и создавал новую. Плоский фон в
+   момент overscroll уже верный и без этого (html:has(body.body--
+   light-top), см. выше в файле) — это и есть практический потолок
+   того, что тут можно сделать: сам браузер во время rubber-band
+   докрашивает только цветом фона html, а не произвольным DOM-
+   контентом типа бордеров. */
 
 /* Contact - L / Form - L (светлая тема, см. .contact/.form ниже) —
    те же локальные значения #fafafb/#e5e7ec, что и у самих секций. */
@@ -375,8 +391,7 @@ body.body--has-header-line {
   background-color: #fafafb;
 }
 
-.header-line--contact .header-line__inner,
-.header-line--contact .header-line__inner::before {
+.header-line--contact .header-line__inner {
   border-left-color: #e5e7ec;
   border-right-color: #e5e7ec;
 }
