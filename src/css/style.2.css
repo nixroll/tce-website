@@ -4983,10 +4983,21 @@ body.body--header-overlay {
   padding-bottom: 9px;
 }
 
+/* 10.08, багфикс (пользователь: "Text относительно Checkbox чуть
+   вверх смотрит" — сверился с Figma, node 1008:1142 "Agreement":
+   Checkbox 20×20 у x=0/y=0, Text высотой 20px у x=28/y=0 — оба ровно
+   от верха, без сдвига. Причина расхождения была в двух местах: (1)
+   .form__checkbox-pad ниже держал padding-top:1px — судя по всему
+   наследие более ранней версии, где либо чекбокс, либо текст были
+   другого размера/line-height, и 1px компенсировал разницу; сейчас
+   оба ровно 20px, поэтому лишний сдвиг просто рассинхронивал верх
+   чекбокса с верхом текста. Убрал. (2) gap был spacing-lg (12px), а
+   в Figma между чекбоксом (кончается на x=20) и текстом (начинается
+   на x=28) ровно 8px — spacing-md, не spacing-lg. */
 .form__checkbox-row {
   display: flex;
   align-items: flex-start;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
   width: 100%;
   cursor: pointer;
 }
@@ -4994,7 +5005,6 @@ body.body--header-overlay {
 .form__checkbox-pad {
   display: flex;
   align-items: center;
-  padding-top: 1px;
   flex-shrink: 0;
 }
 
