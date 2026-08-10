@@ -1,0 +1,33 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="16" cy="16" r="14" fill="url(#safari_bg)"/>
+<circle cx="16" cy="16" r="14" fill="url(#safari_ring)" fill-opacity="0.25"/>
+<circle cx="16" cy="16" r="12.6" fill="none" stroke="#F2F2F2" stroke-width="0.6"/>
+<g stroke="#F2F2F2" stroke-width="0.6">
+<path d="M16 3.4V5.6"/>
+<path d="M16 26.4V28.6"/>
+<path d="M3.4 16H5.6"/>
+<path d="M26.4 16H28.6"/>
+<path d="M7.05 7.05L8.6 8.6"/>
+<path d="M23.4 23.4L24.95 24.95"/>
+<path d="M7.05 24.95L8.6 23.4"/>
+<path d="M23.4 8.6L24.95 7.05"/>
+</g>
+<g transform="rotate(45 16 16)">
+<path d="M16 6L18.6 16L16 16Z" fill="#FF3B30"/>
+<path d="M16 6L13.4 16L16 16Z" fill="#F2F2F2"/>
+<path d="M16 26L18.6 16L16 16Z" fill="#F2F2F2"/>
+<path d="M16 26L13.4 16L16 16Z" fill="#FF3B30"/>
+</g>
+<circle cx="16" cy="16" r="1.4" fill="#F2F2F2"/>
+<defs>
+<linearGradient id="safari_bg" x1="16" y1="2" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+<stop stop-color="#5AC8FA"/>
+<stop offset="0.5" stop-color="#1C8FE3"/>
+<stop offset="1" stop-color="#0B5FC7"/>
+</linearGradient>
+<radialGradient id="safari_ring" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(16 16) rotate(90) scale(14)">
+<stop stop-color="white" stop-opacity="0.4"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>

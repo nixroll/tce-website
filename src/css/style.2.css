@@ -5497,3 +5497,173 @@ body.body--header-overlay {
 .doc-hero__heading-muted {
   color: var(--text-quaternary);
 }
+
+/* ================================================================
+   Paragraph - D (10.08, node 949:4987 внутри Legal -> Cookie,
+   948:3168 — реальный контент есть только на конкретной странице,
+   здесь он живёт прямо в cookies.njk, не как переиспользуемый
+   include). Типографика тела (заголовок документа, преамбула, пункты
+   списка) везде 16px/22px (var(--body2-*)) без изменений по
+   брейкпоинтам — сверено через get_metadata: высота текстовых блоков
+   на каждом брейкпоинте объясняется исключительно переносом строк
+   при разной ширине, а не сменой font-size (в отличие от заголовка
+   Doc Hero). Меняются только паддинги/бордеры Container и переход
+   .paragraph-d__content на центрирование Fit Width (max-width:720px)
+   с 1000px, когда доступного места (1232px после паддингов Container)
+   становится больше 720 — тот же приём, что и в doc-hero__title-badge.
+
+   .paragraph-d — сама секция, в отличие от .doc-hero, имеет
+   border-top И border-bottom (border-t border-b в Figma) на всех
+   брейкпоинтах — обычная тёмная разделительная линия сверху/снизу.
+
+   .paragraph-d__container — border-left/border-right только с 768px
+   (тот же порог, что и у .doc-hero__container/.social__container),
+   паддинги растут по брейкпоинтам: 24/32 (320-768? нет, см. ниже) —
+   точные значения сверены по метаданным на каждом брейкпоинте
+   индивидуально (320: 24×32, 390: 24×32, 768: 48×64 — асимметрично,
+   не одно и то же значение на обе оси, редкий случай в этом проекте,
+   но именно так в Figma, 1000-1440: 80×80).
+
+   .paragraph-d__list — нумерованный список, каждый <li> в разметке
+   заканчивается двойным <br> (кроме последнего, 11-го, который прямо
+   переходит в ряд иконок браузеров) — это 1:1 повторяет структуру
+   реального Figma-экспорта (там тоже буквальные <br aria-hidden />,
+   а не margin/gap), сохранено для идентичного вертикального ритма.
+
+   .paragraph-d__browsers — паддинг слева var(--spacing-4xl) [32px] с
+   390px (по факту из get_metadata на 390-1440 иконки стартуют ровно
+   на 32px от края), но на 320px Figma уменьшает этот отступ до
+   var(--spacing-xs) [4px] — иначе 6 иконок по 32px с гэпом 12px
+   (итого 252px) с паддингом 32px не влезли бы в доступную ширину
+   Content (272px на 320px: 32+252=284 > 272). Это единственное
+   отличие 320px от общего паттерна, подтверждено метаданными
+   (Browsers x=4 на 320px, x=32 везде выше). */
+.paragraph-d {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--background-primary);
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+@media (min-width: 390px) {
+  .paragraph-d {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .paragraph-d {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+.paragraph-d__container {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  padding: var(--spacing-4xl) var(--spacing-3xl);
+}
+
+@media (min-width: 768px) {
+  .paragraph-d__container {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+    padding: var(--spacing-7xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .paragraph-d__container {
+    padding: var(--spacing-8xl);
+  }
+}
+
+.paragraph-d__content {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-6xl);
+  min-width: 0;
+}
+
+.paragraph-d__title,
+.paragraph-d__preamble {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--body2-size);
+  line-height: var(--body2-line);
+  letter-spacing: var(--body2-tracking);
+  color: var(--text-primary);
+}
+
+.paragraph-d__text-browsers {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+}
+
+.paragraph-d__list {
+  margin: 0;
+  padding-left: var(--spacing-3xl);
+  width: 100%;
+  list-style: decimal;
+  list-style-position: outside;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--body2-size);
+  line-height: var(--body2-line);
+  color: var(--text-primary);
+}
+
+.paragraph-d__list li {
+  margin: 0;
+}
+
+.paragraph-d__link {
+  color: var(--brand);
+  text-decoration: none;
+}
+
+.paragraph-d__link:hover {
+  opacity: 0.8;
+}
+
+.paragraph-d__browsers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding-left: var(--spacing-xs);
+}
+
+@media (min-width: 390px) {
+  .paragraph-d__browsers {
+    padding-left: var(--spacing-4xl);
+  }
+}
+
+.paragraph-d__browser-link {
+  display: block;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.paragraph-d__browser-link img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
