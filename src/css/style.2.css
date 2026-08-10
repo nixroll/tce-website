@@ -4671,17 +4671,33 @@ body.body--header-overlay {
   }
 }
 
+/* 10.08, пользователь обновил паддинги у Content (той половины, где
+   лежит Form — не у Title/badge) в Figma, перепроверено по
+   get_metadata на каждом брейкпоинте отдельно (все значения кратны
+   существующим токенам, округления не было):
+   320: 80/24 (было 48/24) — вертикальный увеличился, горизонтальный
+   тот же. 390: 80/32 — раньше отдельного правила на этом брейкпоинте
+   не было вообще, наследовался общий 48/24; теперь Figma-значение
+   отличается уже с 390, добавил media. 768: 96/48 (было 48 везде
+   одинаково — раньше вертикаль ошибочно совпадала с горизонталью).
+   1000/1440 — без изменений, уже совпадали. */
 .form__content {
   display: flex;
   align-items: flex-start;
   gap: var(--spacing-4xl);
   border-top: 1px solid var(--border-primary);
-  padding: var(--spacing-6xl) var(--spacing-3xl);
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .form__content {
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+  }
 }
 
 @media (min-width: 768px) {
   .form__content {
-    padding: var(--spacing-6xl);
+    padding: var(--spacing-9xl) var(--spacing-6xl);
   }
 }
 
@@ -4916,38 +4932,26 @@ body.body--header-overlay {
   color: #d92d20;
 }
 
-/* Textarea (node 1063:7731) — тот же :placeholder-shown приём, что и
+/* Big Input (node 1063:7731) — тот же :placeholder-shown приём, что и
    у однострочных полей выше, но лейбл не по центру высоты, а сверху
    (контенту нужно расти вниз на несколько строк, а не центрироваться),
    и белый текст переносится (white-space: normal — у однострочных
    полей label обрезался в одну строку с ellipsis, здесь так не
    нужно).
 
-   08.08, багфикс (пользователь: "это же сделано чтобы по высоте окно
-   сообщений регулировать" — резиновая тянущаяся ручка не декоративная,
-   textarea должен реально тянуться вручную): высота обёртки —
-   min-height, а не жёсткий height (обёртка растёт вместе с
-   содержимым, overflow по умолчанию visible — не обрезает вручную
-   растянутый textarea). Сам textarea — resize: vertical, задаёт
-   собственную стартовую высоту через явный height (а не flex — тогда
-   реальную resize-высоту при auto-высоте родителя браузеру не от чего
-   было бы отсчитывать); пользовательский drag-resize ставит инлайн
-   style="height:...", у которого специфичность выше класса ниже —
-   переключение :placeholder-shown/не эту высоту не перетирает, если
-   поле уже вручную растянуто.
-
-   08.08, третий заход (пользователь: видно ДВА значка ресайза в
-   разных местах, и тянуть за видимый значок высоту не меняло) —
-   height textarea (82px/102px) отличалась от min-height обёртки
-   (134px), обёртка при этом ВСЕГДА рендерилась минимум на 134
-   (min-height — это пол, не потолок), а textarea внутри торчала
-   короче, оставляя пустой зазор снизу. Родная ручка ресайза рисуется
-   в НАСТОЯЩЕМ нижнем углу textarea (у короткой 82/102, а не 134) —
-   заметно выше нашего декоративного значка, который сидел у угла
-   ОБЁРТКИ. Убрал разницу совсем: height textarea теперь всегда РОВНО
-   134px, как и min-height обёртки, в обоих состояниях (меняется
-   только padding-top/bottom под подпись, не высота) — низ textarea и
-   низ обёртки теперь всегда совпадают. */
+   10.08, третий заход по этому полю (пользователь удалил компонент
+   Resize handle из Figma совсем, переименовал в "Big Input": "если
+   строк становится больше, то вместо внутреннего скроллинга просто
+   увеличивай по высоте Input"). Раньше здесь был ручной resize:
+   vertical + декоративная ручка (см. историю правок в git) — оба
+   убраны целиком, компонента для ручки больше нет ни в Figma, ни в
+   разметке. Вместо этого — авто-рост высоты по контенту:
+   contact-form.js на каждый input пересчитывает высоту textarea под
+   scrollHeight, здесь только floor (min-height:134px — тот же
+   стартовый размер, что был раньше) и overflow:hidden (при
+   авто-росте видимый контент никогда не должен требовать
+   внутреннего скролла, но на доли секунды между вводом символа и
+   пересчётом высоты браузер иначе мог бы мигнуть скроллбаром). */
 .form__input--textarea {
   height: auto;
   min-height: 134px;
@@ -4966,39 +4970,17 @@ body.body--header-overlay {
 .form__input-field--textarea {
   display: block;
   width: 100%;
-  height: 134px;
-  min-height: 60px;
+  min-height: 134px;
   padding-top: 16px;
   padding-bottom: 16px;
-  resize: vertical;
+  overflow: hidden;
+  resize: none;
   line-height: 20px;
 }
 
 .form__input-field--textarea:not(:placeholder-shown) {
   padding-top: 24px;
   padding-bottom: 9px;
-}
-
-/* Ручка ресайза (SVG прислан пользователем напрямую — Figma-ассет
-   недоступен из песочницы, см. комментарий в base.njk про
-   figma.com/api/mcp/asset/*).
-
-   08.08, третий заход: раньше это была отдельная декоративная
-   накладка (<span> с тем же SVG внутри, pointer-events:none) поверх
-   НАСТОЯЩЕЙ родной ручки браузера — из-за рассинхрона высот (см. выше)
-   получалось два явно разных значка. Вместо отдельного слоя красим
-   напрямую САМ родной резайзер через ::-webkit-resizer (Chrome/Safari/
-   Edge) — это одна и та же область, а не два элемента, поэтому больше
-   не может разъехаться с реальным хитбоксом ресайза. Цвет/форма — тот
-   же SVG, что прислал пользователь, инлайн как data URI (внешний файл
-   недоступен по той же причине, см. выше). В Firefox ::-webkit-resizer
-   не поддерживается — просто останется дефолтная браузерная ручка,
-   тоже приемлемо. */
-.form__input-field--textarea::-webkit-resizer {
-  background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 2L2 10' stroke='%23E5E7EC' stroke-linecap='round'/%3E%3Cpath d='M11 7L7 11' stroke='%23E5E7EC' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: transparent;
 }
 
 .form__checkbox-row {

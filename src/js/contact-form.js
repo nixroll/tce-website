@@ -71,7 +71,26 @@
  *    к пп.2 и 3 выше (текст кнопки + конфетти), не вместо них —
  *    прямая просьба пользователя. Общий контроллер с тостом
  *    "Скопировано" у карточки "Юридический адрес" — contact-toast.js
- *    (грузится раньше этого скрипта в base.njk), window.showContactToast('send'). */
+ *    (грузится раньше этого скрипта в base.njk), window.showContactToast('send').
+ * 5) 10.08 — Big Input (node 1063:7731) авто-растёт по контенту:
+ *    пользователь убрал компонент Resize handle из Figma совсем,
+ *    попросил вместо ручного resize + внутреннего скролла просто
+ *    увеличивать высоту поля по числу строк. autoGrowTextarea() ниже
+ *    — стандартный приём (height:auto затем height:scrollHeight, сброс
+ *    в auto обязателен на каждый пересчёт, иначе scrollHeight не может
+ *    уменьшиться при удалении текста — он всегда считается от ТЕКУЩЕЙ
+ *    высоты бокса, а не от контента). CSS min-height (134px, см.
+ *    style.2.css) не даёт полю стать меньше стартового состояния.
+ *    Пересчёт также по window resize (с дебаунсом) — на другой
+ *    ширине контейнера текст переносится иначе, число строк меняется,
+ *    хотя сам textarea никто не трогал.
+ * 6) 10.08 — телефон: type="tel" сам по себе уже переключает
+ *    клавиатуру на цифровую на мобильных (понравилось пользователю),
+ *    но не мешает ФИЗИЧЕСКИ ввести буквы с обычной клавиатуры/при
+ *    вставке — убираю именно буквы (юникод-класс \p{L}, работает и
+ *    для кириллицы), остальные символы (+, -, en-dash, пробелы,
+ *    скобки и т.д.) не трогаю — пользователь прямо попросил их
+ *    оставить. */
 (function () {
   var form = document.getElementById('contact-form');
   if (!form) return;
@@ -93,6 +112,36 @@
       wrapper.classList.toggle('is-invalid', !field.validity.valid);
     });
   });
+
+  var autoGrowField = form.querySelector('.form__input-field--textarea');
+  function autoGrowTextarea() {
+    if (!autoGrowField) return;
+    autoGrowField.style.height = 'auto'; /* сброс обязателен — иначе scrollHeight не уменьшится при удалении текста */
+    autoGrowField.style.height = autoGrowField.scrollHeight + 'px';
+  }
+  if (autoGrowField) {
+    autoGrowTextarea(); /* на случай, если уже что-то подставлено (bfcache/автозаполнение) до выполнения скрипта */
+    autoGrowField.addEventListener('input', autoGrowTextarea);
+    var autoGrowResizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(autoGrowResizeTimer);
+      autoGrowResizeTimer = setTimeout(autoGrowTextarea, 100);
+    });
+  }
+
+  var phoneField = document.getElementById('contact-phone');
+  if (phoneField) {
+    phoneField.addEventListener('input', function () {
+      var pos = phoneField.selectionStart;
+      var lettersBefore = (phoneField.value.slice(0, pos).match(/\p{L}/gu) || []).length;
+      var cleaned = phoneField.value.replace(/\p{L}/gu, '');
+      if (cleaned !== phoneField.value) {
+        phoneField.value = cleaned;
+        var newPos = pos - lettersBefore;
+        phoneField.setSelectionRange(newPos, newPos);
+      }
+    });
+  }
 
   var submitBtn = form.querySelector('.form__submit');
   var submitBtnText = form.querySelector('.form__submit-text');
