@@ -4859,9 +4859,22 @@ body.body--header-overlay {
   transition: border-color 0.15s ease;
 }
 
-.form__input:hover,
 .form__input:focus-within {
   border-color: var(--brand);
+}
+
+/* 10.08, багфикс (пользователь: на iPhone — открыл поле, отменил/
+   спрятал клавиатуру — Hover застревает). Тот же класс бага, что уже
+   решён у .btn/.projects__nav-btn выше (см. подробный комментарий
+   там) — эмулированный :hover от тапа не снимается на тач-устройствах
+   до следующего тапа по другому элементу. @media (hover: hover)
+   полностью убирает :hover-правило у устройств без настоящего
+   курсора — :focus-within выше не трогаем, это отдельное состояние
+   (реальный фокус поля), не связанное с багом эмуляции hover. */
+@media (hover: hover) {
+  .form__input:hover {
+    border-color: var(--brand);
+  }
 }
 
 .form__input.is-invalid {
@@ -5034,9 +5047,13 @@ body.body--header-overlay {
    полей: border-color: var(--brand), без заливки. Не применяем поверх
    уже отмеченного чекбокса — там граница и так brand за счёт заливки
    :checked (см. правило ниже), пересечение безвредно, но семантически
-   Hover — состояние ДО выбора. */
-.form__checkbox-row:hover .form__checkbox-box {
-  border-color: var(--brand);
+   Hover — состояние ДО выбора.
+   10.08: обёрнуто в @media (hover: hover) — тот же залипающий тач-hover
+   баг, что и у .form__input выше/.btn (см. подробности там). */
+@media (hover: hover) {
+  .form__checkbox-row:hover .form__checkbox-box {
+    border-color: var(--brand);
+  }
 }
 
 .form__checkbox-check {
