@@ -414,6 +414,31 @@
     window.addEventListener('scrollend', resyncOnSettle, { passive: true });
   }
 
+  /* 10.08, второй заход (пользователь: баг всё ещё воспроизводится) —
+     scrollend поддерживается в iOS Safari только с 16.4 (март 2023);
+     на более старых версиях 'onscrollend' in window — false, и вся
+     подстраховка выше просто не подключается. Дублируем тот же
+     resyncOnSettle через классический debounce поверх обычного
+     'scroll' (поддерживается вообще везде, без привязки к версии
+     iOS/Safari) — 200мс без новых scroll-событий считаем, что скролл
+     (включая возврат из bounce) устоялся, и пересчитываем тему заново.
+     Раз в реальности сработает только ОДИН из двух (либо родной
+     scrollend, либо этот таймер) — держим оба одновременно, это
+     дёшево и безопасно: resyncOnSettle идемпотентна (при уже верной
+     теме просто ничего не меняет). */
+  var settleTimer = null;
+  window.addEventListener(
+    'scroll',
+    function () {
+      if (settleTimer !== null) window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(function () {
+        settleTimer = null;
+        resyncOnSettle();
+      }, 200);
+    },
+    { passive: true }
+  );
+
   /* 05.08, ещё один баг-фикс: открытие/закрытие мобильного меню
      переключает .is-open (header.js, общий с живой "/" — не трогаем),
      а фон прозрачного Header при этом меняется transparent → white
