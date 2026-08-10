@@ -173,6 +173,16 @@
      Footer тоже общий для всех. #}
   <div class="footer-padding" aria-hidden="true"></div>
   <script src="{{ '/js/header.js' | url }}" defer></script>
+  {# 10.08: pencil-hover.js — Apple Pencil на iPad физически умеет
+     наводиться без касания, но @media (hover: hover) этого не видит
+     (смотрит на ОСНОВНОЙ указатель устройства, для iPad это всегда
+     палец) и гасит все hover-стили. Скрипт добавляет класс
+     is-pencil-hover через Pointer Events, безусловно на каждой
+     странице — задействованные классы (.btn/.form__input/
+     .form__checkbox-row/.projects__nav-btn) встречаются на разных
+     страницах сайта, сам себя гасит через querySelectorAll на
+     страницах без них. #}
+  <script src="{{ '/js/pencil-hover.js' | url }}" defer></script>
   {% if isHome %}
     <script src="{{ '/js/gallery.js' | url }}" defer></script>
     <script src="{{ '/js/areas-parallax.js' | url }}" defer></script>

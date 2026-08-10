@@ -2088,6 +2088,15 @@ body.body--header-overlay {
   }
 }
 
+/* 10.08: is-pencil-hover — тот же эффект, что и :hover выше, но по
+   классу от pencil-hover.js (Apple Pencil на iPad, см. комментарий
+   там). Без media-обёртки: это не тач-эмуляция hover, а честное
+   наведение, залипать нечему — класс снимается по pointerleave. */
+.btn--primary.is-pencil-hover {
+  background-color: var(--button-primary-hover);
+  color: var(--white);
+}
+
 .btn--secondary {
   background-color: var(--background-secondary);
   border-color: var(--border-primary);
@@ -2097,6 +2106,10 @@ body.body--header-overlay {
   .btn--secondary:hover {
     border-color: var(--border-secondary);
   }
+}
+
+.btn--secondary.is-pencil-hover {
+  border-color: var(--border-secondary);
 }
 
 /* Brands (node 462:2019). Повторяющийся элемент на всех страницах,
@@ -3855,6 +3868,12 @@ body.body--header-overlay {
   }
 }
 
+/* 10.08: is-pencil-hover — см. .btn--primary.is-pencil-hover выше,
+   тот же смысл (класс от pencil-hover.js, Apple Pencil на iPad). */
+.projects__nav-btn.is-pencil-hover {
+  border-color: var(--border-secondary);
+}
+
 .projects__nav-btn svg {
   display: block;
   stroke: currentColor;
@@ -4939,6 +4958,11 @@ body.body--header-overlay {
   }
 }
 
+/* 10.08: is-pencil-hover — см. .btn--primary.is-pencil-hover выше. */
+.form__input.is-pencil-hover {
+  border-color: var(--brand);
+}
+
 .form__input.is-invalid {
   border-color: #d92d20;
 }
@@ -5118,6 +5142,13 @@ body.body--header-overlay {
   }
 }
 
+/* 10.08: is-pencil-hover — см. .btn--primary.is-pencil-hover выше
+   (это и есть жёлтая рамочка, которую пользователь не видел на iPad
+   с Apple Pencil). */
+.form__checkbox-row.is-pencil-hover .form__checkbox-box {
+  border-color: var(--brand);
+}
+
 .form__checkbox-check {
   position: absolute;
   top: 50%;
@@ -5198,6 +5229,11 @@ body.body--header-overlay {
   .form__submit:hover:not(:disabled) {
     background-color: #40464e;
   }
+}
+
+/* 10.08: is-pencil-hover — см. .btn--primary.is-pencil-hover выше. */
+.form__submit.is-pencil-hover:not(:disabled) {
+  background-color: #40464e;
 }
 
 .form__submit:disabled {
