@@ -5879,11 +5879,17 @@ body.body--header-overlay {
    высоте/паддингам Container, 1000/1440 тоже идентичны друг другу, 768
    отдельная "средняя" ступень):
 
-     брейкпоинт   min-height   паддинг секции (x)   паддинг Container   gap   pt/pb Container   heading
-     320          500px        0                    24px (3xl)          40px  80px / 32px        h5 (32/34/-0.32)
-     390          500px        20px (2xl)            32px (4xl)          40px  80px / 32px        h5
-     768          640px        24px (3xl)             48px (6xl)          48px  96px / 48px        h4 (36/38/-0.36)
-     1000/1440    740px        24px (3xl)             80px (8xl)          64px  128px / 80px       h3 (40/42/-0.4)
+     брейкпоинт   min-height   max-height   паддинг секции (x)   паддинг Container   gap   pt/pb Container   heading
+     320          500px        600px        0                    24px (3xl)          40px  80px / 32px        h5 (32/34/-0.32)
+     390          500px        600px        20px (2xl)            32px (4xl)          40px  80px / 32px        h5
+     768          640px        1000px       24px (3xl)             48px (6xl)          48px  96px / 48px        h4 (36/38/-0.36)
+     1000/1440    740px        1000px       24px (3xl)             80px (8xl)          64px  128px / 80px       h3 (40/42/-0.4)
+
+   10.08: max-height добавлен пользователем в Figma позже (изначально
+   был только min-height) — перепроверено через get_design_context на
+   всех 5 брейкпоинтах повторно: 320/390 — max-h-[600px], 768/1000/1440 —
+   max-h-[1000px] (одна и та же верхняя граница на всех трёх, в отличие
+   от min-height, где 768 — отдельная средняя ступень между 500 и 740).
 
    Border-left/right у Container — только с 390px (0 на 320px, ровно та же
    граница, что у .doc-hero__container/.paragraph-d__container). */
@@ -5901,6 +5907,7 @@ body.body--header-overlay {
   overflow: hidden;
   height: calc(100vh - var(--header-height));
   min-height: 500px;
+  max-height: 600px;
 }
 
 @media (min-width: 390px) {
@@ -5913,6 +5920,7 @@ body.body--header-overlay {
   .hero-l {
     padding: 0 var(--spacing-3xl);
     min-height: 640px;
+    max-height: 1000px;
   }
 }
 
