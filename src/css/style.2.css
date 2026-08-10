@@ -5678,6 +5678,102 @@ body.body--header-overlay {
   margin: 0;
 }
 
+/* 10.08, /privacy/: базовый .paragraph-d__content использует
+   gap:48px (--spacing-6xl) — верно для /cookies/ и /rights/, где
+   Content состоит всего из 3 детей (заголовок, преамбула, один общий
+   <ol>). На /privacy/ в реальном Figma-файле заголовок, преамбула и
+   КАЖДЫЙ из 6 пунктов списка — отдельные дети Content с flex-gap.
+   Сверено арифметически по метаданным на 320px: расстояние между
+   ВСЕМИ соседними парами (title→преамбула, преамбула→п.1, п.1→п.2
+   [с таблицей], ... , п.5→п.6) везде ровно 32px (--spacing-4xl), без
+   единого исключения — другое значение, чем у /cookies/ и /rights/.
+   Не трогаем базовый класс (сломает уже протестированные страницы),
+   добавляем модификатор здесь. Тот же зазор 32px применён между
+   пунктами общего <ol> (li + li) — там, где на /cookies/ и /rights/
+   зазор между пунктами верстался буквальными двойными <br> (44px,
+   т.к. там это один непрерывный текстовый блок в самом Figma), здесь
+   он явно является отдельным flex-gap в другом размере. */
+.paragraph-d__content--privacy {
+  gap: var(--spacing-4xl);
+}
+
+.paragraph-d__content--privacy .paragraph-d__list > li + li {
+  margin-top: var(--spacing-4xl);
+}
+
+/* 10.08, /privacy/: таблица в пункте 2 ("Цели и правовые основания
+   обработки...") — 5 колонок по 230px = 1150px, шапка + 11 строк,
+   сверено через get_design_context на узел "Table" (320px и 768px
+   идентичны: 5 ячеек по flex-[1_0_0] с фикс. шириной 230px каждая,
+   border между колонками кроме последней, border-bottom у каждой
+   строки, внешний border+rounded-8+overflow-clip у самой таблицы).
+   1150px шире доступного контента на ЛЮБОМ брейкпоинте сайта
+   (272-720px), поэтому .paragraph-d__table-wrap — горизонтально
+   скроллящийся контейнер на всех брейкпоинтах (пользователь прямо
+   просил "горизонтальный скроллинг" у таблицы; в самом
+   Figma-экспорте overflow-класса на обёртке не было — это просто
+   визуальный "вылет" авто-layout фрейма без Clip content на канвасе,
+   не про реальное поведение сайта, поэтому здесь добавлен
+   полноценный overflow-x:auto, а не буквальное копирование
+   Figma-класса). */
+.paragraph-d__table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-primary);
+  -webkit-overflow-scrolling: touch;
+}
+
+.paragraph-d__table {
+  width: 1150px;
+  max-width: none;
+  border-collapse: collapse;
+  background-color: var(--background-secondary);
+}
+
+.paragraph-d__table th,
+.paragraph-d__table td {
+  width: 230px;
+  min-width: 230px;
+  box-sizing: border-box;
+  vertical-align: top;
+  text-align: left;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--border-primary);
+  border-right: 1px solid var(--border-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.07px;
+}
+
+.paragraph-d__table th:last-child,
+.paragraph-d__table td:last-child {
+  border-right: none;
+}
+
+.paragraph-d__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.paragraph-d__table thead th {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.paragraph-d__table tbody td {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.paragraph-d__table td p {
+  margin: 0 0 var(--spacing-lg);
+}
+
+.paragraph-d__table td p:last-child {
+  margin-bottom: 0;
+}
+
 .paragraph-d__browsers {
   display: flex;
   flex-wrap: wrap;
