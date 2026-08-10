@@ -5349,3 +5349,151 @@ body.body--header-overlay {
   color: #f7f7f7;
   white-space: nowrap;
 }
+
+/* ================================================================
+   Doc Hero - D (10.08, node 948:2755 в дев-библиотеке компонентов;
+   реальный контент конкретной страницы — в Figma Layout, для
+   /cookies/ это node 948:3190/948:3168 "Legal -> Cookie"). Общий
+   переиспользуемый hero для юридических страниц (Cookies/Privacy/
+   Rights/Bank-details) — см. doc-hero.njk, там же комментарий про
+   docHeroBadge/docHeroTitleAccent/docHeroTitleMuted.
+
+   Первая страница на этом компоненте — /cookies/, вся страница
+   тёмная (в отличие от /contact/, где Contact - L/Form - L светлые) —
+   поэтому, в отличие от .contact/.form, здесь НЕТ локального
+   переопределения --text-primary/--text-quaternary/--border-primary:
+   цвета 1:1 совпадают с глобальными :root-токенами тёмной темы
+   (--background-primary #101010, --text-primary #f7f7f7,
+   --text-quaternary #94979c, --border-primary #2f3238, --brand
+   #fdb022, все уже дефолт в :root) — используются напрямую, без
+   переобъявления.
+
+   .doc-hero__title-badge — Fit Width из Figma (пользователь отдельно
+   обратил на это внимание): max-width:720px + width:100%, а НЕ
+   flex:1 (растянуть на всю строку контейнера). Родитель
+   (.doc-hero__container) центрирует блок через justify-content:
+   center. На 320-768px эффект центрирования не виден (доступного
+   места меньше или примерно равно 720 — блок занимает всю
+   доступную ширину), с 1000-1440px, где доступно 1232px после
+   паддингов, видны симметричные пустые поля по бокам ровно у
+   720-пиксельного блока — сверено через get_metadata на каждом
+   брейкпоинте (x-координата title-and-badge везде симметрична
+   относительно Container, что возможно только при
+   max-width+justify-center, не при flex:1 — тот заполнил бы всю
+   ширину без пустых полей). */
+.doc-hero {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--background-primary);
+}
+
+@media (min-width: 390px) {
+  .doc-hero {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .doc-hero {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+.doc-hero__container {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--spacing-4xl);
+  overflow: hidden;
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .doc-hero__container {
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .doc-hero__container {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+    padding: var(--spacing-9xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .doc-hero__container {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+  }
+}
+
+.doc-hero__title-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  width: 100%;
+  max-width: 720px;
+  min-width: 0;
+}
+
+.doc-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(253, 176, 34, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: var(--brand);
+  white-space: nowrap;
+}
+
+/* 10.08: h6(18/24) + font-body на 320-768 (Figma "Heading 6/
+   Semibold" — да, именно обычный Inter, не Inter Display, ниже
+   768px), h5(32/34) + font-display с 768px, h4(36/38) с 1440px —
+   сверено через get_design_context на каждом брейкпоинте отдельно
+   (не предполагал по аналогии с Contact - L, там была другая шкала:
+   h5 база → h4 с 1440, без смены font-family). */
+.doc-hero__heading {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--h6-size);
+  line-height: var(--h6-line);
+  letter-spacing: var(--h6-tracking);
+}
+
+@media (min-width: 768px) {
+  .doc-hero__heading {
+    font-family: var(--font-display);
+    font-size: var(--h5-size);
+    line-height: var(--h5-line);
+    letter-spacing: var(--h5-tracking);
+  }
+}
+
+@media (min-width: 1440px) {
+  .doc-hero__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
+}
+
+.doc-hero__heading-accent {
+  color: var(--text-primary);
+}
+
+.doc-hero__heading-muted {
+  color: var(--text-quaternary);
+}

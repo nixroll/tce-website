@@ -1,7 +1,40 @@
 ---
 title: Куки — Thermo Concept Engineering
 layout: base.njk
+customSections: true
+stickyHeader: true
 ---
-<section class="hero" data-figma-node="308:1917" data-figma-name="Hero">
-  <p class="hero__title">Куки</p>
-</section>
+{# 10.08. Начало вёрстки /cookies/ по "боевому" Figma-макету (node
+   948:3168, "Legal -> Cookie") — пока только первая секция, Doc
+   Hero - D (node 948:2755/948:3190), по прямой просьбе пользователя
+   ("вот первая секция ... для разработки"). Остальные секции
+   (Paragraph - D с текстом документа и иконками браузеров, Divider - D,
+   CTA - D, Footer - D) будут добавлены следующими заходами — пока
+   после Doc Hero сразу идёт общий Footer из base.njk (customSections:
+   true пропускает автоматический хвост "Divider + Brands + CTA +
+   Divider", который здесь не нужен — по прямой просьбе пользователя
+   Brands на этой странице не должно быть вообще).
+
+   Header — без headerTheme: страница целиком тёмная (в отличие от
+   /contact/), а --dark и есть тема Header по умолчанию (см.
+   header-home.njk), переопределять нечего.
+
+   stickyHeader — тот же приём, что и на /contact/ (пользователь нашёл
+   на attio.com, см. подробный комментарий у .site-header в
+   style.2.css): position:sticky вместо position:fixed, чтобы при
+   быстром overscroll-bounce вверху страницы Header уезжал вниз вместе
+   с остальным контентом, а не оставался жёстко пришпилен поверх — под
+   ним физически не может обнажиться разрыв. Header Line (старая
+   fixed-схема, компонент header-line.njk) здесь принципиально не
+   используется — по прямой просьбе пользователя, "аналогично странице
+   Contact". lightBodyBg (в отличие от /contact/) тоже не нужен — та
+   переменная красит html/body в светлый у старта документа специально
+   под светлую первую секцию, здесь первая секция тёмная, как и весь
+   остальной документ, красить не на что. #}
+{% set docHeroBadge = "Куки" %}
+{% set docHeroTitleAccent = "Файлы куки." %}
+{% set docHeroTitleMuted = "Юридический документ." %}
+{% include "doc-hero.njk" %}
+{% set docHeroBadge = "" %}
+{% set docHeroTitleAccent = "" %}
+{% set docHeroTitleMuted = "" %}

@@ -1,0 +1,46 @@
+{# Doc Hero - D (node 948:2755 в дев-библиотеке компонентов, реальный
+   контент см. в Figma Layout страницы конкретного документа, напр.
+   node 948:3190 для /cookies/ — "Legal -> Cookie", node 948:3168).
+   Общий переиспользуемый hero для всех юридических страниц (Cookies/
+   Privacy/Rights/Bank-details) — единственное, что меняется от
+   страницы к странице, это Badge и две строки заголовка, задаются
+   перед include:
+     {% set docHeroBadge = "Куки" %}
+     {% set docHeroTitleAccent = "Файлы куки." %}
+     {% set docHeroTitleMuted = "Юридический документ." %}
+     {% include "doc-hero.njk" %}
+   Не забыть сбросить все три в "" после use (утечёт в следующий
+   include, как и с dividerVariant в divider.njk).
+
+   10.08, первая страница на этом компоненте — /cookies/. Вся страница
+   тёмная (в отличие от /contact/, где Contact - L/Form - L светлые) —
+   у Doc Hero НЕТ локального переопределения --text-primary/
+   --border-primary/etc, как было у .contact/.form: цвета 1:1 совпадают
+   с глобальными :root-токенами тёмной темы (--background-primary
+   #101010, --text-primary #f7f7f7, --text-quaternary #94979c,
+   --border-primary #2f3238, --brand #fdb022) — просто используются
+   напрямую.
+
+   "Title and badge" (.doc-hero__title-badge) — пользователь отдельно
+   обратил внимание на Fit Width в Figma: это НЕ flex:1 (растянуть на
+   всю строку), а хаг-контент с потолком max-width:720px, при этом сам
+   Container центрирует его (justify-content:center). На 320-390px
+   доступного места меньше 720, поэтому блок просто занимает всю
+   ширину без видимого центрирования — эффект центрирования с
+   пустыми полями по бокам заметен только с 1000-1440px, где
+   доступного места (1232px после паддингов) заметно больше 720
+   (сверено по факту через get_metadata на каждом брейкпоинте:
+   x-координата title-and-badge везде симметрична относительно
+   Container, что возможно только при max-width+justify-center, не
+   при flex:1). #}
+<section class="doc-hero" data-figma-node="948:3190" data-figma-name="Doc Hero - D">
+  <div class="doc-hero__container">
+    <div class="doc-hero__title-badge">
+      <span class="doc-hero__badge">{{ docHeroBadge }}</span>
+      <h1 class="doc-hero__heading">
+        <span class="doc-hero__heading-accent">{{ docHeroTitleAccent }}</span><br>
+        <span class="doc-hero__heading-muted">{{ docHeroTitleMuted }}</span>
+      </h1>
+    </div>
+  </div>
+</section>
