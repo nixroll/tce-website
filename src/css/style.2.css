@@ -5997,7 +5997,21 @@ body.body--header-overlay {
    (var(--radius-md), 8px). См. заметку пользователя: "у этого контейнера
    есть кастомный Stroke и еще Radius". position:relative — стэкинг-
    контекст для LQ/HQ-кроссфейда видео (см. hero-video-upgrade.js),
-   тот же приём, что у .home-hero__media. */
+   тот же приём, что у .home-hero__media.
+
+   10.08, правка по скриншоту Stroke-панели Figma (Position: Inside) —
+   пользователь уточнил: обычный border здесь не годится, т.к. video
+   (position:absolute; inset:0) при обычном border/box-sizing:border-box
+   растягивается только ДО внутреннего края border — сам border
+   оказывается отдельным, не перекрывающим видео кольцом снаружи, а не
+   полупрозрачной обводкой ПОВЕРХ картинки, как в Figma при Position:
+   Inside (там stroke рисуется НАД заливкой/видео, перекрывая его
+   крайний пиксель). Исправлено: видео теперь на всю коробку без
+   отступа под stroke (border тут больше нет), а сама обводка —
+   отдельный ::after поверх видео (генерируется как последний child,
+   красится после видео в стэкинге), box-shadow: inset — рисуется
+   ВНУТРИ, поверх содержимого снизу, ровно как Position: Inside в
+   Figma. pointer-events:none — чисто декоративный слой. */
 .hero-l__cover {
   position: relative;
   width: 100%;
@@ -6005,8 +6019,16 @@ body.body--header-overlay {
   min-height: 0;
   overflow: hidden;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(0, 0, 0, 0.1);
   background-color: #f3f4f6;
+}
+
+.hero-l__cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
 }
 
 .hero-l__video {
