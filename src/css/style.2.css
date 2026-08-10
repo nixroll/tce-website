@@ -4302,14 +4302,15 @@ body.body--header-overlay {
    переиспользуемый .divider/.divider--light компонент, что и везде
    на сайте, свой не потребовался.
 
-   Иконки (phone/mail-01/marker-pin-01 в Contact, file-plus-02 в Form)
-   — SVG прислал пользователь напрямую (Figma download_assets тут
-   недоступен — сеть на figma.com/api/mcp/asset/* блокируется в этой
-   песочнице, проверено curl и fetch), вставлены инлайн в contact.njk
-   с stroke="currentColor". Цвет phone/mail/marker — var(--brand)
-   (#fdb022), ровно как в присланных файлах (stroke="#FDB022"); у
-   file-plus-02 — var(--text-tertiary) (#535862, тоже 1:1 с
-   присланным файлом).
+   Иконки (phone/mail-01/marker-pin-01 в Contact) — SVG прислал
+   пользователь напрямую (Figma download_assets тут недоступен — сеть
+   на figma.com/api/mcp/asset/* блокируется в этой песочнице, проверено
+   curl и fetch), вставлены инлайн в contact.njk с stroke="currentColor".
+   Цвет — var(--brand) (#fdb022), ровно как в присланных файлах
+   (stroke="#FDB022").
+   10.08: поле "Документы" (file-plus-02) убрано из Form-L целиком по
+   просьбе пользователя — вместе с ним ушла и эта иконка, комментарий
+   выше почищен от упоминаний.
 
    Обе секции (.contact, .form) — светлая тема, тот же паттерн
    локального переопределения токенов, что у .stats/.services/.areas/
