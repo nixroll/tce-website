@@ -824,7 +824,14 @@ body.body--sticky-header .site-header:not(.is-open) {
 
 /* ---------- Theme = Home Hero (прозрачный, по умолчанию на /home/) ---------- */
 .site-header--home.site-header--transparent {
-  background-color: transparent;
+  /* 10.08: iOS 26 Safari (баг WebKit, см. commit) для статус-бара
+     теперь смотрит на background-color именно этого fixed-элемента
+     вместо <meta name="theme-color"> — при строгом transparent цвета
+     считать неоткуда, Safari откатывается на тёмный дефолт. Alpha
+     0.01 визуально неотличима от transparent (Glass-эффект Header не
+     меняется), но у Safari остаётся RGB-подсказка (255,255,255) на
+     случай, если она читает канал цвета отдельно от alpha. */
+  background-color: rgba(255, 255, 255, 0.01);
   border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
