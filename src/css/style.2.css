@@ -205,8 +205,20 @@ html, body {
    секция под Header или нет, так что фон документа теперь корректен
    на всей длине страницы, а не только у самого верха/низа.
    .is-footer-bottom / .body--light-top больше нигде не используются —
-   убраны полностью (см. header-home-theme.js, base.njk). */
-html:has(.site-header--home:not(.site-header--dark)) {
+   убраны полностью (см. header-home-theme.js, base.njk).
+
+   10.08, багфикс (сама полоска статус-бара на /home/ сразу при
+   открытии стала тёмной): правило ниже сначала матчило только html —
+   у самого body своего фона не осталось (дефолтный тёмный из общего
+   html, body выше). Не проблема для overscroll (там браузер берёт
+   именно html), НО для iOS 26 tab-tinting (см. commit о transparent
+   Header) это оказалось важно — когда background-color fixed-элемента
+   (Header) прозрачный, Safari откатывается на цвет именно body, а не
+   html. Добавлен body:has(...) — тот же приём, что и раньше у
+   .body--header-overlay/.body--light-top (оба красили ОБА элемента,
+   не только html). */
+html:has(.site-header--home:not(.site-header--dark)),
+body:has(.site-header--home:not(.site-header--dark)) {
   background-color: #fafafb;
 }
 
