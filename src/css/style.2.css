@@ -5568,15 +5568,27 @@ body.body--header-overlay {
 .paragraph-d__container {
   width: 100%;
   max-width: 1392px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
   padding: var(--spacing-4xl) var(--spacing-3xl);
 }
 
+/* 10.08, /privacy/: overflow:hidden убран из базового правила и
+   перенесён сюда (с 390px) по прямому указанию пользователя —
+   сверено по Figma (node 937:6119, брейкпоинт 320px): у "Container"
+   в Figma НЕТ clip content ни на одном брейкпоинте вообще (сверено
+   через get_design_context на 320px и 768px — ни там, ни там нет
+   overflow-clip класса), но пользователь по канвасу Figma подтвердил,
+   что именно на 320px контейнер должен быть БЕЗ clip content, чтобы
+   таблица в п.2 могла визуально уходить за границу экрана (обычная
+   горизонтальная прокрутка страницы), а не обрезаться. На cookies/
+   и rights/ контента шире контейнера нет, так что на них разницы не
+   видно ни при overflow:hidden, ни без него — риска регресса нет. */
 @media (min-width: 390px) {
   .paragraph-d__container {
+    overflow: hidden;
     border-left: 1px solid var(--border-primary);
     border-right: 1px solid var(--border-primary);
   }
@@ -5628,6 +5640,7 @@ body.body--header-overlay {
   margin: 0;
   padding-left: var(--spacing-3xl);
   width: 100%;
+  min-width: 0;
   list-style: decimal;
   list-style-position: outside;
   font-family: var(--font-body);
@@ -5712,40 +5725,60 @@ body.body--header-overlay {
    сверено через get_design_context на узел "Table" (320px и 768px
    идентичны: 5 ячеек по flex-[1_0_0] с фикс. шириной 230px каждая,
    border между колонками кроме последней, border-bottom у каждой
-   строки, внешний border+rounded-8+overflow-clip у самой таблицы).
+   строки). В Figma border+rounded-8+overflow-clip висят на самой
+   ТАБЛИЦЕ (узел "Table", w-[1150px]), а не на её обёртке
+   ("View for table", которая просто size-full без какой-либо рамки) —
+   правка 10.08: перенёс border/radius/clip с .paragraph-d__table-wrap
+   на .paragraph-d__table, обёртка теперь просто прозрачный контейнер
+   шириной 100%, как и в Figma.
+
    1150px шире доступного контента на ЛЮБОМ брейкпоинте сайта
-   (272-720px), поэтому .paragraph-d__table-wrap — горизонтально
-   скроллящийся контейнер на всех брейкпоинтах (пользователь прямо
-   просил "горизонтальный скроллинг" у таблицы; в самом
-   Figma-экспорте overflow-класса на обёртке не было — это просто
-   визуальный "вылет" авто-layout фрейма без Clip content на канвасе,
-   не про реальное поведение сайта, поэтому здесь добавлен
-   полноценный overflow-x:auto, а не буквальное копирование
-   Figma-класса). margin-top:24px (--spacing-3xl) — гэп между
-   заголовком пункта 2 и таблицей, в Figma это flex-gap самого узла
-   "Text and view" (сверено метаданными), изначально был упущен
-   (заголовок вплотную примыкал к таблице) — добавлен по замечанию
-   пользователя о недостатке разделения между блоками. */
+   (272-720px). Поведение обёртки различается по брейкпоинтам (по
+   прямому указанию пользователя, сверено по Figma-канвасу,
+   node 937:6119): на 320px контейнер БЕЗ clip content — таблица
+   визуально уходит за границу экрана, доступна обычной горизонтальной
+   прокруткой страницы (overflow:visible); с 390px и шире — обычный
+   скроллящийся контейнер (overflow-x:auto), как и просил пользователь
+   изначально ("у нее есть горизонтальный скроллинг"). margin-top:24px
+   (--spacing-3xl) — гэп между заголовком пункта 2 и таблицей, в Figma
+   это flex-gap самого узла "Text and view" (сверено метаданными). */
 .paragraph-d__table-wrap {
   width: 100%;
   margin-top: var(--spacing-3xl);
-  overflow-x: auto;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-primary);
-  -webkit-overflow-scrolling: touch;
+  overflow: visible;
+}
+
+@media (min-width: 390px) {
+  .paragraph-d__table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 .paragraph-d__table {
+  /* table-layout:fixed берёт реальную ширину колонок (230px × 5 =
+     1150px, ниже) как жёсткий минимум внутренней ширины — значение
+     width здесь фактически игнорируется браузером, если оно меньше
+     суммы колонок (сверено эмпирически), поэтому просто указано те же
+     1150px для ясности. Итоговая offsetWidth будет 1152px (+1px рамки
+     с каждой стороны сверх border-box — известная особенность
+     табличной модели браузеров: border у <table> с
+     border-collapse:separate не полностью учитывается в border-box).
+     Расхождение в 2px на общей ширине 1150px визуально незаметно. */
   width: 1150px;
   max-width: none;
-  border-collapse: collapse;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
   background-color: var(--background-secondary);
 }
 
 .paragraph-d__table th,
 .paragraph-d__table td {
   width: 230px;
-  min-width: 230px;
   box-sizing: border-box;
   vertical-align: top;
   text-align: left;
@@ -5756,6 +5789,8 @@ body.body--header-overlay {
   font-size: 14px;
   line-height: 18px;
   letter-spacing: -0.07px;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .paragraph-d__table th:last-child,
