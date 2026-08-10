@@ -331,6 +331,11 @@ body.body--has-header-line {
    паддинг увеличивается до 24px (--spacing-3xl, тот же, что и на
    1000/1440) — 1:1 повторяет паддинг/border самой Contact - L/Form - L
    на каждом брейкпоинте. */
+/* 10.08: пользователь добавил в Figma верхний stroke у самого Header
+   Line (border-t на ВНЕШНЕМ элементе — не на .header-line__inner, у
+   которого уже есть боковые border-l/r, см. ниже) — напоминание:
+   компонент общий (header-line.njk используется include'ом на любой
+   странице с hasHeaderLine: true), поэтому правится один раз здесь. */
 .header-line {
   width: 100%;
   height: var(--header-height);
@@ -339,6 +344,7 @@ body.body--has-header-line {
   flex-shrink: 0;
   display: flex;
   justify-content: center;
+  border-top: 1px solid var(--border-primary);
 }
 
 @media (min-width: 390px) {
@@ -389,6 +395,7 @@ body.body--has-header-line {
    те же локальные значения #fafafb/#e5e7ec, что и у самих секций. */
 .header-line--contact {
   background-color: #fafafb;
+  border-top-color: #e5e7ec;
 }
 
 .header-line--contact .header-line__inner {
