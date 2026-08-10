@@ -5548,7 +5548,6 @@ body.body--header-overlay {
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-x: hidden;
   background-color: var(--background-primary);
   border-top: 1px solid var(--border-primary);
   border-bottom: 1px solid var(--border-primary);
@@ -5573,35 +5572,12 @@ body.body--header-overlay {
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: hidden;
   padding: var(--spacing-4xl) var(--spacing-3xl);
 }
 
-/* 10.08, /privacy/: overflow:hidden убран из базового правила и
-   перенесён сюда (с 390px) по прямому указанию пользователя —
-   сверено по Figma (node 937:6119, брейкпоинт 320px): у "Container"
-   в Figma НЕТ clip content ни на одном брейкпоинте вообще (сверено
-   через get_design_context на 320px и 768px — ни там, ни там нет
-   overflow-clip класса), но пользователь по канвасу Figma подтвердил,
-   что именно на 320px контейнер должен быть БЕЗ clip content, чтобы
-   таблица в п.2 могла визуально выходить за пределы паддингов
-   Container вплоть до края экрана.
-
-   ВАЖНО (правка 10.08, вторая итерация): это НЕ значит, что страница
-   должна реально горизонтально скроллиться — clip content есть у
-   самой СЕКЦИИ .paragraph-d (родитель Container'а), она обрезает
-   всё, что вышло за её пределы, жёстко, без скролла (см.
-   overflow-x:hidden на .paragraph-d). Так что на 320px таблица просто
-   визуально дотягивается до правого края экрана и там обрывается —
-   без прокрутки и без скруглённого правого угла (он просто не виден,
-   обрезан). У .paragraph-d__container клип появляется с 390px и уже
-   держит таблицу внутри себя (со скруглёнными углами) — тогда
-   доступен внутренний скролл через .paragraph-d__table-wrap. На
-   cookies/ и rights/ контента шире контейнера нет, так что на них
-   разницы не видно ни при overflow:hidden на Container, ни без него —
-   риска регресса нет. */
 @media (min-width: 390px) {
   .paragraph-d__container {
-    overflow: hidden;
     border-left: 1px solid var(--border-primary);
     border-right: 1px solid var(--border-primary);
   }
@@ -5746,28 +5722,25 @@ body.body--header-overlay {
    шириной 100%, как и в Figma.
 
    1150px шире доступного контента на ЛЮБОМ брейкпоинте сайта
-   (272-720px). Поведение обёртки различается по брейкпоинтам (по
-   прямому указанию пользователя, сверено по Figma-канвасу,
-   node 937:6119): на 320px контейнер БЕЗ clip content — таблица
-   визуально выходит за паддинги Container вплоть до края экрана и
-   там жёстко обрезается секцией .paragraph-d (overflow-x:hidden,
-   без скролла — см. комментарий у .paragraph-d__container); с 390px
-   и шире — обычный скроллящийся контейнер (overflow-x:auto), как и
-   просил пользователь изначально ("у нее есть горизонтальный
-   скроллинг"). margin-top:24px (--spacing-3xl) — гэп между
-   заголовком пункта 2 и таблицей, в Figma это flex-gap самого узла
-   "Text and view" (сверено метаданными). */
+   (272-720px), поэтому .paragraph-d__table-wrap — горизонтально
+   скроллящийся контейнер на ВСЕХ брейкпоинтах без исключения (три
+   разных варианта поведения на 320px перебрал в процессе — то
+   overflow:visible с реальным скроллом всей страницы, то жёсткий обрез
+   без скролла — в обоих случаях пользователь поправил: итоговое
+   решение по его прямому выбору — везде одинаковая скроллящаяся рамка,
+   как и было изначально задумано, "у нее есть горизонтальный
+   скроллинг"). Figma-детали про "clip content у Container/Section на
+   320px" на итоговую реализацию не влияют — .paragraph-d__container
+   свой overflow:hidden держит на всех брейкпоинтах (как исходно),
+   .paragraph-d__table-wrap сам себя ограничивает и скроллит независимо
+   от родителя. margin-top:24px (--spacing-3xl) — гэп между заголовком
+   пункта 2 и таблицей, в Figma это flex-gap самого узла "Text and
+   view" (сверено метаданными). */
 .paragraph-d__table-wrap {
   width: 100%;
   margin-top: var(--spacing-3xl);
-  overflow: visible;
-}
-
-@media (min-width: 390px) {
-  .paragraph-d__table-wrap {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .paragraph-d__table {
