@@ -124,23 +124,12 @@
   );
   if (!candidates.length) return;
 
-  /* 05.08: фон документа (см. .is-footer-bottom в style.css) у самого
-     низа страницы должен совпадать с цветом Footer, а не оставаться
-     светлым, как везде выше — иначе виден стык в safe-area под
-     домашним индикатором iOS. Footer — последний элемент в разметке,
-     поэтому как только он хоть немного показался снизу экрана, весь
-     "хвост" документа до самого конца гарантированно попадает в его
-     тёмную область. */
-  var footerEl = document.querySelector('.site-footer');
-  if (footerEl && 'IntersectionObserver' in window) {
-    var footerObserver = new IntersectionObserver(
-      function (entries) {
-        document.body.classList.toggle('is-footer-bottom', entries[0].isIntersecting);
-      },
-      { threshold: 0 }
-    );
-    footerObserver.observe(footerEl);
-  }
+  /* 10.08: раньше здесь был IntersectionObserver на .site-footer,
+     ставивший .is-footer-bottom на body у самого низа страницы — фон
+     html/body теперь вместо этого следит напрямую за темой Header
+     (см. html:has(.site-header--home:not(.site-header--dark)) в
+     style.2.css), так что отдельный класс для "хвоста" у Footer
+     больше не нужен — убран вместе с самим правилом в CSS. */
 
   var THEMES = { transparent: 1, light: 1, dark: 1 };
 

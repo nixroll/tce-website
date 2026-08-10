@@ -21,8 +21,8 @@
      тоже светлая с самого начала, см. header-home.njk) тег для неё не
      рендерился вообще, и iOS красил область под чёлкой в свой дефолт
      (белый) вместо нужного #fafafb/светлой темы — на глаз выглядело
-     как "белая вспышка" при быстром скролле вверху, отдельно от уже
-     исправленного тёмного фона html/body (.body--light-top). #}
+     как "белая вспышка" при быстром скролле вверху, отдельно от
+     фона html/body (см. 10.08 в комментарии у bodyClass ниже). #}
   {% if transparentHeader or headerTheme == "light" %}<meta name="theme-color" content="#ffffff">{% endif %}
   <title>{{ title or "Thermo Concept Engineering" }}</title>
   {# 10.08: фавиконка (лого-марк TCE, тот же орнаж/белый квадрат, что и
@@ -65,15 +65,12 @@
      style.(N+1).css и обновить путь тут. #}
   <link rel="stylesheet" href="{{ '/css/style.2.css' | url }}">
 </head>
-{# lightBodyBg (07.08, для /contact/) — НЕ путать с transparentHeader:
-   этот флаг только красит html/body в светлый у начала документа и
-   обратно в тёмный у Footer (см. .body--light-top в style.2.css),
-   чтобы при быстром скролле/rubber-band не мелькал тёмный фон
-   документа под светлой Contact - L секцией. В отличие от
-   transparentHeader — НЕ убирает padding-top у body и НЕ трогает
-   стартовую тему Header (та остаётся --dark, как отрисована сервером,
-   см. DEFAULT_THEME в header-home-theme.js) — Header на /contact/
-   в обычном потоке документа, а не поверх контента.
+{# 10.08: lightBodyBg/.body--light-top убраны — фон html/body теперь
+   красится напрямую по теме Header (html:has(.site-header--home:not
+   (.site-header--dark)) в style.2.css), а не отдельным флагом за
+   страницу; headerTheme на /contact/ по-прежнему решает, в какой теме
+   стартует сам Header (см. header-home.njk), от этого флага и зависит
+   новое CSS-правило — отдельного bodyClass для этого больше не нужно.
 
    hasHeaderLine — обнуляет обычный padding-top у body (.body--
    has-header-line в style.2.css): страница вместо этого сама
@@ -96,7 +93,7 @@
    резервирует место в потоке — обычный padding-top задваивал бы
    отступ). #}
 {% set bodyClass = "" %}
-{% if transparentHeader %}{% set bodyClass = "body--header-overlay" %}{% elif lightBodyBg %}{% set bodyClass = "body--light-top" %}{% endif %}
+{% if transparentHeader %}{% set bodyClass = "body--header-overlay" %}{% endif %}
 {% if hasHeaderLine %}{% set bodyClass = (bodyClass + " body--has-header-line") | trim %}{% endif %}
 {% if stickyHeader %}{% set bodyClass = (bodyClass + " body--sticky-header") | trim %}{% endif %}
 <body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
