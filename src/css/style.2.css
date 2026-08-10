@@ -4713,19 +4713,6 @@ body.body--header-overlay {
   display: flex;
   align-items: flex-start;
   gap: var(--spacing-4xl);
-  padding: var(--spacing-8xl) var(--spacing-3xl);
-}
-
-@media (min-width: 390px) {
-  .form__intro {
-    padding: var(--spacing-8xl) var(--spacing-4xl);
-  }
-}
-
-@media (min-width: 768px) {
-  .form__intro {
-    padding: var(--spacing-9xl) var(--spacing-6xl);
-  }
 }
 
 /* 07.08, багфикс (пользователь: "справа опять линия двойная"):
@@ -4742,45 +4729,68 @@ body.body--header-overlay {
     min-width: 0;
     align-self: stretch;
     border-right: 1px solid var(--border-primary);
-    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
   }
 }
 
-/* 10.08, пользователь обновил паддинги у Content (той половины, где
-   лежит Form — не у Title/badge) в Figma, перепроверено по
-   get_metadata на каждом брейкпоинте отдельно (все значения кратны
-   существующим токенам, округления не было):
-   320: 80/24 (было 48/24) — вертикальный увеличился, горизонтальный
-   тот же. 390: 80/32 — раньше отдельного правила на этом брейкпоинте
-   не было вообще, наследовался общий 48/24; теперь Figma-значение
-   отличается уже с 390, добавил media. 768: 96/48 (было 48 везде
-   одинаково — раньше вертикаль ошибочно совпадала с горизонталью).
-   1000/1440 — без изменений, уже совпадали. */
-.form__content {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-4xl);
-  border-top: 1px solid var(--border-primary);
+/* 10.08, багфикс (пользователь: "на 1000px у Content разная ширина,
+   так не должно быть! они должны быть одинаковой ширины") — flex:
+   1 0 0 на .form__intro/.form__content в рядной раскладке (1000px+)
+   давал НЕРАВНЫЙ сплит (508px/444px вместо честных 476/476), хотя оба
+   flex-item с ИДЕНТИЧНЫМИ flex-grow/shrink/basis и min-width:0.
+   Причина — реальное поведение браузера (проверено эмпирически на
+   голых пустых div с той же парой паддингов, без какого-либо
+   контента, воспроизводится 1:1): padding у самого flex-элемента
+   задаёт нижний "пол" для flex-basis:0 — контентная область не может
+   уйти в минус, поэтому item НЕ может сжаться меньше суммы своих
+   padding-left+padding-right, и min-width:0 это не отменяет (0 —
+   это пол ДЛЯ КОНТЕНТА, а не для paddig, который сам по себе не
+   резиновый). У .form__intro паддинг был БОЛЬШЕ (80px против 48px у
+   .form__content) — при распределении остатка 1:1 он и получал
+   лишние ~32px с каждой стороны за счёт соседа.
+   Фикс — padding убран с самих .form__intro/.form__content (flex-item,
+   участвующих в сплите 1000px+), перенесён на их единственных детей:
+   .form__intro-inner ниже (см. отдельный, НЕ общий с
+   .contact__intro-inner блок — там эта проблема неактуальна, у
+   .contact__intro нет соседней колонки, делить нечего) и .form__form
+   (см. там же). У одного-единственного ребёнка нет конкурента за
+   пространство внутри родителя — "пол" от паддинга больше ни на что
+   не давит, а сам .form__intro/.form__content с padding:0 честно
+   делят 952px пополам (476/476, сверено по get_metadata node
+   937:4841 — Figma even делит Container именно так, 476+476). */
+.form__intro-inner {
   padding: var(--spacing-8xl) var(--spacing-3xl);
 }
 
 @media (min-width: 390px) {
-  .form__content {
+  .form__intro-inner {
     padding: var(--spacing-8xl) var(--spacing-4xl);
   }
 }
 
 @media (min-width: 768px) {
-  .form__content {
+  .form__intro-inner {
     padding: var(--spacing-9xl) var(--spacing-6xl);
   }
 }
 
-/* 1000px: намеренно УЖЕ горизонтальный паддинг (48px/6xl), чем у
-   .form__intro на том же брейкпоинте (80px/8xl) — так в Figma,
-   перепроверено дважды по get_design_context, не опечатка.
+@media (min-width: 1000px) {
+  .form__intro-inner {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+  }
+}
 
-   07.08: border-right здесь убран — в рядной раскладке .form__content
+/* 10.08: паддинги этой половины (той, где лежит Form — не Title/badge)
+   ПЕРЕЕХАЛИ отсюда на .form__form (см. комментарий там и у
+   .form__intro-inner выше про баг с "полом" от padding при
+   flex-basis:0 на 1000px+) — .form__content сам теперь без padding. */
+.form__content {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-4xl);
+  border-top: 1px solid var(--border-primary);
+}
+
+/* 07.08: border-right здесь убран — в рядной раскладке .form__content
    становится крайним правым элементом, и этот border-right дублировал
    border-right самого .form__container на том же правом краю (тот же
    класс бага, что и у .form__intro выше). Правый край теперь рисует
@@ -4791,13 +4801,6 @@ body.body--header-overlay {
     flex: 1 0 0;
     min-width: 0;
     border-top: none;
-    padding: var(--spacing-10xl) var(--spacing-6xl) var(--spacing-9xl);
-  }
-}
-
-@media (min-width: 1440px) {
-  .form__content {
-    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
   }
 }
 
@@ -4807,7 +4810,15 @@ body.body--header-overlay {
    1440) Button всегда x=0 внутри Form, то есть прижата к ЛЕВОМУ краю,
    а не к правому. justify-content: flex-end не трогаем — это про
    вертикальное распределение (кнопка внизу колонки), с этим проблем
-   не было. */
+   не было.
+
+   10.08, второй фикс: padding перенесён сюда с .form__content — см.
+   подробный комментарий у .form__intro-inner выше (баг с "полом" от
+   padding при flex-basis:0 на 1000px+ — .form__content/.form__intro
+   с разным паддингом не делили 952px честно пополам). 1000px:
+   намеренно УЖЕ горизонт. паддинг (48px/6xl), чем у .form__intro-inner
+   на том же брейкпоинте (80px/8xl) — так в Figma, перепроверено дважды
+   по get_design_context, не опечатка. */
 .form__form {
   display: flex;
   flex-direction: column;
@@ -4818,6 +4829,13 @@ body.body--header-overlay {
   min-width: 0;
   flex: 1 0 0;
   max-width: 620px;
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .form__form {
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+  }
 }
 
 /* 768px: единственный брейкпоинт без потолка ширины формы (720 в
@@ -4826,12 +4844,20 @@ body.body--header-overlay {
 @media (min-width: 768px) {
   .form__form {
     max-width: none;
+    padding: var(--spacing-9xl) var(--spacing-6xl);
   }
 }
 
 @media (min-width: 1000px) {
   .form__form {
     max-width: 620px;
+    padding: var(--spacing-10xl) var(--spacing-6xl) var(--spacing-9xl);
+  }
+}
+
+@media (min-width: 1440px) {
+  .form__form {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
   }
 }
 
