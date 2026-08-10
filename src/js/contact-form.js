@@ -217,6 +217,24 @@
       submitBtn.disabled = true;
     }
 
+    /* 10.08 (пользователь, скриншот significa.co: "когда форму
+       отправили поля опять пустые, а у тебя остаются заполненные,
+       будто не отправилось") — form.reset() возвращает все поля к
+       пустому состоянию; плавающий label ничего дополнительно не
+       требует (переключается сам через :placeholder-shown, реагирует
+       на реальное value поля). Два ручных доп. шага: autoGrowTextarea()
+       — reset не бьёт 'input', высота Big Input сама не пересчитается
+       и останется растянутой под старый текст; submitAttempted = false
+       — иначе следующий blur по уже опустевшему обязательному полю
+       тут же подсветил бы его как ошибку сразу после "успешной"
+       отправки, что выглядело бы странно. */
+    form.reset();
+    autoGrowTextarea();
+    submitAttempted = false;
+    Array.prototype.forEach.call(floatWrappers, function (wrapper) {
+      wrapper.classList.remove('is-invalid');
+    });
+
     fireConfetti();
 
     if (typeof window.showContactToast === 'function') {
