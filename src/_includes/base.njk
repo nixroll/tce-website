@@ -50,15 +50,30 @@
    см. DEFAULT_THEME в header-home-theme.js) — Header на /contact/
    в обычном потоке документа, а не поверх контента.
 
-   hasHeaderLine (08.08, для /contact/) — обнуляет обычный padding-top
-   у body (.body--has-header-line в style.2.css): страница вместо
-   этого сама вставляет header-line.njk первым элементом контента
-   (см. contact.njk) — видимый отступ той же высоты (--header-height)
-   с вертикальными stroke вместо невидимого padding, см. подробности
-   в самом header-line.njk. #}
+   hasHeaderLine — обнуляет обычный padding-top у body (.body--
+   has-header-line в style.2.css): страница вместо этого сама
+   вставляет header-line.njk первым элементом контента — видимый
+   отступ той же высоты (--header-height) с вертикальными stroke
+   вместо невидимого padding, см. подробности в самом header-line.njk.
+   Флаг больше нигде не используется (см. stickyHeader ниже), но сам
+   механизм оставлен в CSS/include — рабочий вариант для будущей
+   страницы, которая всё же захочет схему с fixed-хедером.
+
+   10.08, stickyHeader (для /contact/, пользователь нашёл приём на
+   attio.com) — .site-header переключается с position:fixed на
+   position:sticky (см. подробный комментарий у .site-header в
+   style.2.css): sticky-элемент — часть обычного потока документа и
+   двигается вместе со страницей при overscroll-bounce, поэтому под
+   ним физически не может обнажиться пустой разрыв (тот самый баг,
+   который Header Line были придуман закрывать) — сам этот спейсер
+   для страниц с stickyHeader больше не нужен. Как и hasHeaderLine,
+   обнуляет padding-top у body (sticky, в отличие от fixed, сам
+   резервирует место в потоке — обычный padding-top задваивал бы
+   отступ). #}
 {% set bodyClass = "" %}
 {% if transparentHeader %}{% set bodyClass = "body--header-overlay" %}{% elif lightBodyBg %}{% set bodyClass = "body--light-top" %}{% endif %}
 {% if hasHeaderLine %}{% set bodyClass = (bodyClass + " body--has-header-line") | trim %}{% endif %}
+{% if stickyHeader %}{% set bodyClass = (bodyClass + " body--sticky-header") | trim %}{% endif %}
 <body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
   {# 05.08 (изначальный раскат) + 05.08 (промоушен новой Home на живую
      "/"): новый Header (header-home.njk) используется на ВСЕХ

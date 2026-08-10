@@ -6,7 +6,7 @@ hasContactForm: true
 lightBodyBg: true
 headerTheme: light
 hasAddressCopy: true
-hasHeaderLine: true
+stickyHeader: true
 ---
 {# 05.08. Первая страница, свёрстанная с "боевого" Figma-макета (не
    заглушки .hero) — адаптивы под все 5 брейкпоинтов пользователь
@@ -30,11 +30,20 @@ hasHeaderLine: true
    Иконки (phone/mail-01/marker-pin-01, file-plus-02 в Form) — SVG
    прислал пользователь напрямую (Figma download_assets недоступен из
    этой песочницы), вставлены инлайн с stroke="currentColor" — цвет
-   задаётся в CSS (.contact__card-icon, .form__file-icon). #}
+   задаётся в CSS (.contact__card-icon, .form__file-icon).
 
-{% set headerLineVariant = "contact" %}
-{% include "header-line.njk" %}
-{% set headerLineVariant = "" %}
+   10.08, Header Line убран (заменён на stickyHeader, см. подробный
+   комментарий у .site-header в style.2.css и у stickyHeader-ветки в
+   base.njk) — пользователь нашёл на attio.com приём получше: Header
+   у них не position:fixed, а position:sticky, поэтому при быстром
+   overscroll-bounce вверху страницы он просто уезжает вниз вместе со
+   всем остальным контентом (как обычный элемент в потоке), а не
+   остаётся жёстко пришпилен поверх — значит, под ним физически
+   НЕЧЕМУ обнажаться (не может возникнуть тот самый разрыв без
+   stroke, который Header Line был придуман закрывать). Раз разрыва
+   больше нет — сам спейсер с его stroke'ами больше не нужен, компонент
+   (header-line.njk) оставлен в проекте нетронутым на случай, если
+   какая-то будущая страница всё же захочет старую fixed-схему. #}
 
 <section class="contact" data-figma-node="924:9666" data-figma-name="Contact - L">
   <div class="contact__intro">
