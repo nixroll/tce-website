@@ -72,17 +72,7 @@
   --white: #ffffff;                  /* base/white */
   --radius-md: 8px;
   --radius-lg: 10px;
-  /* 10.08: + env(safe-area-inset-top) — с viewport-fit=cover (см.
-     base.njk) Header реально дотягивается до физического верха экрана
-     под чёлкой/статус-баром на iOS и красит эту область СВОИМ
-     собственным фоном (см. padding-top у .site-header ниже) — это
-     компенсирующая добавка, чтобы весь остальной сайт (padding-top у
-     body, расчёт высоты .hero-l/.home-hero и т.д.), который опирается
-     на --header-height как на "сколько места реально резервировать",
-     не начинал контент СЛИШКОМ РАНО, перекрываясь с этой новой,
-     возросшей на величину чёлки высотой Header. На устройствах без
-     чёлки env() = 0px, ничего не меняется. */
-  --header-height: calc(62px + env(safe-area-inset-top, 0px)); /* высота свёрнутого Header, 72px на >=768 (см. media query ниже) */
+  --header-height: 62px; /* высота свёрнутого Header, 72px на >=768 (см. media query ниже) */
 
   --spacing-xxs: 2px;
   --spacing-xs: 4px;
@@ -299,7 +289,7 @@ body {
 
 @media (min-width: 768px) {
   :root {
-    --header-height: calc(72px + env(safe-area-inset-top, 0px));
+    --header-height: 72px;
   }
 
   /* 04.08: реальная высота НОВОГО Header (.site-header--home, см.
@@ -320,7 +310,7 @@ body {
      а на живой "/" (там всегда header.njk, .site-header--home там
      просто не существует) не сработает вообще. */
   html:has(.site-header--home) {
-    --header-height: calc(64px + env(safe-area-inset-top, 0px));
+    --header-height: 64px;
   }
 }
 
@@ -479,18 +469,6 @@ body.body--sticky-header {
   width: 100%;
   background-color: var(--background-secondary);
   border-bottom: 1px solid var(--border-primary);
-  /* 10.08: настоящая, надёжная перекраска полосы под статус-баром/
-     чёлкой на iOS — вместо (ненадёжного, см. подробный комментарий в
-     base.njk у viewport-fit=cover) <meta name="theme-color">, теперь
-     сам Header (с viewport-fit=cover top:0 у него реально совпадает с
-     физическим верхом экрана) растягивает СВОЙ СОБСТВЕННЫЙ, уже
-     тематически перекрашиваемый через обычные CSS-классы фон (см.
-     .site-header--home.site-header--light/--dark ниже) на область под
-     чёлкой через padding-top — реальный DOM-рендер, не системная
-     подсказка, красится 100% надёжно при любом скролле/bounce.
-     --header-height (см. :root) увеличен на ту же величину, чтобы
-     остальной сайт не начинал контент слишком рано. */
-  padding-top: env(safe-area-inset-top, 0px);
 }
 
 /* 10.08 (пользователь нашёл на attio.com, скриншот с их мобильной
@@ -5928,25 +5906,6 @@ body.body--header-overlay {
   align-items: center;
   overflow: hidden;
   height: calc(100vh - var(--header-height));
-  /* 10.08, багфикс (пользователь, iOS: "скроллю вниз до тёмных секций,
-     Header темнеет — верно; скроллю обратно наверх, Header снова
-     белый — верно, а вот полоса статус-бара становится сероватой, будто
-     цвета фона"): 100vh в iOS Safari НЕ стабильна во время скролла —
-     пересчитывается по мере скрытия/появления адресной строки. Секция
-     здесь на 100vh-based высоте (в отличие от .contact, где этой
-     проблемы нет — там высота по контенту, без vh вообще) — на
-     развороте скролла (вниз→вверх) высота .hero-l на долю кадра
-     "гуляет" вместе с анимацией адресной строки, из-за чего
-     currentTheme() в header-home-theme.js может на мгновение считать
-     геометрию неверно и мигнуть Header туда-обратно; iOS в этот момент
-     теряет синхронизацию с <meta name="theme-color"> и остаётся в
-     блёклом дефолтном сером вместо реального цвета Header. 100svh —
-     "small viewport height", высота при ПОЛНОСТЬЮ развёрнутом чехле
-     браузера — не меняется во время скролла вообще, что убирает саму
-     причину дребезга. Прогрессивное улучшение (вторая строка
-     переопределяет первую только в браузерах, которые понимают svh —
-     старые просто останутся на calc(100vh...), ничего не сломается). */
-  height: calc(100svh - var(--header-height));
   min-height: 500px;
   max-height: 600px;
 }

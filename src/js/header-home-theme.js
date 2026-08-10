@@ -334,37 +334,11 @@
      самом верху) — следующий scroll/resize снова его будит. */
   var rafId = null;
 
-  /* 10.08, багфикс (пользователь, iOS: "быстро и сильно скроллю, до
-     резинового эффекта, когда Header оттягивается вниз" — полоса
-     статус-бара после этого остаётся серой на /about/, на /contact/
-     не воспроизводится): пока страница физически находится в верхнем
-     upscroll-bounce (тянешь ЗА пределы верха — sticky Header уезжает
-     вниз ВМЕСТЕ с контентом, ровно как и задумано, см. комментарий про
-     переход на position:sticky выше), document.documentElement
-     физически смещается вниз от своей обычной позиции — но
-     scrollY при этом остаётся зажат на 0 (в отличие от визуальной
-     растяжки, сама scroll-позиция в DOM-модели не уходит в минус).
-     currentTheme() тут не виновата (при top > threshold она и так
-     корректно вернула бы DEFAULT_THEME/light), проблема именно в
-     ТАЙМИНГЕ — на резком, сильном флике одно из промежуточных
-     scroll-событий может сработать РОВНО в момент начала bounce, когда
-     геометрия ещё не устаканилась, и статус-бар на iOS теряет
-     синхронизацию с <meta theme-color> (сам Header при этом
-     переключается корректно — визуально бага в самом Header нет,
-     только в статус-баре, см. скриншоты пользователя). Пока идёт
-     bounce — просто НЕ трогаем тему вообще (ни Header, ни статус-бар)
-     и ждём, когда страница вернётся в норму (documentElement.top
-     снова 0) — на re-settle сработает наш же scrollend-хендлер ниже и
-     принудительно пересчитает всё заново с нуля, авторитетно. */
-  function isOverscrollBouncing() {
-    return document.documentElement.getBoundingClientRect().top > 0.5;
-  }
-
   function tick() {
     rafId = null;
     var state = heroPhase();
 
-    if (!state.inHero && !isOverscrollBouncing()) {
+    if (!state.inHero) {
       header.style.transform = '';
       smoothedY = 0;
       var theme = currentTheme();
@@ -388,56 +362,6 @@
   window.addEventListener('scroll', ensureLoop, { passive: true });
   window.addEventListener('resize', ensureLoop);
   ensureLoop();
-
-  /* 10.08, доп. подстраховка (пользователь, iOS: полоса статус-бара
-     иногда остаётся серой на /about/ после сильного флика с
-     резиновым bounce-эффектом Header — см. isOverscrollBouncing()
-     выше про основной фикс, и подробный комментарий у .hero-l в
-     style.2.css про нестабильность 100vh на iOS Safari во время
-     скролла). На случай, если что-то всё же успело разъехаться —
-     когда скролл (включая bounce-возврат) ПОЛНОСТЬЮ остановился
-     (scrollend, Safari 16.4+/iOS 16.4+ — если браузер событие не
-     поддерживает, просто ничего не делает, никакого вреда),
-     принудительно и АВТОРИТЕТНО пересчитываем тему заново с нуля
-     (currentTheme() по актуальной устоявшейся геометрии, не просто
-     зеркалим текущий — возможно, тоже неверный — класс Header). */
-  function resyncOnSettle() {
-    var theme = currentTheme();
-    if (theme !== current && THEMES[theme]) {
-      current = theme;
-      setThemeClass(theme, false);
-    }
-    syncMetaThemeColor();
-  }
-
-  if ('onscrollend' in window) {
-    window.addEventListener('scrollend', resyncOnSettle, { passive: true });
-  }
-
-  /* 10.08, второй заход (пользователь: баг всё ещё воспроизводится) —
-     scrollend поддерживается в iOS Safari только с 16.4 (март 2023);
-     на более старых версиях 'onscrollend' in window — false, и вся
-     подстраховка выше просто не подключается. Дублируем тот же
-     resyncOnSettle через классический debounce поверх обычного
-     'scroll' (поддерживается вообще везде, без привязки к версии
-     iOS/Safari) — 200мс без новых scroll-событий считаем, что скролл
-     (включая возврат из bounce) устоялся, и пересчитываем тему заново.
-     Раз в реальности сработает только ОДИН из двух (либо родной
-     scrollend, либо этот таймер) — держим оба одновременно, это
-     дёшево и безопасно: resyncOnSettle идемпотентна (при уже верной
-     теме просто ничего не меняет). */
-  var settleTimer = null;
-  window.addEventListener(
-    'scroll',
-    function () {
-      if (settleTimer !== null) window.clearTimeout(settleTimer);
-      settleTimer = window.setTimeout(function () {
-        settleTimer = null;
-        resyncOnSettle();
-      }, 200);
-    },
-    { passive: true }
-  );
 
   /* 05.08, ещё один баг-фикс: открытие/закрытие мобильного меню
      переключает .is-open (header.js, общий с живой "/" — не трогаем),
