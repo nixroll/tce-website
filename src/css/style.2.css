@@ -5193,12 +5193,13 @@ body.body--header-overlay {
   /* 08.08: было var(--text-secondary) — по актуальной Figma текст
      ссылки #181d27 (var(--text-primary) в локальной светлой теме
      .contact/.form), плюс вес medium (родитель .form__checkbox-label
-     теперь regular). */
+     теперь regular).
+     10.08: подчёркивание убрано — пользователь сверился с актуальной
+     Figma (node 1008:1144, все брейкпоинты 320-1440): text-decoration
+     там больше нет вообще, только цвет/вес отличают ссылку от
+     остального текста. */
   font-weight: 500;
   color: var(--text-primary);
-  text-decoration: underline;
-  text-decoration-skip-ink: none;
-  text-underline-position: from-font;
 }
 
 /* Кнопка "Отправить" (node 1063:7903/1063:7904) — переиспользует .btn
