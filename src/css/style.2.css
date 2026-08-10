@@ -5414,14 +5414,14 @@ body.body--header-overlay {
 
 @media (min-width: 390px) {
   .doc-hero__container {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
     padding: var(--spacing-8xl) var(--spacing-4xl);
   }
 }
 
 @media (min-width: 768px) {
   .doc-hero__container {
-    border-left: 1px solid var(--border-primary);
-    border-right: 1px solid var(--border-primary);
     padding: var(--spacing-9xl) var(--spacing-6xl);
   }
 }
@@ -5516,8 +5516,13 @@ body.body--header-overlay {
    border-top И border-bottom (border-t border-b в Figma) на всех
    брейкпоинтах — обычная тёмная разделительная линия сверху/снизу.
 
-   .paragraph-d__container — border-left/border-right только с 768px
-   (тот же порог, что и у .doc-hero__container/.social__container),
+   .paragraph-d__container — border-left/border-right с 390px (10.08,
+   исправлено: было ошибочно поставлено с 768px, пользователь поймал
+   по факту на реальном iPhone 17 Pro Max, 440px CSS-ширина — сверено
+   через get_design_context на 320/390px: на 320 border-классов у
+   Container нет вообще, на 390 уже есть border-l/border-r — тот же
+   порог у .doc-hero__container, там была та же ошибка, тоже
+   исправлена),
    паддинги растут по брейкпоинтам: 24/32 (320-768? нет, см. ниже) —
    точные значения сверены по метаданным на каждом брейкпоинте
    индивидуально (320: 24×32, 390: 24×32, 768: 48×64 — асимметрично,
@@ -5570,10 +5575,15 @@ body.body--header-overlay {
   padding: var(--spacing-4xl) var(--spacing-3xl);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 390px) {
   .paragraph-d__container {
     border-left: 1px solid var(--border-primary);
     border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .paragraph-d__container {
     padding: var(--spacing-7xl) var(--spacing-6xl);
   }
 }
