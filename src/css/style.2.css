@@ -4726,10 +4726,17 @@ body.body--header-overlay {
   }
 }
 
+/* 10.08, багфикс (пользователь: "у меня в Figma кнопка отправить
+   слева, а у тебя справа") — align-items был flex-end, хотя во всех
+   брейкпоинтах (перепроверено по get_metadata на 320/390/768/1000/
+   1440) Button всегда x=0 внутри Form, то есть прижата к ЛЕВОМУ краю,
+   а не к правому. justify-content: flex-end не трогаем — это про
+   вертикальное распределение (кнопка внизу колонки), с этим проблем
+   не было. */
 .form__form {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: flex-end;
   gap: var(--spacing-4xl);
   width: 100%;
