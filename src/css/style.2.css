@@ -5835,3 +5835,185 @@ body.body--header-overlay {
   width: 100%;
   height: 100%;
 }
+
+/* ==========================================================================
+   Hero - L (10.08, /about/ — node 1130:9467) — переиспользуемая светлая
+   hero-секция с видео-обложкой, см. hero-l.njk для разметки/переменных
+   и подробный комментарий там же про технологию LQ→HQ подгрузки видео.
+
+   Локальные переопределения токенов — тот же приём, что у .contact/.form
+   (см. выше): секция светлая, а у сайта дефолтная тема тёмная.
+
+   Высота секции — та же логика, что у Home Hero (см. .home-hero выше):
+   в Figma фиксированные h-740/640/500 на разных брейкпоинтах — типичный
+   способ Figma обозначить "почти весь экран за вычетом Header". Реализовано
+   как calc(100vh - var(--header-height)) с min-height-полом, взятым из
+   Figma буквально на каждом брейкпоинте (сверено через get_design_context
+   на узлах 1130:9653/9645/9637/9468/9466 — 320/390 идентичны по
+   высоте/паддингам Container, 1000/1440 тоже идентичны друг другу, 768
+   отдельная "средняя" ступень):
+
+     брейкпоинт   min-height   паддинг секции (x)   паддинг Container   gap   pt/pb Container   heading
+     320          500px        0                    24px (3xl)          40px  80px / 32px        h5 (32/34/-0.32)
+     390          500px        20px (2xl)            32px (4xl)          40px  80px / 32px        h5
+     768          640px        24px (3xl)             48px (6xl)          48px  96px / 48px        h4 (36/38/-0.36)
+     1000/1440    740px        24px (3xl)             80px (8xl)          64px  128px / 80px       h3 (40/42/-0.4)
+
+   Border-left/right у Container — только с 390px (0 на 320px, ровно та же
+   граница, что у .doc-hero__container/.paragraph-d__container). */
+.hero-l {
+  --text-primary: #181d27;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+
+  width: 100%;
+  background-color: #fafafb;
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  height: calc(100vh - var(--header-height));
+  min-height: 500px;
+}
+
+@media (min-width: 390px) {
+  .hero-l {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-l {
+    padding: 0 var(--spacing-3xl);
+    min-height: 640px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .hero-l {
+    min-height: 740px;
+  }
+}
+
+.hero-l__container {
+  width: 100%;
+  max-width: 1392px;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: hidden;
+  gap: var(--spacing-5xl);
+  padding: var(--spacing-8xl) var(--spacing-3xl) var(--spacing-4xl);
+}
+
+@media (min-width: 390px) {
+  .hero-l__container {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+    padding-left: var(--spacing-4xl);
+    padding-right: var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-l__container {
+    gap: var(--spacing-6xl);
+    padding: var(--spacing-9xl) var(--spacing-6xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .hero-l__container {
+    gap: var(--spacing-7xl);
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-8xl);
+  }
+}
+
+.hero-l__title-badge {
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+}
+
+.hero-l__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: #325abc;
+}
+
+.hero-l__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
+}
+
+@media (min-width: 768px) {
+  .hero-l__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
+}
+
+@media (min-width: 1000px) {
+  .hero-l__heading {
+    font-size: var(--h3-size);
+    line-height: var(--h3-line);
+    letter-spacing: var(--h3-tracking);
+  }
+}
+
+.hero-l__heading-accent {
+  color: var(--text-primary);
+}
+
+.hero-l__heading-muted {
+  color: var(--text-quaternary);
+}
+
+/* Video-контейнер ("Cover" в Figma) — ОТДЕЛЬНЫЙ от Container Stroke
+   (rgba(0,0,0,0.1), не переиспользует --border-primary секции — в самом
+   Figma это буквально другой полупрозрачный чёрный stroke) и Radius
+   (var(--radius-md), 8px). См. заметку пользователя: "у этого контейнера
+   есть кастомный Stroke и еще Radius". position:relative — стэкинг-
+   контекст для LQ/HQ-кроссфейда видео (см. hero-video-upgrade.js),
+   тот же приём, что у .home-hero__media. */
+.hero-l__cover {
+  position: relative;
+  width: 100%;
+  flex: 1 0 0;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: #f3f4f6;
+}
+
+.hero-l__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}

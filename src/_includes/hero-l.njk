@@ -1,0 +1,64 @@
+{# Hero - L (Figma node 1130:9467 на /about/, "About Hero - L") —
+   переиспользуемый светлый hero с видео-обложкой в отдельном
+   контейнере (свой Stroke/Radius, отличные от самой секции). Тот же
+   принцип, что и у doc-hero.njk: переменные задаются перед include,
+   сбрасываются в "" после:
+     {% set heroLBadge = "О нас" %}
+     {% set heroLHeadingAccent = "Знаем своё дело." %}
+     {% set heroLHeadingMuted = "10 лет опыта." %}
+     {% set heroLVideoSrc = "/videos/about-hero.mp4" %}
+     {% set heroLVideoHq = "/videos/about-hero-hq.mp4" %}
+     {% set heroLVideoPoster = "/videos/about-hero-poster.jpg" %}
+     {% include "hero-l.njk" %}
+   10.08, первая страница на этом компоненте — /about/, вторая (по
+   словам пользователя, "точно такая же секция, только с другими
+   заголовками и видео") — /services/, тогда же появится свой
+   набор {% set %} перед include с тем же именем файла. data-figma-node
+   ниже указывает на конкретный АКТУАЛЬНЫЙ (About) экземпляр — как и в
+   doc-hero.njk, у переиспользуемого include это не 100% точно для
+   каждой страницы, где он подключается (тот же компромисс, что там).
+
+   Секция — на всю высоту браузера ЗА ВЫЧЕТОМ Header, но не меньше
+   min-height по Figma (тот же приём, что у Home Hero: h-740/640/500 в
+   Figma — это "почти полный экран", реализовано как calc(100vh -
+   var(--header-height)) + min-height-пол на каждом брейкпоинте, см.
+   .hero-l в style.2.css). Паддинги Container и размер заголовка меняются
+   на каждом брейкпоинте (см. подробную таблицу в комментарии там же) —
+   сверено через get_design_context на всех 5 брейкпоинтах (320/390/
+   768/1000/1440, узлы 1130:9653/9645/9637/9468/9466).
+
+   Video-контейнер ("Cover" в Figma, .hero-l__cover) — bg
+   var(--background-secondary) СВЕТЛОЙ темы (#f3f4f6), border
+   rgba(0,0,0,0.1) (НЕ переиспользует --border-primary секции — в
+   Figma это буквально другой, полупрозрачный чёрный stroke, отдельный
+   от рамки Container, ровно то, о чём пользователь просил обратить
+   внимание) + radius 8px (--radius-md), overflow-clip. Видео внутри —
+   position:absolute inset:0 object-fit:cover, как у Home Hero.
+
+   Прогрессивная (LQ→HQ) подгрузка видео — та же технология, что и на
+   Home Hero (см. подробный комментарий в hero-video-upgrade.js): LQ
+   стартует сразу, HQ бесшовно подменяет её в фоне. Работает через
+   generic-классы .video-upgrade/.video-upgrade__video — страница,
+   подключающая этот include, обязана также выставить hasVideoUpgrade:
+   true во front matter (иначе сам скрипт не подключится, см. base.njk). #}
+<section class="hero-l" data-figma-node="1130:9467" data-figma-name="Hero - L">
+  <div class="hero-l__container">
+    <div class="hero-l__title-badge">
+      <span class="hero-l__badge">{{ heroLBadge }}</span>
+      <h1 class="hero-l__heading">
+        <span class="hero-l__heading-accent">{{ heroLHeadingAccent }}</span><br>
+        <span class="hero-l__heading-muted">{{ heroLHeadingMuted }}</span>
+      </h1>
+    </div>
+    <div class="hero-l__cover video-upgrade" aria-hidden="true">
+      <video class="hero-l__video video-upgrade__video"
+        poster="{{ heroLVideoPoster | url }}"
+        autoplay muted loop playsinline
+        preload="metadata"
+        tabindex="-1"
+        data-hq-src="{{ heroLVideoHq | url }}">
+        <source src="{{ heroLVideoSrc | url }}">
+      </video>
+    </div>
+  </div>
+</section>

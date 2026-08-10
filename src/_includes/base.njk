@@ -211,8 +211,17 @@
   {% if isHome %}
     <script src="{{ '/js/gallery.js' | url }}" defer></script>
     <script src="{{ '/js/areas-parallax.js' | url }}" defer></script>
-    <script src="{{ '/js/hero-video-upgrade.js' | url }}" defer></script>
     <script src="{{ '/js/social-drag.js' | url }}" defer></script>
+  {% endif %}
+  {# 10.08: hero-video-upgrade.js обобщён (см. подробный комментарий в
+     самом файле) — теперь работает через generic-классы .video-upgrade/
+     .video-upgrade__video и умеет апгрейдить любое число видео на
+     странице, не только Home Hero. Раньше грузился только под isHome —
+     теперь отдельный флаг hasVideoUpgrade (устанавливают страницы,
+     использующие переиспользуемую секцию Hero - L, напр. /about/),
+     isHome по-прежнему тоже его подключает. #}
+  {% if isHome or hasVideoUpgrade %}
+    <script src="{{ '/js/hero-video-upgrade.js' | url }}" defer></script>
   {% endif %}
   {# 05.08: header-home-theme.js раньше грузился ТОЛЬКО под
      transparentHeader (тогда это было равносильно "только на живой /",

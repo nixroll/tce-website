@@ -114,9 +114,13 @@
   /* 05.08: .contact/.form добавлены — то же самое расширение, которое
      было анонсировано ниже в комментарии про "если позже на этих
      страницах появятся светлые секции" — теперь есть (Contact - L/
-     Form - L на странице /contact/). */
+     Form - L на странице /contact/).
+     10.08: .hero-l добавлен тем же способом — переиспользуемая светлая
+     секция Hero - L (см. hero-l.njk), первая на /about/ (node
+     1130:9467) и, по словам пользователя, дальше появится на
+     /services/ с тем же классом. */
   var candidates = document.querySelectorAll(
-    '.social, .stats, .divider, .areas, .testimonial, .services, .projects, .brands, .cta, .site-footer, .contact, .form'
+    '.social, .stats, .divider, .areas, .testimonial, .services, .projects, .brands, .cta, .site-footer, .contact, .form, .hero-l'
   );
   if (!candidates.length) return;
 
@@ -151,7 +155,8 @@
       el.classList.contains('services') ||
       el.classList.contains('projects') ||
       el.classList.contains('contact') ||
-      el.classList.contains('form')
+      el.classList.contains('form') ||
+      el.classList.contains('hero-l')
     ) {
       theme = 'light';
     } else {

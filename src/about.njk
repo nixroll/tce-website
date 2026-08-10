@@ -1,7 +1,40 @@
 ---
 title: О нас — Thermo Concept Engineering
 layout: base.njk
+stickyHeader: true
+lightBodyBg: true
+headerTheme: light
+hasVideoUpgrade: true
 ---
-<section class="hero" data-figma-node="308:1917" data-figma-name="Hero">
-  <p class="hero__title">О нас</p>
-</section>
+{# 10.08: первая по-настоящему свёрстанная секция страницы /about/ —
+   Hero - L (см. hero-l.njk, node 1130:9467). Хвост страницы (Brands/
+   Divider/CTA/Footer) пока НЕ трогается — customSections тут
+   сознательно НЕ выставлен, страница по-прежнему получает стандартный
+   хвост из base.njk (divider → brands → divider → cta →
+   divider(edge-secondary) → footer), как и другие ещё не полностью
+   свёрстанные внутренние страницы (Services/Каталог). Если разметка
+   хвоста по Figma этой страницы (node 1130:8714, "About") в будущем
+   потребует отличий — дорабатывать отдельно, вне текущей задачи.
+
+   stickyHeader — тот же приём, что у /contact/ и юридических страниц
+   (см. подробный комментарий в contact.njk и у .site-header в
+   style.2.css): Header становится sticky вместо fixed, поэтому
+   отдельный "Header Line"-спейсер (как в Figma-макете этой страницы,
+   node 1130:8716) НЕ нужен — под sticky-хедером физически нечему
+   обнажаться при overscroll на мобилке, эффект тот же, реализация
+   проще. hasVideoUpgrade — подключает hero-video-upgrade.js (см.
+   base.njk), нужен для прогрессивной LQ→HQ подгрузки видео внутри
+   Hero - L. #}
+{% set heroLBadge = "О нас" %}
+{% set heroLHeadingAccent = "Знаем своё дело." %}
+{% set heroLHeadingMuted = "10 лет опыта." %}
+{% set heroLVideoSrc = "/videos/about-hero.mp4" %}
+{% set heroLVideoHq = "/videos/about-hero-hq.mp4" %}
+{% set heroLVideoPoster = "/videos/about-hero-poster.jpg" %}
+{% include "hero-l.njk" %}
+{% set heroLBadge = "" %}
+{% set heroLHeadingAccent = "" %}
+{% set heroLHeadingMuted = "" %}
+{% set heroLVideoSrc = "" %}
+{% set heroLVideoHq = "" %}
+{% set heroLVideoPoster = "" %}
