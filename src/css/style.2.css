@@ -6324,6 +6324,18 @@ body.body--header-overlay {
 }
 
 @media (min-width: 1000px) {
+  /* 11.08: пользователь убрал в Figma правый Stroke у placeholder-1
+     (средняя карточка в неполной последней строке) — теперь у неё
+     только border-left, как у крайней карточки, а не border-left+right,
+     как у настоящей средней колонки (см. общее правило nth-child(3n+2)
+     выше). Селектор ниже — .team-l__card + модификатор вместе, чтобы
+     специфичность совпала с nth-child(3n+2) (тоже 2 класса-уровня) и
+     override сработал за счёт порядка в файле, а не только частный
+     класс сам по себе (он специфичнее). */
+  .team-l__card.team-l__card--placeholder-1 {
+    border-right: none;
+  }
+
   .team-l__card--placeholder-2 {
     display: flex;
   }
