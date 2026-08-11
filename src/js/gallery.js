@@ -1,10 +1,19 @@
-/* Карусель галереи секции Projects - L (projects.njk).
+/* Карусель галерей-каруселей на странице: Projects - L (projects.njk,
+ * Home) и Docs - L (docs-l.njk, /about/) — оба используют одну и ту же
+ * разметку/логику ([data-gallery] > [data-gallery-track] > слайды +
+ * [data-gallery-prev/next]), отличаются только количеством слайдов (9
+ * у Projects - L, 4 у Docs - L) и видимым числом одновременно (задаёт
+ * CSS через flex-basis, JS только измеряет ширину). 11.08: переписано
+ * с document.querySelector (брал только ПЕРВУЮ на странице галерею) на
+ * querySelectorAll + инициализацию каждой независимо — Home и /about/
+ * никогда не показывают обе секции одновременно сейчас, но так код не
+ * ломается, если это когда-нибудь изменится.
  *
- * Требования (по макету и ТЗ):
- * - 9 реальных слайдов; видно 1 (320/390), 2 (768/1000) или 3 (1440) —
+ * Требования (по макету и ТЗ) — общие для всех галерей на странице:
+ * - N реальных слайдов; видно 1 (320/390), 2 (768/1000) или 3 (1440) —
  *   задаётся CSS через flex-basis, JS ширину слайда только измеряет;
  * - клик по стрелке сдвигает ровно на ОДИН слайд с плавной анимацией
- *   (transition на .projects__track в CSS);
+ *   (transition на track в CSS);
  * - галерея зациклена в обе стороны: по краям добавлены клоны (по 3 —
  *   максимум видимых), после завершения анимации на клонах индекс
  *   мгновенно и незаметно «перескакивает» на реальный слайд;
@@ -18,12 +27,16 @@
  * - при prefers-reduced-motion CSS отключает transition — перелистывание
  *   становится мгновенным, логика та же.
  *
- * Кнопки продублированы в разметке (intro с 768px, bottom до 768px),
- * поэтому обработчики вешаются на все [data-gallery-prev/next]. */
+ * Кнопки продублированы в разметке (intro с 768px, bottom до 768px) —
+ * ВНУТРИ каждой конкретной галереи; обработчики вешаются только на
+ * [data-gallery-prev/next], найденные внутри данного root, а не на
+ * все такие кнопки на странице (важно, раз галерей может быть больше
+ * одной). */
 (function () {
-  var root = document.querySelector('[data-gallery]');
-  if (!root) return;
+  var roots = document.querySelectorAll('[data-gallery]');
+  Array.prototype.forEach.call(roots, initGallery);
 
+  function initGallery(root) {
   var track = root.querySelector('[data-gallery-track]');
   if (!track) return;
   var viewport = track.parentElement;
@@ -98,8 +111,13 @@
     normalize();
   });
 
-  var prevButtons = document.querySelectorAll('[data-gallery-prev]');
-  var nextButtons = document.querySelectorAll('[data-gallery-next]');
+  /* Кнопки — СНАРУЖИ root (root = [data-gallery], т.е. .projects__gallery/
+     .docs-l__gallery; кнопки лежат в соседних .projects__intro/__bottom
+     или .docs-l__intro/__bottom, общий родитель — вся секция целиком),
+     поэтому ищем от родителя root, а не от самого root. */
+  var scope = root.parentElement || document;
+  var prevButtons = scope.querySelectorAll('[data-gallery-prev]');
+  var nextButtons = scope.querySelectorAll('[data-gallery-next]');
   Array.prototype.forEach.call(prevButtons, function (btn) {
     btn.addEventListener('click', function () { move(-1); });
   });
@@ -202,4 +220,5 @@
   });
 
   apply(true);
+  }
 })();

@@ -205,8 +205,18 @@
      страницах сайта, сам себя гасит через querySelectorAll на
      страницах без них. #}
   <script src="{{ '/js/pencil-hover.js' | url }}" defer></script>
-  {% if isHome %}
+  {# 11.08: gallery.js раньше грузился только под isHome (карусель была
+     только у Projects - L на Home) — теперь Docs - L на /about/ тоже
+     карусель на той же разметке/скрипте (см. docs-l.njk), поэтому
+     отдельный флаг hasGallery, тот же приём, что у hasVideoUpgrade
+     ниже; сам gallery.js уже написан на несколько [data-gallery] на
+     странице через querySelectorAll, isHome по-прежнему тоже его
+     подключает. areas-parallax.js/social-drag.js остаются только под
+     isHome — они специфичны для других Home-секций. #}
+  {% if isHome or hasGallery %}
     <script src="{{ '/js/gallery.js' | url }}" defer></script>
+  {% endif %}
+  {% if isHome %}
     <script src="{{ '/js/areas-parallax.js' | url }}" defer></script>
     <script src="{{ '/js/social-drag.js' | url }}" defer></script>
   {% endif %}

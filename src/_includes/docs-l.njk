@@ -1,59 +1,89 @@
-{# Docs - L (Figma node 1153:13608 на /about/, "Docs - L") — светлая
-   секция с двумя сканами аттестатов сразу под Team - L. НЕ
-   переиспользуемый include (контент фиксирован), подключается
-   напрямую, без {% set %} переменных (тот же подход, что у team-l.njk).
+{# Docs - L (Figma node 1172:14382 на /about/, "Docs - L") — светлая
+   секция со сканами документов (аттестаты + свидетельство на товарный
+   знак), сразу под Team - L. НЕ переиспользуемый include (контент
+   фиксирован), подключается напрямую, без {% set %} переменных (тот
+   же подход, что у team-l.njk).
 
-   Разметка — ПЛОСКАЯ (Row → 3 карточки: title/img1/img2, без
-   промежуточных обёрток) с раскладкой через CSS Grid + именованные
-   grid-area (.docs-l__row в style.2.css): на 320/390 все три в один
-   столбец, на 768 — заголовок сверху на всю ширину, два фото рядом
-   снизу, на 1000/1440 — все три в один ряд. В Figma эти же 3 карточки
-   на 768/390/320 физически завёрнуты в разные промежуточные wrapper-
-   контейнеры (то один для двух фото, то без него вовсе) — grid-area
-   даёт тот же результат на одной и той же разметке без необходимости
-   держать разные обёртки под разные брейкпоинты (тот же приём, что и
-   в team-l.njk, только там понадобился Grid с nth-child, а не
-   именованные area — здесь ровно 3 РАЗНЫЕ по смыслу карточки, а не
-   повторяющийся список, поэтому у каждой свой модификатор-класс
-   .docs-l__card--title/--img1/--img2 и Stroke на каждой прописан
-   отдельно и явно, без вычисления по позиции).
+   11.08, ПЕРЕСОБРАНО с нуля: изначальная плоская 3-карточная вёрстка
+   (title/img1/img2 через grid-area) заменена — пользователь попросил
+   переиспользовать готовую секцию Projects - L (см. projects.njk,
+   node 622:4042, секция "Сделано TCE." на Home) как основу: тот же
+   компонент карусели (бейдж + заголовок + стрелки навигации, снизу —
+   серый контейнер с фото, свайп/клики листают по одному фото), просто
+   с другим текстом/бейджем и другими фото. Figma-копия с уже
+   подставленным контентом — node 1172:14382 ("Docs - L"), сверено
+   по всем 5 брейкпоинтам через get_design_context: структура/паддинги/
+   границы 1-в-1 совпадают с Projects - L (три контейнера друг под
+   другом — .docs-l__intro/.docs-l__gallery/.docs-l__bottom, кнопки
+   продублированы в intro (с 768px) и bottom (до 768px), видна всегда
+   только одна пара — см. подробности в style.2.css у .docs-l).
 
-   11.08, обновлено: пользователь прислал новые сканы аттестатов УЖЕ с
-   прозрачным фоном и фото заранее отцентрованным внутри собственного
-   400×400 холста (проверено через convert -trim — видимая область
-   156×228 при смещении +122/+86 у ОБОИХ файлов, т.е. идентично
-   отцентровано). Поэтому больше не нужна ручная центровка через
-   height:62.5% на <img> — картинка просто растягивается на всю
-   Image card (width:100%/height:100%), а собственная прозрачная рамка
-   внутри PNG уже даёт нужный отступ от фона #f3f4f6 (см.
-   .docs-l__cert-img). Старый подход (непрозрачные сканы 350×500/364×500
-   + ручная центровка через height:62.5%) заменён этим полностью. #}
-<section class="docs-l" data-figma-node="1153:13608" data-figma-name="Docs - L">
-  <div class="docs-l__row">
-    <div class="docs-l__card docs-l__card--title">
-      <div class="docs-l__title-badge">
-        <span class="docs-l__badge">Лицензии</span>
-        <h2 class="docs-l__heading">
-          <span class="docs-l__heading-accent">Аттестаты.</span><br>
-          <span class="docs-l__heading-muted">Документация.</span>
-        </h2>
+   Карусель — та же логика, что у Projects - L (см. src/js/gallery.js,
+   переписан на поддержку НЕСКОЛЬКИХ [data-gallery] на странице через
+   querySelectorAll, а не только первой найденной): видно 1 фото
+   (320/390), 2 (768/1000), 3 (1440), зациклена в обе стороны, drag-
+   свайп, клик по стрелке — на одно фото.
+
+   4 фото (все — прозрачный PNG 400×400, документ уже отцентрован
+   пользователем внутри собственного холста, аналогично Team-L/старому
+   Docs-L — см. .docs-l__slide img, object-fit:cover, но т.к. исходник
+   уже 1:1 без обрезки не происходит):
+   1. Аттестат соответствия №0018492-СТ
+   2. Аттестат соответствия №0010020-ГС
+   3. Пасведчанне на таварны знак №03984
+   4. Приложение к пасведчанню №03984 (сам товарный знак TCE) #}
+{% macro navButtons() %}
+  <div class="docs-l__buttons">
+    <button class="docs-l__nav-btn" type="button" data-gallery-prev aria-label="Предыдущий документ">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M19 12H5M12 5L5 12L12 19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="docs-l__nav-btn" type="button" data-gallery-next aria-label="Следующий документ">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M5 12H19M12 19L19 12L12 5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+{% endmacro %}
+{% macro slide(n, alt) %}
+  <div class="docs-l__slide">
+    <picture>
+      <source
+        type="image/webp"
+        srcset="{{ ('/images/docs/doc-' + n + '-400.webp') | url }} 400w, {{ ('/images/docs/doc-' + n + '-800.webp') | url }} 800w"
+        sizes="(min-width: 1440px) 421px, (min-width: 768px) calc((100vw - 146px) / 2), (min-width: 390px) calc(100vw - 90px), calc(100vw - 48px)">
+      <img
+        src="{{ ('/images/docs/doc-' + n + '-800.png') | url }}"
+        srcset="{{ ('/images/docs/doc-' + n + '-400.png') | url }} 400w, {{ ('/images/docs/doc-' + n + '-800.png') | url }} 800w"
+        sizes="(min-width: 1440px) 421px, (min-width: 768px) calc((100vw - 146px) / 2), (min-width: 390px) calc(100vw - 90px), calc(100vw - 48px)"
+        width="400" height="400"
+        alt="{{ alt }}"
+        loading="lazy">
+    </picture>
+  </div>
+{% endmacro %}
+<section class="docs-l" data-figma-node="1172:14382" data-figma-name="Docs - L">
+  <div class="docs-l__intro">
+    <div class="docs-l__title-badge">
+      <span class="docs-l__badge">Лицензии</span>
+      <p class="docs-l__heading">Аттестаты.<br>
+        <span class="docs-l__heading-muted">Документация.</span>
+      </p>
+    </div>
+    {{ navButtons() }}
+  </div>
+  <div class="docs-l__gallery" data-gallery>
+    <div class="docs-l__viewport">
+      <div class="docs-l__track" data-gallery-track>
+        {{ slide('1', 'Аттестат соответствия №0018492-СТ') }}
+        {{ slide('2', 'Аттестат соответствия №0010020-ГС') }}
+        {{ slide('3', 'Пасведчанне на таварны знак №03984') }}
+        {{ slide('4', 'Приложение к пасведчанню на таварны знак №03984') }}
       </div>
     </div>
-    <div class="docs-l__card docs-l__card--img1">
-      <div class="docs-l__photo">
-        <picture>
-          <source type="image/webp" srcset="{{ '/images/docs/attestat-ct.webp' | url }}">
-          <img class="docs-l__cert-img" src="{{ '/images/docs/attestat-ct.png' | url }}" width="400" height="400" alt="Аттестат соответствия №0018492-СТ" loading="lazy">
-        </picture>
-      </div>
-    </div>
-    <div class="docs-l__card docs-l__card--img2">
-      <div class="docs-l__photo">
-        <picture>
-          <source type="image/webp" srcset="{{ '/images/docs/attestat-gs.webp' | url }}">
-          <img class="docs-l__cert-img" src="{{ '/images/docs/attestat-gs.png' | url }}" width="400" height="400" alt="Аттестат соответствия №0010020-ГС" loading="lazy">
-        </picture>
-      </div>
-    </div>
+  </div>
+  <div class="docs-l__bottom">
+    {{ navButtons() }}
   </div>
 </section>

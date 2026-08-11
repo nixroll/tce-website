@@ -4,12 +4,13 @@ layout: base.njk
 stickyHeader: true
 headerTheme: light
 hasVideoUpgrade: true
+hasGallery: true
 ---
 {# 10.08: первые по-настоящему свёрстанные секции страницы /about/ —
    Hero - L (см. hero-l.njk, node 1130:9467), Team - L (см. team-l.njk,
-   node 1149:12324) и Docs - L (см. docs-l.njk, node 1153:13608), обе
-   добавлены 11.08. Хвост страницы (Brands/
-   Divider/CTA/Footer) пока НЕ трогается — customSections тут
+   node 1149:12324) и Docs - L (см. docs-l.njk, node 1172:14382 —
+   пересобрана 11.08 на основе Projects - L с Home). Хвост страницы
+   (Brands/Divider/CTA/Footer) пока НЕ трогается — customSections тут
    сознательно НЕ выставлен, страница по-прежнему получает стандартный
    хвост из base.njk (divider → brands → divider → cta →
    divider(edge-secondary) → footer), как и другие ещё не полностью
@@ -25,7 +26,8 @@ hasVideoUpgrade: true
    обнажаться при overscroll на мобилке, эффект тот же, реализация
    проще. hasVideoUpgrade — подключает hero-video-upgrade.js (см.
    base.njk), нужен для прогрессивной LQ→HQ подгрузки видео внутри
-   Hero - L. #}
+   Hero - L. hasGallery — подключает gallery.js, нужен для карусели
+   Docs - L (тот же скрипт, что у Projects - L на Home). #}
 {% set heroLBadge = "О нас" %}
 {% set heroLHeadingAccent = "Знаем своё дело." %}
 {% set heroLHeadingMuted = "10 лет опыта." %}
@@ -44,10 +46,11 @@ hasVideoUpgrade: true
    он тут не нужен — убран по просьбе пользователя, Docs - L идёт сразу
    следом (у обеих секций свой border, разрыва не возникает). #}
 {% include "team-l.njk" %}
-{# 11.08: Docs - L (node 1153:13608) — сканы аттестатов, сразу под
-   Team - L. Своей нижней границы (border-bottom) достаточно перед
-   стандартным хвостом base.njk (Brands/Divider/CTA/Footer) — в самом
-   Figma (node 1130:8714, полная страница About) между Docs - L и
-   Brands - D тоже нет отдельного дивайдера, только собственные border-
-   bottom секций подряд. #}
+{# 11.08: Docs - L (node 1172:14382) — карусель сканов документов
+   (аттестаты + свидетельство на товарный знак), сразу под Team - L.
+   Своей нижней границы (border-bottom) достаточно перед стандартным
+   хвостом base.njk (Brands/Divider/CTA/Footer) — в самом Figma (node
+   1130:8714, полная страница About) между Docs - L и Brands - D тоже
+   нет отдельного дивайдера, только собственные border-bottom секций
+   подряд. #}
 {% include "docs-l.njk" %}
