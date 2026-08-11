@@ -6436,3 +6436,231 @@ body.body--header-overlay {
   letter-spacing: -0.08px;
   color: var(--text-quaternary);
 }
+
+/* Docs - L (11.08, node 1153:13608, /about/, сразу под Team - L +
+   Divider - L) — светлая секция с 2 сканами аттестатов. Локальная
+   переопределёнка токенов — та же, что у .hero-l/.team-l.
+
+   Раскладка — CSS Grid с ИМЕНОВАННЫМИ grid-area (title/img1/img2) на
+   ОДНОЙ и той же плоской разметке (.docs-l__row → 3 карточки, без
+   промежуточных обёрток) — в Figma на разных брейкпоинтах эти 3
+   карточки физически по-разному сгруппированы во wrapper-контейнеры
+   (без обёртки на 1000/1440, с одной на 768 — фото парой, с другой на
+   390/320 — фото друг под другом), но воспроизводить это разными DOM-
+   обёртками не нужно: grid-template-areas переключает раскладку по
+   брейкпоинту, сама разметка не меняется (см. подробный комментарий в
+   docs-l.njk).
+
+   Stroke — сверен отдельно на каждой из 3 карточек на каждом
+   брейкпоинте через get_design_context (не по формуле/позиции, как в
+   Team - L, а явно на каждый именованный класс — тут всего 3 РАЗНЫЕ по
+   смыслу карточки, а не повторяющийся список):
+     320/390:  title — без Stroke;      img1 — только сверху;         img2 — сверху и снизу
+     768:      title — только сверху;   img1 — Stroke со ВСЕХ сторон; img2 — сверху и снизу
+     1000/1440: title — сверху и снизу (без л/п — их даёт border самого .docs-l__row);
+                img1 — Stroke со ВСЕХ сторон; img2 — сверху и снизу
+   Общее замечание: img1 везде получает Stroke со всех 4 сторон (в
+   Figma это буквально "border" на весь периметр, не border-l/r) — это
+   НЕ ошибка/не то же самое, что у Team - L (там среднюю карточку
+   объединяли смежные border-l+border-r у соседей) — здесь у img1 не
+   просто "средняя колонка", а собственный периметр целиком, визуально
+   "обведённая рамкой" карточка, отдельно от общей сетки. */
+.docs-l {
+  --text-primary: #181d27;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+
+  width: 100%;
+  background-color: #fafafb;
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (min-width: 390px) {
+  .docs-l {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .docs-l {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+.docs-l__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: "title" "img1" "img2";
+  width: 100%;
+  max-width: 1392px;
+  padding-bottom: var(--spacing-8xl);
+}
+
+@media (min-width: 390px) {
+  .docs-l__row {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .docs-l__row {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "title title" "img1 img2";
+    padding-bottom: var(--spacing-9xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .docs-l__row {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas: "title img1 img2";
+    padding-top: var(--spacing-10xl);
+  }
+}
+
+.docs-l__card {
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.docs-l__card--title {
+  grid-area: title;
+}
+
+.docs-l__card--img1 {
+  grid-area: img1;
+}
+
+.docs-l__card--img2 {
+  grid-area: img2;
+}
+
+/* 320/390: title без Stroke, img1 только сверху, img2 сверху и снизу
+   (см. таблицу в комментарии блока выше). */
+.docs-l__card--img1 {
+  padding: var(--spacing-3xl);
+  border-top: 1px solid var(--border-primary);
+}
+
+.docs-l__card--img2 {
+  padding: var(--spacing-3xl);
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.docs-l__card--title {
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .docs-l__card--title {
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 768px) {
+  /* 768: title получает Stroke сверху (которого не было на 320/390),
+     img1 — Stroke со всех сторон (было только сверху), img2 —
+     остаётся сверху+снизу. */
+  .docs-l__card--title {
+    padding: var(--spacing-9xl) var(--spacing-4xl);
+    border-top: 1px solid var(--border-primary);
+  }
+
+  .docs-l__card--img1 {
+    padding: var(--spacing-4xl);
+    border: 1px solid var(--border-primary);
+  }
+
+  .docs-l__card--img2 {
+    padding: var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  /* 1000/1440: title теряет Stroke сверху, получает сверху+снизу (без
+     л/п — их даёт border самого .docs-l__row), img1/img2 без изменений
+     относительно 768. */
+  .docs-l__card--title {
+    padding: var(--spacing-4xl);
+    border: none;
+    border-top: 1px solid var(--border-primary);
+    border-bottom: 1px solid var(--border-primary);
+  }
+}
+
+.docs-l__title-badge {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+}
+
+.docs-l__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: #325abc;
+}
+
+.docs-l__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
+}
+
+@media (min-width: 1440px) {
+  .docs-l__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
+}
+
+.docs-l__heading-accent {
+  color: var(--text-primary);
+}
+
+.docs-l__heading-muted {
+  color: var(--text-quaternary);
+}
+
+.docs-l__photo {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #f3f4f6;
+}
+
+/* Скан целиком, без обрезки — по факту в Figma это просто равномерное
+   уменьшение в 2 раза (175/350 = 250/500 = 0.5, то же у второго скана),
+   реализовано явно через высоту 62.5% от контейнера (250/400),
+   ширина — автоматически по родному соотношению сторон каждого скана. */
+.docs-l__cert-img {
+  display: block;
+  height: 62.5%;
+  width: auto;
+  max-width: 100%;
+}

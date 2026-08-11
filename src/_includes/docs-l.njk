@@ -1,0 +1,59 @@
+{# Docs - L (Figma node 1153:13608 на /about/, "Docs - L") — светлая
+   секция с двумя сканами аттестатов сразу под Team - L. НЕ
+   переиспользуемый include (контент фиксирован), подключается
+   напрямую, без {% set %} переменных (тот же подход, что у team-l.njk).
+
+   Разметка — ПЛОСКАЯ (Row → 3 карточки: title/img1/img2, без
+   промежуточных обёрток) с раскладкой через CSS Grid + именованные
+   grid-area (.docs-l__row в style.2.css): на 320/390 все три в один
+   столбец, на 768 — заголовок сверху на всю ширину, два фото рядом
+   снизу, на 1000/1440 — все три в один ряд. В Figma эти же 3 карточки
+   на 768/390/320 физически завёрнуты в разные промежуточные wrapper-
+   контейнеры (то один для двух фото, то без него вовсе) — grid-area
+   даёт тот же результат на одной и той же разметке без необходимости
+   держать разные обёртки под разные брейкпоинты (тот же приём, что и
+   в team-l.njk, только там понадобился Grid с nth-child, а не
+   именованные area — здесь ровно 3 РАЗНЫЕ по смыслу карточки, а не
+   повторяющийся список, поэтому у каждой свой модификатор-класс
+   .docs-l__card--title/--img1/--img2 и Stroke на каждой прописан
+   отдельно и явно, без вычисления по позиции).
+
+   Фото — обычные сканы (350×500 и 364×500), в Figma "закадрированы"
+   через position:absolute с процентами, но проверка по фактическим
+   пикселям (175×250 и 182×250 в кадре 400×400) показала, что это
+   просто равномерное уменьшение в 2 раза БЕЗ обрезки (175/350=0.5,
+   250/500=0.5 — то же для второго фото) — то есть буквально "фото
+   целиком, по центру, высотой 62.5% от контейнера", как и сказал
+   пользователь ("отцентровано по центру"). Реализовано явно через
+   height:62.5%/width:auto на <img> (см. .docs-l__cert-img), без
+   Team-L-подобных per-person абсолютных сдвигов — они тут просто не
+   нужны. #}
+<section class="docs-l" data-figma-node="1153:13608" data-figma-name="Docs - L">
+  <div class="docs-l__row">
+    <div class="docs-l__card docs-l__card--title">
+      <div class="docs-l__title-badge">
+        <span class="docs-l__badge">Лицензии</span>
+        <h2 class="docs-l__heading">
+          <span class="docs-l__heading-accent">Аттестаты.</span><br>
+          <span class="docs-l__heading-muted">Документация.</span>
+        </h2>
+      </div>
+    </div>
+    <div class="docs-l__card docs-l__card--img1">
+      <div class="docs-l__photo">
+        <picture>
+          <source type="image/webp" srcset="{{ '/images/docs/attestat-ct.webp' | url }}">
+          <img class="docs-l__cert-img" src="{{ '/images/docs/attestat-ct.png' | url }}" width="350" height="500" alt="Аттестат соответствия №0018492-СТ" loading="lazy">
+        </picture>
+      </div>
+    </div>
+    <div class="docs-l__card docs-l__card--img2">
+      <div class="docs-l__photo">
+        <picture>
+          <source type="image/webp" srcset="{{ '/images/docs/attestat-gs.webp' | url }}">
+          <img class="docs-l__cert-img" src="{{ '/images/docs/attestat-gs.png' | url }}" width="364" height="500" alt="Аттестат соответствия №0010020-ГС" loading="lazy">
+        </picture>
+      </div>
+    </div>
+  </div>
+</section>
