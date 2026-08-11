@@ -5,8 +5,9 @@ stickyHeader: true
 headerTheme: light
 hasVideoUpgrade: true
 ---
-{# 10.08: первая по-настоящему свёрстанная секция страницы /about/ —
-   Hero - L (см. hero-l.njk, node 1130:9467). Хвост страницы (Brands/
+{# 10.08: первые по-настоящему свёрстанные секции страницы /about/ —
+   Hero - L (см. hero-l.njk, node 1130:9467) и, с 11.08, Team - L (см.
+   team-l.njk, node 1149:12324) сразу под ней. Хвост страницы (Brands/
    Divider/CTA/Footer) пока НЕ трогается — customSections тут
    сознательно НЕ выставлен, страница по-прежнему получает стандартный
    хвост из base.njk (divider → brands → divider → cta →
@@ -37,3 +38,10 @@ hasVideoUpgrade: true
 {% set heroLVideoSrc = "" %}
 {% set heroLVideoHq = "" %}
 {% set heroLVideoPoster = "" %}
+{# 11.08: Team - L (node 1149:12324) — сетка фото команды, сразу под
+   Hero - L. Divider - L сразу после (см. divider.njk) — та же светлая
+   тема, что и у самой секции. #}
+{% include "team-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}

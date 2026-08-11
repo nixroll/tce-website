@@ -6071,3 +6071,324 @@ body.body--header-overlay {
   object-fit: cover;
   display: block;
 }
+
+/* Team - L (11.08, node 1149:12324, /about/, сразу под Hero - L) —
+   светлая секция с сеткой фото команды. Та же локальная переопределёнка
+   токенов, что у .hero-l (light-тема поверх тёмной страницы).
+
+   Сама сетка (Container → Row → Card в Figma) реализована через CSS
+   Grid (.team-l__grid), а НЕ буквальным повтором вложенных Row-
+   контейнеров — на разных брейкпоинтах карточки группируются в СТРОКИ
+   по-разному (1 колонка на 320/390, 2 на 768, 3 на 1000/1440), и число
+   "пустых" карточек-заполнителей для ровной последней строки тоже
+   разное (0/1/2, см. .team-l__card--placeholder-1/-2 ниже) — плоский
+   список карточек + переключение grid-template-columns по брейкпоинту
+   даёт тот же результат без необходимости менять саму разметку под
+   каждый брейкпоинт.
+
+   Stroke у каждой карточки (сверху/слева/справа) сверен по всем 5
+   брейкпоинтам через get_design_context — он ПОЗИЦИОННЫЙ (зависит от
+   места в сетке: первая строка целиком получает Stroke сверху от
+   .team-l__grid, остальные строки — от границы самих карточек; средняя
+   колонка в 3-колоночной сетке получает Stroke и слева, и справа,
+   крайняя правая колонка в 2-колоночной — только слева), а не от того,
+   реальный это человек или пустой заполнитель — в Figma у placeholder-
+   карточек ровно тот же Stroke, что был бы у настоящей карточки на
+   этом месте. */
+.team-l {
+  --text-primary: #181d27;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+
+  width: 100%;
+  background-color: #fafafb;
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (min-width: 390px) {
+  .team-l {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .team-l {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+.team-l__container {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: hidden;
+  gap: var(--spacing-7xl);
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .team-l__container {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .team-l__container {
+    padding: var(--spacing-9xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .team-l__container {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+  }
+}
+
+.team-l__title-badge {
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+}
+
+.team-l__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: #325abc;
+}
+
+.team-l__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
+}
+
+@media (min-width: 1440px) {
+  .team-l__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
+}
+
+.team-l__heading-accent {
+  color: var(--text-primary);
+}
+
+.team-l__heading-muted {
+  color: var(--text-quaternary);
+}
+
+.team-l__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+}
+
+@media (min-width: 390px) {
+  .team-l__grid {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .team-l__grid {
+    grid-template-columns: repeat(2, 1fr);
+    border-top: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 1000px) {
+  .team-l__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.team-l__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  min-width: 0;
+  overflow: hidden;
+  padding: var(--spacing-3xl);
+  border-top: 1px solid var(--border-primary);
+}
+
+@media (min-width: 768px) {
+  .team-l__card {
+    padding: var(--spacing-4xl);
+    border-top: none;
+  }
+
+  /* 2 колонки (768px): строка 1 = карточки 1-2 (без своего верхнего
+     Stroke — его даёт .team-l__grid), строки 2+ = карточки с 3-й —
+     Stroke сверху у каждой. Правая колонка (чётные) — Stroke слева. */
+  .team-l__card:nth-child(n + 3) {
+    border-top: 1px solid var(--border-primary);
+  }
+
+  .team-l__card:nth-child(2n) {
+    border-left: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 1000px) {
+  /* 3 колонки (1000/1440px): строка 1 = карточки 1-3, строки 2+ = с
+     4-й — сбрасываем правило 768px (2 колонки) и задаём заново для 3.
+     Средняя колонка (3n+2) получает Stroke и слева, и справа (Figma:
+     именно средняя карточка несёт оба внутренних Stroke, а не соседние
+     карточки своими крайними сторонами — см. комментарий блока выше). */
+  .team-l__card:nth-child(-n + 3) {
+    border-top: none;
+  }
+
+  .team-l__card:nth-child(n + 4) {
+    border-top: 1px solid var(--border-primary);
+  }
+
+  .team-l__card:nth-child(2n) {
+    border-left: none;
+  }
+
+  .team-l__card:nth-child(3n + 2) {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+.team-l__card--placeholder {
+  display: none;
+  opacity: 0;
+}
+
+@media (min-width: 768px) {
+  .team-l__card--placeholder-1 {
+    display: flex;
+  }
+}
+
+@media (min-width: 1000px) {
+  .team-l__card--placeholder-2 {
+    display: flex;
+  }
+}
+
+.team-l__photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background-color: #f3f4f6;
+}
+
+.team-l__photo-img {
+  position: absolute;
+  max-width: none;
+  display: block;
+}
+
+/* Позиция/масштаб каждого фото внутри квадратной рамки — индивидуальный
+   ручной сдвиг на человека (см. get_design_context), в % от рамки,
+   поэтому одинаков на всех брейкпоинтах (масштабируется вместе с самой
+   рамкой). Фото — PNG с прозрачным фоном, .team-l__photo своим фоном
+   (#f3f4f6) закрывает прозрачные области, поэтому кроп не обязан
+   заполнять рамку строго впритык — как в Figma. */
+.team-l__photo-img--maksim {
+  left: -11.07%;
+  top: 3.32%;
+  width: 122%;
+  height: 122%;
+}
+
+.team-l__photo-img--evgeniy {
+  left: -5.82%;
+  top: 4.45%;
+  width: 116%;
+  height: 115.43%;
+}
+
+.team-l__photo-img--nikita {
+  left: -2.9%;
+  top: 3.89%;
+  width: 106%;
+  height: 106%;
+}
+
+.team-l__photo-img--natalya {
+  left: -2.52%;
+  top: -2.42%;
+  width: 105%;
+  height: 105%;
+}
+
+.team-l__photo-img--irina {
+  left: -5.28%;
+  top: -3.79%;
+  width: 118%;
+  height: 118%;
+}
+
+.team-l__photo-img--anastasiya {
+  left: -3.44%;
+  top: 9.25%;
+  width: 107%;
+  height: 107%;
+}
+
+.team-l__photo-img--sergey {
+  left: -5.12%;
+  top: 3.17%;
+  width: 105%;
+  height: 105%;
+}
+
+.team-l__meta {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.team-l__name {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--h6-size);
+  line-height: var(--h6-line);
+  letter-spacing: var(--h6-tracking);
+  color: var(--text-primary);
+}
+
+.team-l__role {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.08px;
+  color: var(--text-quaternary);
+}

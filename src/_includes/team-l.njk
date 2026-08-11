@@ -1,0 +1,146 @@
+{# Team - L (Figma node 1149:12324 на /about/, "Team - L") — светлая
+   секция с сеткой фото команды. НЕ переиспользуемый include (в отличие
+   от hero-l.njk) — контент (7 человек, их фото/должности) фиксирован,
+   поэтому подключается напрямую без {% set %} переменных.
+
+   Сетка (Container → Row → Card в Figma) реализована через CSS Grid
+   (.team-l__grid), а не буквальным повтором вложенных Row-контейнеров
+   из Figma — на разных брейкпоинтах карточки группируются в СТРОКИ
+   ПО-РАЗНОМУ (1 колонка на 320/390, 2 на 768, 3 на 1000/1440), и even
+   число "пустых" карточек-заполнителей для ровной последней строки
+   тоже разное (0 / 1 / 2) — Grid с одним плоским списком карточек и
+   переключением grid-template-columns по брейкпоинту избегает
+   необходимости менять саму разметку (DOM) под каждый брейкпоинт.
+
+   Позиция Stroke у каждой карточки (сверху/слева/справа) — ПОЗИЦИОННАЯ
+   (зависит от места в сетке: первая строка/остальные строки, средняя
+   колонка/крайние), не зависит от того, реальный это человек или
+   пустой заполнитель — сверено по всем 5 брейкпоинтам через
+   get_design_context (см. .team-l__card в style.2.css, там же таблица
+   nth-child). Два "пустых" placeholder-карточки (opacity:0, как в
+   Figma) нужны только для ровной сетки на 768/1000/1440 — на 320/390
+   (1 колонка) их в Figma нет вообще, поэтому они display:none там же.
+
+   Фото — PNG с прозрачным фоном (прислал пользователь, файлы уже
+   подписаны именами), у контейнера "Image card" свой фон #f3f4f6, виден
+   сквозь прозрачные части фото. Позиционирование самого фото внутри
+   квадратной рамки (индивидуальный сдвиг/масштаб на человека,
+   подобранный в Figma вручную) — те же 4 числа (left/top/width/height
+   в %), что в Figma-экспорте, одинаковые на всех брейкпоинтах
+   (масштабируются вместе с самой рамкой, т.к. заданы в %) — вынесены в
+   модификаторы .team-l__photo-img--<имя> в style.2.css. #}
+<section class="team-l" data-figma-node="1149:12324" data-figma-name="Team - L">
+  <div class="team-l__container">
+    <div class="team-l__title-badge">
+      <span class="team-l__badge">Команда</span>
+      <h2 class="team-l__heading">
+        <span class="team-l__heading-accent">Люди TCE.</span><br>
+        <span class="team-l__heading-muted">Команда за вашим проектом.</span>
+      </h2>
+    </div>
+    <div class="team-l__grid">
+      <div class="team-l__card">
+        <div class="team-l__photo">
+          <picture>
+            <source type="image/webp" srcset="{{ '/images/team/maksim-400.webp' | url }} 400w, {{ '/images/team/maksim-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
+            <img class="team-l__photo-img team-l__photo-img--maksim" src="{{ '/images/team/maksim-800.png' | url }}" srcset="{{ '/images/team/maksim-400.png' | url }} 400w, {{ '/images/team/maksim-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Максим" loading="lazy">
+          </picture>
+        </div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Максим</p>
+          <p class="team-l__role">Директор</p>
+        </div>
+      </div>
+      <div class="team-l__card">
+        <div class="team-l__photo">
+          <picture>
+            <source type="image/webp" srcset="{{ '/images/team/evgeniy-400.webp' | url }} 400w, {{ '/images/team/evgeniy-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
+            <img class="team-l__photo-img team-l__photo-img--evgeniy" src="{{ '/images/team/evgeniy-800.png' | url }}" srcset="{{ '/images/team/evgeniy-400.png' | url }} 400w, {{ '/images/team/evgeniy-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Евгений" loading="lazy">
+          </picture>
+        </div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Евгений</p>
+          <p class="team-l__role">Заместитель директора</p>
+        </div>
+      </div>
+      <div class="team-l__card">
+        <div class="team-l__photo">
+          <picture>
+            <source type="image/webp" srcset="{{ '/images/team/nikita-400.webp' | url }} 400w, {{ '/images/team/nikita-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
+            <img class="team-l__photo-img team-l__photo-img--nikita" src="{{ '/images/team/nikita-800.png' | url }}" srcset="{{ '/images/team/nikita-400.png' | url }} 400w, {{ '/images/team/nikita-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Никита" loading="lazy">
+          </picture>
+        </div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Никита</p>
+          <p class="team-l__role">Зам. директора, гл. инженер</p>
+        </div>
+      </div>
+      <div class="team-l__card">
+        <div class="team-l__photo">
+          <picture>
+            <source type="image/webp" srcset="{{ '/images/team/natalya-400.webp' | url }} 400w, {{ '/images/team/natalya-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
+            <img class="team-l__photo-img team-l__photo-img--natalya" src="{{ '/images/team/natalya-800.png' | url }}" srcset="{{ '/images/team/natalya-400.png' | url }} 400w, {{ '/images/team/natalya-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Наталья" loading="lazy">
+          </picture>
+        </div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Наталья</p>
+          <p class="team-l__role">Инженер по сметной работе</p>
+        </div>
+      </div>
+      <div class="team-l__card">
+        <div class="team-l__photo">
+          <picture>
+            <source type="image/webp" srcset="{{ '/images/team/irina-400.webp' | url }} 400w, {{ '/images/team/irina-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
+            <img class="team-l__photo-img team-l__photo-img--irina" src="{{ '/images/team/irina-800.png' | url }}" srcset="{{ '/images/team/irina-400.png' | url }} 400w, {{ '/images/team/irina-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Ирина" loading="lazy">
+          </picture>
+        </div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Ирина</p>
+          <p class="team-l__role">Главный бухгалтер</p>
+        </div>
+      </div>
+      <div class="team-l__card">
+        <div class="team-l__photo">
+          <picture>
+            <source type="image/webp" srcset="{{ '/images/team/anastasiya-400.webp' | url }} 400w, {{ '/images/team/anastasiya-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
+            <img class="team-l__photo-img team-l__photo-img--anastasiya" src="{{ '/images/team/anastasiya-800.png' | url }}" srcset="{{ '/images/team/anastasiya-400.png' | url }} 400w, {{ '/images/team/anastasiya-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Анастасия" loading="lazy">
+          </picture>
+        </div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Анастасия</p>
+          <p class="team-l__role">Бухгалтер</p>
+        </div>
+      </div>
+      <div class="team-l__card">
+        <div class="team-l__photo">
+          <picture>
+            <source type="image/webp" srcset="{{ '/images/team/sergey-400.webp' | url }} 400w, {{ '/images/team/sergey-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
+            <img class="team-l__photo-img team-l__photo-img--sergey" src="{{ '/images/team/sergey-800.png' | url }}" srcset="{{ '/images/team/sergey-400.png' | url }} 400w, {{ '/images/team/sergey-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Сергей" loading="lazy">
+          </picture>
+        </div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Сергей</p>
+          <p class="team-l__role">Менеджер по продажам</p>
+        </div>
+      </div>
+      {# Пустые карточки-заполнители (см. комментарий вверху файла) —
+         видны только с 768px (первая) и с 1000px (вторая), нужны только
+         чтобы последняя строка сетки не "рвалась" — aria-hidden, т.к.
+         это не реальный контент. #}
+      <div class="team-l__card team-l__card--placeholder team-l__card--placeholder-1" aria-hidden="true">
+        <div class="team-l__photo"></div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Имя</p>
+          <p class="team-l__role">Должность</p>
+        </div>
+      </div>
+      <div class="team-l__card team-l__card--placeholder team-l__card--placeholder-2" aria-hidden="true">
+        <div class="team-l__photo"></div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Имя</p>
+          <p class="team-l__role">Должность</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
