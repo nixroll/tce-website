@@ -18,16 +18,16 @@
    .docs-l__card--title/--img1/--img2 и Stroke на каждой прописан
    отдельно и явно, без вычисления по позиции).
 
-   Фото — обычные сканы (350×500 и 364×500), в Figma "закадрированы"
-   через position:absolute с процентами, но проверка по фактическим
-   пикселям (175×250 и 182×250 в кадре 400×400) показала, что это
-   просто равномерное уменьшение в 2 раза БЕЗ обрезки (175/350=0.5,
-   250/500=0.5 — то же для второго фото) — то есть буквально "фото
-   целиком, по центру, высотой 62.5% от контейнера", как и сказал
-   пользователь ("отцентровано по центру"). Реализовано явно через
-   height:62.5%/width:auto на <img> (см. .docs-l__cert-img), без
-   Team-L-подобных per-person абсолютных сдвигов — они тут просто не
-   нужны. #}
+   11.08, обновлено: пользователь прислал новые сканы аттестатов УЖЕ с
+   прозрачным фоном и фото заранее отцентрованным внутри собственного
+   400×400 холста (проверено через convert -trim — видимая область
+   156×228 при смещении +122/+86 у ОБОИХ файлов, т.е. идентично
+   отцентровано). Поэтому больше не нужна ручная центровка через
+   height:62.5% на <img> — картинка просто растягивается на всю
+   Image card (width:100%/height:100%), а собственная прозрачная рамка
+   внутри PNG уже даёт нужный отступ от фона #f3f4f6 (см.
+   .docs-l__cert-img). Старый подход (непрозрачные сканы 350×500/364×500
+   + ручная центровка через height:62.5%) заменён этим полностью. #}
 <section class="docs-l" data-figma-node="1153:13608" data-figma-name="Docs - L">
   <div class="docs-l__row">
     <div class="docs-l__card docs-l__card--title">
@@ -43,7 +43,7 @@
       <div class="docs-l__photo">
         <picture>
           <source type="image/webp" srcset="{{ '/images/docs/attestat-ct.webp' | url }}">
-          <img class="docs-l__cert-img" src="{{ '/images/docs/attestat-ct.png' | url }}" width="350" height="500" alt="Аттестат соответствия №0018492-СТ" loading="lazy">
+          <img class="docs-l__cert-img" src="{{ '/images/docs/attestat-ct.png' | url }}" width="400" height="400" alt="Аттестат соответствия №0018492-СТ" loading="lazy">
         </picture>
       </div>
     </div>
@@ -51,7 +51,7 @@
       <div class="docs-l__photo">
         <picture>
           <source type="image/webp" srcset="{{ '/images/docs/attestat-gs.webp' | url }}">
-          <img class="docs-l__cert-img" src="{{ '/images/docs/attestat-gs.png' | url }}" width="364" height="500" alt="Аттестат соответствия №0010020-ГС" loading="lazy">
+          <img class="docs-l__cert-img" src="{{ '/images/docs/attestat-gs.png' | url }}" width="400" height="400" alt="Аттестат соответствия №0010020-ГС" loading="lazy">
         </picture>
       </div>
     </div>

@@ -40,14 +40,12 @@ hasVideoUpgrade: true
 {% set heroLVideoHq = "" %}
 {% set heroLVideoPoster = "" %}
 {# 11.08: Team - L (node 1149:12324) — сетка фото команды, сразу под
-   Hero - L. Divider - L сразу после (см. divider.njk) — та же светлая
-   тема, что и у самой секции. #}
+   Hero - L. Изначально после неё добавлялся Divider - L, но по Figma
+   он тут не нужен — убран по просьбе пользователя, Docs - L идёт сразу
+   следом (у обеих секций свой border, разрыва не возникает). #}
 {% include "team-l.njk" %}
-{% set dividerVariant = "light" %}
-{% include "divider.njk" %}
-{% set dividerVariant = "" %}
 {# 11.08: Docs - L (node 1153:13608) — сканы аттестатов, сразу под
-   Divider - L. Своей нижней границы (border-bottom) достаточно перед
+   Team - L. Своей нижней границы (border-bottom) достаточно перед
    стандартным хвостом base.njk (Brands/Divider/CTA/Footer) — в самом
    Figma (node 1130:8714, полная страница About) между Docs - L и
    Brands - D тоже нет отдельного дивайдера, только собственные border-
