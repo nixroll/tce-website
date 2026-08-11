@@ -6299,6 +6299,21 @@ body.body--header-overlay {
 
 .team-l__card--placeholder {
   display: none;
+}
+
+/* 11.08, багфикс (пользователь заметил пропавшую горизонтальную линию
+   Stroke у последней строки на 1440/1000/768px и вертикальную на
+   768px): в Figma opacity:0 стоит НЕ на самой карточке-заполнителе
+   (там же её Stroke, border-l/border-r), а только на её содержимом
+   ("Image card"/"Title and supporting text" по отдельности) — сверено
+   повторно по исходному export'у. Раньше opacity:0 стоял на всей
+   .team-l__card--placeholder целиком, из-за чего вместе с содержимым
+   гас и её собственный Stroke — от карточки-заполнителя оставался
+   только Stroke СОСЕДНЕЙ настоящей карточки, а сама линия обрывалась
+   ровно на границе последней реальной карточки в строке, не доходя до
+   конца сетки. */
+.team-l__card--placeholder .team-l__photo,
+.team-l__card--placeholder .team-l__meta {
   opacity: 0;
 }
 
