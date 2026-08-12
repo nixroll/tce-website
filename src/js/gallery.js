@@ -90,12 +90,34 @@
     return el ? el.offsetLeft : i * step();
   }
 
+  /* 12.08, второй заход: клик по офсету слайда убирает НАКОПЛЕННЫЙ дрейф
+     (см. комментарий выше), но не объясняет, почему край соседнего фото
+     проскакивает именно ПОСЛЕ НЕСКОЛЬКИХ кликов, а не сразу — так себя
+     ведёт именно normalize(): после того как анимация доводит до
+     клона (края достигают после CLONES=3 кликов подряд в одну сторону),
+     index незаметно «перепрыгивает» на реальный слайд БЕЗ анимации
+     (instant=true). Раньше мгновенный прыжок гасился синхронным
+     форс-reflow (getBoundingClientRect) между transition:none и
+     обнулением transition — этого достаточно для layout/main thread,
+     но GPU-композитор (track анимируется на своём слое из-за
+     will-change: transform) иногда успевает отрисовать ОДИН кадр уже
+     ПОСЛЕ снятия transition:none, но ДО того как реально применился
+     новый transform — на этом кадре виден край клона со старой
+     позиции. Двойной requestAnimationFrame — стандартный приём для
+     подобных «бесшовных» каруселей: гарантирует, что браузер
+     отрисовал кадр С НОВЫМ transform (и БЕЗ transition), и только
+     после этого возвращает transition обратно. */
   function setTransform(px, instant) {
-    if (instant) track.style.transition = 'none';
-    track.style.transform = 'translate3d(' + px + 'px, 0, 0)';
     if (instant) {
-      void track.getBoundingClientRect(); /* форсируем reflow */
-      track.style.transition = '';
+      track.style.transition = 'none';
+      track.style.transform = 'translate3d(' + px + 'px, 0, 0)';
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          track.style.transition = '';
+        });
+      });
+    } else {
+      track.style.transform = 'translate3d(' + px + 'px, 0, 0)';
     }
   }
 
