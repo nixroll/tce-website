@@ -1,0 +1,61 @@
+{# Features - L (Figma node 1260:17615 на /about/, "Features - L") —
+   светлая секция "Как мы работаем." с 3 карточками-принципами, между
+   Hero - L и Team - L (см. about.njk — Divider - L идёт СРАЗУ ДО и
+   СРАЗУ ПОСЛЕ этой секции, см. Figma Layout node 1130:8714). НЕ
+   переиспользуемый include (контент фиксирован), подключается
+   напрямую, без {% set %} переменных (тот же подход, что у team-l.njk/
+   docs-l.njk).
+
+   Раскладка (см. .features-l в style.2.css): Intro (бейдж+заголовок,
+   без кнопок — в отличие от Projects-L/Docs-L тут карусели нет) +
+   Container (фон secondary, внутри Content — рамка со всех сторон,
+   3 карточки). Card на 320/390/768 — в СТОЛБИК (flex-col, каждая
+   full-width, у СРЕДНЕЙ карточки border-top+bottom), на 1000/1440 —
+   в РЯД (flex-1 каждая, у СРЕДНЕЙ карточки border-left+right). Сверено
+   по всем 5 брейкпоинтам через get_design_context — паддинги Card
+   разные почти на каждом брейкпоинте (24/24/32/32/40), gap между
+   иконкой и текстом тоже (64 везде кроме 1000/1440 — там 96).
+
+   ВАЖНО/TODO: иконки (target-04, fingerprint-04, sliders-04 — Untitled
+   UI icon set, тот же, что у остальных иконок проекта) в Figma
+   экспортируются как растровые ассеты с истекающих по времени CDN-
+   ссылок (figma.com/api/mcp/asset/...), а сеть песочницы блокирует
+   прямой доступ к figma.com (проверено — curl/webfetch оба отбиты
+   allowlist'ом). Пока используется ЗАГЛУШКА (пустой квадрат с alt-
+   текстом) — заменить на реальные SVG, как только пользователь
+   пришлёт файлы (тот же процесс, что с фото Team-L/Docs-L). #}
+<section class="features-l" data-figma-node="1260:17615" data-figma-name="Features - L">
+  <div class="features-l__intro">
+    <div class="features-l__title-badge">
+      <span class="features-l__badge">Ценности</span>
+      <p class="features-l__heading">Как мы работаем.<br>
+        <span class="features-l__heading-muted">Принципы, на которых стоит TCE.</span>
+      </p>
+    </div>
+  </div>
+  <div class="features-l__container">
+    <div class="features-l__content">
+      <div class="features-l__card">
+        <span class="features-l__icon" role="img" aria-label="Иконка: цель"></span>
+        <div class="features-l__card-text-wrap">
+          <p class="features-l__card-title">Узкая специализация.</p>
+          <p class="features-l__card-text">Занимаемся теплом, паром и очисткой воды на промышленных объектах уже более 10 лет.</p>
+        </div>
+      </div>
+      <div class="features-l__card">
+        <span class="features-l__icon" role="img" aria-label="Иконка: отпечаток пальца"></span>
+        <div class="features-l__card-text-wrap">
+          <p class="features-l__card-title">Индивидуальный подход.</p>
+          <p class="features-l__card-text">Работаем на долгосрочное партнёрство и подбираем решения под задачи объекта, а не по шаблону.</p>
+        </div>
+      </div>
+      <div class="features-l__card">
+        <span class="features-l__icon" role="img" aria-label="Иконка: настройки"></span>
+        <div class="features-l__card-text-wrap">
+          <p class="features-l__card-title">Гибкие условия.</p>
+          <p class="features-l__card-text">Открыты к разным вариантам оплаты и работаем с широким кругом клиентов.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

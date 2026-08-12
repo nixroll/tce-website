@@ -7,9 +7,11 @@ hasVideoUpgrade: true
 hasGallery: true
 ---
 {# 10.08: первые по-настоящему свёрстанные секции страницы /about/ —
-   Hero - L (см. hero-l.njk, node 1130:9467), Team - L (см. team-l.njk,
-   node 1149:12324) и Docs - L (см. docs-l.njk, node 1172:14382 —
-   пересобрана 11.08 на основе Projects - L с Home). Хвост страницы
+   Hero - L (см. hero-l.njk, node 1130:9467), Features - L (см.
+   features-l.njk, node 1260:17615, добавлена 11.08), Team - L (см.
+   team-l.njk, node 1149:12324) и Docs - L (см. docs-l.njk, node
+   1172:14382 — пересобрана 11.08 на основе Projects - L с Home).
+   Хвост страницы
    (Brands/Divider/CTA/Footer) пока НЕ трогается — customSections тут
    сознательно НЕ выставлен, страница по-прежнему получает стандартный
    хвост из base.njk (divider → brands → divider → cta →
@@ -41,10 +43,27 @@ hasGallery: true
 {% set heroLVideoSrc = "" %}
 {% set heroLVideoHq = "" %}
 {% set heroLVideoPoster = "" %}
+{# 11.08: Features - L (node 1260:17615) — 3 карточки-принципа "Как мы
+   работаем.", сразу под Hero - L. Divider - L ДО и ПОСЛЕ секции — по
+   Figma Layout (node 1130:8714) видно на 1440px явно (Hero → Divider →
+   Features → Divider → Team), на меньших брейкпоинтах в самом Figma
+   Divider-инстансы физически не расставлены (это баг/недоделка
+   мокапа), но у самого компонента Divider - L уже есть своя
+   адаптивная высота 64→80→96px на все брейкпоинты — используем его
+   единообразно везде, а не только с 1440px. #}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "features-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
 {# 11.08: Team - L (node 1149:12324) — сетка фото команды, сразу под
-   Hero - L. Изначально после неё добавлялся Divider - L, но по Figma
-   он тут не нужен — убран по просьбе пользователя, Docs - L идёт сразу
-   следом (у обеих секций свой border, разрыва не возникает). #}
+   Divider - L (после Features - L). Раньше между Team - L и Docs - L
+   тоже стоял Divider - L — убран по отдельной просьбе пользователя
+   (Docs - L идёт сразу следом, у обеих секций свой border, разрыва не
+   возникает); эта пара дивайдеров вокруг Features - L — отдельный,
+   не связанный случай. #}
 {% include "team-l.njk" %}
 {# 11.08: Docs - L (node 1172:14382) — карусель сканов документов
    (аттестаты + свидетельство на товарный знак), сразу под Team - L.

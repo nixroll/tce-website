@@ -6735,3 +6735,263 @@ body.body--header-overlay {
     display: none;
   }
 }
+
+/* Features - L (11.08, node 1260:17615, /about/, между Hero - L и
+   Team - L, окружена Divider - L с обеих сторон — см. about.njk и
+   Figma Layout node 1130:8714). Локальная переопределёнка токенов —
+   та же, что у Team - L/Docs - L.
+
+   Структура: .features-l__intro (бейдж+заголовок, без кнопок — в
+   отличие от Projects-L/Docs-L карусели тут нет) + .features-l__container
+   (фон secondary, border-top всегда + border-l/r с 390px) →
+   .features-l__content (рамка со ВСЕХ сторон всегда) → 3
+   .features-l__card. Направление карточек — СТОЛБИК на 320/390/768
+   (flex-col, полная ширина, у средней карточки border-top+bottom),
+   РЯД на 1000/1440 (flex-1 каждая, у средней карточки border-l+r) —
+   сверено по всем 5 брейкпоинтам через get_design_context, см.
+   таблицу паддингов Card ниже по коду (24/24/32/32/40, gap иконка↔текст
+   64 везде кроме 1000/1440 — там 96). */
+.features-l {
+  --text-primary: #181d27;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+
+  width: 100%;
+  background-color: #fafafb;
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (min-width: 390px) {
+  .features-l {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .features-l {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+.features-l__intro {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .features-l__intro {
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .features-l__intro {
+    padding: var(--spacing-9xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .features-l__intro {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+  }
+}
+
+.features-l__title-badge {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  min-width: 0;
+}
+
+.features-l__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: #325abc;
+}
+
+.features-l__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
+  color: var(--text-primary);
+}
+
+@media (min-width: 1440px) {
+  .features-l__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
+}
+
+.features-l__heading-muted {
+  color: var(--text-quaternary);
+}
+
+.features-l__container {
+  width: 100%;
+  max-width: 1392px;
+  background-color: #f3f4f6;
+  border-top: 1px solid var(--border-primary);
+  padding: var(--spacing-2xl);
+}
+
+@media (min-width: 390px) {
+  .features-l__container {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .features-l__container {
+    padding: var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 1440px) {
+  .features-l__container {
+    padding: var(--spacing-7xl);
+  }
+}
+
+.features-l__content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-primary);
+}
+
+@media (min-width: 1000px) {
+  .features-l__content {
+    flex-direction: row;
+  }
+}
+
+.features-l__card {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-7xl);
+  padding: var(--spacing-3xl);
+  background-color: #fafafb;
+}
+
+/* Средняя карточка (2-я из 3) — в столбик получает border-top+bottom,
+   в ряд (1000px+) — border-left+right; см. .features-l__content выше. */
+.features-l__card:nth-child(2) {
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+@media (min-width: 768px) {
+  .features-l__card {
+    padding: var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .features-l__card {
+    flex: 1 0 0;
+    gap: var(--spacing-9xl);
+    padding: var(--spacing-4xl);
+    border-top: none;
+    border-bottom: none;
+  }
+
+  .features-l__card:nth-child(2) {
+    border-top: none;
+    border-bottom: none;
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 1440px) {
+  .features-l__card {
+    padding: var(--spacing-5xl);
+  }
+}
+
+/* TODO: заглушка вместо реальной иконки (target-04/fingerprint-04/
+   sliders-04, Untitled UI) — см. комментарий в features-l.njk. Как
+   только появятся настоящие SVG — заменить на <img>/инлайн-svg,
+   правило ниже убрать. */
+.features-l__icon {
+  display: block;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  background-color: rgba(245, 166, 35, 0.16);
+  border: 1px dashed rgba(245, 166, 35, 0.5);
+}
+
+.features-l__card-text-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+}
+
+@media (min-width: 390px) {
+  .features-l__card-text-wrap {
+    max-width: 450px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .features-l__card-text-wrap {
+    max-width: 300px;
+  }
+}
+
+.features-l__card-title {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.09px;
+  color: var(--text-primary);
+}
+
+.features-l__card-text {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.08px;
+  color: var(--text-quaternary);
+}
