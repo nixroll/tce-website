@@ -109,7 +109,29 @@
   var header = document.querySelector('.site-header--home');
   if (!header) return;
 
-  var social = document.querySelector('.social');
+  /* 12.08, багфикс: раньше здесь было безусловно
+     document.querySelector('.social') — искал элемент .social ГДЕ
+     УГОДНО на странице как признак "это hero-страница, нужен
+     menkind-эффект сноса/прозрачности" (см. heroPhase() ниже). Пока
+     Social - L была только на Home, это работало — на /about/ .social
+     просто не было, social===null, heroPhase() сразу возвращал
+     {inHero:false}, Header оставался обычным светлым.
+     12.08: Social - L (social-l.njk) стала переиспользуемой и
+     появилась на /about/ тоже (см. about.njk) — с этого момента
+     querySelector('.social') стал находить её и там, из-за чего Header
+     на /about/ ошибочно включал прозрачную Home-Hero тему (призрачный
+     белый логотип поверх светлого фона) вместо обычного светлого —
+     баг, который заметил пользователь ("почему ты взял на About
+     header с главной"). Фикс: эффект должен запускаться ТОЛЬКО там,
+     где Header реально СТАРТУЕТ прозрачным — то есть где выставлен
+     transparentHeader (см. body--header-overlay, та же переменная, что
+     и у DEFAULT_THEME ниже). На /about/ (headerTheme: light,
+     transparentHeader не задан) body--header-overlay нет — social
+     остаётся null, эффект не включается, Header остаётся светлым
+     сразу и всегда, как и должен. */
+  var social = document.body.classList.contains('body--header-overlay')
+    ? document.querySelector('.social')
+    : null;
 
   /* 05.08: .contact/.form добавлены — то же самое расширение, которое
      было анонсировано ниже в комментарии про "если позже на этих
