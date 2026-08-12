@@ -5,6 +5,7 @@ stickyHeader: true
 headerTheme: light
 hasVideoUpgrade: true
 hasGallery: true
+tailDividerVariant: light
 ---
 {# 10.08-12.08: секции страницы /about/ — Hero - L (см. hero-l.njk,
    node 1130:9467), Social - L (см. social-l.njk, тот же компонент,
@@ -27,14 +28,19 @@ hasGallery: true
    ТОЛЬКО на 1440px (на 320/390/768/1000 Team-L идёт сразу за
    Features-L без разрыва).
 
-   Хвост страницы (Brands/Divider/CTA/Footer) по-прежнему НЕ трогается
-   — customSections тут сознательно НЕ выставлен, страница получает
-   стандартный хвост из base.njk (divider → brands → divider → cta →
-   divider(edge-secondary) → footer). В новой Figma дивайдер перед
-   Brands - D — светлый (Divider - L), а не тёмный, как отдаёт
-   стандартный хвост base.njk, но это та же самая, ранее принятая
-   договорённость — хвост страницы ещё не свёрстан пиксель-в-пиксель
-   (см. пояснение выше), трогать его — отдельная задача.
+   Хвост страницы (Brands/Divider/CTA/Footer) по-прежнему в основном НЕ
+   трогается — customSections тут сознательно НЕ выставлен, страница
+   получает стандартный хвост из base.njk (divider → brands → divider
+   → cta → divider(edge-secondary) → footer), Brands/CTA/Footer там
+   по-прежнему не сверены с Figma пиксель-в-пиксель. ИСКЛЮЧЕНИЕ —
+   именно ПЕРВЫЙ дивайдер хвоста (между Gallery - L и Brands - D): по
+   Figma он светлый (Divider - L), а не тёмный, как обычно отдаёт этот
+   стык у ещё не свёрстанных страниц — пользователь явно попросил его
+   поправить. Т.к. dividerVariant, выставленный ЗДЕСЬ (в теле
+   about.njk), не протекает в base.njk (content рендерится в строку
+   ДО того, как base.njk его получает — раздельные Nunjucks-контексты),
+   передаём тему через отдельную front-matter переменную
+   tailDividerVariant: "light" (см. base.njk, тот самый стык).
 
    stickyHeader — тот же приём, что у /contact/ и юридических страниц
    (см. подробный комментарий в contact.njk и у .site-header в
