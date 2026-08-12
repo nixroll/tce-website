@@ -16,14 +16,12 @@
    разные почти на каждом брейкпоинте (24/24/32/32/40), gap между
    иконкой и текстом тоже (64 везде кроме 1000/1440 — там 96).
 
-   ВАЖНО/TODO: иконки (target-04, fingerprint-04, sliders-04 — Untitled
-   UI icon set, тот же, что у остальных иконок проекта) в Figma
-   экспортируются как растровые ассеты с истекающих по времени CDN-
-   ссылок (figma.com/api/mcp/asset/...), а сеть песочницы блокирует
-   прямой доступ к figma.com (проверено — curl/webfetch оба отбиты
-   allowlist'ом). Пока используется ЗАГЛУШКА (пустой квадрат с alt-
-   текстом) — заменить на реальные SVG, как только пользователь
-   пришлёт файлы (тот же процесс, что с фото Team-L/Docs-L). #}
+   Иконки (target-04/fingerprint-04/sliders-04, Untitled UI, тот же
+   набор, что у .services__icon) — присланы пользователем 12.08 как
+   готовые SVG (28×28, stroke #FDB022), лежат в src/images/features/,
+   подключены как <img> — тот же приём, что у services.njk
+   (.services__icon), а не инлайн-svg, т.к. цвет уже зашит в файл и
+   не должен наследовать currentColor. #}
 <section class="features-l" data-figma-node="1260:17615" data-figma-name="Features - L">
   <div class="features-l__intro">
     <div class="features-l__title-badge">
@@ -36,21 +34,21 @@
   <div class="features-l__container">
     <div class="features-l__content">
       <div class="features-l__card">
-        <span class="features-l__icon" role="img" aria-label="Иконка: цель"></span>
+        <div class="features-l__icon"><img src="{{ '/images/features/target-04.svg' | url }}" alt=""></div>
         <div class="features-l__card-text-wrap">
           <p class="features-l__card-title">Узкая специализация.</p>
           <p class="features-l__card-text">Занимаемся теплом, паром и очисткой воды на промышленных объектах уже более 10 лет.</p>
         </div>
       </div>
       <div class="features-l__card">
-        <span class="features-l__icon" role="img" aria-label="Иконка: отпечаток пальца"></span>
+        <div class="features-l__icon"><img src="{{ '/images/features/fingerprint-04.svg' | url }}" alt=""></div>
         <div class="features-l__card-text-wrap">
           <p class="features-l__card-title">Индивидуальный подход.</p>
           <p class="features-l__card-text">Работаем на долгосрочное партнёрство и подбираем решения под задачи объекта, а не по шаблону.</p>
         </div>
       </div>
       <div class="features-l__card">
-        <span class="features-l__icon" role="img" aria-label="Иконка: настройки"></span>
+        <div class="features-l__icon"><img src="{{ '/images/features/sliders-04.svg' | url }}" alt=""></div>
         <div class="features-l__card-text-wrap">
           <p class="features-l__card-title">Гибкие условия.</p>
           <p class="features-l__card-text">Открыты к разным вариантам оплаты и работаем с широким кругом клиентов.</p>
