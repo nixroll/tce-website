@@ -138,9 +138,9 @@
      остальных Body/Heading — letter-spacing -0.5% от размера. Первое
      применение — .team-l__role (Supporting text у карточек Team - L),
      см. правку там же. */
-  --body3-size: 14px;
+  --body3-size: 15px;
   --body3-line: 20px;
-  --body3-tracking: -0.07px;
+  --body3-tracking: -0.075px;
 }
 
 * {
@@ -6325,9 +6325,19 @@ body.body--header-overlay {
    строке) — нет, её правый край закрывает border-right самого
    .team-l__grid (та же логика, что у последней колонки на 768/1000px).
    Формула по позиции в строке из 4: nth-child(4n+1/+2/+3) — border-r,
-   nth-child(4n) — без него. */
+   nth-child(4n) — без него.
+
+   12.08, багфикс (пользователь заметил лишний Stroke слева у 2, 5 и 8
+   карточек): блочный сброс через ОДИН класс (.team-l__card{border-
+   left:none}) недостаточен — специфичность у :nth-child(2n)/:nth-
+   child(3n+2) из блока 1000px ВЫШЕ одного класса (класс+псевдокласс
+   против одного класса), поэтому эти правила продолжали побеждать на
+   1440px несмотря на more поздний порядок в файле. Сбрасываем явно ТЕ
+   ЖЕ nth-child-селекторы (одинаковая специфичность → выигрывает
+   порядок в файле, мы ниже). */
 @media (min-width: 1440px) {
-  .team-l__card {
+  .team-l__card:nth-child(2n),
+  .team-l__card:nth-child(3n + 2) {
     border-left: none;
     border-right: none;
   }
