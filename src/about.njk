@@ -4,21 +4,37 @@ layout: base.njk
 stickyHeader: true
 headerTheme: light
 hasVideoUpgrade: true
+hasGallery: true
 ---
-{# 10.08: первые по-настоящему свёрстанные секции страницы /about/ —
-   Hero - L (см. hero-l.njk, node 1130:9467), Features - L (см.
-   features-l.njk, node 1260:17615, добавлена 11.08), Team - L (см.
-   team-l.njk, node 1149:12324). Docs - L (docs-l.njk) была подключена
-   здесь же 11.08, но 12.08 пользователь попросил убрать её со страницы
-   /about/ — include убран, сам файл (и его CSS/JS) оставлен в
-   проекте на случай, если пригодится в другом месте. Хвост страницы
-   (Brands/Divider/CTA/Footer) пока НЕ трогается — customSections тут
-   сознательно НЕ выставлен, страница по-прежнему получает стандартный
-   хвост из base.njk (divider → brands → divider → cta →
-   divider(edge-secondary) → footer), как и другие ещё не полностью
-   свёрстанные внутренние страницы (Services/Каталог). Если разметка
-   хвоста по Figma этой страницы (node 1130:8714, "About") в будущем
-   потребует отличий — дорабатывать отдельно, вне текущей задачи.
+{# 10.08-12.08: секции страницы /about/ — Hero - L (см. hero-l.njk,
+   node 1130:9467), Social - L (см. social-l.njk, тот же компонент,
+   что на Home, добавлена 12.08), Features - L (см. features-l.njk,
+   node 1260:17615), Team - L (см. team-l.njk, node 1149:12324),
+   Gallery - L (см. gallery-l.njk, node 1300:2567, добавлена 12.08).
+   Docs - L (docs-l.njk) была подключена здесь же 11.08, но 12.08
+   пользователь попросил убрать её со страницы /about/ — include убран,
+   сам файл (и его CSS/JS) оставлен в проекте на случай, если
+   пригодится в другом месте.
+
+   12.08: порядок секций и дивайдеров ПЕРЕСВЕРЕН заново по обновлённой
+   Figma Layout (node 1130:8714) на всех 5 брейкпоинтах — сильно
+   изменился по сравнению с версией от 10-11.08:
+   Hero-L → Social-L (БЕЗ дивайдера ни до, ни после) → Features-L (БЕЗ
+   дивайдера перед ней — раньше был) → [Divider-L ТОЛЬКО на 1440px,
+   см. dividerVariant="light-only-1440" в divider.njk] → Team-L →
+   Divider-L (всегда) → Gallery-L. Раньше Divider-L стоял ВСЕГДА между
+   Features-L и Team-L на всех брейкпоинтах — по новой Figma он есть
+   ТОЛЬКО на 1440px (на 320/390/768/1000 Team-L идёт сразу за
+   Features-L без разрыва).
+
+   Хвост страницы (Brands/Divider/CTA/Footer) по-прежнему НЕ трогается
+   — customSections тут сознательно НЕ выставлен, страница получает
+   стандартный хвост из base.njk (divider → brands → divider → cta →
+   divider(edge-secondary) → footer). В новой Figma дивайдер перед
+   Brands - D — светлый (Divider - L), а не тёмный, как отдаёт
+   стандартный хвост base.njk, но это та же самая, ранее принятая
+   договорённость — хвост страницы ещё не свёрстан пиксель-в-пиксель
+   (см. пояснение выше), трогать его — отдельная задача.
 
    stickyHeader — тот же приём, что у /contact/ и юридических страниц
    (см. подробный комментарий в contact.njk и у .site-header в
@@ -28,7 +44,8 @@ hasVideoUpgrade: true
    обнажаться при overscroll на мобилке, эффект тот же, реализация
    проще. hasVideoUpgrade — подключает hero-video-upgrade.js (см.
    base.njk), нужен для прогрессивной LQ→HQ подгрузки видео внутри
-   Hero - L. #}
+   Hero - L. hasGallery — подключает gallery.js (карусель Gallery - L,
+   см. base.njk). #}
 {% set heroLBadge = "О нас" %}
 {% set heroLHeadingAccent = "Знаем своё дело." %}
 {% set heroLHeadingMuted = "10 лет опыта." %}
@@ -42,25 +59,13 @@ hasVideoUpgrade: true
 {% set heroLVideoSrc = "" %}
 {% set heroLVideoHq = "" %}
 {% set heroLVideoPoster = "" %}
-{# 11.08: Features - L (node 1260:17615) — 3 карточки-принципа "Как мы
-   работаем.", сразу под Hero - L. Divider - L ДО и ПОСЛЕ секции — по
-   Figma Layout (node 1130:8714) видно на 1440px явно (Hero → Divider →
-   Features → Divider → Team), на меньших брейкпоинтах в самом Figma
-   Divider-инстансы физически не расставлены (это баг/недоделка
-   мокапа), но у самого компонента Divider - L уже есть своя
-   адаптивная высота 64→80→96px на все брейкпоинты — используем его
-   единообразно везде, а не только с 1440px. #}
-{% set dividerVariant = "light" %}
-{% include "divider.njk" %}
-{% set dividerVariant = "" %}
+{% include "social-l.njk" %}
 {% include "features-l.njk" %}
+{% set dividerVariant = "light-only-1440" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "team-l.njk" %}
 {% set dividerVariant = "light" %}
 {% include "divider.njk" %}
 {% set dividerVariant = "" %}
-{# 11.08: Team - L (node 1149:12324) — сетка фото команды, сразу под
-   Divider - L (после Features - L). Раньше между Team - L и Docs - L
-   тоже стоял Divider - L — убран по отдельной просьбе пользователя
-   (Docs - L идёт сразу следом, у обеих секций свой border, разрыва не
-   возникает); эта пара дивайдеров вокруг Features - L — отдельный,
-   не связанный случай. #}
-{% include "team-l.njk" %}
+{% include "gallery-l.njk" %}

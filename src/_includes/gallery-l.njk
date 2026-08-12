@@ -1,0 +1,90 @@
+{# Gallery - L (Figma node 1300:2567 на /about/, "Gallery - L") —
+   светлая секция-карусель "Наш альбом." (бейдж "Изнутри"), сразу под
+   Team - L (см. about.njk — Divider - L идёт СРАЗУ ПЕРЕД этой секцией,
+   после неё — стандартный хвост base.njk, см. подробный комментарий
+   там). НЕ переиспользуемый include (контент фиксирован), подключается
+   напрямую, без {% set %} переменных (тот же подход, что у
+   team-l.njk/docs-l.njk).
+
+   12.08: структура и почти все паддинги/границы — 1-в-1 то же, что у
+   Projects - L (Home, node 622:4042) и старого Docs - L (см.
+   .projects/.docs-l в style.2.css, подробные комментарии там) — три
+   контейнера друг под другом (.gallery-l__intro/.gallery-l__gallery/
+   .gallery-l__bottom), кнопки продублированы в intro (с 768px) и
+   bottom (до 768px), карусель — та же логика (src/js/gallery.js).
+   Сверено по всем 5 брейкпоинтам через get_design_context.
+
+   ЕДИНСТВЕННОЕ структурное отличие от Projects-L/Docs-L (то, ради чего
+   пользователь отдельно попросил свериться) — у контейнера
+   "Title and badge" ЕСТЬ max-width, и он не прогрессивный (460→480→
+   none, как у Projects-L), а ФИКСИРОВАННЫЙ 340px на 320/390/768/1000,
+   и только на 1440px снимается (max-width: none, растёт как flex:1
+   рядом с кнопками) — см. .gallery-l__title-badge в style.2.css.
+
+   Фото — реальные рабочие фотографии (не сканы документов, как у
+   Docs-L), поэтому используется тот же формат slide(), что у
+   Projects - L (jpg+webp, 400/700/1000w), а не докс-л-формат
+   (прозрачный PNG 400×400). 9 фото прислано пользователем 12.08 (уже
+   квадратные 1500×1500, положены в папку "Фото для About" в корне
+   проекта) — обработаны (resize+crop под 400/700/1000, jpg+webp) и
+   перенесены в src/images/gallery-l/. #}
+{% macro navButtons() %}
+  <div class="gallery-l__buttons">
+    <button class="gallery-l__nav-btn" type="button" data-gallery-prev aria-label="Предыдущее фото">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M19 12H5M12 5L5 12L12 19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="gallery-l__nav-btn" type="button" data-gallery-next aria-label="Следующее фото">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M5 12H19M12 19L19 12L12 5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+{% endmacro %}
+{% macro slide(n, alt) %}
+  <div class="gallery-l__slide">
+    <picture>
+      <source
+        type="image/webp"
+        srcset="{{ ('/images/gallery-l/photo-' + n + '-400.webp') | url }} 400w, {{ ('/images/gallery-l/photo-' + n + '-700.webp') | url }} 700w, {{ ('/images/gallery-l/photo-' + n + '-1000.webp') | url }} 1000w"
+        sizes="(min-width: 1440px) 421px, (min-width: 768px) calc((100vw - 146px) / 2), (min-width: 390px) calc(100vw - 90px), calc(100vw - 48px)">
+      <img
+        src="{{ ('/images/gallery-l/photo-' + n + '-1000.jpg') | url }}"
+        srcset="{{ ('/images/gallery-l/photo-' + n + '-400.jpg') | url }} 400w, {{ ('/images/gallery-l/photo-' + n + '-700.jpg') | url }} 700w, {{ ('/images/gallery-l/photo-' + n + '-1000.jpg') | url }} 1000w"
+        sizes="(min-width: 1440px) 421px, (min-width: 768px) calc((100vw - 146px) / 2), (min-width: 390px) calc(100vw - 90px), calc(100vw - 48px)"
+        width="1000" height="1000"
+        alt="{{ alt }}"
+        loading="lazy">
+    </picture>
+  </div>
+{% endmacro %}
+<section class="gallery-l" data-figma-node="1300:2567" data-figma-name="Gallery - L">
+  <div class="gallery-l__intro">
+    <div class="gallery-l__title-badge">
+      <span class="gallery-l__badge">Изнутри</span>
+      <p class="gallery-l__heading">Наш альбом.<br>
+        <span class="gallery-l__heading-muted">Загляните в&nbsp;наши рабочие будни.</span>
+      </p>
+    </div>
+    {{ navButtons() }}
+  </div>
+  <div class="gallery-l__gallery" data-gallery>
+    <div class="gallery-l__viewport">
+      <div class="gallery-l__track" data-gallery-track>
+        {{ slide('1', 'Сотрудник TCE у логотипа компании в офисе') }}
+        {{ slide('2', 'Инженеры TCE изучают чертежи проекта') }}
+        {{ slide('3', 'Команда TCE с цветами на 8 Марта') }}
+        {{ slide('4', 'Сотрудники TCE за работой в офисе') }}
+        {{ slide('5', 'Команда TCE на профильной выставке') }}
+        {{ slide('6', 'Команда TCE на новогоднем корпоративе') }}
+        {{ slide('7', 'Монтажники TCE на объекте у частного дома') }}
+        {{ slide('8', 'Бригада TCE на объекте летом') }}
+        {{ slide('9', 'Бригада TCE на объекте в коттеджном посёлке') }}
+      </div>
+    </div>
+  </div>
+  <div class="gallery-l__bottom">
+    {{ navButtons() }}
+  </div>
+</section>

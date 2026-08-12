@@ -31,7 +31,15 @@
   самого secondary-фона), нужен виден на всех брейкпоинтах, просто с
   правильным цветом (пользователь заметил, что раньше здесь ошибочно
   стоял primary фон вместо secondary).
+
+  12.08, добавлено для /about/: dividerVariant = "light-only-1440" —
+  светлый Divider - L, который в Figma (node 1130:8714, About Layout)
+  стоит МЕЖДУ Features - L и Team - L, но ТОЛЬКО на брейкпоинте
+  1440px — на 320/390/768/1000 этого инстанса в Figma нет вообще,
+  Team - L идёт сразу за Features - L (см. about.njk). Модификатор
+  .divider--only-1440 (по аналогии с .divider--edge) скрывает элемент
+  ниже 1440px и показывает с 1440px.
 #}
-<div class="divider{% if dividerVariant == 'edge-secondary' %} divider--edge divider--secondary{% elif dividerVariant == 'secondary' %} divider--secondary{% elif dividerVariant == 'light' %} divider--light{% elif dividerVariant == 'hidden-320' %} divider--hidden-320{% endif %}" data-figma-node="416:1773" data-figma-name="Divider">
+<div class="divider{% if dividerVariant == 'edge-secondary' %} divider--edge divider--secondary{% elif dividerVariant == 'secondary' %} divider--secondary{% elif dividerVariant == 'light' %} divider--light{% elif dividerVariant == 'hidden-320' %} divider--hidden-320{% elif dividerVariant == 'light-only-1440' %} divider--light divider--only-1440{% endif %}" data-figma-node="416:1773" data-figma-name="Divider">
   <div class="divider__inner"></div>
 </div>

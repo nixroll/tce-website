@@ -1,0 +1,69 @@
+{# Social - L (node 702:4876 на Home, node 1322:xxxx на /about/) —
+   бесконечная лента логотипов клиентов, СВЕТЛАЯ тема. 12.08: вынесена
+   из index.njk в переиспользуемый include — пользователь попросил тот
+   же элемент на /about/ (сразу под Hero - L, без дивайдеров ни до, ни
+   после — см. about.njk и Figma Layout node 1130:8714), высоты
+   инстанса на обеих страницах совпадают 1-в-1 на всех 5 брейкпоинтах
+   (176/176/192/224/224), поэтому это ОДИН и тот же компонент без
+   вариаций под конкретную страницу — просто include без {% set %}
+   переменных (как team-l.njk/docs-l.njk).
+
+   Класс остался .social/.social--light (а не .social-l) — так уже
+   было названо до переименования компонента в Figma в "Social - L", и
+   это универсальное BEM-имя (не завязанное на конкретную страницу)
+   уже использовалось и для тёмного варианта на архивной /old-home/
+   (см. /images/social/ vs /images/social-light/) — переименование
+   класса потребовало бы трогать рабочий, уже сверенный компонент без
+   функциональной необходимости.
+
+   Высота (96px) и вертикальный паддинг внутри каждого логотипного
+   контейнера одинаковы на всех брейкпоинтах, но горизонтальный
+   паддинг — нет (правка в Figma сразу на всех брейкпоинтах): 32px
+   слева/справа на 320/390/768, 48px с 1000px (см. .social__logo--*
+   в CSS, там же таблица итоговых ширин). Из-за этого ширина ряда тоже
+   разная (1053.15px / 1245.15px), но в обоих случаях он шире
+   реального вьюпорта и создан только чтобы бесконечно скроллиться —
+   у самого трека нет отдельных брейкпоинт-версий разметки, только
+   паддинг/бордер секции-обёртки и Container вокруг него.
+   Как и в Brands, каждый логотип — в своём контейнере с собственными
+   паддингами (см. .social__logo--*), чтобы точно повторить выравнивание
+   Figma. По вертикали большинство отметок отцентрованы (верх=низ), но
+   Bolma и Scmitz сдвинуты выше центра (проверено по pixel-данным
+   Figma) — поэтому у них асимметричный padding-top/-bottom, а не
+   center; это не зависит от брейкпоинта.
+   Анимация — бесшовный CSS-марквиз (translateX трека на -100%/3,
+   трек = 3 одинаковые копии ряда; обычные 2 копии не годятся — даже
+   более широкий ряд с 1000px (1245.15px) всё ещё уже Container на
+   1440px (1392px), и в момент разворота анимации была бы видна
+   пустота). Дубли помечены aria-hidden. prefers-reduced-motion
+   останавливает анимацию. #}
+<section class="social social--light" data-figma-node="702:4876" data-figma-name="Social - L">
+  <div class="social__container">
+    <div class="social__track">
+      <div class="social__group">
+        <div class="social__logo social__logo--a100"><img src="{{ '/images/social-light/a100.svg' | url }}" alt="A100"></div>
+        <div class="social__logo social__logo--alutech"><img src="{{ '/images/social-light/alutech.svg' | url }}" alt="Alutech"></div>
+        <div class="social__logo social__logo--great-stone"><img src="{{ '/images/social-light/great-stone.svg' | url }}" alt="Great Stone"></div>
+        <div class="social__logo social__logo--amkodor"><img src="{{ '/images/social-light/amkodor.svg' | url }}" alt="Amkodor"></div>
+        <div class="social__logo social__logo--bolma"><img src="{{ '/images/social-light/bolma.svg' | url }}" alt="Bolma"></div>
+        <div class="social__logo social__logo--scmitz"><img src="{{ '/images/social-light/scmitz.svg' | url }}" alt="Scmitz"></div>
+      </div>
+      <div class="social__group" aria-hidden="true">
+        <div class="social__logo social__logo--a100"><img src="{{ '/images/social-light/a100.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--alutech"><img src="{{ '/images/social-light/alutech.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--great-stone"><img src="{{ '/images/social-light/great-stone.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--amkodor"><img src="{{ '/images/social-light/amkodor.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--bolma"><img src="{{ '/images/social-light/bolma.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--scmitz"><img src="{{ '/images/social-light/scmitz.svg' | url }}" alt="" aria-hidden="true"></div>
+      </div>
+      <div class="social__group" aria-hidden="true">
+        <div class="social__logo social__logo--a100"><img src="{{ '/images/social-light/a100.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--alutech"><img src="{{ '/images/social-light/alutech.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--great-stone"><img src="{{ '/images/social-light/great-stone.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--amkodor"><img src="{{ '/images/social-light/amkodor.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--bolma"><img src="{{ '/images/social-light/bolma.svg' | url }}" alt="" aria-hidden="true"></div>
+        <div class="social__logo social__logo--scmitz"><img src="{{ '/images/social-light/scmitz.svg' | url }}" alt="" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1909,6 +1909,18 @@ body.body--header-overlay {
   --border-primary: #e5e7ec;
 }
 
+/* Между Features - L и Team - L на /about/ — только с 1440px (см.
+   divider.njk, dividerVariant="light-only-1440") */
+.divider--only-1440 {
+  display: none;
+}
+
+@media (min-width: 1440px) {
+  .divider--only-1440 {
+    display: flex;
+  }
+}
+
 /* CTA (node 416:1812). Тоже повторяющийся элемент на всех страницах.
    320px — база: без боковых паддингов у секции (.cta) и без боковых
    stroke у Container (см. 571:3597). С 390px появляются боковые
@@ -6812,6 +6824,288 @@ body.body--header-overlay {
 
 @media (min-width: 768px) {
   .docs-l__bottom {
+    display: none;
+  }
+}
+
+/* Gallery - L (12.08, node 1300:2567, /about/, сразу под Team - L,
+   Divider - L только ПЕРЕД ней — см. gallery-l.njk и about.njk).
+   Прямая копия структуры/большинства стилей Projects - L/Docs - L (см.
+   .projects/.docs-l выше, подробные комментарии там) — сверено по
+   всем 5 брейкпоинтам через get_design_context. ЕДИНСТВЕННОЕ отличие
+   — .gallery-l__title-badge: max-width ФИКСИРОВАННЫЙ 340px на
+   320-1000px (у Projects-L/Docs-L он прогрессивный 460→480), и none
+   на 1440px (там же, где и у них). */
+.gallery-l {
+  --background-primary: #fafafb;
+  --background-secondary: #f3f4f6;
+  --text-primary: #181d27;
+  --text-secondary: #414651;
+  --text-tertiary: #535862;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+  --border-secondary: #cbd0d8;
+  width: 100%;
+  background-color: var(--background-primary);
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (min-width: 390px) {
+  .gallery-l {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .gallery-l {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+.gallery-l__intro {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .gallery-l__intro {
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .gallery-l__intro {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--spacing-4xl);
+    padding: var(--spacing-9xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .gallery-l__intro {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+  }
+}
+
+.gallery-l__title-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  width: 100%;
+  max-width: 340px;
+}
+
+@media (min-width: 768px) {
+  .gallery-l__title-badge {
+    flex: 1 0 0;
+  }
+}
+
+@media (min-width: 1440px) {
+  .gallery-l__title-badge {
+    max-width: none;
+  }
+}
+
+.gallery-l__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  color: #325abc;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+}
+
+.gallery-l__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
+  color: var(--text-primary);
+}
+
+@media (min-width: 1440px) {
+  .gallery-l__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
+}
+
+.gallery-l__heading-muted {
+  color: var(--text-quaternary);
+}
+
+/* Кнопки-стрелки: в intro видны только с 768px, в нижнем контейнере —
+   только до 768px (см. .projects__intro .projects__buttons). */
+.gallery-l__intro .gallery-l__buttons {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .gallery-l__intro .gallery-l__buttons {
+    display: flex;
+  }
+}
+
+.gallery-l__buttons {
+  display: flex;
+  gap: var(--spacing-lg);
+  align-items: flex-start;
+  flex-shrink: 0;
+  touch-action: manipulation;
+}
+
+.gallery-l__nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+  touch-action: manipulation;
+}
+
+@media (hover: hover) {
+  .gallery-l__nav-btn:hover {
+    border-color: var(--border-secondary);
+  }
+}
+
+.gallery-l__nav-btn.is-pencil-hover {
+  border-color: var(--border-secondary);
+}
+
+.gallery-l__nav-btn svg {
+  display: block;
+  stroke: currentColor;
+}
+
+.gallery-l__gallery {
+  width: 100%;
+  max-width: 1392px;
+  background-color: var(--background-secondary);
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  padding: var(--spacing-3xl);
+  overflow: hidden;
+}
+
+@media (min-width: 390px) {
+  .gallery-l__gallery {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .gallery-l__gallery {
+    border-bottom: none;
+    padding: var(--spacing-4xl);
+  }
+}
+
+.gallery-l__viewport {
+  width: 100%;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.gallery-l__viewport.is-dragging {
+  cursor: grabbing;
+}
+
+.gallery-l__track {
+  display: flex;
+  gap: var(--spacing-3xl);
+  transition: transform 480ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  will-change: transform;
+}
+
+@media (min-width: 768px) {
+  .gallery-l__track {
+    gap: var(--spacing-4xl);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-l__track {
+    transition: none;
+  }
+}
+
+.gallery-l__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  aspect-ratio: 1 / 1;
+}
+
+@media (min-width: 768px) {
+  .gallery-l__slide {
+    flex-basis: calc((100% - var(--spacing-4xl)) / 2);
+  }
+}
+
+@media (min-width: 1440px) {
+  .gallery-l__slide {
+    flex-basis: calc((100% - 2 * var(--spacing-4xl)) / 3);
+  }
+}
+
+.gallery-l__slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.gallery-l__bottom {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--spacing-4xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .gallery-l__bottom {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .gallery-l__bottom {
     display: none;
   }
 }
