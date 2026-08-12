@@ -4,14 +4,14 @@ layout: base.njk
 stickyHeader: true
 headerTheme: light
 hasVideoUpgrade: true
-hasGallery: true
 ---
 {# 10.08: первые по-настоящему свёрстанные секции страницы /about/ —
    Hero - L (см. hero-l.njk, node 1130:9467), Features - L (см.
    features-l.njk, node 1260:17615, добавлена 11.08), Team - L (см.
-   team-l.njk, node 1149:12324) и Docs - L (см. docs-l.njk, node
-   1172:14382 — пересобрана 11.08 на основе Projects - L с Home).
-   Хвост страницы
+   team-l.njk, node 1149:12324). Docs - L (docs-l.njk) была подключена
+   здесь же 11.08, но 12.08 пользователь попросил убрать её со страницы
+   /about/ — include убран, сам файл (и его CSS/JS) оставлен в
+   проекте на случай, если пригодится в другом месте. Хвост страницы
    (Brands/Divider/CTA/Footer) пока НЕ трогается — customSections тут
    сознательно НЕ выставлен, страница по-прежнему получает стандартный
    хвост из base.njk (divider → brands → divider → cta →
@@ -28,8 +28,7 @@ hasGallery: true
    обнажаться при overscroll на мобилке, эффект тот же, реализация
    проще. hasVideoUpgrade — подключает hero-video-upgrade.js (см.
    base.njk), нужен для прогрессивной LQ→HQ подгрузки видео внутри
-   Hero - L. hasGallery — подключает gallery.js, нужен для карусели
-   Docs - L (тот же скрипт, что у Projects - L на Home). #}
+   Hero - L. #}
 {% set heroLBadge = "О нас" %}
 {% set heroLHeadingAccent = "Знаем своё дело." %}
 {% set heroLHeadingMuted = "10 лет опыта." %}
@@ -65,11 +64,3 @@ hasGallery: true
    возникает); эта пара дивайдеров вокруг Features - L — отдельный,
    не связанный случай. #}
 {% include "team-l.njk" %}
-{# 11.08: Docs - L (node 1172:14382) — карусель сканов документов
-   (аттестаты + свидетельство на товарный знак), сразу под Team - L.
-   Своей нижней границы (border-bottom) достаточно перед стандартным
-   хвостом base.njk (Brands/Divider/CTA/Footer) — в самом Figma (node
-   1130:8714, полная страница About) между Docs - L и Brands - D тоже
-   нет отдельного дивайдера, только собственные border-bottom секций
-   подряд. #}
-{% include "docs-l.njk" %}
