@@ -132,6 +132,15 @@
   --body2-size: 16px;
   --body2-line: 22px;
   --body2-tracking: -0.08px;
+
+  /* 12.08: Body 3 — добавлен пользователем в дизайн-систему (node
+     157:316, "_Type scale base" #1297:18209), та же логика, что у
+     остальных Body/Heading — letter-spacing -0.5% от размера. Первое
+     применение — .team-l__role (Supporting text у карточек Team - L),
+     см. правку там же. */
+  --body3-size: 14px;
+  --body3-line: 20px;
+  --body3-tracking: -0.07px;
 }
 
 * {
@@ -6119,6 +6128,7 @@ body.body--header-overlay {
 
   width: 100%;
   background-color: #fafafb;
+  border-top: 1px solid var(--border-primary);
   border-bottom: 1px solid var(--border-primary);
   display: flex;
   flex-direction: column;
@@ -6244,6 +6254,16 @@ body.body--header-overlay {
   }
 }
 
+/* 12.08: 1440px — пользователь поменял в Figma 1000/1440 с ОБЩИХ 3
+   колонок на: 1000px остаётся 3, 1440px теперь 4 (это ТОЛЬКО у
+   1440px, 1000px не трогали). См. .team-l__card ниже — своя нить
+   nth-child(4n±) вместо переиспользования формулы 1000px. */
+@media (min-width: 1440px) {
+  .team-l__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 .team-l__card {
   display: flex;
   flex-direction: column;
@@ -6297,6 +6317,36 @@ body.body--header-overlay {
   }
 }
 
+/* 12.08: 1440px — теперь 4 карточки в строке (было 3, см. комментарий
+   у .team-l__grid выше). Сверено через get_design_context: ни у одной
+   карточки нет border-left (сбрасываем 1000px-правило для 3n+2 — там
+   у средней колонки был border-left+right, здесь такого нет вообще);
+   первые 3 карточки строки получают border-right, 4-я (последняя в
+   строке) — нет, её правый край закрывает border-right самого
+   .team-l__grid (та же логика, что у последней колонки на 768/1000px).
+   Формула по позиции в строке из 4: nth-child(4n+1/+2/+3) — border-r,
+   nth-child(4n) — без него. */
+@media (min-width: 1440px) {
+  .team-l__card {
+    border-left: none;
+    border-right: none;
+  }
+
+  .team-l__card:nth-child(-n + 4) {
+    border-top: none;
+  }
+
+  .team-l__card:nth-child(n + 5) {
+    border-top: 1px solid var(--border-primary);
+  }
+
+  .team-l__card:nth-child(4n + 1),
+  .team-l__card:nth-child(4n + 2),
+  .team-l__card:nth-child(4n + 3) {
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
 .team-l__card--placeholder {
   display: none;
 }
@@ -6338,6 +6388,16 @@ body.body--header-overlay {
 
   .team-l__card--placeholder-2 {
     display: flex;
+  }
+}
+
+/* 12.08: на 1440px (4 колонки) 7 реальных карточек + 1 заполнитель
+   ровно закрывают 2 полные строки (8 ячеек) — второй заполнитель
+   (placeholder-2, нужен был для 3-колоночной сетки на 1000px) тут
+   создал бы лишнюю, наполовину пустую 3-ю строку, поэтому скрыт. */
+@media (min-width: 1440px) {
+  .team-l__card--placeholder-2 {
+    display: none;
   }
 }
 
@@ -6414,7 +6474,7 @@ body.body--header-overlay {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--spacing-xxs);
 }
 
 .team-l__name {
@@ -6431,9 +6491,9 @@ body.body--header-overlay {
   margin: 0;
   font-family: var(--font-body);
   font-weight: 500;
-  font-size: 16px;
-  line-height: 22px;
-  letter-spacing: -0.08px;
+  font-size: var(--body3-size);
+  line-height: var(--body3-line);
+  letter-spacing: var(--body3-tracking);
   color: var(--text-quaternary);
 }
 
