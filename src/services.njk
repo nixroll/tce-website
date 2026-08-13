@@ -5,16 +5,21 @@ stickyHeader: true
 headerTheme: light
 hasVideoUpgrade: true
 hasSocial: true
+hasGallery: true
+hasPortfolio: true
 tailDividerVariant: light
 ---
 {# 13.08: секции страницы /services/ — Services Hero - L (см. hero-l.njk,
    переиспользуемый include, тот же компонент, что у /about/, node
    1147:11848 на этой странице), Social - L (см. social-l.njk, тот же
-   компонент, что на Home и /about/) и Stages - L (см. stages-l.njk,
-   node 1351:8152 — сетка "Семь шагов."). Дальше — стандартный хвост
-   base.njk (Brands - D/CTA - D/Footer - D), страница ещё не полностью
-   свёрстана дальше этих трёх секций (Каталог/остальной контент —
-   отдельная задача).
+   компонент, что на Home и /about/), Services - L (см. _includes/
+   services.njk, ТОТ ЖЕ компонент, что на Home — переиспользован через
+   servicesLBtnText/servicesLBtnHref, см. ниже), Portfolio - D (см.
+   portfolio-d.njk) и Stages - L (см. stages-l.njk, node 1351:8152 —
+   сетка "Семь шагов."). Дальше — стандартный хвост base.njk
+   (Brands - D/CTA - D/Footer - D), страница ещё не полностью
+   свёрстана дальше этих секций (Каталог/остальной контент — отдельная
+   задача).
 
    Header — 1-в-1 как у /about/ (пользователь явно попросил "все
    аналогично"): stickyHeader/headerTheme: light (тот же приём, см.
@@ -39,14 +44,41 @@ tailDividerVariant: light
    работает) — подключает social-drag.js, который раньше грузился
    только под isHome; см. подробный комментарий в about.njk и base.njk.
 
-   13.08: добавлена Stages - L сразу после Social - L (по свежей Figma
-   Layout, node 1146:10941 — порядок теперь Hero-L → Social-L →
-   Stages-L → Divider-L → Brands-D). Divider-L между Stages-L и
-   Brands-D — ТОТ ЖЕ приём, что на /about/ (см. подробный комментарий
-   там про раздельные Nunjucks-scope): передаём через front-matter
-   tailDividerVariant: "light" (сменили с "none", т.к. раньше именно
-   между Social-L и Brands-D дивайдера не было, теперь он есть, просто
-   сдвинулся на стык после новой Stages-L). #}
+   hasGallery/hasPortfolio — подключают gallery.js (тот же карусельный
+   движок, что у Docs - L/Gallery - L/Projects - L) и portfolio-text.js
+   (синхронизация текста слева с текущим слайдом картинки) для
+   Portfolio - D, см. подробный комментарий в portfolio-d.njk и в самих
+   скриптах.
+
+   13.08, порядок секций пересверен по свежей Figma Layout (node
+   1146:10941, теперь с добавленными Services - L/Portfolio - D):
+   Hero-L → Social-L → Services-L → [divider] → Portfolio-D → divider
+   (Divider-D, всегда виден) → Stages-L → Divider-L → Brands-D.
+   Дивайдер между Services-L и Portfolio-D — СОСТАВНОЙ и отличается по
+   брейкпоинтам: на 320px его нет вообще (секции идут впритык), с
+   390px появляется Divider-D (используем существующий модификатор
+   dividerVariant="hidden-320" — тёмный, скрыт < 390px, ровно то же
+   поведение, что уже описано в divider.njk для другого места), а на
+   1440px ПЕРЕД ним встаёт ещё и Divider-L, видимый ТОЛЬКО с 1440px —
+   для него уже есть готовый модификатор dividerVariant=
+   "light-only-1440" (был введён для /about/, см. divider.njk) — оба
+   модификатора совпали 1-в-1 с нужным поведением, новых вариантов
+   заводить не пришлось. Divider между Portfolio-D и Stages-L —
+   обычный дивайдер без модификатора (тёмный, виден на всех
+   брейкпоинтах, включая 320).
+
+   servicesLBtnText/servicesLBtnHref — на Home кнопка в Services-L
+   ведёт на /services/ с текстом "Подробнее" (дефолт в самом
+   _includes/services.njk, ничего передавать не нужно); здесь, по
+   просьбе пользователя ("такую же секцию, только вместо кнопки
+   Подробнее — кнопка Связаться"), передаём "Связаться"/"/contact/" —
+   сверено с Figma (node 1374:9406 @ 1440px): текст, ширина кнопки
+   (125px, уже была в CSS) и вся остальная разметка/иконки 1-в-1
+   совпадают с Home, отличается только эта кнопка.
+
+   Divider-L между Stages-L и Brands-D — ТОТ ЖЕ приём, что на /about/
+   (см. подробный комментарий там про раздельные Nunjucks-scope):
+   передаём через front-matter tailDividerVariant: "light". #}
 {% set heroLBadge = "Услуги" %}
 {% set heroLHeadingAccent = "Полный цикл." %}
 {% set heroLHeadingMuted = "Расчёт и сервис." %}
@@ -61,4 +93,16 @@ tailDividerVariant: light
 {% set heroLVideoHq = "" %}
 {% set heroLVideoPoster = "" %}
 {% include "social-l.njk" %}
+{% set servicesLBtnText = "Связаться" %}
+{% set servicesLBtnHref = "/contact/" %}
+{% include "services.njk" %}
+{% set servicesLBtnText = "" %}
+{% set servicesLBtnHref = "" %}
+{% set dividerVariant = "light-only-1440" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "hidden-320" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "portfolio-d.njk" %}
+{% include "divider.njk" %}
 {% include "stages-l.njk" %}

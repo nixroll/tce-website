@@ -237,6 +237,15 @@
   {% if isHome or hasGallery %}
     <script src="{{ '/js/gallery.js' | url }}" defer></script>
   {% endif %}
+  {# 13.08: portfolio-text.js — только под Portfolio - D (/services/,
+     см. portfolio-d.njk), синхронизирует текст слева с текущим слайдом
+     через кастомное событие gallery:change (см. подробный комментарий
+     в gallery.js и в самом portfolio-text.js). Зависит от gallery.js
+     (слушает событие, которое тот кидает) — подключается сразу следом,
+     страница обязана выставлять и hasGallery, и hasPortfolio вместе. #}
+  {% if hasPortfolio %}
+    <script src="{{ '/js/portfolio-text.js' | url }}" defer></script>
+  {% endif %}
   {% if isHome %}
     <script src="{{ '/js/areas-parallax.js' | url }}" defer></script>
   {% endif %}

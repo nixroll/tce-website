@@ -1,0 +1,75 @@
+/* 13.08. Синхронизирует текст слева (название объекта + описание) в
+ * Portfolio - D (/services/) со слайдом картинки справа — картинка
+ * листается через gallery.js (тот же механизм, что у Gallery - L/
+ * Projects - L), а текст физически лежит СНАРУЖИ трека (отдельная
+ * панель, не ещё один слайд в общем ряду), поэтому сам gallery.js про
+ * него ничего не знает — вместо этого он кидает кастомное событие
+ * 'gallery:change' на root ([data-gallery]) при каждой РЕАЛЬНОЙ смене
+ * слайда (см. подробный комментарий в самом gallery.js), а этот
+ * скрипт слушает событие и подменяет текст.
+ *
+ * Анимация — по просьбе пользователя "слегка растворяется по
+ * вертикали", как секция Signals на attio.com: класс is-swapping
+ * переводит блок в opacity:0 + сдвиг по Y (CSS transition, см.
+ * .portfolio-d__text-wrap в style.2.css), через SWAP_DELAY_MS (должно
+ * совпадать с длительностью CSS-transition) подменяем textContent и
+ * снимаем класс — блок тем же transition возвращается в opacity:1 и
+ * исходное положение. Один и тот же элемент используется для fade-out
+ * И fade-in (не 4 разных блока друг под другом) — так высота
+ * контейнера всегда равна высоте ТЕКУЩЕГО текста, лишний "прыжок"
+ * layout при переключении не нужен гасить отдельно.
+ *
+ * Тексты всех слайдов лежат в разметке всегда (.portfolio-d__text-data,
+ * display:none через [hidden]) — не JSON в data-атрибуте, чтобы не
+ * возиться с экранированием кавычек/амперсандов (там &nbsp;) в HTML-
+ * атрибуте, см. подробности в portfolio-d.njk. */
+(function () {
+  var SWAP_DELAY_MS = 260; /* должно совпадать с transition-duration в CSS */
+
+  var roots = document.querySelectorAll('[data-gallery]');
+  Array.prototype.forEach.call(roots, function (root) {
+    var scope = root.parentElement || document;
+    var wrap = scope.querySelector('[data-portfolio-text]');
+    if (!wrap) return;
+
+    var titleEl = wrap.querySelector('[data-portfolio-title]');
+    var descEl = wrap.querySelector('[data-portfolio-desc]');
+    var dataRoot = scope.querySelector('.portfolio-d__text-data');
+    if (!titleEl || !descEl || !dataRoot) return;
+
+    var slides = Array.prototype.map.call(
+      dataRoot.querySelectorAll('[data-slide-text]'),
+      function (el) {
+        return {
+          title: el.querySelector('[data-title]').textContent,
+          desc: el.querySelector('[data-desc]').textContent
+        };
+      }
+    );
+    if (!slides.length) return;
+
+    var reduceMotion = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var pending = null;
+
+    root.addEventListener('gallery:change', function (e) {
+      var data = slides[e.detail.index];
+      if (!data) return;
+
+      if (reduceMotion) {
+        titleEl.textContent = data.title;
+        descEl.textContent = data.desc;
+        return;
+      }
+
+      if (pending) clearTimeout(pending);
+      wrap.classList.add('is-swapping');
+      pending = setTimeout(function () {
+        titleEl.textContent = data.title;
+        descEl.textContent = data.desc;
+        wrap.classList.remove('is-swapping');
+        pending = null;
+      }, SWAP_DELAY_MS);
+    });
+  });
+})();

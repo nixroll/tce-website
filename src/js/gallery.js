@@ -126,6 +126,27 @@
     return el ? el.offsetLeft : i * step();
   }
 
+  /* 13.08, добавлено для Portfolio - D (/services/) — там текст слева
+     (название объекта + описание) должен листаться СИНХРОННО с
+     картинкой, но текст физически лежит СНАРУЖИ трека (это не ещё
+     один слайд в общем ряду, а отдельная панель) — самому gallery.js
+     об этом знать не нужно, он по-прежнему знает только про track.
+     Вместо того чтобы тащить логику текста сюда, root (сам
+     [data-gallery]) при каждой РЕАЛЬНОЙ смене слайда (клик по
+     стрелке/drag — не путать с normalize(), где index технически
+     меняется, но виден тот же слайд) кидает кастомное событие
+     'gallery:change' с detail.index — 0-based номер реального слайда
+     (без клонов). Слушает его отдельный маленький скрипт
+     (portfolio-text.js) — если на странице нет ничего похожего на
+     Portfolio - D, событие просто никто не слушает, издержек ноль.
+     realCount тут уже гарантированно есть (проверено выше, ранний
+     return при realCount < 2). */
+  function emitChange() {
+    if (!root.dispatchEvent) return;
+    var real = ((index - CLONES) % realCount + realCount) % realCount;
+    root.dispatchEvent(new CustomEvent('gallery:change', { detail: { index: real } }));
+  }
+
   /* 12.08, второй заход: клик по офсету слайда убирает НАКОПЛЕННЫЙ дрейф
      (см. комментарий выше), но не объясняет, почему край соседнего фото
      проскакивает именно ПОСЛЕ НЕСКОЛЬКИХ кликов, а не сразу — так себя
@@ -200,6 +221,7 @@
   function move(dir) {
     if (animating) settle();
     index += dir;
+    emitChange();
     animating = true;
     apply(false);
   }
@@ -297,6 +319,7 @@
       return;
     }
     index = target;
+    emitChange();
     animating = true;
     apply(false);
   }

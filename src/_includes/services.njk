@@ -4,7 +4,7 @@
       <span class="services__badge">Услуги</span>
       <p class="services__heading">Полный цикл.<br> <span class="services__heading-muted">От&nbsp;расчёта и&nbsp;проекта до&nbsp;пусконаладки и&nbsp;сервиса.</span></p>
     </div>
-    <a class="btn btn--secondary services__btn" href="{{ '/services/' | url }}">Подробнее</a>
+    <a class="btn btn--secondary services__btn" href="{{ (servicesLBtnHref or '/services/') | url }}">{{ servicesLBtnText or 'Подробнее' }}</a>
   </div>
   <div class="services__grid">
     <div class="services__card services__card--teo">

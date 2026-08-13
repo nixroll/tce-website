@@ -1,0 +1,148 @@
+{# Portfolio - D (Figma node 1393:9485 на /services/, "Portfolio - D") —
+   тёмная секция-карусель "Наши работы. Готовые объекты." с 4 слайдами
+   (Slide=01..04 в Figma, каждый — своя пара фото+текст). НЕ
+   переиспользуемый include (контент фиксирован), подключается
+   напрямую, тот же общий подход, что у stages-l.njk/team-l.njk.
+
+   13.08. Важное структурное отличие от Gallery - L/Projects - L:
+   там карусель показывает НЕСКОЛЬКО одинаковых по структуре карточек
+   одновременно (1-3 в ряд), меняется только их набор при пролистывании.
+   Здесь — ОДИН слайд на весь экран (картинка) + текст СЛЕВА (заголовок
+   "Наши работы. Готовые объекты." — статичный, общий для всех слайдов;
+   "Title and supporting text" — название объекта + описание, МЕНЯЕТСЯ
+   на каждом слайде). Картинки листаются через ТОТ ЖЕ механизм
+   gallery.js (offsetFor/клоны/drag — см. подробный комментарий в самом
+   файле), только .portfolio-d__slide — flex: 0 0 100% (виден ровно
+   один слайд, а не 1-3 по брейкпоинту, как у остальных). Текст слева
+   листается СИНХРОННО через отдельный маленький скрипт
+   portfolio-text.js, который слушает кастомное событие 'gallery:change'
+   (13.08, добавлено в gallery.js специально для этого — dispatch'ится
+   на root [data-gallery] при каждой смене слайда кликом/drag'ом, см.
+   подробный комментарий там) и подменяет title/текст с анимацией
+   (пользователь попросил "слегка растворяется по вертикали", как
+   секция Signals на attio.com — плавный fade+сдвиг по Y при смене,
+   см. .portfolio-d__text-wrap в style.2.css и сам portfolio-text.js).
+   Сами тексты для всех 4 слайдов лежат в разметке ВСЕГДА (скрытый
+   блок .portfolio-d__text-data, display:none) — так и сам скрипт не
+   нуждается в JSON/эскейпинге спецсимволов в data-атрибуте, и есть
+   рабочий fallback без JS (виден текст слайда 1, отрендеренный сразу
+   в .portfolio-d__text-wrap).
+
+   Разметка/паддинги/Stroke МЕНЯЮТСЯ буквально на каждом брейкпоинте
+   (пользователь отдельно предупредил, сверено по всем 5 через
+   get_design_context, дважды — второй раз после полного прохода по
+   всем 5 нод специально нашёл и поправил один баг, см. ниже):
+   - 320/390/768 — Container СТОЛБИКОМ: Title and badge (СВОЙ паддинг,
+     симметричный сверху/снизу: 80/80 на 320, 80/80 на 390, 96/96 на
+     768 — НЕ путать с общим отступом секции) → картинка (border-top+
+     bottom, аспект 1:1 на 320/390, фикс. высота 540px на 768) →
+     Title/text + кнопки (СВОЙ паддинг, столбиком на 320/390, В РЯД на
+     768, причём на 768 у текстового блока фиксированная высота 72px).
+   - 1000/1440 — Container В РЯД: слева текстовая панель (фикс. ширина
+     440/600px, ОДИН общий паддинг на весь блок pt-128 pb-48/64
+     px-48/64 — Title/badge и Text/buttons внутри уже БЕЗ своего
+     паддинга, justify-content:space-between разводит их по высоте),
+     справа картинка (flex:1, border-left, паддинг 32px). max-width
+     текста внутри — 310px на 320-1000px, 440px только на 1440px.
+
+     13.08, багфикс (сверка после первого прохода): у Title/badge на
+     320/390/768 паддинг ошибочно поставили только СВЕРХУ (снизу 0) —
+     Figma-нода показывает симметричный py (80/80/96), нижняя часть
+     отступа визуально "съедалась", т.к. картинка сразу за ней рисует
+     свой border-top без доп. отступа; поймано именно доп. сверкой
+     всех 5 нод после первой сборки, до коммита.
+   Реализовано через .portfolio-d__panel: display:contents на
+   320-768px (title-badge и text-buttons становятся ПРЯМЫМИ flex-
+   элементами .portfolio-d__container наравне с картинкой — тогда
+   порядок между ними задаётся через CSS order, картинка визуально
+   встаёт МЕЖДУ title-badge и text-buttons, как в Figma) — и
+   становится настоящим блоком (flex-col, фикс. ширина) с 1000px,
+   тогда картинка снова просто второй flex-элемент сбоку. Подробная
+   таблица паддингов/Stroke — в style.2.css у .portfolio-d.
+
+   Дизайн-токены — тёмная секция, но ВСЕ нужные цвета (#101010 bg,
+   #181818 bg-secondary, #f7f7f7 text-primary, #94979c text-quaternary,
+   #2f3238 border-primary, #fdb022 brand) уже являются ГЛОБАЛЬНЫМ
+   дефолтом (:root в style.2.css) — в отличие от "-L" секций, локальный
+   override переменных тут не нужен вообще. #}
+{% macro navButtons() %}
+  <div class="portfolio-d__buttons">
+    <button class="portfolio-d__nav-btn" type="button" data-gallery-prev aria-label="Предыдущий проект">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M19 12H5M12 5L5 12L12 19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="portfolio-d__nav-btn" type="button" data-gallery-next aria-label="Следующий проект">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M5 12H19M12 19L19 12L12 5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+{% endmacro %}
+{% macro slide(n) %}
+  <div class="portfolio-d__slide">
+    <picture>
+      <source
+        type="image/webp"
+        srcset="{{ ('/images/portfolio-d/slide-' + n + '-500.webp') | url }} 500w, {{ ('/images/portfolio-d/slide-' + n + '-900.webp') | url }} 900w, {{ ('/images/portfolio-d/slide-' + n + '-1300.webp') | url }} 1300w"
+        sizes="(min-width: 1440px) 792px, (min-width: 1000px) 558px, (min-width: 768px) 704px, 100vw">
+      <img
+        src="{{ ('/images/portfolio-d/slide-' + n + '-1300.jpg') | url }}"
+        srcset="{{ ('/images/portfolio-d/slide-' + n + '-500.jpg') | url }} 500w, {{ ('/images/portfolio-d/slide-' + n + '-900.jpg') | url }} 900w, {{ ('/images/portfolio-d/slide-' + n + '-1300.jpg') | url }} 1300w"
+        sizes="(min-width: 1440px) 792px, (min-width: 1000px) 558px, (min-width: 768px) 704px, 100vw"
+        alt=""
+        loading="lazy">
+    </picture>
+  </div>
+{% endmacro %}
+<section class="portfolio-d" data-figma-node="1393:9485" data-figma-name="Portfolio - D">
+  <div class="portfolio-d__container">
+    <div class="portfolio-d__panel">
+      <div class="portfolio-d__title-badge">
+        <span class="portfolio-d__badge">Портфолио</span>
+        <p class="portfolio-d__heading">Наши работы.<br>
+          <span class="portfolio-d__heading-muted">Готовые объекты.</span>
+        </p>
+      </div>
+      <div class="portfolio-d__text-buttons">
+        <div class="portfolio-d__text-wrap" data-portfolio-text>
+          <p class="portfolio-d__title" data-portfolio-title>База отдыха</p>
+          <p class="portfolio-d__desc" data-portfolio-desc>Построили газовую котельную для теплоснабжения зданий базы отдыха на&nbsp;14 котлах Viessmann Vitodens.</p>
+        </div>
+        {{ navButtons() }}
+      </div>
+    </div>
+    <div class="portfolio-d__media" data-gallery>
+      <div class="portfolio-d__viewport">
+        <div class="portfolio-d__track" data-gallery-track>
+          {{ slide('1') }}
+          {{ slide('2') }}
+          {{ slide('3') }}
+          {{ slide('4') }}
+        </div>
+      </div>
+    </div>
+  </div>
+  {# Тексты всех 4 слайдов — всегда в разметке (не только текущий),
+     скрыты через [hidden]. portfolio-text.js читает их по
+     data-slide-text при каждой смене слайда — см. комментарий вверху
+     файла про отказ от JSON в data-атрибуте. #}
+  <div class="portfolio-d__text-data" hidden>
+    <div data-slide-text="0">
+      <p data-title>База отдыха</p>
+      <p data-desc>Построили газовую котельную для теплоснабжения зданий базы отдыха на&nbsp;14 котлах Viessmann Vitodens.</p>
+    </div>
+    <div data-slide-text="1">
+      <p data-title>Квартал усадебной застройки</p>
+      <p data-desc>Смонтировали индивидуальные газовые котельные для&nbsp;23 жилых домов на&nbsp;котлах Viessmann.</p>
+    </div>
+    <div data-slide-text="2">
+      <p data-title>Модульные котельные</p>
+      <p data-desc>Построили три котельные для&nbsp;теплоснабжения жилых районов города на&nbsp;базе котлов Schuster.</p>
+    </div>
+    <div data-slide-text="3">
+      <p data-title>Индивидуальный жилой дом</p>
+      <p data-desc>Собрали гибридную котельную на&nbsp;газе и&nbsp;электричестве с&nbsp;котлами Viessmann.</p>
+    </div>
+  </div>
+</section>
