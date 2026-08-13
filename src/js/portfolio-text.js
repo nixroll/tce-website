@@ -22,13 +22,23 @@
  * Тексты всех слайдов лежат в разметке всегда (.portfolio-d__text-data,
  * display:none через [hidden]) — не JSON в data-атрибуте, чтобы не
  * возиться с экранированием кавычек/амперсандов (там &nbsp;) в HTML-
- * атрибуте, см. подробности в portfolio-d.njk. */
+ * атрибуте, см. подробности в portfolio-d.njk.
+ *
+ * 13.08, багфикс (пользователь: "тексты не перещелкиваются", на всех
+ * брейкпоинтах) — scope брался как root.parentElement
+ * (.portfolio-d__container), а .portfolio-d__text-data в разметке лежит
+ * ВНЕ контейнера (сосед .portfolio-d__container внутри <section
+ * class="portfolio-d">, см. portfolio-d.njk) — dataRoot всегда был
+ * null, скрипт тихо делал return ДО addEventListener, слушатель вообще
+ * не вешался. root.closest('.portfolio-d') поднимается до самой секции
+ * целиком — гарантированно накрывает и text-wrap (внутри контейнера),
+ * и text-data (вне его), независимо от точной вложенности разметки. */
 (function () {
   var SWAP_DELAY_MS = 260; /* должно совпадать с transition-duration в CSS */
 
   var roots = document.querySelectorAll('[data-gallery]');
   Array.prototype.forEach.call(roots, function (root) {
-    var scope = root.parentElement || document;
+    var scope = root.closest('.portfolio-d') || root.parentElement || document;
     var wrap = scope.querySelector('[data-portfolio-text]');
     if (!wrap) return;
 

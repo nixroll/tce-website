@@ -8162,7 +8162,15 @@ body.body--header-overlay {
 
 @media (hover: hover) {
   .portfolio-d__nav-btn:hover {
-    border-color: var(--text-quaternary);
+    /* 13.08, багфикс (пользователь: неверный hover-цвет, "у тёмной
+       темы другой") — стоял var(--text-quaternary) (#94979c, токен
+       для ТЕКСТА, слишком светлый для тёмной секции); тот же приём,
+       что у .gallery-l__nav-btn:hover/.docs-l__nav-btn:hover —
+       var(--border-secondary), только здесь (Portfolio - D без
+       локальных переопределений токенов) он резолвится в ГЛОБАЛЬНОЕ
+       тёмное значение из :root (#525966), а не в светлое, как у "-L"
+       секций (там оно переопределено локально). */
+    border-color: var(--border-secondary);
   }
 }
 
