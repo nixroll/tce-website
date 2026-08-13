@@ -62,8 +62,21 @@
      github.com/orgs/community/discussions/11884). Смена ИМЕНИ файла —
      единственный гарантированный cache miss. Если понадобится снова
      форсировать обновление — переименовать style.N.css в
-     style.(N+1).css и обновить путь тут. #}
-  <link rel="stylesheet" href="{{ '/css/style.2.css' | url }}">
+     style.(N+1).css и обновить путь тут.
+
+     13.08: ровно это и произошло — за один вечер style.2.css правился
+     несколько раз подряд (Stages-L багфиксы, Portfolio-D с нуля, потом
+     ещё 2 раунда багфиксов Portfolio-D), пользователь на разных
+     устройствах продолжал видеть то старые баги, то промежуточные
+     состояния (например, паддинги у картинки Portfolio-D пропадали,
+     хотя в исходнике всегда были на месте) — переименовано в
+     style.3.css, чтобы гарантированно сбросить кеш. По той же причине
+     переименованы gallery.js → gallery.2.js (правился в этот же
+     вечер — добавлено событие gallery:change) и
+     portfolio-text.js → portfolio-text.2.js (создан и сразу же
+     правился несколько раз — баг с scope) — JS отдаётся тем же
+     GitHub Pages/Fastly, тот же риск зависшего кеша. #}
+  <link rel="stylesheet" href="{{ '/css/style.3.css' | url }}">
 </head>
 {# 10.08: lightBodyBg/.body--light-top убраны — фон html/body теперь
    красится напрямую по теме Header (html:has(.site-header--home:not
@@ -235,7 +248,7 @@
      подключает. areas-parallax.js остаётся только под isHome — он
      специфичен для Areas, секции, которая есть только на Home. #}
   {% if isHome or hasGallery %}
-    <script src="{{ '/js/gallery.js' | url }}" defer></script>
+    <script src="{{ '/js/gallery.2.js' | url }}" defer></script>
   {% endif %}
   {# 13.08: portfolio-text.js — только под Portfolio - D (/services/,
      см. portfolio-d.njk), синхронизирует текст слева с текущим слайдом
@@ -244,7 +257,7 @@
      (слушает событие, которое тот кидает) — подключается сразу следом,
      страница обязана выставлять и hasGallery, и hasPortfolio вместе. #}
   {% if hasPortfolio %}
-    <script src="{{ '/js/portfolio-text.js' | url }}" defer></script>
+    <script src="{{ '/js/portfolio-text.2.js' | url }}" defer></script>
   {% endif %}
   {% if isHome %}
     <script src="{{ '/js/areas-parallax.js' | url }}" defer></script>
