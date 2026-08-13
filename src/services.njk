@@ -4,6 +4,7 @@ layout: base.njk
 stickyHeader: true
 headerTheme: light
 hasVideoUpgrade: true
+hasSocial: true
 tailDividerVariant: light
 ---
 {# 13.08: секции страницы /services/ — Services Hero - L (см. hero-l.njk,
@@ -32,6 +33,11 @@ tailDividerVariant: light
 
    hasVideoUpgrade — подключает hero-video-upgrade.js, нужен для
    прогрессивной LQ→HQ подгрузки видео внутри Hero - L (см. about.njk).
+
+   hasSocial — багфикс (пользователь: драг мышью/свайп пальцем у
+   Social - L не работает ни здесь, ни на /about/, хотя на Home
+   работает) — подключает social-drag.js, который раньше грузился
+   только под isHome; см. подробный комментарий в about.njk и base.njk.
 
    13.08: добавлена Stages - L сразу после Social - L (по свежей Figma
    Layout, node 1146:10941 — порядок теперь Hero-L → Social-L →

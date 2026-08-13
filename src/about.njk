@@ -5,6 +5,7 @@ stickyHeader: true
 headerTheme: light
 hasVideoUpgrade: true
 hasGallery: true
+hasSocial: true
 tailDividerVariant: light
 ---
 {# 10.08-12.08: секции страницы /about/ — Hero - L (см. hero-l.njk,
@@ -51,7 +52,17 @@ tailDividerVariant: light
    проще. hasVideoUpgrade — подключает hero-video-upgrade.js (см.
    base.njk), нужен для прогрессивной LQ→HQ подгрузки видео внутри
    Hero - L. hasGallery — подключает gallery.js (карусель Gallery - L,
-   см. base.njk). #}
+   см. base.njk).
+
+   13.08, багфикс: hasSocial — подключает social-drag.js (драг мышью/
+   свайп пальцем у ленты Social - L, см. подробный комментарий в
+   самом social-drag.js). Раньше этот скрипт грузился только под
+   isHome (тогда Social - L была только на Home) — когда секцию
+   вынесли в переиспользуемый social-l.njk и подключили здесь, флаг
+   подгрузки скрипта забыли расширить вместе с разметкой: секция
+   рендерилась и даже анимировалась (CSS-марки автопрокрутки), но без
+   JS драг/свайп не работал вообще (см. base.njk, тот же приём, что у
+   hasGallery). #}
 {% set heroLBadge = "О нас" %}
 {% set heroLHeadingAccent = "Знаем своё дело." %}
 {% set heroLHeadingMuted = "10 лет опыта." %}

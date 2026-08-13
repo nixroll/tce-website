@@ -232,13 +232,32 @@
      отдельный флаг hasGallery, тот же приём, что у hasVideoUpgrade
      ниже; сам gallery.js уже написан на несколько [data-gallery] на
      странице через querySelectorAll, isHome по-прежнему тоже его
-     подключает. areas-parallax.js/social-drag.js остаются только под
-     isHome — они специфичны для других Home-секций. #}
+     подключает. areas-parallax.js остаётся только под isHome — он
+     специфичен для Areas, секции, которая есть только на Home. #}
   {% if isHome or hasGallery %}
     <script src="{{ '/js/gallery.js' | url }}" defer></script>
   {% endif %}
   {% if isHome %}
     <script src="{{ '/js/areas-parallax.js' | url }}" defer></script>
+  {% endif %}
+  {# 13.08, багфикс (пользователь: на /about/ и /services/ у Social - L
+     не работает драг мышью/свайп пальцем, хотя на Home работает) —
+     social-drag.js раньше грузился ТОЛЬКО под isHome, тогда это было
+     равносильно "единственная страница с .social" (см. старый
+     комментарий у gallery.js выше). Когда Social - L стал
+     переиспользуемым (12.08, вынесен в social-l.njk и подключён на
+     /about/, затем 13.08 — на /services/), флаг подгрузки скрипта
+     забыли расширить вместе с самой разметкой — секция физически
+     рендерилась (CSS/marquee-анимация работали), а JS-интерактив
+     (drag/инерция, см. подробный комментарий в самом social-drag.js)
+     — нет, скрипт просто не подключался. Тот же приём, что у
+     hasGallery/hasVideoUpgrade: отдельный флаг hasSocial (страницы,
+     подключающие social-l.njk, но не являющиеся Home, выставляют его
+     во front matter), isHome по-прежнему тоже подключает скрипт
+     напрямую; сам social-drag.js уже самостоятельно гасит себя через
+     querySelectorAll('.social__track'), если секции на странице нет
+     вообще. #}
+  {% if isHome or hasSocial %}
     <script src="{{ '/js/social-drag.js' | url }}" defer></script>
   {% endif %}
   {# 10.08: hero-video-upgrade.js обобщён (см. подробный комментарий в
