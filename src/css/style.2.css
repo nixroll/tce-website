@@ -7559,14 +7559,33 @@ body.body--header-overlay {
   padding: var(--spacing-3xl);
 }
 
+/* Багфикс (пользователь заметил отсутствие горизонтального Stroke
+   между карточками на 320/390px): на 1 колонке (список) border-top
+   нужен у КАЖДОЙ карточки, кроме первой — сверено по Figma (там у
+   каждой Card, начиная со второй, свой border-t; у первой его нет,
+   верхнюю линию списка даёт .stages-l__grid). Раньше border-top у
+   .stages-l__card задавался только внутри @media (min-width: 768px)
+   (позиционно, через nth-child) — про 320/390 (где нет позиционной
+   логики, просто список) забыли вообще, из-за чего строки на
+   мобилке склеивались без разделителя. */
+.stages-l__card:not(:first-child) {
+  border-top: 1px solid var(--border-primary);
+}
+
 @media (min-width: 768px) {
   .stages-l__card {
     padding: var(--spacing-4xl);
   }
 
-  /* 2 колонки (768px): строка 1 = карточки 1-2 (верхний Stroke даёт
-     .stages-l__grid), строки 2+ — свой border-top; правая колонка
-     (чётные) — border-left. */
+  /* 2 колонки (768px): строка 1 = карточки 1-2 — сбрасываем border-top
+     от общего правила :not(:first-child) выше (у карточки 2 в сетке
+     из 2 колонок это уже не "последующий элемент списка", а сосед по
+     первой строке); строки 2+ — border-top заново через nth-child;
+     правая колонка (чётные) — border-left. */
+  .stages-l__card:nth-child(-n + 2) {
+    border-top: none;
+  }
+
   .stages-l__card:nth-child(n + 3) {
     border-top: 1px solid var(--border-primary);
   }
@@ -7690,6 +7709,20 @@ body.body--header-overlay {
 
 @media (min-width: 1440px) {
   .stages-l__card-text-wrap {
+    max-width: 300px;
+  }
+
+  /* Багфикс (пользователь заметил на скрине 1440px, карточка 03
+     "сломанной" ширины): @media (min-width: 1000px) не имеет верхней
+     границы — правило .stages-l__card:nth-child(3) .stages-l__card-
+     text-wrap {max-width:210px} из блока 1000px продолжает
+     действовать и на 1440px тоже, а его специфичность (класс +
+     псевдокласс + класс-потомок = 3 уровня) ВЫШЕ, чем у простого
+     .stages-l__card-text-wrap{max-width:300px} чуть выше (1 уровень)
+     — специфичность побеждает порядок в файле, поэтому 210px
+     "протекал" на 1440px несмотря на более поздний блок. Явный сброс
+     с ТОЙ ЖЕ специфичностью здесь всё исправляет. */
+  .stages-l__card:nth-child(3) .stages-l__card-text-wrap {
     max-width: 300px;
   }
 }
