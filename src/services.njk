@@ -4,14 +4,15 @@ layout: base.njk
 stickyHeader: true
 headerTheme: light
 hasVideoUpgrade: true
-tailDividerVariant: none
+tailDividerVariant: light
 ---
 {# 13.08: секции страницы /services/ — Services Hero - L (см. hero-l.njk,
    переиспользуемый include, тот же компонент, что у /about/, node
-   1147:11848 на этой странице) и Social - L (см. social-l.njk, тот же
-   компонент, что на Home и /about/). Дальше — стандартный хвост
+   1147:11848 на этой странице), Social - L (см. social-l.njk, тот же
+   компонент, что на Home и /about/) и Stages - L (см. stages-l.njk,
+   node 1351:8152 — сетка "Семь шагов."). Дальше — стандартный хвост
    base.njk (Brands - D/CTA - D/Footer - D), страница ещё не полностью
-   свёрстана дальше этих двух секций (Каталог/остальной контент —
+   свёрстана дальше этих трёх секций (Каталог/остальной контент —
    отдельная задача).
 
    Header — 1-в-1 как у /about/ (пользователь явно попросил "все
@@ -32,10 +33,14 @@ tailDividerVariant: none
    hasVideoUpgrade — подключает hero-video-upgrade.js, нужен для
    прогрессивной LQ→HQ подгрузки видео внутри Hero - L (см. about.njk).
 
-   tailDividerVariant: "none" — по свежей Figma Layout (node
-   1146:10941) между Social - L и Brands - D дивайдера нет вообще ни
-   на одном брейкпоинте (в отличие от /about/, где там светлый
-   Divider - L) — см. базовый комментарий у этого стыка в base.njk. #}
+   13.08: добавлена Stages - L сразу после Social - L (по свежей Figma
+   Layout, node 1146:10941 — порядок теперь Hero-L → Social-L →
+   Stages-L → Divider-L → Brands-D). Divider-L между Stages-L и
+   Brands-D — ТОТ ЖЕ приём, что на /about/ (см. подробный комментарий
+   там про раздельные Nunjucks-scope): передаём через front-matter
+   tailDividerVariant: "light" (сменили с "none", т.к. раньше именно
+   между Social-L и Brands-D дивайдера не было, теперь он есть, просто
+   сдвинулся на стык после новой Stages-L). #}
 {% set heroLBadge = "Услуги" %}
 {% set heroLHeadingAccent = "Полный цикл." %}
 {% set heroLHeadingMuted = "Расчёт и сервис." %}
@@ -50,3 +55,4 @@ tailDividerVariant: none
 {% set heroLVideoHq = "" %}
 {% set heroLVideoPoster = "" %}
 {% include "social-l.njk" %}
+{% include "stages-l.njk" %}

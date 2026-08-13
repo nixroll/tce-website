@@ -7368,3 +7368,350 @@ body.body--header-overlay {
   letter-spacing: -0.08px;
   color: var(--text-quaternary);
 }
+
+/* Stages - L (13.08, /services/, Figma node 1351:8152) — светлая секция
+   "Семь шагов." с сеткой из 7 карточек-этапов (жёлтый номер + заголовок
+   + текст). Технически — тот же приём collapsed-grid через
+   :nth-child, что у .team-l__grid/.team-l__card и .services__card
+   (см. подробные комментарии там про специфичность и порядок
+   сброс→применение) — а не буквальное 1-в-1 повторение Figma-разметки
+   (там разные экземпляры "Row" на каждом брейкпоинте с ручным
+   набором border-l/r/t/border на КАЖДОЙ строке, включая "среднюю"
+   строку с border на ВСЕ 4 стороны, чтобы не задваивалась линия между
+   соседними строками) — CSS Grid с collapsed-border даёт тот же
+   пиксель-в-пиксель результат меньшим и куда более поддерживаемым
+   кодом, без риска рассинхронизации при добавлении/удалении карточек.
+
+   Колонки: 320/390 — 1 (список), 768 — 2, 1000/1440 — 3 (формула
+   ОДНА и та же на 1000 и 1440 — сверено через get_design_context,
+   3-я колонка не превращается в 4-ю на 1440, в отличие от Team - L).
+   7 реальных карточек → на 2 колонках нужен 1 placeholder (8 ячеек =
+   4 строки), на 3 колонках — 2 placeholder'а (9 ячеек = 3 строки);
+   на 1 колонке (320/390) плейсхолдеры не нужны — 7 карточек сами
+   закрывают 7 строк без остатка.
+
+   ВАЖНО (пункт 1 в задаче пользователя, Stroke): border-top у самой
+   .stages-l__grid — ПОСТОЯННЫЙ на всех брейкпоинтах (320 включительно,
+   сверено по Figma — там у обёртки карточек всегда border-t, в отличие
+   от Team - L, где эта граница появляется только с 768px). border-l/r
+   у .stages-l__grid и у .stages-l__container (intro-блок с Title and
+   badge) — наоборот, ТОЛЬКО с 390px (на 320 в Figma их нет вообще —
+   тот же общий приём, что у Team-L/Docs-L/Gallery-L: на 320 нет
+   горизонтального паддинга у страницы, поэтому боковой Stroke
+   визуально совпал бы с краем экрана и его просто не рисуют).
+
+   ВАЖНО (пункт 2, max-width у "Title and supporting text" внутри
+   карточки): 300px на 320/390/768/1440, но на 1000px — ИСКЛЮЧЕНИЕ:
+   230px у первых двух колонок и 210px у третьей (правой) — сверено
+   отдельно по get_design_context для 1000px, на 1440px все три
+   колонки снова 300px. Задаётся через .stages-l__card-text-wrap с
+   явным сбросом внутри @media 1000px (3n+1/3n+2 → 230, 3n → 210) и
+   без переопределения на 1440 (там уже действует база 300px, блок
+   1000px не перекрывает её, т.к. 1440 находится СНАРУЖИ @media
+   (min-width: 1000px) по каскаду — переопределяем явно, чтобы не
+   зависеть от порядка). Title and badge (заголовок секции, НЕ
+   карточки) — max-width 900px, ОДИНАКОВЫЙ на всех 5 брейкпоинтах,
+   путать с card-text-wrap нельзя (пункт 2 пользователя).
+
+   ВАЖНО (пункт 3, паддинги): внешний px секции — 0/20/24/24/24
+   (320/390/768/1000/1440, тот же прогрессивный приём, что у Hero-L).
+   Внутренний паддинг .stages-l__container (Title and badge): py-80
+   px-24 на 320, py-80 px-32 на 390, py-96 px-48 на 768, дальше
+   АСИММЕТРИЧНО на 1000/1440 — pt-128 pb-96 px-80 (низ и верх больше
+   не совпадают). Паддинг карточки — p-24 на 320/390, p-32 с 768px
+   (не меняется дальше). gap между номером и текстовым блоком внутри
+   карточки — 64 на 320/390/768, 80 на 1000, 96 на 1440 (три разных
+   значения, без привязки к паддингу — считаны отдельно). Заголовок
+   секции (heading) — ПОСТОЯННЫЙ h4-размер (36px/38px/-0.36px) на
+   ВСЕХ 5 брейкпоинтах, в отличие от обычного прогрессивного приёма
+   h5→h4 на 1440 (Team-L/Docs-L/Gallery-L/Features-L/Hero-L) — здесь
+   Figma везде отдаёт Heading 4/Semibold, без исключений, сверено
+   отдельно на 320 и 1440. */
+.stages-l {
+  --text-primary: #181d27;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+
+  width: 100%;
+  background-color: #fafafb;
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+@media (min-width: 390px) {
+  .stages-l {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .stages-l {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+.stages-l__container {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .stages-l__container {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .stages-l__container {
+    padding: var(--spacing-9xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .stages-l__container {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+  }
+}
+
+.stages-l__title-badge {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  min-width: 0;
+  max-width: 900px;
+}
+
+.stages-l__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: #325abc;
+}
+
+.stages-l__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h4-size);
+  line-height: var(--h4-line);
+  letter-spacing: var(--h4-tracking);
+  color: var(--text-primary);
+}
+
+.stages-l__heading-muted {
+  color: var(--text-quaternary);
+}
+
+.stages-l__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+  max-width: 1392px;
+  border-top: 1px solid var(--border-primary);
+}
+
+@media (min-width: 390px) {
+  .stages-l__grid {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .stages-l__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1000px) {
+  .stages-l__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.stages-l__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-7xl);
+  min-width: 0;
+  overflow: hidden;
+  padding: var(--spacing-3xl);
+}
+
+@media (min-width: 768px) {
+  .stages-l__card {
+    padding: var(--spacing-4xl);
+  }
+
+  /* 2 колонки (768px): строка 1 = карточки 1-2 (верхний Stroke даёт
+     .stages-l__grid), строки 2+ — свой border-top; правая колонка
+     (чётные) — border-left. */
+  .stages-l__card:nth-child(n + 3) {
+    border-top: 1px solid var(--border-primary);
+  }
+
+  .stages-l__card:nth-child(2n) {
+    border-left: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 1000px) {
+  .stages-l__card {
+    gap: var(--spacing-8xl);
+  }
+
+  /* 3 колонки (1000/1440px, ОДНА и та же формула на обоих — Stages-L,
+     в отличие от Team-L, не переходит на 4 колонки на 1440): сброс
+     правил 768px (2 колонки) и заново для 3 — средняя колонка несёт
+     border-left И border-right (тот же приём, что у .team-l__card). */
+  .stages-l__card:nth-child(-n + 3) {
+    border-top: none;
+  }
+
+  .stages-l__card:nth-child(n + 4) {
+    border-top: 1px solid var(--border-primary);
+  }
+
+  .stages-l__card:nth-child(2n) {
+    border-left: none;
+  }
+
+  .stages-l__card:nth-child(3n + 2) {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 1440px) {
+  .stages-l__card {
+    gap: var(--spacing-9xl);
+  }
+}
+
+.stages-l__card--placeholder {
+  display: none;
+}
+
+/* placeholder-1 (8-я ячейка) нужен с 768px, чтобы последняя строка на
+   2 колонках закрылась (7 карточек → 4 строки = 8 ячеек), и на
+   1000/1440px он же — средняя карточка в неполной 3-й строке
+   (7 карточек → 3 строки = 9 ячеек). placeholder-2 нужен ТОЛЬКО на
+   3 колонках (иначе на 768px он создал бы лишнюю 5-ю строку). Тот же
+   приём, что у .team-l__card--placeholder-N (см. подробный комментарий
+   там): opacity:0 стоит на СОДЕРЖИМОМ (число + текстовый блок), а не
+   на самой карточке — иначе погас бы и её собственный border,
+   разорвав линию сетки раньше времени. */
+@media (min-width: 768px) {
+  .stages-l__card--placeholder-1 {
+    display: flex;
+  }
+}
+
+@media (min-width: 1000px) {
+  /* 13.08, сверено по Figma (1349:8140/1351:8196): у placeholder-1 в
+     неполной 3-й строке ТОЛЬКО border-left (наследуется от общего
+     правила nth-child(3n+2) выше) — БЕЗ border-right, в отличие от
+     настоящей средней колонки в полных строках 1-2 (там border-l+r
+     оба). Явный сброс border-right, т.к. специфичность одинаковая
+     (класс+псевдокласс) — побеждает порядок в файле, мы ниже. */
+  .stages-l__card.stages-l__card--placeholder-1 {
+    border-right: none;
+  }
+
+  .stages-l__card--placeholder-2 {
+    display: flex;
+  }
+}
+
+.stages-l__card--placeholder .stages-l__card-number,
+.stages-l__card--placeholder .stages-l__card-text-wrap {
+  opacity: 0;
+}
+
+.stages-l__card-number {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 42px;
+  letter-spacing: -0.4px;
+  color: var(--brand);
+}
+
+.stages-l__card-text-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  max-width: 300px;
+}
+
+@media (min-width: 1000px) {
+  .stages-l__card-text-wrap {
+    max-width: 230px;
+  }
+
+  /* 13.08, перепроверено через get_design_context (forceCode) — узкий
+     210px НЕ у каждой 3-й (правой) колонки, а буквально только у
+     карточки 03 (nth-child(3), самая первая строка). У карточки 06
+     (тоже правая колонка, nth-child(6), строка 2) и у placeholder'ов
+     в 3-й строке (nth-child(9)) — обычные 230px, как у всех
+     остальных. Единичное, не позиционное исключение в самой Figma —
+     нельзя было обобщать формулой nth-child(3n), сначала так и
+     сделали и это было ошибкой (карточка 06 получила бы неверные
+     210px) — заметили и поправили при самопроверке перед сдачей. */
+  .stages-l__card:nth-child(3) .stages-l__card-text-wrap {
+    max-width: 210px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .stages-l__card-text-wrap {
+    max-width: 300px;
+  }
+}
+
+.stages-l__card-title {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.09px;
+  color: var(--text-primary);
+}
+
+.stages-l__card-text {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.08px;
+  color: var(--text-quaternary);
+}

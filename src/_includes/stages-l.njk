@@ -1,0 +1,85 @@
+{# Stages - L (Figma node 1351:8152 на /services/, "Stages - L") —
+   светлая секция "Семь шагов." с сеткой из 7 карточек-этапов (жёлтый
+   номер + заголовок + текст). НЕ переиспользуемый include (контент
+   фиксирован) — подключается напрямую, тот же приём, что у
+   team-l.njk/docs-l.njk/gallery-l.njk.
+
+   Сетка (Container → Row → Card в Figma, с разным набором Row на
+   каждом брейкпоинте) реализована через CSS Grid (.stages-l__grid) —
+   плоский список из 7 карточек + placeholder'ы, переключение
+   grid-template-columns по брейкпоинту (1/1/2/3/3 на 320/390/768/
+   1000/1440) вместо буквального повтора вложенных Row-обёрток. Тот же
+   подход, что у team-l__grid — подробный комментарий с таблицей
+   nth-child и объяснением, ПОЧЕМУ collapsed-grid, а не 1-в-1 повтор
+   Figma-разметки, см. в style.2.css у .stages-l__card.
+
+   13.08, пользователь отдельно предупредил про 3 вещи, сверено по
+   всем 5 брейкпоинтам через get_design_context:
+   1) Stroke — динамические у Container/Row/Card на каждом
+      брейкпоинте (в Figma даже есть "средняя" строка с border на ВСЕ
+      4 стороны разом, чтобы линия между соседними строками не
+      задваивалась) — реализовано через collapsed-grid (см. выше),
+      даёт тот же результат без риска рассинхронизации.
+   2) max-width у "Title and supporting text" (текст ВНУТРИ карточки,
+      .stages-l__card-text-wrap) — 300px почти везде, но ИСКЛЮЧЕНИЕ на
+      1000px: 230px у первых двух колонок, 210px у третьей (на 1440px
+      снова 300px у всех трёх). Title and badge (заголовок секции) —
+      max-width 900px, ОДИНАКОВЫЙ на всех 5 брейкпоинтах — это ДРУГОЙ
+      контейнер, не путать.
+   3) Паддинги — внешний px секции 0/20/24/24/24, внутренний паддинг
+      Container (Title/badge) асимметричный на 1000/1440 (pt-128
+      pb-96 px-80), паддинг карточки 24→32 (с 768px), gap внутри
+      карточки — 64/64/64/80/96 (три разных значения). Подробная
+      таблица — в style.2.css у .stages-l.
+
+   Заголовок секции — ПОСТОЯННЫЙ h4-размер (36px) на ВСЕХ 5
+   брейкпоинтах (не обычный прогрессивный h5→h4 на 1440, как у
+   Team-L/Docs-L/Gallery-L/Features-L/Hero-L) — сверено отдельно на
+   320 и 1440, оба раза Heading 4/Semibold. #}
+{% macro card(number, title, text) %}
+  <div class="stages-l__card">
+    <p class="stages-l__card-number">{{ number }}</p>
+    <div class="stages-l__card-text-wrap">
+      <p class="stages-l__card-title">{{ title }}</p>
+      <p class="stages-l__card-text">{{ text }}</p>
+    </div>
+  </div>
+{% endmacro %}
+<section class="stages-l" data-figma-node="1351:8152" data-figma-name="Stages - L">
+  <div class="stages-l__container">
+    <div class="stages-l__title-badge">
+      <span class="stages-l__badge">Этапы</span>
+      <p class="stages-l__heading">Семь шагов.<br>
+        <span class="stages-l__heading-muted">От заявки до сервиса, под ключ.</span>
+      </p>
+    </div>
+  </div>
+  <div class="stages-l__grid">
+    {{ card('01', 'Заявка и выезд', 'Принимаем заявку, выезжаем на объект и оцениваем объём работ.') }}
+    {{ card('02', 'Расчёт и ТЭО', 'Считаем окупаемость, готовим ТЭО и подбираем схему отопления.') }}
+    {{ card('03', 'Проект и смета', 'Готовим проект, подбираем оборудование и фиксируем смету.') }}
+    {{ card('04', 'Договор и поставка', 'Заключаем договор и поставляем оборудование с полной гарантией.') }}
+    {{ card('05', 'Монтаж', 'Монтируем котельную и инженерные сети своими силами.') }}
+    {{ card('06', 'Пусконаладка и сдача', 'Проверяем, настраиваем и выводим котельную на параметры.') }}
+    {{ card('07', 'Сервис', 'Обслуживаем оборудование, держим гарантию и склад запчастей.') }}
+    {# Пустые карточки-заполнители (см. комментарий вверху файла) —
+       видны только с 768px (первая) и с 1000px (вторая), нужны только
+       чтобы последняя строка сетки не "рвалась" при 2/3 колонках; на
+       320/390 (1 колонка) 7 карточек сами закрывают 7 строк без
+       остатка, placeholder'ы там display:none. #}
+    <div class="stages-l__card stages-l__card--placeholder stages-l__card--placeholder-1" aria-hidden="true">
+      <p class="stages-l__card-number">00</p>
+      <div class="stages-l__card-text-wrap">
+        <p class="stages-l__card-title">Заголовок</p>
+        <p class="stages-l__card-text">Обслуживаем оборудование, держим гарантию и склад запчастей.</p>
+      </div>
+    </div>
+    <div class="stages-l__card stages-l__card--placeholder stages-l__card--placeholder-2" aria-hidden="true">
+      <p class="stages-l__card-number">00</p>
+      <div class="stages-l__card-text-wrap">
+        <p class="stages-l__card-title">Заголовок</p>
+        <p class="stages-l__card-text">Обслуживаем оборудование, держим гарантию и склад запчастей.</p>
+      </div>
+    </div>
+  </div>
+</section>
