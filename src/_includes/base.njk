@@ -168,16 +168,25 @@
     {# 12.08, добавлено для /about/: этот дивайдер — стык между
        контентом страницы и стандартным хвостом (Brands/CTA/Footer)
        ниже. У большинства ещё не полностью свёрстанных страниц
-       (Services/Каталог) он тёмный по умолчанию — сознательно не
-       сверялся с Figma (сам хвост там ещё заглушка). Но на /about/
-       по Figma (node 1130:8714) на этом месте именно светлый
-       Divider - L (после Gallery - L) — страница front matter'ом
-       передаёт tailDividerVariant: "light", чтобы получить его, не
-       беря на себя ВЕСЬ хвост через customSections (Brands/CTA/Footer
-       там по-прежнему стандартные, не Figma-сверенные). #}
-    {% set dividerVariant = tailDividerVariant or "" %}
-    {% include "divider.njk" %}
-    {% set dividerVariant = "" %}
+       (Каталог) он тёмный по умолчанию — сознательно не сверялся с
+       Figma (сам хвост там ещё заглушка). Но на /about/ по Figma
+       (node 1130:8714) на этом месте именно светлый Divider - L
+       (после Gallery - L) — страница front matter'ом передаёт
+       tailDividerVariant: "light", чтобы получить его, не беря на
+       себя ВЕСЬ хвост через customSections (Brands/CTA/Footer там
+       по-прежнему стандартные, не Figma-сверенные).
+
+       13.08, добавлено для /services/: по свежей Figma Layout (node
+       1146:10941) на этом стыке (между Social - L и Brands - D)
+       дивайдера НЕТ ВООБЩЕ ни на одном брейкпоинте — секции идут
+       впритык. tailDividerVariant: "none" пропускает include
+       целиком (не просто рендерит дивайдер без модификатора — тот
+       был бы виден, просто тёмным). #}
+    {% if tailDividerVariant != "none" %}
+      {% set dividerVariant = tailDividerVariant or "" %}
+      {% include "divider.njk" %}
+      {% set dividerVariant = "" %}
+    {% endif %}
   {% endif %}
   {# customSections (05.08, добавлено для contact.njk) — страницы с
      полностью свёрстанным по Figma контентом (свои секции + свои

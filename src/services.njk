@@ -1,7 +1,52 @@
 ---
 title: Услуги — Thermo Concept Engineering
 layout: base.njk
+stickyHeader: true
+headerTheme: light
+hasVideoUpgrade: true
+tailDividerVariant: none
 ---
-<section class="hero" data-figma-node="308:1917" data-figma-name="Hero">
-  <p class="hero__title">Услуги</p>
-</section>
+{# 13.08: секции страницы /services/ — Services Hero - L (см. hero-l.njk,
+   переиспользуемый include, тот же компонент, что у /about/, node
+   1147:11848 на этой странице) и Social - L (см. social-l.njk, тот же
+   компонент, что на Home и /about/). Дальше — стандартный хвост
+   base.njk (Brands - D/CTA - D/Footer - D), страница ещё не полностью
+   свёрстана дальше этих двух секций (Каталог/остальной контент —
+   отдельная задача).
+
+   Header — 1-в-1 как у /about/ (пользователь явно попросил "все
+   аналогично"): stickyHeader/headerTheme: light (тот же приём, см.
+   подробный комментарий в about.njk/contact.njk и у .site-header в
+   style.2.css) — Header стартует и остаётся в светлой теме, БЕЗ
+   прозрачной Home-фазы и БЕЗ "резинового" Menkind-эффекта (см.
+   header-home-theme.js, heroPhase() гейтится через
+   body--header-overlay, которого тут нет, — тот эффект специфичен
+   для Home Hero с видео на весь экран). "Резиновое подтягивание
+   Header у мобилки при быстром скроллинге" из задачи пользователя —
+   это как раз про sticky (а не fixed) позиционирование: sticky-
+   элемент — часть потока документа и двигается вместе со страницей
+   при overscroll-bounce на iOS, поэтому под ним не может обнажиться
+   пустой разрыв при резком скролле — ровно то же поведение, что уже
+   есть на /about/ и /contact/.
+
+   hasVideoUpgrade — подключает hero-video-upgrade.js, нужен для
+   прогрессивной LQ→HQ подгрузки видео внутри Hero - L (см. about.njk).
+
+   tailDividerVariant: "none" — по свежей Figma Layout (node
+   1146:10941) между Social - L и Brands - D дивайдера нет вообще ни
+   на одном брейкпоинте (в отличие от /about/, где там светлый
+   Divider - L) — см. базовый комментарий у этого стыка в base.njk. #}
+{% set heroLBadge = "Услуги" %}
+{% set heroLHeadingAccent = "Полный цикл." %}
+{% set heroLHeadingMuted = "Расчёт и сервис." %}
+{% set heroLVideoSrc = "/videos/services-hero.mp4" %}
+{% set heroLVideoHq = "/videos/services-hero-hq.mp4" %}
+{% set heroLVideoPoster = "/videos/services-hero-poster.jpg" %}
+{% include "hero-l.njk" %}
+{% set heroLBadge = "" %}
+{% set heroLHeadingAccent = "" %}
+{% set heroLHeadingMuted = "" %}
+{% set heroLVideoSrc = "" %}
+{% set heroLVideoHq = "" %}
+{% set heroLVideoPoster = "" %}
+{% include "social-l.njk" %}
