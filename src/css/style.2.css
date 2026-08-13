@@ -7830,8 +7830,6 @@ body.body--header-overlay {
 .portfolio-d__container {
   width: 100%;
   max-width: 1392px;
-  flex: 1 0 0;
-  min-height: 0;
   display: flex;
   flex-direction: column;
 }
@@ -7845,6 +7843,8 @@ body.body--header-overlay {
 
 @media (min-width: 1000px) {
   .portfolio-d__container {
+    flex: 1 0 0;
+    min-height: 0;
     flex-direction: row;
     align-items: stretch;
   }
@@ -8089,6 +8089,25 @@ body.body--header-overlay {
   }
 }
 
+/* 13.08, багфикс (пользователь: "на мобилке вообще нет секции" +
+   заголовка/описания не видно на десктопе): правило из блока 768px
+   выше (flex:1 0 0; height:72px; overflow:hidden) не имеет верхней
+   границы и "протекало" на 1000/1440px — там .portfolio-d__text-
+   buttons уже flex-direction:column (см. .portfolio-d__text-buttons),
+   то есть ГЛАВНАЯ ось флекса вертикальная, и flex-basis:0 у text-wrap
+   схлопывал блок в 0 высоты (родитель auto-height, расти некуда) —
+   текст физически рендерился, но с overflow:hidden при height:0 был
+   не виден целиком. На 1000/1440 высоту распределяет
+   justify-content:space-between у .portfolio-d__panel, самому
+   text-wrap лишние flex/height/overflow тут не нужны — сброс. */
+@media (min-width: 1000px) {
+  .portfolio-d__text-wrap {
+    flex: none;
+    height: auto;
+    overflow: visible;
+  }
+}
+
 @media (min-width: 1440px) {
   .portfolio-d__text-wrap {
     max-width: 440px;
@@ -8145,6 +8164,11 @@ body.body--header-overlay {
   .portfolio-d__nav-btn:hover {
     border-color: var(--text-quaternary);
   }
+}
+
+.portfolio-d__nav-btn svg {
+  display: block;
+  stroke: currentColor;
 }
 
 .portfolio-d__text-data {
