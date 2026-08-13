@@ -7512,10 +7512,26 @@ body.body--header-overlay {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: var(--h4-size);
-  line-height: var(--h4-line);
-  letter-spacing: var(--h4-tracking);
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
   color: var(--text-primary);
+}
+
+/* 13.08, правка пользователя (поправлено и в Figma): заголовок
+   секции больше НЕ постоянный h4 на всех брейкпоинтах — на 1000px и
+   ниже теперь обычный h5 (32px/34px/-0.32px), h4 (36px) остаётся
+   только с 1440px. Стандартный прогрессивный приём h5→h4, тот же,
+   что у Team-L/Docs-L/Gallery-L/Features-L/Hero-L — сверено заново
+   через get_design_context на 1000px (32px, Heading 5/Semibold) и
+   1440px (36px, Heading 4/Semibold), граница подтверждена именно на
+   1440px, не на 1000px. */
+@media (min-width: 1440px) {
+  .stages-l__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
 }
 
 .stages-l__heading-muted {
