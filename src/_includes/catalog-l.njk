@@ -58,10 +58,16 @@
    Дизайн-токены — светлая секция, поэтому --text-primary/
    --text-quaternary/--border-primary/--background-secondary
    переопределяются ЛОКАЛЬНО на .catalog-l (глобальный дефолт в :root
-   — тёмная тема), тот же приём, что у всех "-L" секций. #}
-{% macro card(slug, name, tags, coverMod) %}
+   — тёмная тема), тот же приём, что у всех "-L" секций.
+
+   14.08: список брендов вынесен в src/_data/brands.js и раскрывается
+   циклом ниже. Тот же массив кормит генератор страниц-заглушек
+   /catalog/<slug>/ (см. catalog-brand.njk), поэтому кнопка "Смотреть"
+   в карточке всегда ведёт на реально существующий адрес — добавление
+   бренда = одна строка в brands.js (плюс файл лого и размеры в CSS). #}
+{% macro card(slug, name, tags) %}
   <div class="catalog-l__card">
-    <div class="catalog-l__cover{% if coverMod %} catalog-l__cover--{{ coverMod }}{% endif %}">
+    <div class="catalog-l__cover catalog-l__cover--{{ slug }}">
       <img
         class="catalog-l__logo catalog-l__logo--{{ slug }}"
         src="{{ ('/images/catalog-l/' + slug + '.svg') | url }}"
@@ -73,9 +79,7 @@
         <p class="catalog-l__card-title">{{ name }}</p>
         <p class="catalog-l__card-desc">{{ tags | safe }}</p>
       </div>
-      {# Ссылка ведёт на будущий раздел бренда — пока якорь на саму
-         страницу каталога (страница брендов ещё не свёрстана). #}
-      <a class="catalog-l__btn" href="{{ '/catalog/' | url }}">
+      <a class="catalog-l__btn" href="{{ ('/catalog/' + slug + '/') | url }}">
         Смотреть
         <svg class="catalog-l__btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M3.33331 10H16.6666M11.6666 15L16.6666 10L11.6666 5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -94,15 +98,9 @@
     </div>
   </div>
   <div class="catalog-l__grid">
-    {{ card('arbonia', 'Arbonia', 'Радиаторы / Конвекторы') }}
-    {{ card('elco', 'Elco', 'Горелки / Отопление') }}
-    {{ card('flamco', 'Flamco', 'Баки / Сепараторы') }}
-    {{ card('geberit', 'Geberit', 'Инсталляции / Трубы / Сантехника') }}
-    {{ card('kermi', 'Kermi', 'Тег / Тег / Тег') }}
-    {{ card('meibes', 'Meibes', 'Коллекторы / Узлы / Насосы') }}
-    {{ card('oventrop', 'Oventrop', 'Тег / Тег / Тег') }}
-    {{ card('viessmann', 'Viessmann', 'Котлы / Теплонасосы / Отопление') }}
-    {{ card('wilo', 'Wilo', 'Насосы / Станции / Автоматика', 'wilo') }}
+    {%- for b in brands %}
+    {{ card(b.slug, b.name, b.tags) }}
+    {%- endfor %}
     {# Пустая карточка-заполнитель (см. комментарий вверху файла) —
        видна только на 768/1000 (2 колонки), где 9 карточек не делятся
        нацело; на 320/390 (1 колонка) и 1440 (3 колонки) остатка нет,
