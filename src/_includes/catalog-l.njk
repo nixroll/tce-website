@@ -1,0 +1,112 @@
+{# Catalog - L (Figma node 1487:17117 на /catalog/, "Catalog - L") —
+   светлая секция "Мировые производители. Напрямую." с сеткой из 9
+   карточек-брендов (лого на подложке + название + теги категорий +
+   кнопка "Смотреть"). НЕ переиспользуемый include (контент
+   фиксирован), подключается напрямую — тот же приём, что у
+   stages-l.njk/team-l.njk/portfolio-d.njk.
+
+   14.08. Сетка (Container → Row → Card в Figma, с разным набором Row
+   на каждом брейкпоинте) реализована через CSS Grid
+   (.catalog-l__grid) — плоский список из 9 карточек + placeholder,
+   переключение grid-template-columns по брейкпоинту (1/1/2/2/3 на
+   320/390/768/1000/1440) вместо буквального повтора вложенных
+   Row-обёрток. Тот же подход, что у .stages-l__grid — подробная
+   таблица nth-child и объяснение, ПОЧЕМУ collapsed-grid, см. в
+   style.8.css у .catalog-l__card.
+
+   Placeholder нужен ТОЛЬКО при 2 колонках (768/1000): 9 карточек —
+   число нечётное, последняя строка иначе "рвётся" (в Figma там
+   буквально стоит пустая Card без лого). При 1 колонке (320/390) и
+   3 колонках (1440, 9 = 3×3) остатка нет — placeholder там
+   display:none.
+
+   Хэйрлайны сверены по всем 5 брейкпоинтам через get_design_context
+   (Figma вешает их на РАЗНЫЕ элементы в зависимости от брейкпоинта,
+   но визуальный результат один и тот же — см. подробный разбор в
+   style.8.css у .catalog-l__card):
+   - 320: у Container (заголовок) боковых линий НЕТ вообще (секция без
+     бокового паддинга, контейнер во всю ширину), у карточек —
+     border-bottom. Линии под заголовком на 320 НЕТ.
+   - 390: у Container появляются border-l/r, у карточек по-прежнему
+     border-bottom; линии под заголовком по-прежнему нет.
+   - 768/1000/1440: Row получает border-t + border-l/r, вертикальный
+     разделитель между колонками рисует сама карточка (на 768 это
+     border-r у левой, на 1440 — border-l/r у средней; в вёрстке
+     сведено к одному правилу border-left у всех колонок, кроме
+     первой — результат идентичный). Линия под заголовком здесь ЕСТЬ
+     (это border-top первой строки).
+
+   Размеры лого внутри Cover — ОДИНАКОВЫЕ на всех 5 брейкпоинтах
+   (проверено по метаданным всех брейкпоинтов), меняется только сам
+   Cover (аспект всегда 384/300). Поэтому лого заданы фиксированными
+   width/height в CSS (.catalog-l__logo--<бренд>), а не резиновыми —
+   ровно как в макете. У Wilo Cover дополнительно padding-bottom 4px
+   (единственное исключение, тоже на всех брейкпоинтах — проверено
+   арифметикой центрирования: без него лого центрируется на 2px ниже,
+   чем в макете).
+
+   ВНИМАНИЕ, логотипы: в Figma лого в карточках ПОЛНОЦВЕТНЫЕ (Arbonia
+   оранжевая, Viessmann красный, Wilo зелёный, Oventrop голубой и
+   т.д.), а файлы в src/images/catalog-l/ сейчас — монохромные
+   #CECFD2 (это версия для ТЁМНОЙ секции Brands - D, те же файлы лежат
+   в src/images/brands/). Figma-ассеты через MCP не выгружаются в
+   песочницу, поэтому цветные положить сразу не вышло. Вёрстка от
+   этого не зависит вообще: размеры/позиционирование заданы по макету,
+   подмена = перезапись 9 файлов в src/images/catalog-l/ теми же
+   именами, править разметку/CSS не потребуется.
+
+   Дизайн-токены — светлая секция, поэтому --text-primary/
+   --text-quaternary/--border-primary/--background-secondary
+   переопределяются ЛОКАЛЬНО на .catalog-l (глобальный дефолт в :root
+   — тёмная тема), тот же приём, что у всех "-L" секций. #}
+{% macro card(slug, name, tags, coverMod) %}
+  <div class="catalog-l__card">
+    <div class="catalog-l__cover{% if coverMod %} catalog-l__cover--{{ coverMod }}{% endif %}">
+      <img
+        class="catalog-l__logo catalog-l__logo--{{ slug }}"
+        src="{{ ('/images/catalog-l/' + slug + '.svg') | url }}"
+        alt="{{ name }}"
+        loading="lazy">
+    </div>
+    <div class="catalog-l__content">
+      <div class="catalog-l__text">
+        <p class="catalog-l__card-title">{{ name }}</p>
+        <p class="catalog-l__card-desc">{{ tags | safe }}</p>
+      </div>
+      {# Ссылка ведёт на будущий раздел бренда — пока якорь на саму
+         страницу каталога (страница брендов ещё не свёрстана). #}
+      <a class="catalog-l__btn" href="{{ '/catalog/' | url }}">
+        Смотреть
+        <svg class="catalog-l__btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M3.33331 10H16.6666M11.6666 15L16.6666 10L11.6666 5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+{% endmacro %}
+<section class="catalog-l" data-figma-node="1487:17117" data-figma-name="Catalog - L">
+  <div class="catalog-l__container">
+    <div class="catalog-l__title-badge">
+      <span class="catalog-l__badge">Каталог</span>
+      <p class="catalog-l__heading">Мировые производители.<br>
+        <span class="catalog-l__heading-muted">Напрямую.</span>
+      </p>
+    </div>
+  </div>
+  <div class="catalog-l__grid">
+    {{ card('arbonia', 'Arbonia', 'Радиаторы / Конвекторы') }}
+    {{ card('elco', 'Elco', 'Горелки / Отопление') }}
+    {{ card('flamco', 'Flamco', 'Баки / Сепараторы') }}
+    {{ card('geberit', 'Geberit', 'Инсталляции / Трубы / Сантехника') }}
+    {{ card('kermi', 'Kermi', 'Тег / Тег / Тег') }}
+    {{ card('meibes', 'Meibes', 'Коллекторы / Узлы / Насосы') }}
+    {{ card('oventrop', 'Oventrop', 'Тег / Тег / Тег') }}
+    {{ card('viessmann', 'Viessmann', 'Котлы / Теплонасосы / Отопление') }}
+    {{ card('wilo', 'Wilo', 'Насосы / Станции / Автоматика', 'wilo') }}
+    {# Пустая карточка-заполнитель (см. комментарий вверху файла) —
+       видна только на 768/1000 (2 колонки), где 9 карточек не делятся
+       нацело; на 320/390 (1 колонка) и 1440 (3 колонки) остатка нет,
+       placeholder там display:none. #}
+    <div class="catalog-l__card catalog-l__card--placeholder" aria-hidden="true"></div>
+  </div>
+</section>

@@ -41,7 +41,8 @@
     '.projects__nav-btn',
     '.docs-l__nav-btn',
     '.gallery-l__nav-btn',
-    '.portfolio-d__nav-btn'
+    '.portfolio-d__nav-btn',
+    '.catalog-l__btn'
   ].join(', ');
   var els = document.querySelectorAll(selector);
   if (!els.length) return;

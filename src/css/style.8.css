@@ -8291,3 +8291,432 @@ body.body--header-overlay {
 .portfolio-d__text-data {
   display: none;
 }
+
+/* Catalog - L (14.08, /catalog/, Figma node 1487:17117) — светлая
+   секция "Мировые производители. Напрямую." с сеткой из 9
+   карточек-брендов. Архитектура (почему collapsed-grid вместо
+   Row-обёрток, зачем placeholder, что с логотипами) — см. большой
+   комментарий в catalog-l.njk. Тут — размеры/паддинги/Stroke по
+   брейкпоинтам, сверено по всем 5 через get_design_context/
+   get_metadata.
+
+   Цвета — светлая секция, токены переопределяются ЛОКАЛЬНО (глобальный
+   дефолт в :root — тёмная тема), тот же приём, что у всех "-L" секций.
+   Тут дополнительно нужен --background-secondary (подложка Cover и
+   кнопки) — у .stages-l его нет, а здесь есть.
+
+   Таблица по брейкпоинтам (320 / 390 / 768 / 1000 / 1440):
+     px секции          0   / 20  / 24  / 24  / 24
+     Container padding  80/24 / 80/32 / 96/48 / 128-96/80 / 128-96/80
+       (вертикальный/горизонтальный; на 1000+ верх 128, низ 96)
+     колонок в сетке    1   / 1   / 2   / 2   / 3
+     padding карточки   24  / 32  / 32  / 40  / 40
+     gap Cover→Content  24  / 32  / 32  / 32  / 32
+     заголовок секции   h5  / h5  / h5  / h5  / h4
+   Аспект Cover — 384/300 на всех брейкпоинтах. Размеры логотипов
+   внутри Cover — тоже одинаковые на всех (см. .catalog-l__logo--*). */
+.catalog-l {
+  --text-primary: #181d27;
+  --text-secondary: #414651;
+  --text-tertiary: #535862;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+  --border-secondary: #cbd0d8;
+  --background-secondary: #f3f4f6;
+
+  width: 100%;
+  background-color: #fafafb;
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+@media (min-width: 390px) {
+  .catalog-l {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .catalog-l {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+/* Container — обёртка заголовка секции. Боковых Stroke на 320 нет
+   вообще (секция без бокового паддинга, контейнер во всю ширину),
+   появляются с 390 — та же логика, что у .stages-l__container. */
+.catalog-l__container {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .catalog-l__container {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .catalog-l__container {
+    padding: var(--spacing-9xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .catalog-l__container {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+  }
+}
+
+.catalog-l__title-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  flex: 1 0 0;
+  min-width: 0;
+  max-width: 900px;
+}
+
+.catalog-l__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: #325abc;
+}
+
+.catalog-l__heading {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
+  color: var(--text-primary);
+}
+
+@media (min-width: 1440px) {
+  .catalog-l__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
+}
+
+.catalog-l__heading-muted {
+  color: var(--text-quaternary);
+}
+
+/* Сетка. В Figma это вложенные Row-обёртки, свои на каждом
+   брейкпоинте; здесь — один плоский grid с переключением числа
+   колонок (тот же приём, что у .stages-l__grid/.team-l__grid).
+   Боковые Stroke — на самой сетке (в Figma их рисует Row), с 390,
+   как и у Container выше. */
+.catalog-l__grid {
+  width: 100%;
+  max-width: 1392px;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 390px) {
+  .catalog-l__grid {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .catalog-l__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1440px) {
+  .catalog-l__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Карточка. Хэйрлайны в Figma навешаны на разные элементы в
+   зависимости от брейкпоинта, но визуальный результат сводится к
+   двум правилам:
+   - 320/390 (1 колонка): горизонтальная линия МЕЖДУ карточками. В
+     Figma это border-bottom у каждой карточки; у последней он
+     совпадает с border-bottom самой секции, поэтому здесь он снят с
+     :last-child — иначе при box-sizing:border-box получилась бы
+     линия в 2px.
+     Линии ПОД ЗАГОЛОВКОМ на 320/390 нет — так в макете (у Container
+     нет border-bottom, у первой карточки нет border-top).
+   - 768+: линия появляется НАД каждым рядом (в Figma это border-top
+     у Row) — включая первый ряд, то есть под заголовком линия здесь
+     уже есть. Плюс вертикальный разделитель между колонками: в Figma
+     на 768 это border-right у левой карточки, на 1440 — border-left/
+     right у средней; тут сведено к одному правилу "border-left у
+     всех, кроме первой колонки" — результат идентичный. */
+.catalog-l__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-3xl);
+  min-width: 0;
+  overflow: hidden;
+  padding: var(--spacing-3xl);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+/* Последняя ВИДИМАЯ карточка на 320/390 — девятая: placeholder за ней
+   хоть и display:none, но в DOM присутствует, поэтому :last-child
+   попал бы именно на него, а у карточки Wilo линия осталась бы и
+   задвоилась с border-bottom самой секции. Снимаем у обоих
+   последних. */
+.catalog-l__card:nth-last-child(-n + 2) {
+  border-bottom: none;
+}
+
+@media (min-width: 390px) {
+  .catalog-l__card {
+    gap: var(--spacing-4xl);
+    padding: var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .catalog-l__card {
+    border-bottom: none;
+    border-top: 1px solid var(--border-primary);
+  }
+
+  .catalog-l__card:not(:nth-child(2n + 1)) {
+    border-left: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 1000px) {
+  .catalog-l__card {
+    padding: var(--spacing-5xl);
+  }
+}
+
+@media (min-width: 1440px) {
+  /* 3 колонки — правило вертикального разделителя пересобирается под
+     новый шаг (nth-child(3n+1) вместо 2n+1), иначе оно бы "протекло"
+     с блока 768px и рисовало линию не в тех колонках. */
+  .catalog-l__card:not(:nth-child(2n + 1)) {
+    border-left: none;
+  }
+
+  .catalog-l__card:not(:nth-child(3n + 1)) {
+    border-left: 1px solid var(--border-primary);
+  }
+}
+
+/* Пустая карточка-заполнитель — нужна ТОЛЬКО при 2 колонках
+   (768/1000), где 9 карточек не делятся нацело. На 320/390 (1
+   колонка) и 1440 (3 колонки, 9 = 3×3) остатка нет. */
+.catalog-l__card--placeholder {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .catalog-l__card--placeholder {
+    display: block;
+  }
+}
+
+@media (min-width: 1440px) {
+  .catalog-l__card--placeholder {
+    display: none;
+  }
+}
+
+.catalog-l__cover {
+  width: 100%;
+  aspect-ratio: 384 / 300;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--spacing-md);
+  background-color: var(--background-secondary);
+}
+
+/* Единственное исключение по центровке лого во всём наборе: у Wilo
+   Cover в макете есть padding-bottom 4px (на ВСЕХ брейкпоинтах —
+   проверено арифметикой: без него лого центрируется на 2px ниже, чем
+   в Figma). */
+.catalog-l__cover--wilo {
+  padding-bottom: 4px;
+}
+
+/* Размеры логотипов — фиксированные и ОДИНАКОВЫЕ на всех 5
+   брейкпоинтах (в макете меняется только сам Cover). Значения взяты
+   из Figma как есть, включая дробные. */
+.catalog-l__logo {
+  display: block;
+  flex-shrink: 0;
+}
+
+.catalog-l__logo--arbonia {
+  width: 177.806px;
+  height: 30px;
+}
+
+.catalog-l__logo--elco {
+  width: 112px;
+  height: 28px;
+}
+
+.catalog-l__logo--flamco {
+  width: 159.206px;
+  height: 46px;
+}
+
+.catalog-l__logo--geberit {
+  width: 174.757px;
+  height: 24px;
+}
+
+.catalog-l__logo--kermi {
+  width: 96.842px;
+  height: 36px;
+}
+
+.catalog-l__logo--meibes {
+  width: 129.196px;
+  height: 34px;
+}
+
+.catalog-l__logo--oventrop {
+  width: 183px;
+  height: 44px;
+}
+
+.catalog-l__logo--viessmann {
+  width: 188.589px;
+  height: 32px;
+}
+
+.catalog-l__logo--wilo {
+  width: 93.506px;
+  height: 40px;
+}
+
+.catalog-l__content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+}
+
+.catalog-l__text {
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.catalog-l__card-title {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.09px;
+  color: var(--text-primary);
+}
+
+.catalog-l__card-desc {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.08px;
+  color: var(--text-quaternary);
+}
+
+/* Кнопка "Смотреть" — тот же компонент Arrow Button, что и у
+   .areas__btn на Home (одинаковые паддинги/радиус/типографика/иконка
+   arrow-narrow-right). Единственное отличие — фон: там
+   --background-primary, здесь --background-secondary (в макете
+   кнопка на светлой карточке). Hover повторяет areas: бордер
+   primary→secondary, текст secondary→primary, иконка
+   tertiary→primary. */
+.catalog-l__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: fit-content;
+  flex-shrink: 0;
+  padding: var(--spacing-md) var(--spacing-lg) var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border-primary);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+@media (hover: hover) {
+  .catalog-l__btn:hover {
+    border-color: var(--border-secondary);
+    color: var(--text-primary);
+  }
+
+  .catalog-l__btn:hover .catalog-l__btn-icon path {
+    stroke: var(--text-primary);
+  }
+}
+
+/* is-pencil-hover — Apple Pencil умеет честный hover, но
+   @media(hover:hover) его не видит; класс вешает pencil-hover.2.js
+   (см. подробности там). */
+.catalog-l__btn.is-pencil-hover {
+  border-color: var(--border-secondary);
+  color: var(--text-primary);
+}
+
+.catalog-l__btn.is-pencil-hover .catalog-l__btn-icon path {
+  stroke: var(--text-primary);
+}
+
+.catalog-l__btn-icon {
+  flex-shrink: 0;
+  display: block;
+}
+
+.catalog-l__btn-icon path {
+  stroke: var(--text-tertiary);
+  transition: stroke 0.15s ease;
+}
