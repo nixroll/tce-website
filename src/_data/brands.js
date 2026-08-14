@@ -18,9 +18,12 @@ module.exports = [
   { slug: "elco", name: "Elco", tags: "Горелки / Отопление" },
   { slug: "flamco", name: "Flamco", tags: "Баки / Сепараторы" },
   { slug: "geberit", name: "Geberit", tags: "Инсталляции / Трубы / Сантехника" },
+  /* Kermi — в Figma пока плейсхолдер "Тег / Тег / Тег" (проверено
+     14.08, нода 1487:17029). Как только дизайнер проставит реальные
+     категории — поправить здесь. */
   { slug: "kermi", name: "Kermi", tags: "Тег / Тег / Тег" },
   { slug: "meibes", name: "Meibes", tags: "Коллекторы / Узлы / Насосы" },
-  { slug: "oventrop", name: "Oventrop", tags: "Тег / Тег / Тег" },
+  { slug: "oventrop", name: "Oventrop", tags: "Клапаны / Термостаты" },
   { slug: "viessmann", name: "Viessmann", tags: "Котлы / Теплонасосы / Отопление" },
   { slug: "wilo", name: "Wilo", tags: "Насосы / Станции / Автоматика" },
 ];
