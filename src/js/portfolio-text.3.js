@@ -11,7 +11,7 @@
  * Анимация — по просьбе пользователя "слегка растворяется по
  * вертикали", как секция Signals на attio.com: класс is-swapping
  * переводит блок в opacity:0 + сдвиг по Y (CSS transition, см.
- * .portfolio-d__text-wrap в style.5.css), через SWAP_DELAY_MS (должно
+ * .portfolio-d__text-wrap в style.6.css), через SWAP_DELAY_MS (должно
  * совпадать с длительностью CSS-transition) подменяем textContent и
  * снимаем класс — блок тем же transition возвращается в opacity:1 и
  * исходное положение. Один и тот же элемент используется для fade-out
@@ -36,7 +36,7 @@
  *
  * 14.08, ТЗ дизайнера: max-width у .portfolio-d__text-wrap теперь
  * СВОЙ на каждый слайд и каждый брейкпоинт (см. таблицу в
- * portfolio-d.njk/style.5.css) — реализовано модификатором
+ * portfolio-d.njk/style.6.css) — реализовано модификатором
  * is-slide-0..3 на том же wrap, что и текст. Переключаем его ЗДЕСЬ ЖЕ,
  * в момент подмены textContent (когда блок уже невидим, opacity:0
  * посередине fade) — если поменять класс раньше (одновременно с
