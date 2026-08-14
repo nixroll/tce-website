@@ -52,20 +52,25 @@ tailDividerVariant: light
 
    13.08, порядок секций пересверен по свежей Figma Layout (node
    1146:10941, теперь с добавленными Services - L/Portfolio - D):
-   Hero-L → Social-L → Services-L → [divider] → Portfolio-D → divider
-   (Divider-D, всегда виден) → Stages-L → Divider-L → Brands-D.
-   Дивайдер между Services-L и Portfolio-D — СОСТАВНОЙ и отличается по
-   брейкпоинтам: на 320px его нет вообще (секции идут впритык), с
-   390px появляется Divider-D (используем существующий модификатор
-   dividerVariant="hidden-320" — тёмный, скрыт < 390px, ровно то же
-   поведение, что уже описано в divider.njk для другого места), а на
-   1440px ПЕРЕД ним встаёт ещё и Divider-L, видимый ТОЛЬКО с 1440px —
-   для него уже есть готовый модификатор dividerVariant=
-   "light-only-1440" (был введён для /about/, см. divider.njk) — оба
-   модификатора совпали 1-в-1 с нужным поведением, новых вариантов
-   заводить не пришлось. Divider между Portfolio-D и Stages-L —
-   обычный дивайдер без модификатора (тёмный, виден на всех
-   брейкпоинтах, включая 320).
+   Hero-L → Social-L → Stages-L → Divider-L → Divider-D → Portfolio-D
+   → Divider-D → Services-L → Divider-L → Brands-D.
+
+   14.08, пользователь поменял в Figma порядок секций (было ...→
+   Services-L → [дивайдеры] → Portfolio-D → Divider-D → Stages-L →...,
+   стало — Stages-L и Services-L ПОМЕНЯЛИСЬ МЕСТАМИ) и переработал
+   дивайдеры на стыке Stages-L/Portfolio-D — пересверено по свежему
+   get_metadata Layout-ноды по всем 5 брейкпоинтам:
+   - Divider-L после Stages-L: теперь ЕСТЬ НА ВСЕХ брейкпоинтах
+     (раньше только на 1440px — модификатор light-only-1440 больше не
+     нужен, обычный "light").
+   - Divider-D перед Portfolio-D: на 390/768/1000/1440, на 320
+     ОТСУТСТВУЕТ (на 320 после Divider-L сразу Portfolio-D) —
+     существующий модификатор "hidden-320" по-прежнему подходит 1-в-1.
+   - Divider-D после Portfolio-D (перед Services-L): на всех
+     брейкпоинтах, без модификатора.
+   - Divider-L после Services-L (перед Brands-D) — это уже стык с
+     хвостом base.njk, идёт через tailDividerVariant: "light" (см.
+     ниже), по свежей проверке есть на всех 5 брейкпоинтах — норм.
 
    servicesLBtnText/servicesLBtnHref — на Home кнопка в Services-L
    ведёт на /services/ с текстом "Подробнее" (дефолт в самом
@@ -93,16 +98,16 @@ tailDividerVariant: light
 {% set heroLVideoHq = "" %}
 {% set heroLVideoPoster = "" %}
 {% include "social-l.njk" %}
-{% set servicesLBtnText = "Связаться" %}
-{% set servicesLBtnHref = "/contact/" %}
-{% include "services.njk" %}
-{% set servicesLBtnText = "" %}
-{% set servicesLBtnHref = "" %}
-{% set dividerVariant = "light-only-1440" %}
+{% include "stages-l.njk" %}
+{% set dividerVariant = "light" %}
 {% include "divider.njk" %}
 {% set dividerVariant = "hidden-320" %}
 {% include "divider.njk" %}
 {% set dividerVariant = "" %}
 {% include "portfolio-d.njk" %}
 {% include "divider.njk" %}
-{% include "stages-l.njk" %}
+{% set servicesLBtnText = "Связаться" %}
+{% set servicesLBtnHref = "/contact/" %}
+{% include "services.njk" %}
+{% set servicesLBtnText = "" %}
+{% set servicesLBtnHref = "" %}

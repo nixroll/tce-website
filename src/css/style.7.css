@@ -7980,6 +7980,11 @@ body.body--header-overlay {
   height: 100%;
   touch-action: pan-y;
   cursor: grab;
+  /* см. комментарий у .portfolio-d__slide img — вторая половина фикса
+     выделения при drag: не даём drag-жесту вообще начать выделение
+     внутри вьюпорта карусели (текста тут нет, терять нечего). */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .portfolio-d__viewport.is-dragging {
@@ -8035,6 +8040,20 @@ body.body--header-overlay {
   object-fit: cover;
   object-position: center;
   pointer-events: none;
+  /* 14.08, багфикс (пользователь: при drag мышью всё фото
+     "выделяется жёлтым, как при двойном клике") — у остальных
+     каруселей (.projects__slide img и др.) стоит user-select:none;
+     -webkit-user-drag:none, сюда при вёрстке перенесли только
+     pointer-events:none. pointer-events гасит НАЦЕЛИВАНИЕ событий на
+     саму картинку (нативный drag&drop картинки), но НЕ выделение:
+     selection принадлежит документу — drag, начатый на viewport,
+     протаскивает диапазон выделения ЧЕРЕЗ картинку, и браузер
+     подсвечивает её целиком как выделенный узел (цвет — системный
+     selection highlight). user-select:none на самой картинке и на
+     viewport (ниже) исключает её из выделения полностью. */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
 }
 
 .portfolio-d__text-buttons {
@@ -8255,6 +8274,13 @@ body.body--header-overlay {
        секций (там оно переопределено локально). */
     border-color: var(--border-secondary);
   }
+}
+
+/* 14.08: is-pencil-hover — см. .btn--primary.is-pencil-hover выше
+   (Apple Pencil умеет честный hover, но @media(hover:hover) его не
+   видит — класс вешает pencil-hover.js). */
+.portfolio-d__nav-btn.is-pencil-hover {
+  border-color: var(--border-secondary);
 }
 
 .portfolio-d__nav-btn svg {

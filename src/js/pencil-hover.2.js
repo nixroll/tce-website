@@ -23,7 +23,26 @@
  * бага залипания тут нет: pointerleave гарантированно приходит, когда
  * Pencil уходит от поверхности). */
 (function () {
-  var selector = '.btn, .form__input, .form__checkbox-row, .projects__nav-btn';
+  /* 14.08, багфикс (пользователь: "на iPad на всех страницах не
+     работает hover с Apple Pencil") — список селекторов не пополнялся
+     с 10.08: с тех пор появились карусели Docs - L (/about/),
+     Gallery - L (/about/) и Portfolio - D (/services/) со своими
+     кнопками-стрелками, а также отдельный класс .form__submit у
+     кнопки формы (/contact/). CSS-правила .is-pencil-hover для
+     docs-l/gallery-l/form__submit в style уже БЫЛИ (добавлялись
+     вместе с самими секциями), но скрипт на эти элементы просто не
+     вешал слушатели — класс не появлялся, hover не срабатывал. Для
+     .portfolio-d__nav-btn добавлено и CSS-правило (его не было). */
+  var selector = [
+    '.btn',
+    '.form__input',
+    '.form__checkbox-row',
+    '.form__submit',
+    '.projects__nav-btn',
+    '.docs-l__nav-btn',
+    '.gallery-l__nav-btn',
+    '.portfolio-d__nav-btn'
+  ].join(', ');
   var els = document.querySelectorAll(selector);
   if (!els.length) return;
 
