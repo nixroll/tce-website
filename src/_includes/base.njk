@@ -76,7 +76,7 @@
      portfolio-text.js → portfolio-text.2.js (создан и сразу же
      правился несколько раз — баг с scope) — JS отдаётся тем же
      GitHub Pages/Fastly, тот же риск зависшего кеша. #}
-  <link rel="stylesheet" href="{{ '/css/style.4.css' | url }}">
+  <link rel="stylesheet" href="{{ '/css/style.5.css' | url }}">
 </head>
 {# 10.08: lightBodyBg/.body--light-top убраны — фон html/body теперь
    красится напрямую по теме Header (html:has(.site-header--home:not
@@ -257,7 +257,7 @@
      (слушает событие, которое тот кидает) — подключается сразу следом,
      страница обязана выставлять и hasGallery, и hasPortfolio вместе. #}
   {% if hasPortfolio %}
-    <script src="{{ '/js/portfolio-text.2.js' | url }}" defer></script>
+    <script src="{{ '/js/portfolio-text.3.js' | url }}" defer></script>
   {% endif %}
   {% if isHome %}
     <script src="{{ '/js/areas-parallax.js' | url }}" defer></script>
@@ -303,7 +303,7 @@
      только под transparentHeader — это Home-специфичный обход
      overscroll, сам себя гасит через body--header-overlay, но на
      страницах без него просто не нужен. #}
-  <script src="{{ '/js/header-home-theme.js' | url }}" defer></script>
+  <script src="{{ '/js/header-home-theme.2.js' | url }}" defer></script>
   {% if transparentHeader %}
     <script src="{{ '/js/pull-to-refresh.js' | url }}" defer></script>
   {% endif %}

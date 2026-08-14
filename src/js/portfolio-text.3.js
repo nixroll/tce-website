@@ -11,7 +11,7 @@
  * Анимация — по просьбе пользователя "слегка растворяется по
  * вертикали", как секция Signals на attio.com: класс is-swapping
  * переводит блок в opacity:0 + сдвиг по Y (CSS transition, см.
- * .portfolio-d__text-wrap в style.2.css), через SWAP_DELAY_MS (должно
+ * .portfolio-d__text-wrap в style.5.css), через SWAP_DELAY_MS (должно
  * совпадать с длительностью CSS-transition) подменяем textContent и
  * снимаем класс — блок тем же transition возвращается в opacity:1 и
  * исходное положение. Один и тот же элемент используется для fade-out
@@ -32,9 +32,24 @@
  * null, скрипт тихо делал return ДО addEventListener, слушатель вообще
  * не вешался. root.closest('.portfolio-d') поднимается до самой секции
  * целиком — гарантированно накрывает и text-wrap (внутри контейнера),
- * и text-data (вне его), независимо от точной вложенности разметки. */
+ * и text-data (вне его), независимо от точной вложенности разметки.
+ *
+ * 14.08, ТЗ дизайнера: max-width у .portfolio-d__text-wrap теперь
+ * СВОЙ на каждый слайд и каждый брейкпоинт (см. таблицу в
+ * portfolio-d.njk/style.5.css) — реализовано модификатором
+ * is-slide-0..3 на том же wrap, что и текст. Переключаем его ЗДЕСЬ ЖЕ,
+ * в момент подмены textContent (когда блок уже невидим, opacity:0
+ * посередине fade) — если поменять класс раньше (одновременно с
+ * is-swapping), старый текст на миг переносился бы под новую ширину
+ * ДО того, как сам fade скроет несоответствие. */
 (function () {
   var SWAP_DELAY_MS = 260; /* должно совпадать с transition-duration в CSS */
+  var SLIDE_CLASS_RE = /\bis-slide-\d+\b/g;
+
+  function setSlideClass(el, index) {
+    el.className = el.className.replace(SLIDE_CLASS_RE, '').trim();
+    el.classList.add('is-slide-' + index);
+  }
 
   var roots = document.querySelectorAll('[data-gallery]');
   Array.prototype.forEach.call(roots, function (root) {
@@ -69,6 +84,7 @@
       if (reduceMotion) {
         titleEl.textContent = data.title;
         descEl.textContent = data.desc;
+        setSlideClass(wrap, e.detail.index);
         return;
       }
 
@@ -77,6 +93,7 @@
       pending = setTimeout(function () {
         titleEl.textContent = data.title;
         descEl.textContent = data.desc;
+        setSlideClass(wrap, e.detail.index);
         wrap.classList.remove('is-swapping');
         pending = null;
       }, SWAP_DELAY_MS);

@@ -1,4 +1,12 @@
-/* Переключение темы нового Header на /home/ (04.08).
+/* 14.08: файл переименован header-home-theme.js → header-home-theme.2.js
+ * — багфикс ниже (.stages-l/.portfolio-d не входили в список
+ * отслеживаемых секций, см. комментарий у candidates) правился в
+ * файле, который уже несколько часов активно отдавался пользователю
+ * (грузится безусловно на каждой странице) и рисковал зависшим кешем
+ * GitHub Pages/Fastly — тот же приём, что у style.N.css/gallery.N.js,
+ * см. подробности в комментарии у <link rel="stylesheet"> в base.njk.
+ *
+ * Переключение темы нового Header на /home/ (04.08).
  *
  * Изначально (первая версия скрипта) отслеживалась только одна
  * граница — Hero/Social. Пользователь уточнил: так до самого конца
@@ -141,8 +149,17 @@
      секция Hero - L (см. hero-l.njk), первая на /about/ (node
      1130:9467) и, по словам пользователя, дальше появится на
      /services/ с тем же классом. */
+  /* 14.08, багфикс (пользователь: "не всегда срабатывает нужная тема
+     хедера на /services/") — .stages-l (светлая) и .portfolio-d
+     (тёмная) не входили в список кандидатов вообще, из-за чего
+     алгоритм ниже их просто "не видел": тема на время скролла внутри
+     этих секций наследовалась от ближайшего ПРЕДЫДУЩЕГО отслеживаемого
+     элемента — соседнего Divider. Для Stages-L это означало тёмный
+     хедер (унаследованный от тёмного Divider перед ней) на ВЕСЬ скролл
+     секции, хотя сама секция светлая — нечитаемый хедер поверх белого
+     фона. Добавлены оба класса в список и в ветвление темы ниже. */
   var candidates = document.querySelectorAll(
-    '.social, .stats, .divider, .areas, .testimonial, .services, .projects, .brands, .cta, .site-footer, .contact, .form, .hero-l'
+    '.social, .stats, .divider, .areas, .testimonial, .services, .projects, .brands, .cta, .site-footer, .contact, .form, .hero-l, .stages-l, .portfolio-d'
   );
   if (!candidates.length) return;
 
@@ -167,11 +184,12 @@
       el.classList.contains('projects') ||
       el.classList.contains('contact') ||
       el.classList.contains('form') ||
-      el.classList.contains('hero-l')
+      el.classList.contains('hero-l') ||
+      el.classList.contains('stages-l')
     ) {
       theme = 'light';
     } else {
-      /* .testimonial, .brands, .cta, .site-footer */
+      /* .testimonial, .brands, .cta, .site-footer, .portfolio-d */
       theme = 'dark';
     }
     return { el: el, theme: theme };

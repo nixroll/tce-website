@@ -7771,9 +7771,7 @@ body.body--header-overlay {
    не 1-3 как у Gallery-L/Projects-L; откуда кастомное событие
    gallery:change; почему тексты слайдов не JSON, а скрытые data-ноды)
    — см. большой комментарий в portfolio-d.njk. Тут — только сами
-   размеры/паддинги/Stroke по брейкпоинтам (пользователь отдельно
-   предупредил, что их много и они разные — сверено по всем 5 через
-   get_design_context, дважды перепроверено).
+   размеры/паддинги/Stroke по брейкпоинтам.
 
    Цвета — БЕЗ локальных --text-primary/--border-primary и т.д., в
    отличие от "-L" секций: глобальный дефолт в :root УЖЕ тёмная тема
@@ -7781,17 +7779,26 @@ body.body--header-overlay {
    нужно здесь, override не нужен, тот же приём, что у .brands/.cta.
 
    Layout: 320/390/768 — Container СТОЛБИКОМ (Title/badge → картинка →
-   Title/text + кнопки), 1000/1440 — Container В РЯД (текстовая
-   панель слева фикс. ширины, картинка справа). Разметка ОДНА и та же
-   на все брейкпоинты (.portfolio-d__panel оборачивает Title/badge +
-   Text/buttons) — на 320-768px .panel: display:contents (сам
+   Title/text + кнопки), 1000/1440 — Container В РЯД. Разметка ОДНА и
+   та же на все брейкпоинты (.portfolio-d__panel оборачивает Title/badge
+   + Text/buttons) — на 320-768px .panel: display:contents (сам
    "пропадает" из потока, его дети становятся ПРЯМЫМИ flex-элементами
    .portfolio-d__container наравне с картинкой — порядок между ними
    задаём через CSS order, картинка визуально встаёт МЕЖДУ title-badge
    и text-buttons, как в Figma), с 1000px .panel — обычный flex-col
-   блок фиксированной ширины (order внутри него уже не имеет
-   значения — там всего 2 ребёнка, картинка вообще другой
-   flex-элемент контейнера). */
+   блок.
+
+   14.08, дизайн переработан под квадратные фото (см. подробности в
+   portfolio-d.njk): картинка (.portfolio-d__media) теперь ВСЕГДА
+   aspect-ratio:1/1 (была фикс. высота 540px на 768 и flex:1 0 0 на
+   1000/1440, растягивавшие широкие исходники "в заливку" — с
+   квадратными фото это больше не нужно). На 1000/1440 картинка стала
+   shrink-0 (размер только по высоте контейнера, квадрат), а текстовая
+   панель (.portfolio-d__panel) — наоборот, была фикс. ширины
+   (440/600px), стала flex:1 0 0 (забирает всё, что осталось от
+   ширины после квадратной картинки) — max-width текста внутри
+   компенсирует разную ширину у каждого слайда (см.
+   .portfolio-d__text-wrap.is-slide-N ниже). */
 .portfolio-d {
   width: 100%;
   background-color: var(--background-primary);
@@ -7817,13 +7824,13 @@ body.body--header-overlay {
 
 @media (min-width: 1000px) {
   .portfolio-d {
-    height: 600px;
+    height: 560px;
   }
 }
 
 @media (min-width: 1440px) {
   .portfolio-d {
-    height: 720px;
+    height: 700px;
   }
 }
 
@@ -7846,7 +7853,7 @@ body.body--header-overlay {
     flex: 1 0 0;
     min-height: 0;
     flex-direction: row;
-    align-items: stretch;
+    align-items: center;
   }
 }
 
@@ -7859,8 +7866,8 @@ body.body--header-overlay {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    flex-shrink: 0;
-    width: 440px;
+    flex: 1 0 0;
+    min-width: 0;
     height: 100%;
     padding: var(--spacing-10xl) var(--spacing-6xl) var(--spacing-6xl);
   }
@@ -7868,7 +7875,6 @@ body.body--header-overlay {
 
 @media (min-width: 1440px) {
   .portfolio-d__panel {
-    width: 600px;
     padding: var(--spacing-10xl) var(--spacing-7xl) var(--spacing-7xl);
   }
 }
@@ -7953,8 +7959,6 @@ body.body--header-overlay {
 
 @media (min-width: 768px) {
   .portfolio-d__media {
-    aspect-ratio: auto;
-    height: 540px;
     padding: var(--spacing-4xl);
   }
 }
@@ -7964,7 +7968,7 @@ body.body--header-overlay {
     order: 0;
     width: auto;
     height: 100%;
-    flex: 1 0 0;
+    flex: 0 0 auto;
     border-top: none;
     border-bottom: none;
     border-left: 1px solid var(--border-primary);
@@ -8018,33 +8022,6 @@ body.body--header-overlay {
   pointer-events: none;
 }
 
-/* 13.08, багфикс (пользователь: "фото слиплись", повторно после
-   фиксов #1/#2 контейнера/текста) — бокс под фото по макету почти
-   квадратный (~1.1:1 на 1440px, 0.85:1 на 1000px), исходники широкие
-   (2-2.5:1) — при cover в такой бокс обрезается ~50-60% ширины кадра
-   (эффект зума), это математически неизбежно при заполнении именно
-   такого бокса. Пользователь подтвердил: бокс не менять (по макету),
-   фото должно fill — единственный рычаг — object-position (какую
-   часть широкого кадра показывать вместо слепого центра). Подобрано
-   под каждое фото отдельно: 1 — левее центра (2 первых котла Viessmann
-   с читаемыми табличками, а не стык с чёрными настенными узлами
-   справа), 2 — чуть левее центра (оба настенных котла целиком, не
-   упираясь в чёрный коллектор справа), 3 — почти квадратное само по
-   себе (1.1:1), правки не требует, 4 — правее центра (насосная группа
-   Wilo с манометрами — сам предмет подписи "Индивидуальный жилой
-   дом", а не пустая стена слева). */
-.portfolio-d__slide--1 img {
-  object-position: 30% center;
-}
-
-.portfolio-d__slide--2 img {
-  object-position: 42% center;
-}
-
-.portfolio-d__slide--4 img {
-  object-position: 62% center;
-}
-
 .portfolio-d__text-buttons {
   order: 3;
   display: flex;
@@ -8092,7 +8069,6 @@ body.body--header-overlay {
   align-items: flex-start;
   gap: 4px;
   width: 100%;
-  max-width: 310px;
   opacity: 1;
   transform: translateY(0);
   transition: opacity 0.26s ease, transform 0.26s ease;
@@ -8136,9 +8112,73 @@ body.body--header-overlay {
   }
 }
 
+/* 14.08, ТЗ дизайнера: max-width СВОЙ на каждый слайд и каждый
+   брейкпоинт (не общий на всю карусель) — иначе описание переносится
+   на разное число строк у разных слайдов и высота секции "прыгает"
+   при пролистывании (см. подробности и таблицу в portfolio-d.njk).
+   is-slide-0..3 переключает portfolio-text.3.js синхронно с текстом
+   (см. сам скрипт) — на 0-й слайд класс уже проставлен в разметке для
+   no-JS/SSR. 320 и 390 у всех 4 слайдов совпадают (общий базовый
+   блок ниже), 768/1000/1440 — свои переопределения; на 1000 значения
+   СОВПАДАЮТ с базовыми (320/390), но правило всё равно повторено
+   явно — иначе оно бы просто отсутствовало и унаследовалось от 768,
+   что тоже сработало бы, но лишний implicit-inherit менее очевиден
+   при будущих правках, чем явное число из таблицы ТЗ. */
+.portfolio-d__text-wrap.is-slide-0 {
+  max-width: 230px;
+}
+
+.portfolio-d__text-wrap.is-slide-1 {
+  max-width: 270px;
+}
+
+.portfolio-d__text-wrap.is-slide-2,
+.portfolio-d__text-wrap.is-slide-3 {
+  max-width: 270px;
+}
+
+@media (min-width: 768px) {
+  .portfolio-d__text-wrap.is-slide-0 {
+    max-width: 370px;
+  }
+
+  .portfolio-d__text-wrap.is-slide-1 {
+    max-width: 380px;
+  }
+
+  .portfolio-d__text-wrap.is-slide-2,
+  .portfolio-d__text-wrap.is-slide-3 {
+    max-width: 360px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .portfolio-d__text-wrap.is-slide-0 {
+    max-width: 230px;
+  }
+
+  .portfolio-d__text-wrap.is-slide-1 {
+    max-width: 270px;
+  }
+
+  .portfolio-d__text-wrap.is-slide-2,
+  .portfolio-d__text-wrap.is-slide-3 {
+    max-width: 270px;
+  }
+}
+
 @media (min-width: 1440px) {
-  .portfolio-d__text-wrap {
-    max-width: 440px;
+  .portfolio-d__text-wrap.is-slide-0 {
+    max-width: 340px;
+  }
+
+  .portfolio-d__text-wrap.is-slide-1 {
+    max-width: 380px;
+  }
+
+  .portfolio-d__text-wrap.is-slide-2,
+  .portfolio-d__text-wrap.is-slide-3 {
+    max-width: 370px;
   }
 }
 
