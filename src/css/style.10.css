@@ -8747,11 +8747,23 @@ body.body--header-overlay {
      высота секции (min)   550  / 600  / 800  / 900  / 900
      Container pt          80   / 80   / 96   / 128  / 128
      Container pb          64   / 64   / 80   / 96   / 96
-     Content px            24   / 24   / 48   / 80   / 80
+     Container max-width   —    / —    / —    / —    / 1392
+     Content px            24   / 24   / 24   / 24   / 0
      Content направление   кол. / кол. / кол. / ряд  / ряд
      Content gap (текст-лого) —  / —   / —    / 32   / 32
      логотип бренда        нет  / нет  / нет  / есть / есть
      заголовок             h5   / h5   / h5   / h5   / h4
+
+   17.08, правка дизайнера: боковой отступ контента раньше рос по
+   брейкпоинтам (24/24/48/80/80), теперь он ВЕЗДЕ 24px, а на 1440
+   вообще снят с Content — вместо него у Container появился
+   max-width: 1392px. На вьюпорте ровно 1440 это даёт тот же инсет 24px
+   ((1440-1392)/2), то есть на стыке брейкпоинтов разрыва нет, а на
+   экранах шире 1440 контент перестаёт разъезжаться к краям и
+   центрируется в той же колонке 1392px, что и у остальных секций сайта
+   (.catalog-l, .portfolio-d и др. — там тот же лимит, просто он собран
+   как «секция px 24 + контейнер max-width 1392»; результат идентичный).
+
    Высота фото отдельно НЕ задаётся: .brand-hero__cover — flex:1, то
    есть забирает всю высоту, оставшуюся от Container. Так это собрано и
    в макете; проверено арифметикой — даёт ровно те 560/568/516/314/264px
@@ -8821,10 +8833,20 @@ body.body--header-overlay {
   }
 }
 
+/* С 1440px боковой инсет даёт не паддинг Content, а лимит ширины самого
+   Container (см. правку 17.08 в комментарии выше). Секция —
+   align-items:center, поэтому Container просто центрируется. */
+@media (min-width: 1440px) {
+  .brand-hero__container {
+    max-width: 1392px;
+  }
+}
+
 /* Content: до 1000px — колонка с одним ребёнком (логотип скрыт), с
    1000px — ряд «текст слева / логотип справа», выравнивание по НИЖНЕМУ
    краю (в макете логотип стоит на одной линии с последней строкой
-   заголовка). */
+   заголовка). Боковой паддинг — 24px на всех брейкпоинтах и 0 с 1440px,
+   где инсет берёт на себя max-width у Container. */
 .brand-hero__content {
   width: 100%;
   display: flex;
@@ -8833,18 +8855,17 @@ body.body--header-overlay {
   padding: 0 var(--spacing-3xl);
 }
 
-@media (min-width: 768px) {
-  .brand-hero__content {
-    padding: 0 var(--spacing-6xl);
-  }
-}
-
 @media (min-width: 1000px) {
   .brand-hero__content {
     flex-direction: row;
     align-items: flex-end;
     gap: var(--spacing-4xl);
-    padding: 0 var(--spacing-8xl);
+  }
+}
+
+@media (min-width: 1440px) {
+  .brand-hero__content {
+    padding: 0;
   }
 }
 
@@ -8879,12 +8900,6 @@ body.body--header-overlay {
   color: #325abc;
   text-decoration: none;
   white-space: nowrap;
-}
-
-@media (hover: hover) {
-  .brand-hero__back:hover {
-    text-decoration: underline;
-  }
 }
 
 .brand-hero__heading {
