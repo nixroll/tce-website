@@ -24,7 +24,44 @@
      как "белая вспышка" при быстром скролле вверху, отдельно от
      фона html/body (см. 10.08 в комментарии у bodyClass ниже). #}
   {% if transparentHeader or headerTheme == "light" %}<meta name="theme-color" content="#ffffff">{% endif %}
-  <title>{{ title or "Thermo Concept Engineering" }}</title>
+  <title>{{ title or site.name }}</title>
+  {# 17.08, SEO + Open Graph: обложка для превью ссылки (когда сайт
+     кидают в мессенджер/соцсеть) и обычный сниппет в поиске. До этого в
+     <head> не было ни description, ни og:*, ни twitter:* — ссылка
+     разворачивалась без картинки и без описания.
+
+     Все URL здесь АБСОЛЮТНЫЕ (site.origin + путь): относительные адреса
+     парсеры соцсетей не раскрывают, превью бы не собралось. origin
+     задан в src/_data/site.js — там же дефолтное описание и пояснение,
+     что менять при переезде на свой домен.
+
+     og:image — 1200×630 (src/images/og-cover.png, прислал пользователь):
+     стандартный размер крупной карточки, его же ждёт
+     twitter:card=summary_large_image. width/height объявлены явно —
+     тогда парсер строит превью сразу, не дожидаясь загрузки файла и не
+     показывая мелкую карточку в первый раз.
+
+     Описание берётся из front matter страницы (description), иначе
+     общий дефолт сайта. #}
+  {% set pageDescription = description or site.description %}
+  {% set pageUrl = site.origin + (page.url | url) %}
+  <meta name="description" content="{{ pageDescription }}">
+  <link rel="canonical" href="{{ pageUrl }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ site.name }}">
+  <meta property="og:locale" content="{{ site.locale }}">
+  <meta property="og:title" content="{{ title or site.name }}">
+  <meta property="og:description" content="{{ pageDescription }}">
+  <meta property="og:url" content="{{ pageUrl }}">
+  <meta property="og:image" content="{{ site.origin + ('/images/og-cover.png' | url) }}">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{ site.name }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ title or site.name }}">
+  <meta name="twitter:description" content="{{ pageDescription }}">
+  <meta name="twitter:image" content="{{ site.origin + ('/images/og-cover.png' | url) }}">
   {# 10.08: фавиконка (лого-марк TCE, тот же орнаж/белый квадрат, что и
      в футере, — файл прислал пользователь).
      10.08, багфикс (пользователь: не видно ни в Chrome, ни в Safari,
