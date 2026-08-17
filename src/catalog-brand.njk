@@ -3,6 +3,7 @@ layout: base.njk
 stickyHeader: true
 headerTheme: light
 hasContactForm: true
+hasGallery: true
 customSections: true
 pagination:
   data: brands
@@ -58,6 +59,28 @@ eleventyComputed:
    form-l.njk и base.njk). #}
 {% include "brand-hero.njk" %}
 {% include "brand-catalog.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{# Brand Gallery - L (node 1555:25573) — это ТОТ ЖЕ компонент, что
+   Gallery - L на /about/: вёрстка идентична по всем 5 брейкпоинтам,
+   отличаются только бейдж, заголовок и набор фото. Поэтому подключается
+   тот же параметризуемый include, а контент лежит в
+   src/_data/galleries.js под ключом "brand" (см. комментарии там и в
+   gallery-l.njk). #}
+{% set galleryLSet = "brand" %}
+{% set galleryLBadge = "Галерея" %}
+{% set galleryLHeadingAccent = "В деталях." %}
+{% set galleryLHeadingMuted = "Каталог и&nbsp;объекты." %}
+{% set galleryLNode = "1555:25573" %}
+{% set galleryLName = "Brand Gallery - L" %}
+{% include "gallery-l.njk" %}
+{% set galleryLSet = "" %}
+{% set galleryLBadge = "" %}
+{% set galleryLHeadingAccent = "" %}
+{% set galleryLHeadingMuted = "" %}
+{% set galleryLNode = "" %}
+{% set galleryLName = "" %}
 {% set dividerVariant = "light" %}
 {% include "divider.njk" %}
 {% set dividerVariant = "" %}

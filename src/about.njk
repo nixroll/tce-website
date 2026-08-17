@@ -85,4 +85,16 @@ tailDividerVariant: light
 {% set dividerVariant = "light" %}
 {% include "divider.njk" %}
 {% set dividerVariant = "" %}
+{# 17.08: gallery-l.njk стал параметризуемым — секция понадобилась второй
+   раз на странице бренда (Brand Gallery - L, тот же CSS, другие фото и
+   тексты). Контент здешнего набора — в src/_data/galleries.js под
+   ключом "about". #}
+{% set galleryLSet = "about" %}
+{% set galleryLBadge = "Изнутри" %}
+{% set galleryLHeadingAccent = "Наш альбом." %}
+{% set galleryLHeadingMuted = "Загляните в&nbsp;наши рабочие будни." %}
 {% include "gallery-l.njk" %}
+{% set galleryLSet = "" %}
+{% set galleryLBadge = "" %}
+{% set galleryLHeadingAccent = "" %}
+{% set galleryLHeadingMuted = "" %}

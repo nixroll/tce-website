@@ -1,34 +1,47 @@
-{# Gallery - L (Figma node 1300:2567 на /about/, "Gallery - L") —
-   светлая секция-карусель "Наш альбом." (бейдж "Изнутри"), сразу под
-   Team - L (см. about.njk — Divider - L идёт СРАЗУ ПЕРЕД этой секцией,
-   после неё — стандартный хвост base.njk, см. подробный комментарий
-   там). НЕ переиспользуемый include (контент фиксирован), подключается
-   напрямую, без {% set %} переменных (тот же подход, что у
-   team-l.njk/docs-l.njk).
+{# Gallery - L — светлая секция-карусель с квадратными фото: бейдж +
+   двухстрочный заголовок + кнопки навигации, под ними лента слайдов
+   (1 / 2 / 3 видимых на 320-390 / 768-1000 / 1440).
 
-   12.08: структура и почти все паддинги/границы — 1-в-1 то же, что у
-   Projects - L (Home, node 622:4042) и старого Docs - L (см.
-   .projects/.docs-l в style.2.css, подробные комментарии там) — три
-   контейнера друг под другом (.gallery-l__intro/.gallery-l__gallery/
-   .gallery-l__bottom), кнопки продублированы в intro (с 768px) и
-   bottom (до 768px), карусель — та же логика (src/js/gallery.js).
-   Сверено по всем 5 брейкпоинтам через get_design_context.
+   Используется дважды, поэтому ПАРАМЕТРИЗУЕМЫЙ include (тот же приём,
+   что у hero-l.njk/social-l.njk/form-l.njk):
+   - /about/ — node 1300:2567, бейдж «Изнутри» («Наш альбом.»);
+   - /catalog/<slug>/ — node 1555:25573, называется в Figma
+     «Brand Gallery - L», бейдж «Галерея» («В деталях.»).
+   Вёрстка у них идентична (сверено по всем 5 брейкпоинтам: паддинги,
+   Stroke, max-width 340px у заголовка до 1440, число видимых слайдов,
+   дубль кнопок снизу до 768px) — различаются только бейдж, заголовок и
+   набор фотографий, поэтому CSS (.gallery-l*) один и тот же, ни строчки
+   добавлять не пришлось.
 
-   ЕДИНСТВЕННОЕ структурное отличие от Projects-L/Docs-L (то, ради чего
-   пользователь отдельно попросил свериться) — у контейнера
-   "Title and badge" ЕСТЬ max-width, и он не прогрессивный (460→480→
-   none, как у Projects-L), а ФИКСИРОВАННЫЙ 340px на 320/390/768/1000,
-   и только на 1440px снимается (max-width: none, растёт как flex:1
-   рядом с кнопками) — см. .gallery-l__title-badge в style.2.css.
+   Параметры (задать через {% set %} ПЕРЕД include и сбросить после,
+   иначе значение утечёт в следующий include на той же странице):
+     galleryLSet           — ключ набора фото в src/_data/galleries.js
+                             ("about" | "brand"), обязателен;
+     galleryLBadge         — текст бейджа;
+     galleryLHeadingAccent — первая (тёмная) строка заголовка;
+     galleryLHeadingMuted  — вторая (серая) строка заголовка;
+     galleryLNode/galleryLName — id и имя ноды в Figma для
+                             data-figma-* (у секции они РАЗНЫЕ на двух
+                             страницах, хотя вёрстка одна — атрибуты
+                             чисто документирующие, но пусть каждая
+                             страница ссылается на свой макет).
 
-   Фото — реальные рабочие фотографии (не сканы документов, как у
-   Docs-L), поэтому используется тот же формат slide(), что у
+   12.08, структурно: три контейнера друг под другом
+   (.gallery-l__intro/.gallery-l__gallery/.gallery-l__bottom) — 1-в-1
+   как у Projects - L (Home) и Docs - L, кнопки продублированы в intro
+   (видны с 768px) и в bottom (видны до 768px), карусель — тот же
+   src/js/gallery.2.js.
+
+   ЕДИНСТВЕННОЕ структурное отличие от Projects-L/Docs-L — у контейнера
+   «Title and badge» есть max-width, и он не прогрессивный (460→480→
+   none, как у Projects-L), а ФИКСИРОВАННЫЙ 340px на 320/390/768/1000, и
+   только на 1440px снимается (max-width: none, растёт как flex:1 рядом
+   с кнопками) — см. .gallery-l__title-badge в style.13.css.
+
+   Фото — реальные рабочие фотографии, поэтому тот же формат, что у
    Projects - L (jpg+webp, 400/700/1000w), а не докс-л-формат
-   (прозрачный PNG 400×400). 13.08: пользователь заменил набор в папке
-   "Фото для About" на 12 фото (было 9) — старые файлы photo-1..9 в
-   src/images/gallery-l/ удалены и весь набор переобработан заново с
-   нуля из папки (resize+crop под 400/700/1000, jpg+webp), нумерация
-   слайдов 1-12 соответствует порядку файлов в папке на 13.08. #}
+   (прозрачный PNG 400×400). Имена файлов и alt'ы — в galleries.js. #}
+{% set gallerySet = galleries[galleryLSet] %}
 {% macro navButtons() %}
   <div class="gallery-l__buttons">
     <button class="gallery-l__nav-btn" type="button" data-gallery-prev aria-label="Предыдущее фото">
@@ -43,16 +56,16 @@
     </button>
   </div>
 {% endmacro %}
-{% macro slide(n, alt) %}
+{% macro slide(dir, n, alt) %}
   <div class="gallery-l__slide">
     <picture>
       <source
         type="image/webp"
-        srcset="{{ ('/images/gallery-l/photo-' + n + '-400.webp') | url }} 400w, {{ ('/images/gallery-l/photo-' + n + '-700.webp') | url }} 700w, {{ ('/images/gallery-l/photo-' + n + '-1000.webp') | url }} 1000w"
+        srcset="{{ ('/images/' + dir + '/photo-' + n + '-400.webp') | url }} 400w, {{ ('/images/' + dir + '/photo-' + n + '-700.webp') | url }} 700w, {{ ('/images/' + dir + '/photo-' + n + '-1000.webp') | url }} 1000w"
         sizes="(min-width: 1440px) 421px, (min-width: 768px) calc((100vw - 146px) / 2), (min-width: 390px) calc(100vw - 90px), calc(100vw - 48px)">
       <img
-        src="{{ ('/images/gallery-l/photo-' + n + '-1000.jpg') | url }}"
-        srcset="{{ ('/images/gallery-l/photo-' + n + '-400.jpg') | url }} 400w, {{ ('/images/gallery-l/photo-' + n + '-700.jpg') | url }} 700w, {{ ('/images/gallery-l/photo-' + n + '-1000.jpg') | url }} 1000w"
+        src="{{ ('/images/' + dir + '/photo-' + n + '-1000.jpg') | url }}"
+        srcset="{{ ('/images/' + dir + '/photo-' + n + '-400.jpg') | url }} 400w, {{ ('/images/' + dir + '/photo-' + n + '-700.jpg') | url }} 700w, {{ ('/images/' + dir + '/photo-' + n + '-1000.jpg') | url }} 1000w"
         sizes="(min-width: 1440px) 421px, (min-width: 768px) calc((100vw - 146px) / 2), (min-width: 390px) calc(100vw - 90px), calc(100vw - 48px)"
         width="1000" height="1000"
         alt="{{ alt }}"
@@ -60,12 +73,12 @@
     </picture>
   </div>
 {% endmacro %}
-<section class="gallery-l" data-figma-node="1300:2567" data-figma-name="Gallery - L">
+<section class="gallery-l" data-figma-node="{{ galleryLNode or '1300:2567' }}" data-figma-name="{{ galleryLName or 'Gallery - L' }}">
   <div class="gallery-l__intro">
     <div class="gallery-l__title-badge">
-      <span class="gallery-l__badge">Изнутри</span>
-      <p class="gallery-l__heading">Наш альбом.<br>
-        <span class="gallery-l__heading-muted">Загляните в&nbsp;наши рабочие будни.</span>
+      <span class="gallery-l__badge">{{ galleryLBadge }}</span>
+      <p class="gallery-l__heading">{{ galleryLHeadingAccent }}<br>
+        <span class="gallery-l__heading-muted">{{ galleryLHeadingMuted | safe }}</span>
       </p>
     </div>
     {{ navButtons() }}
@@ -73,18 +86,9 @@
   <div class="gallery-l__gallery" data-gallery>
     <div class="gallery-l__viewport">
       <div class="gallery-l__track" data-gallery-track>
-        {{ slide('1', 'Сотрудник TCE у логотипа компании в офисе') }}
-        {{ slide('2', 'Инженеры TCE изучают чертежи проекта') }}
-        {{ slide('3', 'Команда TCE с цветами на 8 Марта') }}
-        {{ slide('4', 'Сотрудники TCE за работой в офисе') }}
-        {{ slide('5', 'Команда TCE на профильной выставке') }}
-        {{ slide('6', 'Команда TCE на новогоднем корпоративе') }}
-        {{ slide('7', 'Монтажники TCE на объекте у частного дома') }}
-        {{ slide('8', 'Бригада TCE на объекте летом') }}
-        {{ slide('9', 'Шуточные награды команды TCE — именные "запаски"') }}
-        {{ slide('10', 'Сотрудник TCE в переговорной') }}
-        {{ slide('11', 'Сотрудник TCE за ноутбуком в офисе') }}
-        {{ slide('12', 'Бригада TCE на объекте в коттеджном посёлке') }}
+        {%- for alt in gallerySet.photos %}
+        {{ slide(gallerySet.dir, loop.index, alt) }}
+        {%- endfor %}
       </div>
     </div>
   </div>
