@@ -8734,3 +8734,228 @@ body.body--header-overlay {
   stroke: var(--text-tertiary);
   transition: stroke 0.15s ease;
 }
+
+/* Brand Hero - L (17.08, /catalog/<slug>/, Figma node 1515:24095) —
+   светлая первая секция страницы бренда: back link, двухстрочный
+   заголовок, логотип бренда справа (только 1000/1440) и обложка-фото
+   на всю ширину под ними. Архитектура и решения по мультистранице —
+   см. большой комментарий в brand-hero.njk. Тут — размеры/паддинги,
+   сверено по всем 5 брейкпоинтам через get_design_context + ТЗ
+   дизайнера (TZ-Brand-Hero-section.md).
+
+   Таблица (320 / 390 / 768 / 1000 / 1440):
+     высота секции (min)   550  / 600  / 800  / 900  / 900
+     Container pt          80   / 80   / 96   / 128  / 128
+     Container pb          64   / 64   / 80   / 96   / 96
+     Content px            24   / 24   / 48   / 80   / 80
+     Content направление   кол. / кол. / кол. / ряд  / ряд
+     Content gap (текст-лого) —  / —   / —    / 32   / 32
+     логотип бренда        нет  / нет  / нет  / есть / есть
+     заголовок             h5   / h5   / h5   / h5   / h4
+   Высота фото отдельно НЕ задаётся: .brand-hero__cover — flex:1, то
+   есть забирает всю высоту, оставшуюся от Container. Так это собрано и
+   в макете; проверено арифметикой — даёт ровно те 560/568/516/314/264px
+   из п.6 ТЗ на соответствующих брейкпоинтах.
+
+   Высота секции (просьба пользователя: "у страницы есть min height, а
+   так она всегда по высоте 100%, а у 390px и 320px сделай даже 115%"):
+   min-height: max(<значение из макета>, 100vh) — то есть секция тянется
+   на весь экран, но никогда не становится ниже макетного минимума на
+   низких окнах. На 320/390 вместо 100vh взято 115vh — секция намеренно
+   чуть выше экрана, чтобы обложка была заметнее и появлялся намёк на
+   скролл. vh (а не dvh/svh) выбран сознательно: на мобильных с
+   динамическими тулбарами dvh «дышит» при скролле и высота секции
+   прыгала бы, а здесь важна стабильность кадра.
+
+   Цвета — светлая секция, токены переопределяются ЛОКАЛЬНО (глобальный
+   дефолт в :root — тёмная тема), тот же приём, что у всех "-L" секций. */
+.brand-hero {
+  --text-primary: #181d27;
+  --text-quaternary: #717680;
+
+  width: 100%;
+  min-height: max(550px, 115vh);
+  background-color: #fafafb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+@media (min-width: 390px) {
+  .brand-hero {
+    min-height: max(600px, 115vh);
+  }
+}
+
+@media (min-width: 768px) {
+  .brand-hero {
+    min-height: max(800px, 100vh);
+  }
+}
+
+@media (min-width: 1000px) {
+  .brand-hero {
+    min-height: max(900px, 100vh);
+  }
+}
+
+.brand-hero__container {
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-8xl) 0 var(--spacing-7xl);
+}
+
+@media (min-width: 768px) {
+  .brand-hero__container {
+    padding: var(--spacing-9xl) 0 var(--spacing-8xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .brand-hero__container {
+    padding: var(--spacing-10xl) 0 var(--spacing-9xl);
+  }
+}
+
+/* Content: до 1000px — колонка с одним ребёнком (логотип скрыт), с
+   1000px — ряд «текст слева / логотип справа», выравнивание по НИЖНЕМУ
+   краю (в макете логотип стоит на одной линии с последней строкой
+   заголовка). */
+.brand-hero__content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 var(--spacing-3xl);
+}
+
+@media (min-width: 768px) {
+  .brand-hero__content {
+    padding: 0 var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .brand-hero__content {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: var(--spacing-4xl);
+    padding: 0 var(--spacing-8xl);
+  }
+}
+
+.brand-hero__text {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+}
+
+@media (min-width: 1000px) {
+  .brand-hero__text {
+    flex: 1 0 0;
+    min-width: 0;
+  }
+}
+
+/* Back link «← Каталог». Стрелка — обычный символ в строке, не иконка
+   (п.2 ТЗ), поэтому в разметке она склеена с текстом неразрывным
+   пробелом — иначе при переносе могла бы оторваться от слова. Цвет —
+   тот же синий #325abc, что у бейджей секций и ссылки на политику
+   конфиденциальности в форме. */
+.brand-hero__back {
+  display: inline-block;
+  flex-shrink: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: -0.075px;
+  color: #325abc;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+@media (hover: hover) {
+  .brand-hero__back:hover {
+    text-decoration: underline;
+  }
+}
+
+.brand-hero__heading {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
+  color: var(--text-primary);
+}
+
+@media (min-width: 1440px) {
+  .brand-hero__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
+}
+
+.brand-hero__heading-muted {
+  color: var(--text-quaternary);
+}
+
+/* Логотип бренда — только с 1000px (до этого в макете его нет вовсе).
+   Скрыт через display:none, а не убран из разметки: так у Content на
+   мобильных не остаётся зарезервированного пустого места (п.7 ТЗ), и
+   не нужен второй вариант разметки под десктоп.
+   Размер, в отличие от карточек каталога, НЕ per-brand: нормализован по
+   высоте 30px при ширине auto (п.4 ТЗ) — каждый логотип масштабируется
+   по своим пропорциям и даёт свою фактическую ширину. */
+.brand-hero__logo {
+  display: none;
+}
+
+@media (min-width: 1000px) {
+  .brand-hero__logo {
+    display: block;
+    flex-shrink: 0;
+    width: auto;
+    height: 30px;
+  }
+}
+
+/* Обложка. flex:1 + min-height:0 — забирает всю высоту, оставшуюся от
+   Container (см. таблицу выше). Full-bleed: во всю ширину, без боковых
+   паддингов и БЕЗ скругления — единственное такое фото на сайте, у
+   карточек каталога и слайдов портфолио рамка со скруглением остаётся
+   (п.6 ТЗ). */
+.brand-hero__cover {
+  width: 100%;
+  flex: 1 0 0;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.brand-hero__cover picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.brand-hero__cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}

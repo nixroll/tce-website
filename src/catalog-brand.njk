@@ -1,5 +1,9 @@
 ---
 layout: base.njk
+stickyHeader: true
+headerTheme: light
+hasContactForm: true
+customSections: true
 pagination:
   data: brands
   size: 1
@@ -8,21 +12,56 @@ permalink: "/catalog/{{ brand.slug }}/"
 eleventyComputed:
   title: "{{ brand.name }} — Каталог — Thermo Concept Engineering"
 ---
-{# 14.08. Страницы-заглушки брендов каталога, по одной на каждую
-   запись из src/_data/brands.js (9 штук: /catalog/arbonia/,
-   /catalog/elco/ и т.д.). Генерируются пагинацией size:1 — тот же
-   список, по которому строится и сетка карточек в catalog-l.njk, так
-   что ссылка "Смотреть" из карточки гарантированно ведёт на реально
-   существующую страницу и они не разъезжаются.
+{# 14.08. Страницы брендов каталога — по одной на каждую запись из
+   src/_data/brands.js (9 штук: /catalog/arbonia/, /catalog/elco/ и
+   т.д.). Генерируются пагинацией size:1 по ТОМУ ЖЕ списку, по которому
+   строится сетка карточек в catalog-l.njk, поэтому ссылка "Смотреть" из
+   карточки гарантированно ведёт на существующую страницу и они не
+   разъезжаются.
 
-   Содержимое — намеренно та же заглушка, что была у самой /catalog/
-   до вёрстки (секция .hero с названием страницы) и что сейчас у
-   остальных ещё не свёрстанных внутренних страниц. Свёрстанный
-   контент бренда — отдельная задача, макетов пока нет; здесь только
-   рабочий адрес + правильный <title>, чтобы каталог не вёл в 404.
+   17.08. Раньше здесь была заглушка (.hero с названием бренда) — теперь
+   страница свёрстана по Figma Layout (node 1504:20045). Порядок секций
+   сверен по всем 5 брейкпоинтам:
+     Header Line → Brand Hero - L → Form - L → Divider - L → CTA - D →
+     Divider - D → Footer - D
+   Между Brand Hero и Form - L дивайдера НЕТ ни на одном брейкпоинте —
+   обложка Brand Hero упирается в следующую секцию без зазора, это
+   намеренно (п.6 ТЗ). Divider - D перед Footer есть только на
+   1000/1440 — ровно поведение готового модификатора "edge-secondary"
+   (см. divider.njk).
 
-   Хвост страницы (Brands/CTA/Footer) — стандартный из base.njk, как
-   и у прочих заглушек: customSections тут НЕ выставлен. #}
-<section class="hero" data-figma-node="308:1917" data-figma-name="Hero">
-  <p class="hero__title">{{ brand.name }}</p>
-</section>
+   Хвост совпадает с /catalog/ один в один, поэтому и здесь
+   customSections: true (базовый хвост base.njk с Brands не подходит:
+   Brands в макете нет, а дивайдеры расставлены иначе) — страница берёт
+   его на себя, кроме общего Footer.
+
+   Header — как на /catalog/, /about/, /services/ (пользователь просил
+   "те же правила"): stickyHeader: true + headerTheme: light. Именно
+   stickyHeader даёт "резиновое оттягивание" на мобилках — sticky, в
+   отличие от fixed, часть потока документа и двигается вместе со
+   страницей при overscroll-bounce на iOS, поэтому под ним не обнажается
+   пустой разрыв (подробный разбор — у .site-header в style.9.css и у
+   stickyHeader в base.njk). Обе темы хедера (светлая/тёмная) при
+   скролле переключает header-home-theme.3.js: .brand-hero добавлена в
+   его список как светлая секция, тёмными на этой странице оказываются
+   CTA - D/Footer - D — так же, как на остальных страницах.
+
+   Отдельный спейсер header-line.njk (элемент "Header Line" из макета)
+   при этой схеме НЕ нужен и намеренно не подключается: sticky сам
+   резервирует место в потоке, а base.njk по флагу stickyHeader обнуляет
+   padding-top у body — иначе отступ задвоился бы. Та же схема уже
+   работает на /catalog/, /about/, /services/ и /contact/, где в Figma
+   этот же "Header Line" тоже нарисован.
+
+   hasContactForm — подключает contact-toast.js + confetti.js +
+   contact-form.js, без него submit формы не перехватится (см.
+   form-l.njk и base.njk). #}
+{% include "brand-hero.njk" %}
+{% include "form-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "cta.njk" %}
+{% set dividerVariant = "edge-secondary" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
