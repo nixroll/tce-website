@@ -3063,7 +3063,15 @@ body.body--header-overlay {
   width: fit-content;
   padding: var(--spacing-md) var(--spacing-lg) var(--spacing-md) var(--spacing-xl);
   border-radius: var(--radius-lg);
-  background-color: var(--background-primary);
+  /* 17.08: фон был --background-primary (#fafafb, в цвет секции) — по
+     свежей Figma (node 494:2958, компонент "Arrow Button L") у кнопки
+     теперь --background-secondary (#f3f4f6), т.е. она чуть темнее
+     полотна и заметна как отдельный элемент. Ровно та же кнопка уже
+     стоит на /catalog/ (.catalog-l__btn) — там компонент был взят уже в
+     новой версии, поэтому Home оставалась единственным местом со старым
+     фоном. Токен у .areas объявлен локально (см. выше), так что оба
+     значения светлые, несмотря на тёмный :root. */
+  background-color: var(--background-secondary);
   border: 1px solid var(--border-primary);
   font-family: var(--font-body);
   font-weight: 500;
@@ -3072,15 +3080,43 @@ body.body--header-overlay {
   color: var(--text-secondary);
   text-decoration: none;
   white-space: nowrap;
+  transition: border-color 0.15s ease, color 0.15s ease;
 }
 
 /* Hover (node 494:2958, state=Hover): бордер primary -> secondary,
-   текст secondary -> primary. Иконка в Normal — text-tertiary
-   (#535862), на Hover сгущается до text-primary — то же поведение,
-   что было в старой версии кнопки, компонент не менялся. */
-.areas__btn:hover {
+   текст secondary -> primary, фон НЕ меняется (в новой версии
+   компонента он одинаковый в обоих состояниях). Иконка в Normal —
+   text-tertiary (#535862), на Hover сгущается до text-primary.
+
+   17.08: правило убрано под @media (hover: hover) — как у
+   .catalog-l__btn. Без этого гейта на тач-устройствах hover
+   "залипает" после тапа: браузер применяет :hover и оставляет его,
+   пока палец не тапнет в другое место, и кнопка выглядит нажатой уже
+   после перехода назад. */
+@media (hover: hover) {
+  .areas__btn:hover {
+    border-color: var(--border-secondary);
+    color: var(--text-primary);
+  }
+
+  .areas__btn:hover .areas__btn-icon path {
+    stroke: var(--text-primary);
+  }
+}
+
+/* Apple Pencil на iPad: iPadOS даёт наведение стилусом, но НЕ матчит
+   :hover — состояние навешивает src/js/pencil-hover.2.js классом
+   .is-pencil-hover (подробный разбор — в самом скрипте). Класс
+   .areas__btn в его список селекторов раньше не входил, поэтому на
+   Home эти две кнопки были единственными, что не реагировали на
+   Pencil, — добавлено вместе с этой правкой. */
+.areas__btn.is-pencil-hover {
   border-color: var(--border-secondary);
   color: var(--text-primary);
+}
+
+.areas__btn.is-pencil-hover .areas__btn-icon path {
+  stroke: var(--text-primary);
 }
 
 .areas__btn-icon {
@@ -3090,10 +3126,7 @@ body.body--header-overlay {
 
 .areas__btn-icon path {
   stroke: var(--text-tertiary);
-}
-
-.areas__btn:hover .areas__btn-icon path {
-  stroke: var(--text-primary);
+  transition: stroke 0.15s ease;
 }
 
 /* Testimonial (node 480:2828). Только на Home, сразу после нового

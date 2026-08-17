@@ -167,7 +167,7 @@
      ставивший .is-footer-bottom на body у самого низа страницы — фон
      html/body теперь вместо этого следит напрямую за темой Header
      (см. html:has(.site-header--home:not(.site-header--dark)) в
-     style.2.css), так что отдельный класс для "хвоста" у Footer
+     style.css), так что отдельный класс для "хвоста" у Footer
      больше не нужен — убран вместе с самим правилом в CSS. */
 
   var THEMES = { transparent: 1, light: 1, dark: 1 };

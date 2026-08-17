@@ -112,8 +112,14 @@
      вечер — добавлено событие gallery:change) и
      portfolio-text.js → portfolio-text.2.js (создан и сразу же
      правился несколько раз — баг с scope) — JS отдаётся тем же
-     GitHub Pages/Fastly, тот же риск зависшего кеша. #}
-  <link rel="stylesheet" href="{{ '/css/style.13.css' | url }}">
+     GitHub Pages/Fastly, тот же риск зависшего кеша.
+
+     17.08: style.13.css → style.14.css (новый фон у .areas__btn на Home)
+     и pencil-hover.2.js → pencil-hover.3.js (в список селекторов
+     добавлен .areas__btn) — правка мелкая и чисто визуальная, поэтому
+     без переименования её проще всего не увидеть вообще: браузер
+     возьмёт старый CSS из кеша, и покажется, что ничего не изменилось. #}
+  <link rel="stylesheet" href="{{ '/css/style.14.css' | url }}">
 </head>
 {# 10.08: lightBodyBg/.body--light-top убраны — фон html/body теперь
    красится напрямую по теме Header (html:has(.site-header--home:not
@@ -275,7 +281,7 @@
      .form__checkbox-row/.projects__nav-btn) встречаются на разных
      страницах сайта, сам себя гасит через querySelectorAll на
      страницах без них. #}
-  <script src="{{ '/js/pencil-hover.2.js' | url }}" defer></script>
+  <script src="{{ '/js/pencil-hover.3.js' | url }}" defer></script>
   {# 11.08: gallery.js раньше грузился только под isHome (карусель была
      только у Projects - L на Home) — теперь Docs - L на /about/ тоже
      карусель на той же разметке/скрипте (см. docs-l.njk), поэтому

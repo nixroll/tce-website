@@ -23,7 +23,7 @@
   if (!toast) return;
 
   var TOAST_DURATION = 3000;
-  var TRANSITION_MS = 250; /* совпадает с transition в style.2.css */
+  var TRANSITION_MS = 250; /* совпадает с transition в style.css */
 
   var hideTimer = null;
   var removeVisibleTimer = null;
