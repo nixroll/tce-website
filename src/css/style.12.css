@@ -9007,3 +9007,269 @@ body.body--header-overlay {
   -webkit-user-select: none;
   -webkit-user-drag: none;
 }
+
+/* Brand Catalog - L (17.08, /catalog/<slug>/, Figma node 1551:25111) —
+   светлая секция «Линейка бренда. Что мы поставляем.» с сеткой из 4
+   карточек-категорий. Архитектура (новый для проекта flex-wrap вместо
+   Grid, схема хэйрлайнов, мультистраница) — см. большой комментарий в
+   brand-catalog.njk. Тут — размеры/паддинги, сверено по всем 5
+   брейкпоинтам через get_design_context/get_metadata + ТЗ дизайнера
+   (TZ-Categories-section.md).
+
+   Таблица (320 / 390 / 768 / 1000 / 1440):
+     px секции             0    / 20   / 24   / 24   / 24
+     Intro padding-y       80-80/ 80-80/ 96-96/ 128-96 / 128-96
+     Intro padding-x       24   / 32   / 80   / 80   / 80
+     заголовок             h5   / h5   / h5   / h4   / h4
+     колонок в сетке       1    / 1    / 1    / 2    / 2
+     ширина карточки       320  / 350  / 720  / 476  / 696
+     padding карточки      24   / 32   / 32   / 32   / 40
+     размер фото           272  / 286  / 656  / 412  / 616
+     gap фото→текст        24   / 24   / 24   / 24   / 24
+     строк в описании      3    / 3    / 1    / 2    / 1
+   Ширина карточки в вёрстке НЕ задаётся напрямую — только min-width для
+   переноса (см. .brand-catalog__card); фактическая получается от
+   flex-grow, и на опорных ширинах вьюпорта совпадает с макетом.
+   Граница h5→h4 у заголовка — 1000px, а НЕ 1440px, как у большинства
+   других секций (сверено по нодам, на 1000 уже 36/38).
+
+   Цвета — светлая секция, токены переопределяются ЛОКАЛЬНО (глобальный
+   дефолт в :root — тёмная тема), тот же приём, что у всех "-L" секций. */
+.brand-catalog {
+  --text-primary: #181d27;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+
+  width: 100%;
+  background-color: #fafafb;
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+@media (min-width: 390px) {
+  .brand-catalog {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .brand-catalog {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+/* Блок заголовка. Боковых границ на 320 нет вообще (секция там
+   edge-to-edge), появляются с 390 — общая конвенция всех "-L" секций. */
+.brand-catalog__intro {
+  width: 100%;
+  max-width: 1392px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-4xl);
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .brand-catalog__intro {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .brand-catalog__intro {
+    padding: var(--spacing-9xl) var(--spacing-8xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .brand-catalog__intro {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+  }
+}
+
+.brand-catalog__title-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  flex: 1 0 0;
+  min-width: 0;
+}
+
+.brand-catalog__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: #325abc;
+}
+
+.brand-catalog__heading {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
+  color: var(--text-primary);
+}
+
+/* Внимание: h4 здесь с 1000px, а не с 1440px. */
+@media (min-width: 1000px) {
+  .brand-catalog__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
+}
+
+.brand-catalog__heading-muted {
+  color: var(--text-quaternary);
+}
+
+/* Сетка: ОДИН flex-контейнер с переносом, без grid-template-columns.
+   Число колонок задаётся косвенно — через min-width карточек (см.
+   .brand-catalog__card): сколько влезет, столько и встанет в строку.
+   gap намеренно 0 — карточки стоят вплотную, разделяют их бордеры
+   самих карточек. */
+.brand-catalog__grid {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: stretch;
+  gap: 0;
+}
+
+@media (min-width: 390px) {
+  .brand-catalog__grid {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+/* min-width задан в ПРОЦЕНТАХ, а не в пикселях из макета (320/350/720/
+   476/696), сознательно. В Figma обводка контейнера рисуется «поверх» и
+   ширину не занимает, а в CSS border-left/right у .brand-catalog__grid
+   съедает 2px из контентной ширины — пиксельный min-width, равный полной
+   ширине контейнера, оказался бы на 2px ШИРЕ доступного места, и
+   карточка вылезала бы за сетку (на 390 это 350 против 348). Проценты
+   считаются от контентной ширины, поэтому 100% всегда даёт ровно одну
+   карточку в строке, а 50% — ровно две, независимо от толщины бордеров и
+   от промежуточных ширин окна. Фактическая ширина карточки при этом на
+   1-2px меньше макетной — это системное следствие CSS-модели бордеров,
+   одинаковое для всех сеток сайта (та же картина у .catalog-l__grid). */
+.brand-catalog__card {
+  flex: 1 0 0;
+  min-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3xl);
+  overflow: hidden;
+  padding: var(--spacing-3xl);
+  border-top: 1px solid var(--border-primary);
+}
+
+@media (min-width: 390px) {
+  .brand-catalog__card {
+    padding: var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  /* Две колонки: min-width 50% — в строку встают ровно две карточки,
+     третья переносится. Вертикальный разделитель между колонками рисует
+     ЛЕВАЯ карточка каждой пары; правую границу правой колонки уже даёт
+     сам .brand-catalog__grid, поэтому border-right у чётных карточек не
+     нужен — иначе линия задвоилась бы. */
+  .brand-catalog__card {
+    min-width: 50%;
+  }
+
+  .brand-catalog__card:nth-child(odd) {
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 1440px) {
+  .brand-catalog__card {
+    padding: var(--spacing-5xl);
+  }
+}
+
+/* Фото — строгий квадрат, cover, без скругления (п.3 ТЗ). img
+   абсолютно позиционирован, чтобы не тянуть свою натуральную высоту в
+   расчёт (тот же нюанс, что уже разобран в багфиксе .brand-hero__cover:
+   процент высоты внутри блока без явной высоты в Safari не резолвится). */
+.brand-catalog__image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.brand-catalog__image picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.brand-catalog__image img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+.brand-catalog__text {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.brand-catalog__card-title {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.09px;
+  color: var(--text-primary);
+}
+
+.brand-catalog__card-desc {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.08px;
+  color: var(--text-quaternary);
+}

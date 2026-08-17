@@ -159,7 +159,7 @@
      секции, хотя сама секция светлая — нечитаемый хедер поверх белого
      фона. Добавлены оба класса в список и в ветвление темы ниже. */
   var candidates = document.querySelectorAll(
-    '.social, .stats, .divider, .areas, .testimonial, .services, .projects, .brands, .cta, .site-footer, .contact, .form, .hero-l, .stages-l, .portfolio-d, .catalog-l, .brand-hero'
+    '.social, .stats, .divider, .areas, .testimonial, .services, .projects, .brands, .cta, .site-footer, .contact, .form, .hero-l, .stages-l, .portfolio-d, .catalog-l, .brand-hero, .brand-catalog'
   );
   if (!candidates.length) return;
 
@@ -187,7 +187,8 @@
       el.classList.contains('hero-l') ||
       el.classList.contains('stages-l') ||
       el.classList.contains('catalog-l') ||
-      el.classList.contains('brand-hero')
+      el.classList.contains('brand-hero') ||
+      el.classList.contains('brand-catalog')
     ) {
       theme = 'light';
     } else {

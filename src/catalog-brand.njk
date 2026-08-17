@@ -22,13 +22,13 @@ eleventyComputed:
    17.08. Раньше здесь была заглушка (.hero с названием бренда) — теперь
    страница свёрстана по Figma Layout (node 1504:20045). Порядок секций
    сверен по всем 5 брейкпоинтам:
-     Header Line → Brand Hero - L → Form - L → Divider - L → CTA - D →
-     Divider - D → Footer - D
-   Между Brand Hero и Form - L дивайдера НЕТ ни на одном брейкпоинте —
-   обложка Brand Hero упирается в следующую секцию без зазора, это
-   намеренно (п.6 ТЗ). Divider - D перед Footer есть только на
-   1000/1440 — ровно поведение готового модификатора "edge-secondary"
-   (см. divider.njk).
+     Header Line → Brand Hero - L → Brand Catalog - L → Divider - L →
+     Form - L → Divider - L → CTA - D → Divider - D → Footer - D
+   Между Brand Hero и Brand Catalog дивайдера НЕТ ни на одном
+   брейкпоинте — обложка Brand Hero упирается в следующую секцию без
+   зазора, это намеренно (п.6 ТЗ Brand Hero). Divider - D перед Footer
+   есть только на 1000/1440 — ровно поведение готового модификатора
+   "edge-secondary" (см. divider.njk).
 
    Хвост совпадает с /catalog/ один в один, поэтому и здесь
    customSections: true (базовый хвост base.njk с Brands не подходит:
@@ -40,7 +40,7 @@ eleventyComputed:
    stickyHeader даёт "резиновое оттягивание" на мобилках — sticky, в
    отличие от fixed, часть потока документа и двигается вместе со
    страницей при overscroll-bounce на iOS, поэтому под ним не обнажается
-   пустой разрыв (подробный разбор — у .site-header в style.11.css и у
+   пустой разрыв (подробный разбор — у .site-header в style.12.css и у
    stickyHeader в base.njk). Обе темы хедера (светлая/тёмная) при
    скролле переключает header-home-theme.3.js: .brand-hero добавлена в
    его список как светлая секция, тёмными на этой странице оказываются
@@ -57,6 +57,10 @@ eleventyComputed:
    contact-form.js, без него submit формы не перехватится (см.
    form-l.njk и base.njk). #}
 {% include "brand-hero.njk" %}
+{% include "brand-catalog.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
 {% include "form-l.njk" %}
 {% set dividerVariant = "light" %}
 {% include "divider.njk" %}

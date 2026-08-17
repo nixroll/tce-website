@@ -1,0 +1,81 @@
+{# Brand Catalog - L (Figma node 1551:25111, вторая секция страницы
+   бренда /catalog/<slug>/) — светлая секция «Линейка бренда. Что мы
+   поставляем.» с сеткой из 4 карточек-категорий (квадратное фото +
+   название + описание).
+
+   17.08. Контент карточек — из src/_data/brandCategories.js (см.
+   подробности про мультистраницу там); бейдж и заголовок статичные,
+   одинаковые для всех брендов (п.8 ТЗ). Число карточек фиксировано — 4.
+
+   Сверено по всем 5 брейкпоинтам через get_design_context/get_metadata
+   + ТЗ дизайнера (TZ-Categories-section.md). Полная таблица размеров —
+   в style.12.css у .brand-catalog.
+
+   НОВЫЙ ДЛЯ ПРОЕКТА способ раскладки карточек (пользователь отдельно
+   на него указал): не CSS Grid с переключением grid-template-columns
+   по брейкпоинту, как в Catalog - L/Stages - L, а ОДИН flex-контейнер с
+   flex-wrap и карточками flex: 1 0 0 + min-width. Число колонок нигде
+   не задаётся явно — оно получается само: в строку встаёт столько
+   карточек, сколько влезает по min-width, остальные переносятся.
+   min-width подобран так, что ровно две карточки заполняют контейнер на
+   1000/1440 (476×2 = 952 и 696×2 = 1392) и ровно одна — на 768 и ниже
+   (720/350/320). Заодно это устойчивее к промежуточным ширинам окна:
+   между 1000 и 1440 карточки просто растягиваются, сохраняя две в ряд.
+
+   Хэйрлайны (п.3 ТЗ) — эффект «решётки» без задвоенных линий:
+   - border-top у КАЖДОЙ карточки (даёт линию под заголовком секции и
+     между рядами);
+   - border-right только у карточек ЛЕВОЙ колонки, и только там, где
+     колонок две (1000/1440) — правую границу правой колонки уже рисует
+     сам контейнер сетки. На 768 и ниже колонка одна, и border-right в
+     макете отсутствует (проверено на ноде 1551:25167) — иначе линия
+     задвоилась бы с границей контейнера;
+   - левый и нижний край карточек без бордера.
+   Боковые границы контейнеров появляются с 390px; на 320 секция
+   edge-to-edge и границ нет вообще — та же конвенция, что у Catalog - L
+   и всех прочих «-L» секций.
+
+   Скруглений нет ни у карточек, ни у фото (п.3 ТЗ) — в отличие от
+   карточек Catalog - L, где у подложки логотипа радиус 8px.
+
+   Заголовок секции: h5 (32/34) на 320/390/768 и h4 (36/38) с 1000px.
+   Обратить внимание — граница здесь 1000px, а НЕ 1440px, как у
+   большинства других секций сайта (сверено по нодам: на 1000 заголовок
+   уже 36/38). #}
+<section class="brand-catalog" data-figma-node="1551:25111" data-figma-name="Brand Catalog - L">
+  <div class="brand-catalog__intro">
+    <div class="brand-catalog__title-badge">
+      <span class="brand-catalog__badge">Категории</span>
+      <p class="brand-catalog__heading">Линейка бренда.<br>
+        <span class="brand-catalog__heading-muted">Что мы поставляем.</span>
+      </p>
+    </div>
+  </div>
+  <div class="brand-catalog__grid">
+    {%- for c in brandCategories %}
+    <div class="brand-catalog__card">
+      {# sizes считает ширину ФОТО (карточка минус её паддинг), а не
+         карточки: 1440 — 616px, 1000 — 412px, 768 — 656px, иначе почти
+         вся ширина вьюпорта минус паддинги секции и карточки. #}
+      <div class="brand-catalog__image">
+        <picture>
+          <source
+            type="image/webp"
+            srcset="{{ ('/images/brand-catalog/' + c.image + '-400.webp') | url }} 400w, {{ ('/images/brand-catalog/' + c.image + '-700.webp') | url }} 700w, {{ ('/images/brand-catalog/' + c.image + '-1000.webp') | url }} 1000w, {{ ('/images/brand-catalog/' + c.image + '-1400.webp') | url }} 1400w"
+            sizes="(min-width: 1440px) 616px, (min-width: 1000px) 412px, (min-width: 768px) 656px, calc(100vw - 88px)">
+          <img
+            src="{{ ('/images/brand-catalog/' + c.image + '-700.jpg') | url }}"
+            srcset="{{ ('/images/brand-catalog/' + c.image + '-400.jpg') | url }} 400w, {{ ('/images/brand-catalog/' + c.image + '-700.jpg') | url }} 700w, {{ ('/images/brand-catalog/' + c.image + '-1000.jpg') | url }} 1000w, {{ ('/images/brand-catalog/' + c.image + '-1400.jpg') | url }} 1400w"
+            sizes="(min-width: 1440px) 616px, (min-width: 1000px) 412px, (min-width: 768px) 656px, calc(100vw - 88px)"
+            alt="{{ c.title }}"
+            loading="lazy">
+        </picture>
+      </div>
+      <div class="brand-catalog__text">
+        <p class="brand-catalog__card-title">{{ c.title }}</p>
+        <p class="brand-catalog__card-desc">{{ c.text | safe }}</p>
+      </div>
+    </div>
+    {%- endfor %}
+  </div>
+</section>
