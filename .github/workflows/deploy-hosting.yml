@@ -1,0 +1,88 @@
+# Автоматическая выкладка сайта на хостинг hoster.by по FTP.
+#
+# Что делает: при каждом пуше в master собирает боевой вариант сайта
+# (под домен thermoconcept.by, без префикса GitHub Pages — см. разбор в
+# eleventy.config.js) и заливает его на хостинг. Ручная загрузка архива
+# после этого не нужна: поправили текст -> запушили -> через пару минут
+# сайт обновился.
+#
+# Заливаются только ИЗМЕНИВШИЕСЯ файлы: действие хранит на сервере
+# служебный файл .deploy-sync-state.json со списком того, что уже там
+# лежит, и сравнивает с новой сборкой. Поэтому первый запуск льёт все
+# ~57 МБ и идёт долго (видео), а последующие — секунды.
+#
+# --------------------------------------------------------------------
+# ЧТО НУЖНО НАСТРОИТЬ ОДИН РАЗ (без этого workflow не запустится)
+# --------------------------------------------------------------------
+# Реквизиты FTP приходят письмом от hoster.by ("Реквизиты доступов к
+# хостингу") сразу после оплаты. Их НЕЛЬЗЯ писать прямо в этом файле —
+# он публичный. Они кладутся в защищённое хранилище GitHub:
+#
+#   Репозиторий -> Settings -> Secrets and variables -> Actions
+#
+#   Вкладка "Secrets", кнопка "New repository secret", три штуки:
+#     FTP_SERVER    — адрес FTP-сервера из письма (например ftp.hoster.by)
+#     FTP_USERNAME  — логин FTP
+#     FTP_PASSWORD  — пароль FTP
+#
+#   Вкладка "Variables", кнопка "New repository variable", одна штука:
+#     FTP_DEPLOY    = true
+#
+# FTP_DEPLOY — рубильник. Пока он не выставлен в true, задача просто
+# пропускается: это чтобы workflow не падал с ошибкой на каждом пуше в
+# те дни, пока хостинг ещё не оплачен и реквизитов нет.
+#
+# server-dir — папка сайта на хостинге. Точный путь виден в файловом
+# менеджере панели; у hoster.by это обычно www/thermoconcept.by/.
+# Косая черта в конце ОБЯЗАТЕЛЬНА.
+
+name: Deploy to hoster.by
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    # Рубильник: пока переменная не выставлена, задача не выполняется.
+    if: vars.FTP_DEPLOY == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      # Без GITHUB_PAGES собирается боевой вариант: пути от корня домена
+      # и origin https://thermoconcept.by в og:image/canonical.
+      - name: Build site
+        run: npm run build
+
+      - name: Upload to hosting
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          # FTPS = обычный FTP, но с шифрованием. Пароль и файлы не идут
+          # по сети открытым текстом. Если hoster.by откажет в защищённом
+          # соединении — здесь можно поставить ftp, но лучше сначала
+          # спросить у поддержки, как включить FTPS.
+          protocol: ftps
+          local-dir: ./_site/
+          server-dir: ./www/thermoconcept.by/
+          # Не трогаем на сервере то, что положено туда не нами:
+          # служебные файлы панели и статистику логов.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/logs/**
+            **/tmp/**

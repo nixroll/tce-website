@@ -32,8 +32,16 @@ jobs:
         # в моей песочнице). npm install работает и без лока.
         run: npm install
 
+      # GITHUB_PAGES=true переключает сборку в режим превью: pathPrefix
+      # "/tce-website/" и origin https://nixroll.github.io (см. разбор в
+      # eleventy.config.js и src/_data/site.js). Без этой переменной
+      # `npm run build` собирает БОЕВОЙ вариант под thermoconcept.by —
+      # именно он заливается на хостинг. Флаг стоит только здесь, чтобы
+      # нельзя было случайно выложить на домен сборку с чужими путями.
       - name: Build site
         run: npm run build
+        env:
+          GITHUB_PAGES: "true"
 
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3

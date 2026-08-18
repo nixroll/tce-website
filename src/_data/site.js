@@ -24,7 +24,16 @@
  * Страница может переопределить и заголовок сниппета, и описание через
  * front matter: description: "...". */
 module.exports = {
-  origin: "https://nixroll.github.io",
+  /* 18.08: origin теперь зависит от режима сборки — тем же флагом
+     GITHUB_PAGES, что и pathPrefix (см. подробный разбор в
+     eleventy.config.js). Иначе на боевом домене og:image и canonical
+     указывали бы на превью-адрес: соцсети тянули бы обложку с чужого
+     хоста, а поисковик считал бы каноничной страницу на github.io и
+     показывал бы в выдаче её вместо thermoconcept.by. */
+  origin:
+    process.env.GITHUB_PAGES === "true"
+      ? "https://nixroll.github.io"
+      : "https://thermoconcept.by",
   name: "Thermo Concept Engineering",
   locale: "ru_RU",
   description:
