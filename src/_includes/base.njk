@@ -124,8 +124,14 @@
      320/390 переключена на "Связаться"). Тот же случай: сама правка
      живёт только в CSS (переключение display), разметка отдаёт обе
      ссылки — на старом закешированном CSS мобилка показала бы
-     по-прежнему "Направления". #}
-  <link rel="stylesheet" href="{{ '/css/style.15.css' | url }}">
+     по-прежнему "Направления".
+
+     18.08: style.15.css → style.16.css и header-home-theme.6.js →
+     .7.js — новая страница /bank-details/ (светлый Doc Hero + четыре
+     Paragraph - L) и правка списка секций у переключателя темы Header.
+     Скрипт грузится на КАЖДОЙ странице, поэтому его зависший кеш ломал
+     бы тему Header по всему сайту, а не только на новой странице. #}
+  <link rel="stylesheet" href="{{ '/css/style.16.css' | url }}">
 </head>
 {# 10.08: lightBodyBg/.body--light-top убраны — фон html/body теперь
    красится напрямую по теме Header (html:has(.site-header--home:not
@@ -352,7 +358,7 @@
      только под transparentHeader — это Home-специфичный обход
      overscroll, сам себя гасит через body--header-overlay, но на
      страницах без него просто не нужен. #}
-  <script src="{{ '/js/header-home-theme.6.js' | url }}" defer></script>
+  <script src="{{ '/js/header-home-theme.7.js' | url }}" defer></script>
   {% if transparentHeader %}
     <script src="{{ '/js/pull-to-refresh.js' | url }}" defer></script>
   {% endif %}

@@ -159,7 +159,14 @@
      секции, хотя сама секция светлая — нечитаемый хедер поверх белого
      фона. Добавлены оба класса в список и в ветвление темы ниже. */
   var candidates = document.querySelectorAll(
-    '.social, .stats, .divider, .areas, .testimonial, .services, .projects, .brands, .cta, .site-footer, .contact, .form, .hero-l, .stages-l, .portfolio-d, .catalog-l, .brand-hero, .brand-catalog, .gallery-l, .docs-l, .team-l, .features-l'
+    /* 18.08: добавлены .doc-hero и .paragraph-l — секции страницы
+       /bank-details/. .doc-hero тут появился ВПЕРВЫЕ: на тёмных
+       юридических страницах (/cookies/, /privacy/, /rights/) он не
+       отслеживался вовсе, и это сходило с рук только потому, что там
+       все секции тёмные и Header просто оставался тёмным по умолчанию.
+       На /bank-details/ тот же компонент светлый, и без учёта он
+       унаследовал бы тему от предыдущего элемента. */
+    '.social, .stats, .divider, .areas, .testimonial, .services, .projects, .brands, .cta, .site-footer, .contact, .form, .hero-l, .stages-l, .portfolio-d, .catalog-l, .brand-hero, .brand-catalog, .gallery-l, .docs-l, .team-l, .features-l, .doc-hero, .paragraph-l'
   );
   if (!candidates.length) return;
 
@@ -176,6 +183,15 @@
     var theme;
     if (el.classList.contains('divider')) {
       theme = el.classList.contains('divider--light') ? 'light' : 'dark';
+    } else if (el.classList.contains('doc-hero')) {
+      /* 18.08: Doc Hero существует в двух темах, как и Divider, поэтому
+         решает не имя класса, а модификатор: тёмная версия на
+         /cookies/, /privacy/, /rights/, светлая (--light) на
+         /bank-details/ — там она называется "Bank Information Hero - L".
+         Ставить его в общий светлый список было бы ошибкой: три
+         юридические страницы получили бы светлый Header на тёмном
+         фоне. */
+      theme = el.classList.contains('doc-hero--light') ? 'light' : 'dark';
     } else if (
       el.classList.contains('social') ||
       el.classList.contains('stats') ||
@@ -192,7 +208,8 @@
       el.classList.contains('gallery-l') ||
       el.classList.contains('docs-l') ||
       el.classList.contains('team-l') ||
-      el.classList.contains('features-l')
+      el.classList.contains('features-l') ||
+      el.classList.contains('paragraph-l')
     ) {
       theme = 'light';
     } else {

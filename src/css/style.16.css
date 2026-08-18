@@ -5619,6 +5619,173 @@ body.body--header-overlay {
   color: var(--text-quaternary);
 }
 
+/* 18.08. Bank Information Hero - L (node 1565:27208) — светлая версия
+   Doc Hero - D для страницы /bank-details/.
+
+   Геометрия НЕ переопределяется ни на один пиксель: сверено по всем 5
+   брейкпоинтам, паддинги Container, боковые Stroke с 390px, max-width
+   1392/720 и шкала заголовка (h6 → h5 с 768 → h4 с 1440) у светлой и
+   тёмной версии совпадают полностью. Поэтому здесь только цвет.
+
+   Токены объявлены локально — как у .areas/.catalog-l/.brand-hero:
+   глобальный :root у этого сайта тёмный, а секция светлая, поэтому
+   значения перекрываются на самой секции и дальше наследуются всеми
+   потомками (.doc-hero__heading-accent/-muted берут их как обычно, свои
+   правила менять не пришлось). */
+.doc-hero--light {
+  --text-primary: #181d27;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+  --background-primary: #fafafb;
+
+  /* Stroke снизу — есть только у светлой версии: под ней сразу идёт
+     Divider - L, и без этой линии стык двух светлых блоков был бы
+     неразличим. У тёмной версии его нет. */
+  border-bottom: 1px solid var(--border-primary);
+}
+
+/* Badge синий (в тёмной версии — фирменный оранжевый). Фон — тот же
+   цвет текста с прозрачностью 10%, как и в оранжевом варианте, поэтому
+   на #fafafb он читается как очень светлая голубая плашка. */
+.doc-hero--light .doc-hero__badge {
+  background-color: rgba(50, 90, 188, 0.1);
+  color: #325abc;
+}
+
+/* ================================================================
+   Paragraph - L (18.08, node 1579:1325 и соседние внутри Figma Layout
+   страницы "Bank Information", node 1565:25903) — светлая версия
+   Paragraph - D для /bank-details/. На странице таких секций ЧЕТЫРЕ
+   (Альфа Банк / Приорбанк / БСБ Банк / Контакты), между ними и вокруг
+   них — Divider - L.
+
+   Оболочка (секция + Container) повторяет .paragraph-d один в один,
+   сверено по всем 5 брейкпоинтам:
+     секция     padding-x   0 → 20 (390) → 24 (768+)
+     Container  padding     32/24 → 32/24 (390) → 64/48 (768) → 80 (1000+)
+     Container  Stroke слева/справа с 390px, max-width 1392
+     Content    max-width 720, ширина 100%
+   Отдельным блоком, а не модификатором .paragraph-d, сознательно: у
+   тёмной версии совсем другая модель контента (нумерованные списки,
+   вложенные подсписки, таблицы, иконки браузеров, модификатор
+   --privacy), и попытка свести их в один блок дала бы сцепку двух
+   несвязанных наборов правил ради экономии сорока строк оболочки.
+
+   Отличия от .paragraph-d ВНУТРИ Content — принципиальные:
+     gap        24 (у тёмной 48);
+     заголовок  h5 32/34 Inter Display на ВСЕХ брейкпоинтах, не
+                уменьшается (у тёмной — обычный body2 16/22 semibold);
+     текст      body2 16/22 Inter Regular, --text-secondary.
+   То, что заголовок не масштабируется, проверено отдельно: в метаданных
+   его высота равна 34px на всех пяти брейкпоинтах.
+
+   Stroke сверху И снизу у самой секции (пользователь просил обратить на
+   это отдельное внимание) — они есть на всех брейкпоинтах. Вместе с
+   Divider - L между блоками это даёт сдвоенную линию на стыке, и так
+   задумано в макете. */
+.paragraph-l {
+  --text-primary: #181d27;
+  --text-secondary: #414651;
+  --border-primary: #e5e7ec;
+  --background-primary: #fafafb;
+
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--background-primary);
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+@media (min-width: 390px) {
+  .paragraph-l {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .paragraph-l {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+.paragraph-l__container {
+  width: 100%;
+  max-width: 1392px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  padding: var(--spacing-4xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .paragraph-l__container {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .paragraph-l__container {
+    padding: var(--spacing-7xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .paragraph-l__container {
+    padding: var(--spacing-8xl);
+  }
+}
+
+.paragraph-l__content {
+  width: 100%;
+  max-width: 720px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-3xl);
+}
+
+.paragraph-l__title {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
+  color: var(--text-primary);
+}
+
+.paragraph-l__text {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--body2-size);
+  line-height: var(--body2-line);
+  letter-spacing: var(--body2-tracking);
+  color: var(--text-secondary);
+  /* Реквизиты — длинные нерасчленимые строки (IBAN, SWIFT, номера
+     счетов). На 320px ширина Content всего 272px, и такая строка шире
+     контейнера: без переноса она вылезала бы за Stroke и растягивала
+     страницу горизонтально. overflow-wrap разрешает разрыв ТОЛЬКО
+     когда строка иначе не помещается, обычные слова он не рвёт. */
+  overflow-wrap: break-word;
+}
+
+/* Полужирные фрагменты внутри текста (названия банков, подписи адресов)
+   — в Figma это отдельные span'ы стиля Inter:Bold внутри одного
+   текстового слоя. <strong> здесь и семантически верен: это выделение
+   значимого фрагмента, а не заголовок. */
+.paragraph-l__text strong {
+  font-weight: 700;
+}
+
 /* ================================================================
    Paragraph - D (10.08, node 949:4987 внутри Legal -> Cookie,
    948:3168 — реальный контент есть только на конкретной странице,

@@ -1,7 +1,156 @@
 ---
 title: Реквизиты — Thermo Concept Engineering
+description: "Банковские реквизиты и контактные данные ООО «Термо Концепт Инжиниринг»: счета в Альфа-Банке, Приорбанке и БСБ Банке, УНП, юридический и почтовый адрес."
 layout: base.njk
+customSections: true
+stickyHeader: true
+headerTheme: light
 ---
-<section class="hero" data-figma-node="308:1917" data-figma-name="Hero">
-  <p class="hero__title">Реквизиты</p>
+{# 18.08. Страница /bank-details/ свёрстана по Figma Layout
+   "Bank Information" (node 1565:25903). Порядок секций сверен по всем 5
+   брейкпоинтам, он одинаков везде:
+     Header Line → Bank Information Hero - L → Divider - L →
+     Paragraph - L ×4 (между каждой парой Divider - L) → Divider - L →
+     CTA - D → Divider - D → Footer - D
+   Divider - D перед Footer есть только на 1000/1440 — ровно поведение
+   готового модификатора "edge-secondary" (см. divider.njk). Divider - L
+   стоит и ПЕРЕД первым абзацем, и ПОСЛЕ последнего, то есть всего их
+   пять на пять стыков — легко просчитаться, поэтому пересчитано по
+   метаданным: 1565:25921, 1579:6641, 1579:9772, 1579:9780, 1579:9788
+   на 320px и их аналоги выше.
+
+   customSections: true — базовый хвост base.njk (Divider + Brands +
+   Divider + CTA) здесь не подходит: Brands в макете нет, а дивайдеры
+   расставлены иначе. Страница берёт хвост на себя, кроме общего Footer.
+   Так же сделано на /catalog/ и /catalog/<slug>/.
+
+   headerTheme: light — ВАЖНОЕ отличие от остальных юридических страниц.
+   /cookies/, /privacy/ и /rights/ тёмные целиком, поэтому у них темы
+   Header нет вовсе (тёмная — дефолт). Здесь же весь документ светлый
+   (Hero - L + четыре Paragraph - L + светлые дивайдеры), а тёмными
+   становятся только CTA - D и Footer - D в самом низу. Без этого флага
+   Header стартовал бы тёмным на светлом фоне.
+   Переключение светлая/тёмная при скролле делает
+   header-home-theme.7.js: .doc-hero (по модификатору --light) и
+   .paragraph-l добавлены в его список секций этим же заходом — раньше
+   .doc-hero там не было вообще, и на тёмных юридических страницах это
+   работало лишь потому, что все секции там и так тёмные.
+
+   stickyHeader — тот же приём, что на /about/, /services/, /catalog/ и
+   /contact/: position:sticky вместо fixed. Именно он даёт "резиновое
+   оттягивание" Header на мобилках при быстром скролле сверху вниз —
+   sticky-элемент часть потока документа и уезжает вместе со страницей
+   при overscroll-bounce на iOS, поэтому под ним физически не может
+   обнажиться пустой разрыв (подробный разбор — у .site-header в
+   style.css). Отдельный спейсер header-line.njk (элемент "Header Line"
+   из макета) при этой схеме НЕ нужен и намеренно не подключается:
+   sticky сам резервирует место в потоке, а base.njk по флагу
+   stickyHeader обнуляет padding-top у body — иначе отступ задвоился бы.
+
+   Тексты реквизитов взяты из Figma дословно, включая пунктуацию и
+   регистр. Полужирные фрагменты — отдельные span'ы стиля Inter:Bold
+   внутри одного текстового слоя, здесь это <strong>. Пустые строки
+   между блоками в макете сделаны двойными переводами строки, поэтому и
+   тут <br><br>, а не отдельные абзацы: иначе не совпали бы вертикальные
+   расстояния. #}
+{% set docHeroVariant = "light" %}
+{% set docHeroNode = "1565:27208" %}
+{% set docHeroName = "Bank Information Hero - L" %}
+{% set docHeroBadge = "Реквизиты" %}
+{% set docHeroTitleAccent = "Банкинг." %}
+{% set docHeroTitleMuted = "Юридическая информация." %}
+{% include "doc-hero.njk" %}
+{% set docHeroVariant = "" %}
+{% set docHeroNode = "" %}
+{% set docHeroName = "" %}
+{% set docHeroBadge = "" %}
+{% set docHeroTitleAccent = "" %}
+{% set docHeroTitleMuted = "" %}
+
+{% macro paragraphL(title, node) %}
+<section class="paragraph-l" data-figma-node="{{ node }}" data-figma-name="Paragraph - L">
+  <div class="paragraph-l__container">
+    <div class="paragraph-l__content">
+      <h2 class="paragraph-l__title">{{ title }}</h2>
+      <p class="paragraph-l__text">{{ caller() }}</p>
+    </div>
+  </div>
 </section>
+{% endmacro %}
+
+{% set dividerVariant = "light" %}{% include "divider.njk" %}{% set dividerVariant = "" %}
+
+{% call paragraphL("Альфа Банк", "1579:1325") %}
+р/с BY14 ALFA 3012 2A30 1700 1027 0000 – в BYN<br>
+р/с BY96 ALFA 3012 2A30 1700 2027 0000 – в EUR<br><br>
+<strong>в Закрытом акционерном обществе «АЛЬФА-БАНК»<br>
+ул. Сурганова, 43-47, 220013, г. Минск, Республика Беларусь</strong><br><br>
+SWIFT: ALFABY2X, <br>
+БИК: ALFABY2X, <br>
+УНП: 101541947, <br>
+ОКПО: 37526626<br><br>
+Тел: + 375 (44, 29, 25) 733 33 32, <br>
+Факс: +375 (17) 229-66-55
+{% endcall %}
+
+{% set dividerVariant = "light" %}{% include "divider.njk" %}{% set dividerVariant = "" %}
+
+{% call paragraphL("Приорбанк", "1579:1332") %}
+р/с BY26 PJCB 3012 0711 6810 0000 0933 – в BYN<br>
+р/с BY72 PJCB 3012 0711 6810 0000 0978 – в EUR<br>
+р/с BY82 PJCB 3012 0711 6810 2000 0840 – в USD<br>
+р/с BY81PJCB30120711681010000643 в RUB<br><br>
+<strong>"Приорбанк" Открытое акционерное общество ("Приорбанк" ОАО) Республика Беларусь, 220002, г. Минск, ул. Веры Хоружей, 31А,  "Priorbank" Joint Stock Company ("Priorbank" JSC), 220002, Minsk, Belarus, 31А, V. Khoruzhey Str. </strong><br><br>
+SWIFT: PJCBBY2X,<br>
+БИК: PJCBBY2X,<br>
+УНП: 100220190,<br>
+ОКПО: 05832739.<br><br>
+<strong>Банк корреспондент: </strong><br>
+АО «Райффайзенбанк», Москва, Россия ИНН 7744000302, <br>
+БИК 044525700 к/счет в ГУ Банка России по ЦФО 30101810200000000700, <br><br>
+SWIFT: RZBM RU MM<br>№ счета: 30111810700000110023
+{% endcall %}
+
+{% set dividerVariant = "light" %}{% include "divider.njk" %}{% set dividerVariant = "" %}
+
+{% call paragraphL("БСБ Банк", "1579:1338") %}
+IBAN: BY56 UNBS 3012 2427 7000 0000 0643 – в RUB<br>
+IBAN: BY83 UNBS 3012 2427 7000 0000 0933 – в BYN<br>
+IBAN: BY32 UNBS 3012 2427 7000 0000 0978 – в EUR<br>
+IBAN: BY39 UNBS 3012 2427 7000 0000 0949 – в TRY<br>
+IBAN: BY75 UNBS 3012 2427 7000 0000 0398 – ТЕНГЕ<br><br>
+<strong>ЗАО "БСБ Банк", 220004, г. Минск, пр. Победителей, 23, корп. 4</strong><br>
+БИК: UNBSBY2X (универсальный / S.W.I.F.T.),<br>
+УНП: 807000069,<br>
+ОКПО: 37580914.<br><br>
+<strong>Номер корреспондентского счета: </strong><br>
+30111810300000000764.<br><br>
+<strong>Банк-корреспондент: </strong><br>
+ПУБЛИЧНОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО «СБЕРБАНК РОССИИ», S - Банк для отправки рос. руб.<br>
+WIFT: SABRRUMM, <br>
+Банк получателя: BSB Bank, <br>
+SWIFT: UNBSBY2X.<br><br>
+<strong>Банк-корреспондент: </strong><br>
+Alatau City Bank - Банк для отправки тенге<br>
+счет - KZ57998AKB0000000727
+{% endcall %}
+
+{% set dividerVariant = "light" %}{% include "divider.njk" %}{% set dividerVariant = "" %}
+
+{% call paragraphL("Контакты", "1579:1346") %}
+<strong>Общество с Ограниченной Ответственностью «Термо Концепт Инжиниринг»<br>
+УНП 193563497</strong><br><br>
+Директор Сероокий Максим Валентинович, <br>
+действует на основании Устава<br><br>
+<strong>Юридический адрес:</strong><br>
+Республика Беларусь, 220091, г. Минск, ул. Матусевича, д. 33/2, офис 801<br><br>
+<strong>Почтовый адрес:</strong><br>
+Республика Беларусь, 220091, г. Минск, ул. Матусевича, д. 33/2, офис 801<br><br>
+<strong>Адрес склада:</strong><br>
+Минская обл., Пуховичский район, 26км трассы М5<br><br>
+Тел: +375 29 676 19 55
+{% endcall %}
+
+{% set dividerVariant = "light" %}{% include "divider.njk" %}{% set dividerVariant = "" %}
+{% include "cta.njk" %}
+{% set dividerVariant = "edge-secondary" %}{% include "divider.njk" %}{% set dividerVariant = "" %}

@@ -33,7 +33,27 @@
    x-координата title-and-badge везде симметрична относительно
    Container, что возможно только при max-width+justify-center, не
    при flex:1). #}
-<section class="doc-hero" data-figma-node="948:3190" data-figma-name="Doc Hero - D">
+{# 18.08, светлый вариант. На /bank-details/ используется секция
+   "Bank Information Hero - L" (node 1565:27208) — по геометрии это ТОТ ЖЕ
+   компонент, что Doc Hero - D: сверено по всем 5 брейкпоинтам, паддинги
+   Container (80/24 → 80/32 → 96/48 → 128-96/80), max-width 1392, боковые
+   Stroke начиная с 390px, max-width 720 у "Title and badge", шкала
+   заголовка (h6 → h5 с 768 → h4 с 1440) — всё совпадает до пикселя, ни
+   одного нового геометрического правила не понадобилось.
+
+   Отличий ровно три, и все чисто цветовые (см. .doc-hero--light в
+   style.css): светлые токены вместо тёмных, синий Badge вместо
+   оранжевого и Stroke снизу у самой секции. Поэтому не отдельный
+   компонент, а модификатор — иначе пришлось бы дублировать всю
+   геометрию и потом чинить её в двух местах.
+
+   Дополнительные параметры (все необязательные):
+     docHeroVariant — "light" для светлой версии, иначе тёмная;
+     docHeroNode / docHeroName — id и имя ноды в Figma для data-figma-*
+       (у секций они разные, хотя вёрстка одна — атрибуты чисто
+       документирующие, но пусть каждая страница ссылается на свой
+       макет). #}
+<section class="doc-hero{% if docHeroVariant == 'light' %} doc-hero--light{% endif %}" data-figma-node="{{ docHeroNode or '948:3190' }}" data-figma-name="{{ docHeroName or 'Doc Hero - D' }}">
   <div class="doc-hero__container">
     <div class="doc-hero__title-badge">
       <span class="doc-hero__badge">{{ docHeroBadge }}</span>
