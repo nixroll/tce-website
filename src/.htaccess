@@ -105,3 +105,12 @@ AddDefaultCharset UTF-8
 # index.html (по умолчанию Apache выводит список файлов — это и
 # некрасиво, и лишняя информация наружу).
 Options -Indexes
+
+# 18.08. Своя страница ошибки 404 вместо стандартной заглушки Apache
+# ("Not Found. The requested URL was not found on this server").
+# Путь от корня сайта, а не относительный, — иначе на вложенных адресах
+# вроде /catalog/wilo/opechatka Apache искал бы файл рядом с ними.
+# Сам файл собирается из src/404.njk, у которого выставлен
+# permalink: /404.html — GitHub Pages подхватывает такое имя
+# автоматически, без всяких настроек, Apache — по этой директиве.
+ErrorDocument 404 /404.html

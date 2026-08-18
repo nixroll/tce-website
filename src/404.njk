@@ -1,0 +1,57 @@
+---
+title: Страница не найдена — Thermo Concept Engineering
+description: "Такой страницы нет. Возможно, адрес набран с ошибкой или страница переехала. Вернитесь на главную или свяжитесь с нами."
+layout: base.njk
+permalink: /404.html
+noindex: true
+customSections: true
+stickyHeader: true
+headerTheme: light
+---
+{# 18.08. Страница ошибки 404, свёрстана по Figma Layout (node
+   1585:9847). Порядок секций одинаков на всех 5 брейкпоинтах:
+     Header Line → 404 Hero - L → Divider - L → CTA - D →
+     Divider - D → Footer - D
+   Divider - L ровно ОДИН, между Hero и CTA (пользователь отдельно
+   просил не пропустить). Divider - D перед Footer есть только на
+   1000/1440 — это готовый модификатор "edge-secondary".
+
+   permalink: /404.html — не папка /404/, а именно файл в корне. Так его
+   ищут оба наших сервера: GitHub Pages подхватывает /404.html
+   автоматически, Apache на hoster.by — по директиве ErrorDocument,
+   добавленной в src/.htaccess этим же заходом. Без явного permalink
+   Eleventy сделал бы /404/index.html, и ни один из них файл бы не нашёл.
+
+   noindex — страница ошибки не должна попадать в поисковую выдачу.
+   Флаг уже поддержан в base.njk (<meta name="robots">).
+
+   customSections: true — базовый хвост с Brands здесь не подходит:
+   Brands в макете нет, дивайдеры расставлены иначе. Страница берёт
+   хвост на себя, кроме общего Footer.
+
+   headerTheme: light + stickyHeader — как на /bank-details/: первая
+   секция светлая, тёмными становятся только CTA и Footer внизу. sticky
+   даёт резиновое оттягивание Header на мобилках и сам резервирует место
+   в потоке, поэтому отдельный спейсер header-line.njk не нужен.
+   .hero-404 добавлена в список секций header-home-theme.7.js как
+   светлая — иначе Header унаследовал бы тему от предыдущего элемента.
+
+   Кнопка "На главную" — обычный .btn.btn--primary, тёмный вариант.
+   Именно так в макете: тёмная кнопка на светлой секции. Возвращать ей
+   тёмные цвет текста и рамку пришлось отдельным правилом, см.
+   .hero-404 .btn--primary в style.css. #}
+<section class="hero-404" data-figma-node="1588:10423" data-figma-name="404 Hero - L">
+  <div class="hero-404__container">
+    <div class="hero-404__title-badge">
+      <span class="hero-404__badge">404</span>
+      <h1 class="hero-404__heading">Ошибка.<br>
+        <span class="hero-404__heading-muted">Страница не&nbsp;найдена.</span>
+      </h1>
+    </div>
+    <a class="btn btn--primary" href="{{ '/' | url }}">На главную</a>
+  </div>
+  <div class="hero-404__filler" aria-hidden="true"></div>
+</section>
+{% set dividerVariant = "light" %}{% include "divider.njk" %}{% set dividerVariant = "" %}
+{% include "cta.njk" %}
+{% set dividerVariant = "edge-secondary" %}{% include "divider.njk" %}{% set dividerVariant = "" %}

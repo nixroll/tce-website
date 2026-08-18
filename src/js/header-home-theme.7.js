@@ -166,7 +166,7 @@
        все секции тёмные и Header просто оставался тёмным по умолчанию.
        На /bank-details/ тот же компонент светлый, и без учёта он
        унаследовал бы тему от предыдущего элемента. */
-    '.social, .stats, .divider, .areas, .testimonial, .services, .projects, .brands, .cta, .site-footer, .contact, .form, .hero-l, .stages-l, .portfolio-d, .catalog-l, .brand-hero, .brand-catalog, .gallery-l, .docs-l, .team-l, .features-l, .doc-hero, .paragraph-l'
+    '.social, .stats, .divider, .areas, .testimonial, .services, .projects, .brands, .cta, .site-footer, .contact, .form, .hero-l, .stages-l, .portfolio-d, .catalog-l, .brand-hero, .brand-catalog, .gallery-l, .docs-l, .team-l, .features-l, .doc-hero, .paragraph-l, .hero-404'
   );
   if (!candidates.length) return;
 
@@ -209,7 +209,8 @@
       el.classList.contains('docs-l') ||
       el.classList.contains('team-l') ||
       el.classList.contains('features-l') ||
-      el.classList.contains('paragraph-l')
+      el.classList.contains('paragraph-l') ||
+      el.classList.contains('hero-404')
     ) {
       theme = 'light';
     } else {

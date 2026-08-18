@@ -9530,3 +9530,205 @@ body.body--header-overlay {
   letter-spacing: -0.08px;
   color: var(--text-quaternary);
 }
+
+/* ================================================================
+   404 Hero - L (18.08, node 1588:10423; Figma Layout страницы —
+   node 1585:9847). Единственная секция страницы /404.html, дальше сразу
+   Divider - L и стандартный тёмный хвост.
+
+   ВЫСОТА. В макете у секции фиксированные 400px (320/390/768/1000) и
+   600px (1440), но по задаче она занимает всю высоту окна, а эти числа —
+   нижний предел. Тот же приём, что у .hero-main и .brand-hero:
+   height:100vh минус Header, потом дубль на 100lvh для браузеров, где
+   он поддерживается. Вычитать высоту Header обязательно — он sticky,
+   то есть занимает место в потоке, и без вычитания первый экран стал бы
+   на его высоту длиннее, а внизу появилась бы полоса пустоты.
+   vh/lvh, а не dvh: dvh пересчитывается при появлении и скрытии
+   адресной строки на мобилках, и секция бы "дышала" при скролле.
+
+   УСТРОЙСТВО. Двое детей: блок с контентом (Container) и пустая
+   растяжка под ним. Растяжка нужна именно как элемент, а не как
+   padding: у неё свои боковые Stroke, которые продолжают линии
+   Container до самого низа секции. flex:1 у неё и даёт полную высоту —
+   контент прижат кверху, всё лишнее место уходит вниз.
+   В Figma на 768px эта растяжка задана фиксированными 96px, а не
+   flex — но это тот же результат: там контент занимает 304px, и до
+   min-height 400 остаётся ровно 96. При flex:1 на 400px выйдет то же
+   число, а на высоком окне растяжка вырастет, чего фиксированная
+   величина не дала бы. Поэтому flex:1 на всех брейкпоинтах.
+
+   РАСКЛАДКА Container. До 768px — колонка (заголовок, под ним кнопка),
+   с 768px — строка, кнопка справа, оба прижаты по нижнему краю. На
+   1440px вместо gap используется justify-content: space-between —
+   заголовок и кнопка разъезжаются по краям.
+
+   Заголовок h5 32/34 на всех брейкпоинтах, h4 36/38 только с 1440px.
+   Badge синий, как на /bank-details/. */
+.hero-404 {
+  --text-primary: #181d27;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+  --background-primary: #fafafb;
+
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  background-color: var(--background-primary);
+  border-bottom: 1px solid var(--border-primary);
+  height: calc(100vh - var(--header-height));
+  height: calc(100lvh - var(--header-height));
+  min-height: 400px;
+}
+
+@media (min-width: 390px) {
+  .hero-404 {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-404 {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+@media (min-width: 1440px) {
+  .hero-404 {
+    min-height: 600px;
+  }
+}
+
+.hero-404__container {
+  width: 100%;
+  max-width: 1392px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: var(--spacing-4xl);
+  overflow: hidden;
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .hero-404__container {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+  }
+}
+
+/* С 768px раскладка меняется на строку: заголовок слева, кнопка справа,
+   оба по нижнему краю. justify-content сбрасывается — при row он
+   означал бы прижатие к правому краю. */
+@media (min-width: 768px) {
+  .hero-404__container {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: var(--spacing-9xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .hero-404__container {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+  }
+}
+
+/* На 1440px gap заменяется на space-between: заголовок и кнопка
+   расходятся к противоположным краям Container. */
+@media (min-width: 1440px) {
+  .hero-404__container {
+    justify-content: space-between;
+    gap: 0;
+  }
+}
+
+.hero-404__title-badge {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+}
+
+@media (min-width: 768px) {
+  .hero-404__title-badge {
+    flex: 1 0 0;
+    min-width: 0;
+    width: auto;
+  }
+}
+
+.hero-404__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: #325abc;
+  white-space: nowrap;
+}
+
+.hero-404__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
+  color: var(--text-primary);
+}
+
+@media (min-width: 1440px) {
+  .hero-404__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
+}
+
+.hero-404__heading-muted {
+  color: var(--text-quaternary);
+}
+
+/* Кнопка остаётся ТЁМНОЙ на светлой секции — так в макете. Фон и фон
+   при наведении берутся из глобальных токенов (--button-primary
+   #373c43, --button-primary-hover #40464e), их секция не
+   переопределяет, поэтому они и так верные. А вот цвет текста и рамки
+   .btn берёт из --text-primary/--border-secondary, которые здесь
+   перекрыты светлыми значениями — без возврата тёмных получился бы
+   тёмный текст на тёмном фоне. */
+.hero-404 .btn--primary {
+  color: #f7f7f7;
+  border-color: #525966;
+}
+
+/* Пустая растяжка под контентом: продолжает боковые Stroke Container
+   до низа секции и забирает всю оставшуюся высоту.
+
+   Боковые линии здесь на ВСЕХ брейкпоинтах, включая 320px, — и это не
+   описка. У Container на 320px их нет, у растяжки есть: проверено
+   отдельным запросом к макету (node 1589:14108), потому что расхождение
+   выглядело подозрительно. На 320px у секции нет боковых паддингов,
+   поэтому линии проходят по самым краям экрана и вместе с нижним
+   Stroke секции образуют рамку вокруг пустой области. */
+.hero-404__filler {
+  width: 100%;
+  max-width: 1392px;
+  flex: 1 0 0;
+  min-height: 0;
+  border-left: 1px solid var(--border-primary);
+  border-right: 1px solid var(--border-primary);
+}
