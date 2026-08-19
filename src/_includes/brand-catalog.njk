@@ -52,7 +52,14 @@
     </div>
   </div>
   <div class="brand-catalog__grid">
-    {%- for c in brandCategories %}
+    {#- 19.08: набор карточек стал пофирменным (см. brandCategories.js).
+        Ключ — brand.slug, запасной вариант — Arbonia, пока у бренда нет
+        своих категорий: без него страница упала бы на отсутствующем
+        ключе. Тот же приём, что у обложки и галереи. Количество карточек
+        у брендов разное (Arbonia четыре, Elco две) — сетка построена на
+        переносе строк, поэтому правок вёрстки не потребовалось. -#}
+    {%- set cards = brandCategories[brand.slug] or brandCategories.arbonia %}
+    {%- for c in cards %}
     <div class="brand-catalog__card">
       {# sizes считает ширину ФОТО (карточка минус её паддинг), а не
          карточки: 1440 — 616px, 1000 — 412px, 768 — 656px, иначе почти
