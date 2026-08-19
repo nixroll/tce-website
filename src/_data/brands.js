@@ -82,8 +82,6 @@ module.exports = [
     tags: "Радиаторы / Душевые / Вентиляция",
     category: "Радиаторы, душевые и&nbsp;вентиляция.",
     cover: "kermi",
-    /* Исходник 1960x871. */
-    coverWidths: [800, 1300, 1960],
   },
   {
     slug: "meibes",
