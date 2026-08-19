@@ -3,7 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  {% if noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
+  {# noindex — либо у конкретной страницы (страница ошибки, архивные), либо
+     у ВСЕЙ черновой сборки: превью на GitHub Pages содержит то же, что и
+     боевой домен, и без этого тега Google индексировал бы его как
+     отдельный сайт-дубль (canonical там указывает сам на себя, см.
+     origin в src/_data/site.js). Дубль умеет оттягивать позиции у
+     настоящего домена и попадать в выдачу вместо него. #}
+  {% if noindex or site.isDraft %}<meta name="robots" content="noindex, nofollow">{% endif %}
   {# Область под статус-баром/чёлкой на iOS Safari подсвечивается по
      этому тегу — БЕЗ него iOS красит эту область в свой дефолт (белый)
      независимо от реального фона страницы. Начальное значение — та же

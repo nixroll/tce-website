@@ -34,6 +34,14 @@ module.exports = {
     process.env.GITHUB_PAGES === "true"
       ? "https://nixroll.github.io"
       : "https://thermoconcept.by",
+
+  /* 18.08. Признак черновой сборки. Нужен, чтобы закрыть превью на
+     GitHub Pages от поисковиков: содержимое там то же, что на боевом
+     домене, а canonical указывает сам на себя — то есть для Google это
+     полноценный второй сайт с дублирующим контентом. Такой дубль умеет
+     и оттягивать позиции у настоящего домена, и просто попадать в
+     выдачу вместо него. См. <meta name="robots"> в base.njk. */
+  isDraft: process.env.GITHUB_PAGES === "true",
   name: "Thermo Concept Engineering",
   locale: "ru_RU",
   description:
