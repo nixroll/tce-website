@@ -79,16 +79,26 @@
   </div>
   {# Обложка. sizes="100vw" — фото действительно во всю ширину вьюпорта
      на любом брейкпоинте, поэтому вариант выбирается браузером ровно по
-     ширине экрана (с учётом DPR); 2560w нужен для retina-десктопов. #}
+     ширине экрана (с учётом DPR).
+
+     19.08: набор ширин стал per-brand. Раньше он был жёстко зашит
+     (800/1300/2000/2560) под обложку Arbonia, у которой исходник
+     2560px. У Elco исходник 1920px, и объявлять для него 2560w значило
+     бы обещать браузеру разрешение, которого нет: он выбрал бы этот
+     вариант на retina-десктопе и получил бы растянутую картинку, да ещё
+     и весом больше нужного. Список ширин берётся из brands.js
+     (coverWidths), дефолт — набор Arbonia. Для нового бренда достаточно
+     положить файлы и указать реальные ширины. #}
+  {% set coverWidths = brand.coverWidths or [800, 1300, 2000, 2560] %}
   <div class="brand-hero__cover">
     <picture>
       <source
         type="image/webp"
-        srcset="{{ ('/images/brand-hero/' + coverName + '-800.webp') | url }} 800w, {{ ('/images/brand-hero/' + coverName + '-1300.webp') | url }} 1300w, {{ ('/images/brand-hero/' + coverName + '-2000.webp') | url }} 2000w, {{ ('/images/brand-hero/' + coverName + '-2560.webp') | url }} 2560w"
+        srcset="{% for w in coverWidths %}{{ ('/images/brand-hero/' + coverName + '-' + w + '.webp') | url }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}"
         sizes="100vw">
       <img
         src="{{ ('/images/brand-hero/' + coverName + '-1300.jpg') | url }}"
-        srcset="{{ ('/images/brand-hero/' + coverName + '-800.jpg') | url }} 800w, {{ ('/images/brand-hero/' + coverName + '-1300.jpg') | url }} 1300w, {{ ('/images/brand-hero/' + coverName + '-2000.jpg') | url }} 2000w, {{ ('/images/brand-hero/' + coverName + '-2560.jpg') | url }} 2560w"
+        srcset="{% for w in coverWidths %}{{ ('/images/brand-hero/' + coverName + '-' + w + '.jpg') | url }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}"
         sizes="100vw"
         alt="{{ brand.name }} — оборудование в интерьере"
         fetchpriority="high">
