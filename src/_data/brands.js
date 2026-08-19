@@ -72,35 +72,47 @@ module.exports = [
     name: "Geberit",
     tags: "Инсталляции / Трубы / Сантехника",
     category: "Инсталляции, трубы и&nbsp;сантехника.",
+    cover: "geberit",
+    /* Исходник 1600x900 — дальше апскейл, поэтому свой набор. */
+    coverWidths: [800, 1300, 1600],
   },
   {
     slug: "kermi",
     name: "Kermi",
     tags: "Радиаторы / Душевые / Вентиляция",
     category: "Радиаторы, душевые и&nbsp;вентиляция.",
+    cover: "kermi",
+    /* Исходник 1960x871. */
+    coverWidths: [800, 1300, 1960],
   },
   {
     slug: "meibes",
     name: "Meibes",
     tags: "Коллекторы / Узлы / Насосы",
     category: "Коллекторы, узлы и&nbsp;насосы.",
+    cover: "meibes",
   },
   {
     slug: "oventrop",
     name: "Oventrop",
     tags: "Клапаны / Термостаты",
     category: "Клапаны и&nbsp;термостаты.",
+    cover: "oventrop",
   },
   {
     slug: "viessmann",
     name: "Viessmann",
     tags: "Котлы / Теплонасосы / Отопление",
     category: "Котлы, теплонасосы и&nbsp;отопление.",
+    cover: "viessmann",
   },
   {
     slug: "wilo",
     name: "Wilo",
     tags: "Насосы / Станции / Автоматика",
     category: "Насосы, станции и&nbsp;автоматика.",
+    cover: "wilo",
+    /* Исходник 1920x821. */
+    coverWidths: [800, 1300, 1920],
   },
 ];
