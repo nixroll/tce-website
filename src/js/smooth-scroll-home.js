@@ -36,7 +36,7 @@
  *   - На каждом кадре (rAF) текущая позиция (current) лерпится к
  *     target и применяется через window.scrollTo(0, current) — это
  *     НАСТОЯЩИЙ window.scrollY, все существующие scroll-обработчики
- *     страницы (header-home-theme.js, areas-parallax.js) продолжают
+ *     страницы (header-home-theme.js, parallax.js) продолжают
  *     получать корректный window.scrollY/'scroll'-события без единой
  *     правки в них.
  *   - Раз target никогда не выходит за границы документа, а current

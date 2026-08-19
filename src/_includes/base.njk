@@ -315,8 +315,7 @@
      отдельный флаг hasGallery, тот же приём, что у hasVideoUpgrade
      ниже; сам gallery.js уже написан на несколько [data-gallery] на
      странице через querySelectorAll, isHome по-прежнему тоже его
-     подключает. areas-parallax.js остаётся только под isHome — он
-     специфичен для Areas, секции, которая есть только на Home. #}
+     подключает. #}
   {% if isHome or hasGallery %}
     <script src="{{ '/js/gallery.2.js' | url }}" defer></script>
   {% endif %}
@@ -329,8 +328,15 @@
   {% if hasPortfolio %}
     <script src="{{ '/js/portfolio-text.3.js' | url }}" defer></script>
   {% endif %}
-  {% if isHome %}
-    <script src="{{ '/js/areas-parallax.js' | url }}" defer></script>
+  {# 18.08: areas-parallax.js → parallax.js. Раньше грузился только под
+     isHome и работал только с секцией Areas; теперь тот же эффект нужен
+     обложке Brand Hero - L на страницах брендов, поэтому скрипт обобщён
+     (список секций — в FRAMES внутри него), а флаг стал отдельным.
+     hasParallax вместо isHome: Areas есть только на Home, но сам скрипт
+     больше не про Areas, и привязывать его к странице неправильно — на
+     Home флаг выставлен в front matter рядом с остальными. #}
+  {% if hasParallax %}
+    <script src="{{ '/js/parallax.js' | url }}" defer></script>
   {% endif %}
   {# 13.08, багфикс (пользователь: на /about/ и /services/ у Social - L
      не работает драг мышью/свайп пальцем, хотя на Home работает) —

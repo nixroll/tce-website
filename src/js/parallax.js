@@ -1,16 +1,24 @@
-/* Лёгкий параллакс для фото в секции Areas (.areas__image img) —
- * предложение пользователя, в Figma не реализуемо и не отражено,
- * чистое JS-улучшение поверх уже готовой вёрстки.
+/* Лёгкий параллакс для фото — предложение пользователя, в Figma не
+ * реализуемо и не отражено, чистое JS-улучшение поверх готовой вёрстки.
  *
- * Как работает: .areas__image уже клипует контент (overflow: hidden,
- * фиксированный aspect-ratio 615/460), а img внутри абсолютно
- * спозиционирован и растянут object-fit: cover — то есть контейнер
- * уже готовая "рамка" для параллакса, ничего в разметке/CSS менять
- * не нужно. Картинку слегка увеличиваем (scale) JS-ом, чтобы у неё
- * появился запас на сдвиг без оголения краёв контейнера, и на скролле
- * плавно двигаем по вертикали (translateY) в зависимости от того,
- * насколько центр контейнера сместился от центра вьюпорта — чем
- * дальше от центра экрана, тем сильнее сдвиг.
+ * 18.08: файл назывался areas-parallax.js и работал только с секцией
+ * Areas на Home. Пользователь попросил тот же эффект для обложки в
+ * Brand Hero - L на страницах брендов, поэтому скрипт обобщён, а имя
+ * перестало врать про область применения. Список "рамок" — в FRAMES
+ * ниже; чтобы подключить эффект к новой секции, достаточно дописать
+ * туда селектор её контейнера, при условии что вёрстка устроена так же
+ * (см. следующий абзац).
+ *
+ * Как работает: контейнер уже клипует содержимое (overflow: hidden), а
+ * img внутри абсолютно спозиционирован и растянут object-fit: cover —
+ * то есть это готовая "рамка" для параллакса, ничего в разметке и CSS
+ * менять не нужно. Так устроены и .areas__image (фиксированный
+ * aspect-ratio 615/460), и .brand-hero__cover (высота от flex-роста).
+ * Картинку слегка увеличиваем (scale) JS-ом, чтобы у неё появился запас
+ * на сдвиг без оголения краёв контейнера, и на скролле плавно двигаем
+ * по вертикали (translateY) в зависимости от того, насколько центр
+ * контейнера сместился от центра вьюпорта — чем дальше от центра
+ * экрана, тем сильнее сдвиг.
  *
  * Без JS или при prefers-reduced-motion картинка остаётся как есть,
  * без scale и без сдвига — 1:1 как в Figma, ничего не задваивается.
@@ -35,18 +43,30 @@
 (function () {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  var images = Array.prototype.slice.call(
-    document.querySelectorAll('.areas__image img')
+  /* Контейнеры-"рамки". Берём именно их, а не сразу img: рамка задаёт
+     обрезку и реальные размеры, по которым считается сдвиг. Раньше для
+     этого использовался img.parentElement, но у Brand Hero между
+     картинкой и рамкой стоит ещё <picture> — так что опираться на
+     прямого родителя больше нельзя. */
+  var FRAMES = '.areas__image, .brand-hero__cover';
+
+  var items = [];
+  Array.prototype.forEach.call(
+    document.querySelectorAll(FRAMES),
+    function (frame) {
+      var img = frame.querySelector('img');
+      if (img) items.push({ frame: frame, img: img });
+    }
   );
-  if (!images.length) return;
+  if (!items.length) return;
 
   var SCALE = 1.15;
   var SHIFT_RATIO = 0.055; /* доля от высоты картинки, в каждую сторону */
   var MAX_SHIFT_CAP = 32; /* px — страховочный потолок */
 
-  images.forEach(function (img) {
-    img.style.transform = 'scale(' + SCALE + ') translateY(0px)';
-    img.style.willChange = 'transform';
+  items.forEach(function (item) {
+    item.img.style.transform = 'scale(' + SCALE + ') translateY(0px)';
+    item.img.style.willChange = 'transform';
   });
 
   var ticking = false;
@@ -59,8 +79,9 @@
     ticking = false;
     var viewportH = window.innerHeight;
 
-    images.forEach(function (img) {
-      var rect = img.parentElement.getBoundingClientRect();
+    items.forEach(function (item) {
+      var img = item.img;
+      var rect = item.frame.getBoundingClientRect();
       if (rect.bottom < 0 || rect.top > viewportH) return; /* вне экрана */
 
       var maxShift = Math.min(rect.height * SHIFT_RATIO, MAX_SHIFT_CAP);
