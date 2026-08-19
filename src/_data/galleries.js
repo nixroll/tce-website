@@ -72,6 +72,17 @@ module.exports = {
     ],
   },
 
+  /* 19.08. Третий присланный снимок в набор НЕ вошёл: на нём бак
+     Viessmann Vitocell 100, а не Flamco — увеличил шильдик и сверился с
+     пользователем, он подтвердил и обещал замену. Пока два фото. */
+  "brand-flamco": {
+    dir: "brand-gallery-flamco",
+    photos: [
+      "Расширительный бак Flamco Flexcon в котельной",
+      "Расширительные баки Flamco на производственной линии",
+    ],
+  },
+
   "brand-elco": {
     dir: "brand-gallery-elco",
     photos: [

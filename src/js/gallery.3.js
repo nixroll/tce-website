@@ -50,9 +50,27 @@
 
   var CLONES = 3; /* максимум одновременно видимых слайдов */
 
+  /* 19.08, багфикс. Индексы клонов берутся ПО КРУГУ (wrap), а не
+     напрямую. Раньше было realSlides[i] и realSlides[realCount-1-i] —
+     это работало, пока слайдов было не меньше числа клонов (у всех
+     наборов их было 5 и больше). У Flamco пришло всего два фото, и при
+     i=2 оба выражения дали undefined: realSlides[2] не существует, а
+     realCount-1-i = -1 в JS не заворачивается в конец массива, как в
+     некоторых языках, а просто промахивается. Дальше .cloneNode() на
+     undefined выбрасывал TypeError, карусель не собиралась вовсе.
+
+     wrap() — положительный остаток: обычный % в JS для отрицательных
+     чисел даёт отрицательный результат (-1 % 2 === -1), поэтому
+     прибавляем длину перед вторым взятием остатка. При двух слайдах
+     клоны идут S1,S0,S1 слева и S0,S1,S0 справа — лента получается
+     бесшовной, как и при девяти. */
+  function wrap(n) {
+    return ((n % realCount) + realCount) % realCount;
+  }
+
   for (var i = 0; i < CLONES; i++) {
-    var tail = realSlides[i].cloneNode(true);
-    var head = realSlides[realCount - 1 - i].cloneNode(true);
+    var tail = realSlides[wrap(i)].cloneNode(true);
+    var head = realSlides[wrap(realCount - 1 - i)].cloneNode(true);
     tail.setAttribute('aria-hidden', 'true');
     head.setAttribute('aria-hidden', 'true');
     track.appendChild(tail);

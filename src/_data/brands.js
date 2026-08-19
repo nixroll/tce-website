@@ -63,6 +63,9 @@ module.exports = [
     name: "Flamco",
     tags: "Баки / Сепараторы",
     category: "Баки и&nbsp;сепараторы.",
+    cover: "flamco",
+    /* Исходник 2362x1575 — свой набор ширин, как и у Elco. */
+    coverWidths: [800, 1300, 2362],
   },
   {
     slug: "geberit",
