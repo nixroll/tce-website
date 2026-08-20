@@ -181,7 +181,7 @@ module.exports = {
     {
       image: "kermi-conditioning",
       title: "Кондиционирование",
-      text: "Охлаждают и&nbsp;обогревают помещения с&nbsp;помощью сплит-систем и&nbsp;фанкойлов.",
+      text: "Охлаждают и&nbsp;обогревают помещения с&nbsp;помощью сплит-систем.",
     },
     {
       image: "kermi-convectors",
@@ -206,7 +206,7 @@ module.exports = {
     {
       image: "kermi-heat-storage",
       title: "Тепловые накопители",
-      text: "Хранят тепловую энергию и&nbsp;отдают её потребителю по&nbsp;мере необходимости.",
+      text: "Хранят и&nbsp;отдают тепловую энергию потребителю по&nbsp;запросу.",
     },
     {
       image: "kermi-ventilation",
