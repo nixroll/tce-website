@@ -57,8 +57,19 @@
         своих категорий: без него страница упала бы на отсутствующем
         ключе. Тот же приём, что у обложки и галереи. Количество карточек
         у брендов разное (Arbonia четыре, Elco две) — сетка построена на
-        переносе строк, поэтому правок вёрстки не потребовалось. -#}
-    {%- set cards = brandCategories[brand.slug] or brandCategories.arbonia %}
+        переносе строк, поэтому правок вёрстки не потребовалось.
+
+        20.08: набор ширин у картинки карточки стал настраиваемым — тот
+        же приём, что в gallery-l.njk у Geberit. Исходники категорий
+        Geberit — 750x750, а 1000/1400 были бы апскейлом (файл тяжелее,
+        картинка мягче, а объявленная ширина в srcset — обещание
+        разрешения, которого нет). brandCategories.js может задать
+        catWidths прямо в объекте набора; дефолт — прежние четыре
+        ширины. #}
+    {%- set catSet = brandCategories[brand.slug] or brandCategories.arbonia %}
+    {%- set cards = catSet.cards or catSet %}
+    {%- set catWidths = catSet.widths or [400, 700, 1000, 1400] %}
+    {%- set catMaxW = catWidths | last %}
     {%- for c in cards %}
     <div class="brand-catalog__card">
       {# sizes считает ширину ФОТО (карточка минус её паддинг), а не
@@ -68,11 +79,11 @@
         <picture>
           <source
             type="image/webp"
-            srcset="{{ ('/images/brand-catalog/' + c.image + '-400.webp') | url }} 400w, {{ ('/images/brand-catalog/' + c.image + '-700.webp') | url }} 700w, {{ ('/images/brand-catalog/' + c.image + '-1000.webp') | url }} 1000w, {{ ('/images/brand-catalog/' + c.image + '-1400.webp') | url }} 1400w"
+            srcset="{% for w in catWidths %}{{ ('/images/brand-catalog/' + c.image + '-' + w + '.webp') | url }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}"
             sizes="(min-width: 1440px) 616px, (min-width: 1000px) 412px, (min-width: 768px) 296px, calc(100vw - 88px)">
           <img
-            src="{{ ('/images/brand-catalog/' + c.image + '-700.jpg') | url }}"
-            srcset="{{ ('/images/brand-catalog/' + c.image + '-400.jpg') | url }} 400w, {{ ('/images/brand-catalog/' + c.image + '-700.jpg') | url }} 700w, {{ ('/images/brand-catalog/' + c.image + '-1000.jpg') | url }} 1000w, {{ ('/images/brand-catalog/' + c.image + '-1400.jpg') | url }} 1400w"
+            src="{{ ('/images/brand-catalog/' + c.image + '-' + catMaxW + '.jpg') | url }}"
+            srcset="{% for w in catWidths %}{{ ('/images/brand-catalog/' + c.image + '-' + w + '.jpg') | url }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}"
             sizes="(min-width: 1440px) 616px, (min-width: 1000px) 412px, (min-width: 768px) 296px, calc(100vw - 88px)"
             {# 18.08: в title появился неразрывный пробел (&nbsp;) ради
                переноса — но в alt его быть не должно. Nunjucks
