@@ -130,7 +130,7 @@ module.exports = {
       {
         image: "geberit-washing",
         title: "Зона для&nbsp;умывания",
-        text: "Раковины, смесители и&nbsp;системы для&nbsp;комфортной и&nbsp;стильной зоны умывания.",
+        text: "Раковины, смесители и&nbsp;системы для&nbsp;комфортной зоны умывания.",
       },
       {
         image: "geberit-showers",
