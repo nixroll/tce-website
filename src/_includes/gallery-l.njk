@@ -56,18 +56,30 @@
     </button>
   </div>
 {% endmacro %}
-{% macro slide(dir, n, alt) %}
+{# 20.08: набор ширин у слайда стал настраиваемым. Раньше он был жёстко
+   зашит (400/700/1000) — у всех наборов исходники были не меньше 1000px.
+   У Geberit пришли снимки 750x750, и вариант 1000 пришлось бы делать
+   апскейлом: файл тяжелее, картинка мягче, а объявленная в srcset
+   ширина 1000w была бы обещанием разрешения, которого нет — браузер
+   выбрал бы этот файл на retina и получил бы растянутое фото.
+   Список берётся из galleries.js (widths), дефолт — прежние три ширины.
+   width/height у img — из самой большой доступной ширины: атрибуты
+   нужны, чтобы браузер зарезервировал место до загрузки и вёрстка не
+   прыгала, а фото здесь всегда квадратные. #}
+{% set slideWidths = gallerySet.widths or [400, 700, 1000] %}
+{% set slideMax = slideWidths | last %}
+{% macro slide(dir, n, alt, widths, maxW) %}
   <div class="gallery-l__slide">
     <picture>
       <source
         type="image/webp"
-        srcset="{{ ('/images/' + dir + '/photo-' + n + '-400.webp') | url }} 400w, {{ ('/images/' + dir + '/photo-' + n + '-700.webp') | url }} 700w, {{ ('/images/' + dir + '/photo-' + n + '-1000.webp') | url }} 1000w"
+        srcset="{% for w in widths %}{{ ('/images/' + dir + '/photo-' + n + '-' + w + '.webp') | url }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}"
         sizes="(min-width: 1440px) 421px, (min-width: 768px) calc((100vw - 146px) / 2), (min-width: 390px) calc(100vw - 90px), calc(100vw - 48px)">
       <img
-        src="{{ ('/images/' + dir + '/photo-' + n + '-1000.jpg') | url }}"
-        srcset="{{ ('/images/' + dir + '/photo-' + n + '-400.jpg') | url }} 400w, {{ ('/images/' + dir + '/photo-' + n + '-700.jpg') | url }} 700w, {{ ('/images/' + dir + '/photo-' + n + '-1000.jpg') | url }} 1000w"
+        src="{{ ('/images/' + dir + '/photo-' + n + '-' + maxW + '.jpg') | url }}"
+        srcset="{% for w in widths %}{{ ('/images/' + dir + '/photo-' + n + '-' + w + '.jpg') | url }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}"
         sizes="(min-width: 1440px) 421px, (min-width: 768px) calc((100vw - 146px) / 2), (min-width: 390px) calc(100vw - 90px), calc(100vw - 48px)"
-        width="1000" height="1000"
+        width="{{ maxW }}" height="{{ maxW }}"
         alt="{{ alt }}"
         loading="lazy">
     </picture>
@@ -87,7 +99,7 @@
     <div class="gallery-l__viewport">
       <div class="gallery-l__track" data-gallery-track>
         {%- for alt in gallerySet.photos %}
-        {{ slide(gallerySet.dir, loop.index, alt) }}
+        {{ slide(gallerySet.dir, loop.index, alt, slideWidths, slideMax) }}
         {%- endfor %}
       </div>
     </div>
