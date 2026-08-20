@@ -8869,9 +8869,15 @@ body.body--header-overlay {
   height: 36px;
 }
 
-.catalog-l__logo--meibes {
-  width: 129.196px;
-  height: 34px;
+/* 20.08: Meibes заменён на Tece (Figma node 1487:17117). Размер из
+   макета — 98x50; сверено с самим SVG: viewBox 189.7x96.9, то есть
+   пропорции 1.958, и при высоте 50px ширина выходит 97.9px. Совпадает,
+   логотип не будет сплющен. Это самый ВЫСОКИЙ логотип в наборе (50px
+   против 24-46 у остальных) — так в макете, у Cover высота задана
+   пропорцией, места хватает. */
+.catalog-l__logo--tece {
+  width: 98px;
+  height: 50px;
 }
 
 .catalog-l__logo--oventrop {
