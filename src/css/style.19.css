@@ -9897,6 +9897,7 @@ body.body--header-overlay {
 }
 
 .cookie-consent__title {
+  margin: 0;
   font-family: var(--font-body);
   font-weight: 700;
   font-size: 16px;
@@ -9906,6 +9907,7 @@ body.body--header-overlay {
 }
 
 .cookie-consent__text {
+  margin: 0;
   font-family: var(--font-body);
   font-weight: 500;
   font-size: 15px;
@@ -10027,6 +10029,7 @@ body.body--header-overlay {
 }
 
 .cookie-consent__category-title {
+  margin: 0;
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 15px;
@@ -10036,6 +10039,7 @@ body.body--header-overlay {
 }
 
 .cookie-consent__category-desc {
+  margin: 0;
   font-family: var(--font-body);
   font-weight: 500;
   font-size: 14px;
