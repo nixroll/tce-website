@@ -2,7 +2,15 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {# 21.08 (пользователь, скриншот iOS Safari): у cookie-баннера снизу
+     резко обрывалась тень/угол карточки — плавающий низ адресной
+     строки мобильного Safari перекрывает fixed-элементы с bottom:16px
+     без запаса, т.к. viewport по умолчанию НЕ учитывает этот UI-чром
+     в safe-area-inset-bottom. viewport-fit=cover — обязательное
+     условие, чтобы env(safe-area-inset-bottom) вообще возвращал
+     реальное значение (без него всегда 0), см. использование в
+     .cookie-consent/.contact-toast в style.css. #}
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   {# noindex — либо у конкретной страницы (страница ошибки, архивные), либо
      у ВСЕЙ черновой сборки: превью на GitHub Pages содержит то же, что и
      боевой домен, и без этого тега Google индексировал бы его как

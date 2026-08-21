@@ -5417,7 +5417,10 @@ body.body--header-overlay {
 .contact-toast {
   position: fixed;
   left: 50%;
-  bottom: 20px;
+  /* 21.08: тот же safe-area фикс, что у .cookie-consent выше — тост
+     тоже position:fixed с фиксированным bottom, значит подвержен той
+     же проблеме с плавающим низом iOS Safari. */
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
   z-index: 1100; /* выше конфетти (см. CONFETTI_HEADER_Z=1000 в contact-form.js) и Header (100) — тост должен быть виден поверх всего */
   transform: translate(-50%, 16px);
   max-width: calc(100% - 40px);
@@ -5454,7 +5457,7 @@ body.body--header-overlay {
   .contact-toast {
     left: auto;
     right: 20px;
-    bottom: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     transform: translateY(16px);
     max-width: calc(100vw - 40px);
   }
@@ -9858,7 +9861,14 @@ body.body--header-overlay {
   position: fixed;
   left: 16px;
   right: 16px;
-  bottom: 16px;
+  /* 21.08 (пользователь, скриншот): на iOS Safari плавающая адресная
+     строка/жест-зона внизу перекрывала карточку — угол и тень резко
+     обрывались под ней. env(safe-area-inset-bottom) добавляет реальный
+     отступ под этот UI-чром (нужен viewport-fit=cover в <meta
+     viewport>, см. base.njk — без него env() всегда 0). На устройствах
+     без выреза/жестов safe-area-inset-bottom = 0, поведение не
+     меняется. */
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   z-index: 1150; /* выше .contact-toast (1100) — согласие приоритетнее уведомления */
   background-color: var(--cc-bg);
   border-radius: 16px;
