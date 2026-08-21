@@ -9931,8 +9931,11 @@ body.body--header-overlay {
   text-decoration: none;
 }
 
+/* 21.08 (пользователь, скриншот): hover был оранжевый (var(--brand)) —
+   поменяно на var(--cc-text) (#181d27, та же переменная, что красит
+   заголовок "Настройка Cookie" и текст категорий в этом баннере). */
 .cookie-consent__link:hover {
-  color: var(--brand);
+  color: var(--cc-text);
 }
 
 /* Общая раскладка обеих групп кнопок (Принять/Отклонить/Настроить и
