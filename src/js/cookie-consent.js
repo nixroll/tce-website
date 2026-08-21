@@ -84,10 +84,24 @@
     }, 250); // совпадает с transition в style.css
   }
 
-  toggles.forEach(function (el) {
-    el.addEventListener('click', function () {
-      setToggle(el, !el.classList.contains('cookie-consent__toggle--on'));
+  // 21.08, второй раунд (пользователь, скриншот: "нужно нажимным
+  // сделать весь пункт, чтобы не целиться в переключатель") — клик
+  // вешаем на ВЕСЬ .cookie-consent__category, а не на сам тумблер.
+  // Клик по самому тумблеру тоже срабатывает — событие всё равно
+  // всплывает до строки, отдельный обработчик на toggle не нужен (и
+  // не должен: с ним клик сработал бы дважды). Keydown (Space/Enter)
+  // остаётся на самом тумблере — это обычный фокусируемый элемент
+  // (tabindex="0", role="switch"), клавиатурная активация именно на
+  // нём ожидаема и не требует делегирования на всю строку.
+  banner.querySelectorAll('.cookie-consent__category').forEach(function (row) {
+    var toggle = row.querySelector('[data-cookie-category]');
+    if (!toggle) return; // строка "Необходимые" — некликабельна, без data-cookie-category
+    row.addEventListener('click', function () {
+      setToggle(toggle, !toggle.classList.contains('cookie-consent__toggle--on'));
     });
+  });
+
+  toggles.forEach(function (el) {
     el.addEventListener('keydown', function (e) {
       if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault();

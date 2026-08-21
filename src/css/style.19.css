@@ -9824,12 +9824,14 @@ body.body--header-overlay {
    не везде — например карточка тут чисто белая #ffffff, а не #fafafb
    как у -L секций).
 
-   Один переключатель раскладки на 768px, брейкпоинты внутри каждого
-   кластера (320/390 и 768/1000/1440) идентичны — проверено по
-   метаданным всех 5 фреймов Home:
-     <768: карточка растянута (16px слева/справа), кнопки в СТОЛБЕЦ.
-     >=768: карточка фиксированной ширины 447px, 16px от левого края,
-       кнопки в СТРОКУ (flex:1 каждая).
+   Один переключатель раскладки на 768px для ШИРИНЫ/ПОЗИЦИИ карточки,
+   брейкпоинты внутри каждого кластера (320/390 и 768/1000/1440)
+   идентичны — проверено по метаданным всех 5 фреймов Home:
+     <768: карточка растянута (16px слева/справа).
+     >=768: карточка фиксированной ширины 447px, 16px от левого края.
+   Раскладка КНОПОК — см. отдельный комментарий у .cookie-consent__
+   button-row ниже (21.08, второй раунд правок: там теперь flex-wrap,
+   а не отдельный column/row переключатель).
    Позиция низ-лево, отступ 16px от обоих краёв (в Figma инстанс Cookie
    отстоит от левого края и от низа каждого фрейма ровно на 16px). */
 .cookie-consent {
@@ -9928,25 +9930,33 @@ body.body--header-overlay {
 /* Общая раскладка обеих групп кнопок (Принять/Отклонить/Настроить и
    Сохранить/Назад) — столбец на мобильном, строка на десктопе, gap
    12px в обоих случаях (см. комментарий в cookie-consent.njk). */
+/* 21.08, второй раунд правок: раскладка кнопок теперь строится ЧЕРЕЗ
+   flex-wrap, без разного markup под брейкпоинты. Оба ряда кнопок
+   (.cookie-consent__actions — 3 кнопки, .cookie-consent__save-actions —
+   2) используют одну и ту же базу: flex-wrap, gap 12px, каждая кнопка
+   flex:1 (делит ширину поровну с соседями на своей строке).
+   .cookie-consent__save-actions с двумя кнопками при этом ВСЕГДА в
+   один ряд — переносить нечего. .cookie-consent__actions с тремя
+   кнопками на <768px переносится в 2 строки — это устраивает ТОЛЬКО
+   "Настроить" (первая по порядку в разметке) flex-basis:100%,
+   вытесняя его на свою строку, "Принять"/"Отклонить" делят вторую. На
+   >=768px эта принудительная ширина снимается — все три помещаются в
+   один ряд равными третями, порядок в разметке (Настроить/Принять/
+   Отклонить) уже совпадает с десктопным макетом, менять расположение
+   не нужно. */
 .cookie-consent__button-row {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 12px;
   width: 100%;
-}
-
-@media (min-width: 768px) {
-  .cookie-consent__button-row {
-    flex-direction: row;
-    align-items: center;
-  }
 }
 
 .cookie-consent__btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  flex: 1 1 0;
+  min-width: 0;
   padding: var(--spacing-md) var(--spacing-2xl);
   border-radius: var(--radius-lg);
   border: 1px solid var(--cc-border);
@@ -9961,10 +9971,13 @@ body.body--header-overlay {
   touch-action: manipulation;
 }
 
+.cookie-consent__actions [data-cookie-action="settings"] {
+  flex-basis: 100%;
+}
+
 @media (min-width: 768px) {
-  .cookie-consent__btn {
-    flex: 1 0 0;
-    width: auto;
+  .cookie-consent__actions [data-cookie-action="settings"] {
+    flex-basis: 0;
   }
 }
 
@@ -10010,14 +10023,27 @@ body.body--header-overlay {
   display: flex;
 }
 
+/* 21.08, второй раунд: паддинги были перепутаны местами (16/12
+   вместо 12/16 — CSS-шорткод "top/bottom left/right" легко спутать) —
+   в Figma px-16 py-12, то есть 12px сверху/снизу и 16px слева/справа,
+   а было наоборот. Плюс по просьбе пользователя весь ряд стал
+   кликабельным (не только тумблер) — cursor:pointer тут, обработчик
+   клика в cookie-consent.js делегирован на весь .cookie-consent__category.
+   Модификатор --locked (см. "Необходимые") возвращает обычный курсor —
+   этот ряд трогать нельзя, cookie-consent.js его игнорирует. */
 .cookie-consent__category {
   display: flex;
   align-items: flex-start;
   gap: 10px;
   width: 100%;
-  padding: var(--spacing-xl) var(--spacing-lg);
+  padding: var(--spacing-lg) var(--spacing-xl);
   border: 1px solid var(--cc-border);
   border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.cookie-consent__category--locked {
+  cursor: default;
 }
 
 .cookie-consent__category-text {
