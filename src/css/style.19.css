@@ -6170,7 +6170,7 @@ body.body--header-overlay {
    (см. выше): секция светлая, а у сайта дефолтная тема тёмная.
 
    Высота секции — та же логика, что у Home Hero (см. .home-hero выше):
-   в Figma фиксированные h-740/640/500 на разных брейкпоинтах — типичный
+   в Figma фиксированные h-740/640/600 на разных брейкпоинтах — типичный
    способ Figma обозначить "почти весь экран за вычетом Header". Реализовано
    как calc(100vh - var(--header-height)) с min-height-полом, взятым из
    Figma буквально на каждом брейкпоинте (сверено через get_design_context
@@ -6179,8 +6179,8 @@ body.body--header-overlay {
    отдельная "средняя" ступень):
 
      брейкпоинт   min-height   max-height   паддинг секции (x)   паддинг Container   gap   pt/pb Container   heading
-     320          500px        600px        0                    24px (3xl)          40px  80px / 32px        h5 (32/34/-0.32)
-     390          500px        600px        20px (2xl)            32px (4xl)          40px  80px / 32px        h5
+     320          600px        800px        0                    24px (3xl)          40px  80px / 32px        h5 (32/34/-0.32)
+     390          600px        800px        20px (2xl)            32px (4xl)          40px  80px / 32px        h5
      768          640px        1000px       24px (3xl)             48px (6xl)          48px  96px / 48px        h4 (36/38/-0.36)
      1000/1440    740px        1000px       24px (3xl)             80px (8xl)          64px  128px / 80px       h3 (40/42/-0.4)
 
@@ -6189,6 +6189,14 @@ body.body--header-overlay {
    всех 5 брейкпоинтах повторно: 320/390 — max-h-[600px], 768/1000/1440 —
    max-h-[1000px] (одна и та же верхняя граница на всех трёх, в отличие
    от min-height, где 768 — отдельная средняя ступень между 500 и 740).
+
+   21.08: пользователь поправил 320/390 в Figma ещё раз — min-height
+   500→600, max-height 600→800 (перепроверено через get_design_context
+   на 1130:9645/9653 и 1147:11849/11856, About Hero - L и Services
+   Hero - L архитектурно один и тот же компонент hero-l.njk, правка
+   общая для обеих страниц одним изменением здесь). 768/1000/1440 этим
+   заходом не затронуты — только выбор пользователя, значения там
+   прежние.
 
    Border-left/right у Container — только с 390px (0 на 320px, ровно та же
    граница, что у .doc-hero__container/.paragraph-d__container). */
@@ -6205,8 +6213,8 @@ body.body--header-overlay {
   align-items: center;
   overflow: hidden;
   height: calc(100vh - var(--header-height));
-  min-height: 500px;
-  max-height: 600px;
+  min-height: 600px;
+  max-height: 800px;
 }
 
 @media (min-width: 390px) {
