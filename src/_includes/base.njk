@@ -311,6 +311,14 @@
      здесь же, рядом. #}
   {% include "cookie-consent.njk" %}
   <script src="{{ '/js/cookie-consent.js' | url }}" defer></script>
+  {# 21.08: Яндекс Метрика (счётчик пользователя, id 111828954) —
+     ПЕРВЫЙ реальный трекер на сайте, ради которого вся инфраструктура
+     согласия и делалась. Обязательно СРАЗУ ПОСЛЕ cookie-consent.js:
+     оба defer, порядок выполнения = порядок в разметке, а
+     yandex-metrika.js на старте читает window.TCE_CONSENT, который
+     выставляет именно cookie-consent.js. Подробности решения — в
+     самом yandex-metrika.js. #}
+  <script src="{{ '/js/yandex-metrika.js' | url }}" defer></script>
   <script src="{{ '/js/header.js' | url }}" defer></script>
   {# 10.08: pencil-hover.js — Apple Pencil на iPad физически умеет
      наводиться без касания, но @media (hover: hover) этого не видит
