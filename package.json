@@ -5,7 +5,8 @@
   "description": "Thermo Concept Engineering — сайт",
   "scripts": {
     "dev": "eleventy --serve",
-    "build": "eleventy"
+    "build": "eleventy",
+    "postbuild": "node scripts/minify-css.js"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0"
