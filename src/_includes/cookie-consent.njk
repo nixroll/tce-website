@@ -43,10 +43,25 @@
       </p>
     </div>
 
+    {# 21.08, третий раунд: пользователь прислал скриншот живого баннера
+       с пометкой "опять кнопки переставил" + актуальную ссылку на
+       Figma (node 1731:14325). Проверено напрямую через Figma MCP
+       (get_design_context на "Normal, 1440->768" 1731:14326 и "Normal,
+       390->320" 1731:14684) — в обоих порядок ОДИНАКОВЫЙ: Принять,
+       Отклонить, Настроить (Настроить — ПОСЛЕДНЯЯ, а не первая). Во
+       втором раунде правок (см. историю) порядок был выставлен
+       наоборот (Настроить первой) — то ли неверно считан тогда со
+       скриншотов, то ли дизайн с тех пор поменялся обратно; сейчас
+       ориентир — то, что реально отдаёт Figma по этой ссылке.
+       CSS-класс, который сворачивает "Настроить" на свою строку
+       <768px, выбирает кнопку по data-атрибуту
+       [data-cookie-action="settings"], а не по позиции (см.
+       style.css) — поэтому просто менять порядок в разметке
+       безопасно, CSS трогать не пришлось. #}
     <div class="cookie-consent__button-row cookie-consent__actions">
-      <button type="button" class="cookie-consent__btn cookie-consent__btn--ghost" data-cookie-action="settings">Настроить</button>
       <button type="button" class="cookie-consent__btn cookie-consent__btn--ghost" data-cookie-action="accept">Принять</button>
       <button type="button" class="cookie-consent__btn cookie-consent__btn--ghost" data-cookie-action="reject">Отклонить</button>
+      <button type="button" class="cookie-consent__btn cookie-consent__btn--ghost" data-cookie-action="settings">Настроить</button>
     </div>
 
     <div class="cookie-consent__categories">
