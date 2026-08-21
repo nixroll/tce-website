@@ -132,9 +132,17 @@
      Контакты, дублирует то же, что и кнопка раньше вела) + иконки
      соцсетей вместо кнопки — самой кнопки в новой версии Figma больше
      нет. Ссылки соцсетей — те же адреса, что уже использует footer.njk
-     (Instagram/Telegram/LinkedIn), чтобы не плодить рассинхрон. #}
+     (Instagram/Telegram/LinkedIn), чтобы не плодить рассинхрон.
+
+     21.08: добавлена ссылка "Главная" первым пунктом (запрос
+     пользователя + обновлённый Figma, node 384:2287, State=Open —
+     теперь там 5 ссылок вместо 4, "Главная" перед "О нас"). Только
+     мобильная панель — в развёрнутом >=768px навигации (.header-home__links
+     чуть выше) "Главная" не добавляли: там ссылки на неё и так нет ни
+     в одной из тем по макету, только логотип ведёт на "/". #}
   <div class="header__mobile-panel" id="mobile-menu">
     <nav class="header__mobile-links">
+      <a class="header-mlink" href="{{ '/' | url }}">Главная</a>
       <a class="header-mlink" href="{{ '/about/' | url }}">О нас</a>
       <a class="header-mlink" href="{{ '/services/' | url }}">Услуги</a>
       <a class="header-mlink" href="{{ '/catalog/' | url }}">Каталог</a>
