@@ -304,6 +304,13 @@
      Footer. На ВСЕХ страницах (вне customSections-хвоста), т.к.
      Footer тоже общий для всех. #}
   <div class="footer-padding" aria-hidden="true"></div>
+  {# 21.08: баннер согласия на cookie — на КАЖДОЙ странице, без
+     условного флага (см. подробный разбор в самом cookie-consent.njk).
+     cookie-consent.js решает, показывать ли его (проверяет
+     localStorage), поэтому подключаем и разметку, и скрипт безусловно
+     здесь же, рядом. #}
+  {% include "cookie-consent.njk" %}
+  <script src="{{ '/js/cookie-consent.js' | url }}" defer></script>
   <script src="{{ '/js/header.js' | url }}" defer></script>
   {# 10.08: pencil-hover.js — Apple Pencil на iPad физически умеет
      наводиться без касания, но @media (hover: hover) этого не видит

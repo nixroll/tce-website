@@ -9810,3 +9810,233 @@ body.body--header-overlay {
   border-left: 1px solid var(--border-primary);
   border-right: 1px solid var(--border-primary);
 }
+
+/* ================================================================
+   Cookie Consent (21.08, по референсу со старого Framer-сайта —
+   скриншоты в чате, разметка/поведение объяснены в cookie-consent.njk).
+   Своя лёгкая реализация вместо сторонней библиотеки.
+
+   Светлая карточка на токенах TCE (та же палитра, что у "-L" секций,
+   переопределена ЛОКАЛЬНО — компонент плавает поверх ЛЮБОЙ секции
+   независимо от её темы, поэтому не может полагаться на глобальные
+   :root-значения, которые по умолчанию тёмные). Позиция — низ-лево
+   (в отличие от .contact-toast, который справа, — так они не
+   конфликтуют, если оба вдруг понадобятся на экране одновременно).
+
+   [hidden] управляет самим показом (cookie-consent.js снимает атрибут
+   при первом визите), .is-expanded переключает "маску" карточки между
+   3 кнопками и панелью категорий (см. .cookie-consent__actions/
+   .cookie-consent__categories ниже) — один и тот же контейнер, без
+   анимации между режимами, чтобы не усложнять (можно добавить позже). */
+.cookie-consent {
+  --background-primary: #fafafb;
+  --background-secondary: #f3f4f6;
+  --text-primary: #181d27;
+  --text-secondary: #414651;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+
+  position: fixed;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1150; /* выше .contact-toast (1100) — согласие приоритетнее уведомления */
+  max-width: 400px;
+  background-color: var(--background-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 20px;
+  box-shadow:
+    0 12px 16px -4px rgba(10, 13, 18, 0.08),
+    0 4px 6px -2px rgba(10, 13, 18, 0.03),
+    0 2px 2px -1px rgba(10, 13, 18, 0.04);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.cookie-consent[hidden] {
+  display: block; /* переопределяем браузерный display:none у [hidden] */
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.cookie-consent.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (min-width: 768px) {
+  .cookie-consent {
+    right: auto;
+    width: 400px;
+  }
+}
+
+.cookie-consent__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  padding: var(--spacing-3xl);
+}
+
+.cookie-consent__title {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 24px;
+  color: var(--text-primary);
+}
+
+.cookie-consent__text {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--text-secondary);
+}
+
+.cookie-consent__link {
+  color: var(--text-quaternary);
+  text-decoration: underline;
+}
+
+.cookie-consent__link:hover {
+  color: var(--brand);
+}
+
+.cookie-consent__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.cookie-consent__btn {
+  flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-primary);
+  background: none;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-primary);
+  cursor: pointer;
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+
+.cookie-consent__btn--ghost {
+  background-color: var(--background-secondary);
+}
+
+.cookie-consent__btn--ghost:hover {
+  background-color: var(--border-primary);
+}
+
+.cookie-consent__btn--primary {
+  background-color: var(--text-primary);
+  border-color: var(--text-primary);
+  color: var(--background-primary);
+}
+
+.cookie-consent__btn--primary:hover {
+  opacity: 0.85;
+}
+
+.cookie-consent__btn--save {
+  width: 100%;
+}
+
+/* Панель категорий — скрыта, пока карточка не в режиме .is-expanded
+   ("Настроить"), см. cookie-consent.js. */
+.cookie-consent__categories {
+  display: none;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.cookie-consent.is-expanded .cookie-consent__actions {
+  display: none;
+}
+
+.cookie-consent.is-expanded .cookie-consent__categories {
+  display: flex;
+}
+
+.cookie-consent__category {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--spacing-lg);
+  background-color: var(--background-secondary);
+  border-radius: var(--radius-md);
+}
+
+.cookie-consent__category-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+}
+
+.cookie-consent__category-title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-primary);
+}
+
+.cookie-consent__category-desc {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--text-quaternary);
+}
+
+/* Тумблер — без чекбокса под капотом (у сайта нет других тумблеров, с
+   которыми нужно быть визуально консистентным, поэтому просто span с
+   role="switch" + JS переключает aria-checked/класс, см.
+   cookie-consent.js). ON — тёмная заливка (--text-primary, тот же
+   цвет, что у первичной кнопки) — так на референсе со скриншота. */
+.cookie-consent__toggle {
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+  height: 24px;
+  border-radius: 999px;
+  background-color: var(--border-primary);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.cookie-consent__toggle::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: var(--background-primary);
+  box-shadow: 0 1px 2px rgba(10, 13, 18, 0.15);
+  transition: transform 0.15s ease;
+}
+
+.cookie-consent__toggle--on {
+  background-color: var(--text-primary);
+}
+
+.cookie-consent__toggle--on::before {
+  transform: translateX(16px);
+}
+
+.cookie-consent__toggle--locked {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
