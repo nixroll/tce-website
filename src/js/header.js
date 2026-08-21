@@ -47,7 +47,15 @@ document.addEventListener('DOMContentLoaded', function () {
   function unlockScroll() {
     document.body.classList.remove('is-menu-locked');
     document.body.style.top = '';
-    window.scrollTo(0, savedScrollY);
+    /* 21.08, багфикс (пользователь: "при закрытии на пустое поле под
+       меню проскролливается страница странно") — на сайте глобально
+       включён html { scroll-behavior: smooth } (см. style.css, якорные
+       переходы в Hero), он же подхватывает и ЛЮБОЙ программный
+       scrollTo, включая этот — без явного behavior:'instant' страница
+       плавно проезжала бы всё расстояние от 0 до savedScrollY, вместо
+       мгновенного возврата, и по пути было бы видно ту самую пустую
+       область, что была под меню. */
+    window.scrollTo({ top: savedScrollY, left: 0, behavior: 'instant' });
   }
 
   function openMenu() {
