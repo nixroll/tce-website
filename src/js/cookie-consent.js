@@ -109,6 +109,10 @@
       hide();
     } else if (action === 'settings') {
       banner.classList.add('is-expanded');
+    } else if (action === 'back') {
+      // возврат к свёрнутому виду БЕЗ сохранения (кнопка "Назад" в
+      // развёрнутой панели, node 1731:13925/14740 в Figma)
+      banner.classList.remove('is-expanded');
     } else if (action === 'save') {
       writeConsent(collectFromToggles());
       hide();

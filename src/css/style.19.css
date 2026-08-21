@@ -9812,43 +9812,47 @@ body.body--header-overlay {
 }
 
 /* ================================================================
-   Cookie Consent (21.08, по референсу со старого Framer-сайта —
-   скриншоты в чате, разметка/поведение объяснены в cookie-consent.njk).
-   Своя лёгкая реализация вместо сторонней библиотеки.
+   Cookie Consent (21.08, второй заход — пользователь сам собрал точный
+   дизайн в Figma, node 1731:14325 "Cookie", 4 состояния: State=Normal/
+   Open × Breakpoint 1440→768/390→320, плюс размещение на странице —
+   node 405:2033 "Home", инстанс "Cookie" на каждом брейкпоинте.
+   Разметка/резюме решений — в cookie-consent.njk. Первую версию (свой
+   примерный дизайн под токены -L секций) пользователь забраковал —
+   здесь всё сверено через get_design_context 1:1, без отсебятины:
+   цвета, отступы, радиусы, шрифты — конкретные значения из макета, не
+   переиспользованные токены -L (они местами буквально совпадают, но
+   не везде — например карточка тут чисто белая #ffffff, а не #fafafb
+   как у -L секций).
 
-   Светлая карточка на токенах TCE (та же палитра, что у "-L" секций,
-   переопределена ЛОКАЛЬНО — компонент плавает поверх ЛЮБОЙ секции
-   независимо от её темы, поэтому не может полагаться на глобальные
-   :root-значения, которые по умолчанию тёмные). Позиция — низ-лево
-   (в отличие от .contact-toast, который справа, — так они не
-   конфликтуют, если оба вдруг понадобятся на экране одновременно).
-
-   [hidden] управляет самим показом (cookie-consent.js снимает атрибут
-   при первом визите), .is-expanded переключает "маску" карточки между
-   3 кнопками и панелью категорий (см. .cookie-consent__actions/
-   .cookie-consent__categories ниже) — один и тот же контейнер, без
-   анимации между режимами, чтобы не усложнять (можно добавить позже). */
+   Один переключатель раскладки на 768px, брейкпоинты внутри каждого
+   кластера (320/390 и 768/1000/1440) идентичны — проверено по
+   метаданным всех 5 фреймов Home:
+     <768: карточка растянута (16px слева/справа), кнопки в СТОЛБЕЦ.
+     >=768: карточка фиксированной ширины 447px, 16px от левого края,
+       кнопки в СТРОКУ (flex:1 каждая).
+   Позиция низ-лево, отступ 16px от обоих краёв (в Figma инстанс Cookie
+   отстоит от левого края и от низа каждого фрейма ровно на 16px). */
 .cookie-consent {
-  --background-primary: #fafafb;
-  --background-secondary: #f3f4f6;
-  --text-primary: #181d27;
-  --text-secondary: #414651;
-  --text-quaternary: #717680;
-  --border-primary: #e5e7ec;
+  --cc-bg: #ffffff;
+  --cc-bg-secondary: #f3f4f6;
+  --cc-text: #181d27;
+  --cc-text-secondary: #414651;
+  --cc-text-quaternary: #717680;
+  --cc-border: #e5e7ec;
+  --cc-btn-primary: #373c43;
+  --cc-btn-primary-border: #525966;
+  --cc-btn-primary-text: #f7f7f7;
+  --cc-toggle-off: #f5f5f5;
+  --cc-toggle-on: var(--brand);
 
   position: fixed;
-  left: 20px;
-  right: 20px;
-  bottom: 20px;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
   z-index: 1150; /* выше .contact-toast (1100) — согласие приоритетнее уведомления */
-  max-width: 400px;
-  background-color: var(--background-primary);
-  border: 1px solid var(--border-primary);
-  border-radius: 20px;
-  box-shadow:
-    0 12px 16px -4px rgba(10, 13, 18, 0.08),
-    0 4px 6px -2px rgba(10, 13, 18, 0.03),
-    0 2px 2px -1px rgba(10, 13, 18, 0.04);
+  background-color: var(--cc-bg);
+  border-radius: 16px;
+  box-shadow: 0 20px 24px -4px rgba(10, 13, 18, 0.08);
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 0.25s ease, transform 0.25s ease;
@@ -9868,95 +9872,125 @@ body.body--header-overlay {
 @media (min-width: 768px) {
   .cookie-consent {
     right: auto;
-    width: 400px;
+    width: 447px;
   }
 }
 
 .cookie-consent__body {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xl);
-  padding: var(--spacing-3xl);
+  gap: var(--spacing-2xl);
+  padding: var(--spacing-3xl) var(--spacing-2xl);
+}
+
+@media (min-width: 768px) {
+  .cookie-consent__body {
+    padding: var(--spacing-3xl);
+  }
+}
+
+.cookie-consent__text-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 340px;
 }
 
 .cookie-consent__title {
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: 17px;
-  line-height: 24px;
-  color: var(--text-primary);
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.08px;
+  color: var(--cc-text);
 }
 
 .cookie-consent__text {
   font-family: var(--font-body);
-  font-weight: 400;
+  font-weight: 500;
   font-size: 15px;
-  line-height: 22px;
-  color: var(--text-secondary);
+  line-height: 20px;
+  letter-spacing: -0.075px;
+  color: var(--cc-text-quaternary);
 }
 
 .cookie-consent__link {
-  color: var(--text-quaternary);
-  text-decoration: underline;
+  color: var(--cc-text-secondary);
+  text-decoration: none;
 }
 
 .cookie-consent__link:hover {
   color: var(--brand);
 }
 
-.cookie-consent__actions {
+/* Общая раскладка обеих групп кнопок (Принять/Отклонить/Настроить и
+   Сохранить/Назад) — столбец на мобильном, строка на десктопе, gap
+   12px в обоих случаях (см. комментарий в cookie-consent.njk). */
+.cookie-consent__button-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .cookie-consent__button-row {
+    flex-direction: row;
+    align-items: center;
+  }
 }
 
 .cookie-consent__btn {
-  flex: 1 1 auto;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-lg) var(--spacing-xl);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-primary);
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-2xl);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--cc-border);
   background: none;
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
-  color: var(--text-primary);
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--cc-text);
   cursor: pointer;
   white-space: nowrap;
   touch-action: manipulation;
 }
 
+@media (min-width: 768px) {
+  .cookie-consent__btn {
+    flex: 1 0 0;
+    width: auto;
+  }
+}
+
 .cookie-consent__btn--ghost {
-  background-color: var(--background-secondary);
+  background-color: var(--cc-bg-secondary);
 }
 
 .cookie-consent__btn--ghost:hover {
-  background-color: var(--border-primary);
+  background-color: var(--cc-border);
 }
 
 .cookie-consent__btn--primary {
-  background-color: var(--text-primary);
-  border-color: var(--text-primary);
-  color: var(--background-primary);
+  background-color: var(--cc-btn-primary);
+  border-color: var(--cc-btn-primary-border);
+  color: var(--cc-btn-primary-text);
 }
 
 .cookie-consent__btn--primary:hover {
-  opacity: 0.85;
-}
-
-.cookie-consent__btn--save {
-  width: 100%;
+  background-color: #40464e;
 }
 
 /* Панель категорий — скрыта, пока карточка не в режиме .is-expanded
-   ("Настроить"), см. cookie-consent.js. */
-.cookie-consent__categories {
+   ("Настроить"), см. cookie-consent.js. Группа кнопок Сохранить/Назад
+   (.cookie-consent__save-actions) — та же история, что и .cookie-
+   consent__actions выше: скрыта/показана вместе с категориями. */
+.cookie-consent__categories,
+.cookie-consent__save-actions {
   display: none;
-  flex-direction: column;
-  gap: var(--spacing-xl);
 }
 
 .cookie-consent.is-expanded .cookie-consent__actions {
@@ -9965,52 +9999,62 @@ body.body--header-overlay {
 
 .cookie-consent.is-expanded .cookie-consent__categories {
   display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  width: 100%;
+}
+
+.cookie-consent.is-expanded .cookie-consent__save-actions {
+  display: flex;
 }
 
 .cookie-consent__category {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: var(--spacing-lg);
-  background-color: var(--background-secondary);
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  border: 1px solid var(--cc-border);
   border-radius: var(--radius-md);
 }
 
-.cookie-consent__category-row {
+.cookie-consent__category-text {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-lg);
+  flex: 1 0 0;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
 .cookie-consent__category-title {
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 20px;
-  color: var(--text-primary);
+  letter-spacing: -0.075px;
+  color: var(--cc-text);
 }
 
 .cookie-consent__category-desc {
   font-family: var(--font-body);
-  font-weight: 400;
-  font-size: 13px;
+  font-weight: 500;
+  font-size: 14px;
   line-height: 18px;
-  color: var(--text-quaternary);
+  letter-spacing: -0.07px;
+  color: var(--cc-text-quaternary);
 }
 
-/* Тумблер — без чекбокса под капотом (у сайта нет других тумблеров, с
-   которыми нужно быть визуально консистентным, поэтому просто span с
-   role="switch" + JS переключает aria-checked/класс, см.
-   cookie-consent.js). ON — тёмная заливка (--text-primary, тот же
-   цвет, что у первичной кнопки) — так на референсе со скриншота. */
+/* Тумблер — без чекбокса под капотом (span с role="switch", JS
+   переключает aria-checked/класс, см. cookie-consent.js). ON —
+   брендовый оранжевый (--brand), тот же токен, что у CTA-кнопок
+   сайта — так в макете (не тёмный, как было в первой версии). */
 .cookie-consent__toggle {
   position: relative;
   flex-shrink: 0;
-  width: 40px;
-  height: 24px;
-  border-radius: 999px;
-  background-color: var(--border-primary);
+  width: 36px;
+  height: 20px;
+  border-radius: 9999px;
+  background-color: var(--cc-toggle-off);
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
@@ -10018,18 +10062,18 @@ body.body--header-overlay {
 .cookie-consent__toggle::before {
   content: "";
   position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 18px;
-  height: 18px;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  background-color: var(--background-primary);
-  box-shadow: 0 1px 2px rgba(10, 13, 18, 0.15);
+  background-color: var(--white);
+  box-shadow: 0 1px 3px rgba(10, 13, 18, 0.1), 0 1px 2px -1px rgba(10, 13, 18, 0.1);
   transition: transform 0.15s ease;
 }
 
 .cookie-consent__toggle--on {
-  background-color: var(--text-primary);
+  background-color: var(--cc-toggle-on);
 }
 
 .cookie-consent__toggle--on::before {
@@ -10038,5 +10082,5 @@ body.body--header-overlay {
 
 .cookie-consent__toggle--locked {
   cursor: not-allowed;
-  opacity: 0.6;
 }
+

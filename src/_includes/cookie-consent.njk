@@ -1,92 +1,98 @@
-{# 21.08 (пользователь прислал скриншоты со старого Framer-сайта,
-   old-tce.framer.website): баннер согласия на cookie. Своя реализация
-   без сторонней библиотеки (vanilla-cookieconsent и т.п.) — на сайте
-   до сих пор нет ни одной внешней JS-зависимости (свой SMTP-клиент,
-   свой тост, свой carousel), плюс в песочнице всё равно нет доступа ни
-   к npm, ни к CDN, чтобы такую библиотеку сюда затащить.
+{# 21.08 (пользователь прислал скриншоты со старого Framer-сайта) +
+   21.08 правка (пользователь сам собрал точный дизайн в Figma, node
+   1731:14325 "Cookie" — 4 состояния: State=Normal/Open × Breakpoint
+   1440→768/390→320, плюс контекст размещения на странице, node
+   405:2033 "Home", инстанс "Cookie" на каждом брейкпоинте). Первая
+   версия (свой примерный дизайн под токены TCE) пользователь забраковал
+   ("дизайн кривоват") — эта версия сверена с Figma через
+   get_design_context 1:1 по цветам/отступам/радиусам, без
+   отсебятины.
 
-   Решение с пользователем (два вопроса перед реализацией):
-   1) Цвета — НЕ точная копия тёмной карточки с Framer, а токены TCE
-      (та же светлая палитра, что у остальных "-L" компонентов сайта:
-      --background-primary/--text-primary и т.д., переопределены
-      локально на .cookie-consent ниже в style.css) — общий визуальный
-      язык сайта важнее буквального повтора старого дизайна.
-   2) На сайте сейчас нет вообще ни одного трекера (GA, метрики,
-      пиксели) — категории "Функциональные/Аналитические/Рекламные"
-      пока НЕЧЕГО реально блокировать. Баннер — заглушка, но с честной
-      инфраструктурой на будущее: cookie-consent.js пишет выбор в
-      localStorage и кидает CustomEvent tce:consent-updated + держит
-      window.TCE_CONSENT — когда будет добавлен первый реальный скрипт
-      аналитики/рекламы, его достаточно обернуть проверкой
-      TCE_CONSENT.analytics (или подписаться на событие), в разметке
-      /JS баннера при этом менять ничего не придётся.
+   Разметка не меняется между брейкпоинтами (как и раньше) — меняется
+   только CSS: у Cookie ОДИН переключатель раскладки на 768px (два
+   кластера состояний в Figma: 320/390 — "мобильный", 768/1000/1440 —
+   "десктопный", внутри каждого кластера все брейкпоинты идентичны).
+     Мобильный (<768): карточка растянута по ширине (16px слева/справа,
+       см. base.njk/style.css), кнопки в СТОЛБЕЦ (Принять/Отклонить/
+       Настроить, и Сохранить/Назад — тем же паттерном).
+     Десктопный (>=768): карточка фиксированной ширины 447px, 16px от
+       левого края, кнопки в СТРОКУ (flex:1 каждая).
+   Все переключения — через один общий класс-модификатор
+   .cookie-consent__button-row на обеих группах кнопок (см. style.css).
 
-   Кнопки — по правке пользователя БЕЗ слова "все": "Отклонить",
-   "Настроить", "Принять" (не "Отклонить все"/"Принять все", как было
-   на Framer-референсе).
+   Позиция — низ-лево, 16px от обоих краёв (в Figma инстанс Cookie на
+   каждом брейкпоинте отстоит от левого края и от низа страницы ровно
+   на 16px — проверено арифметикой по метаданным всех 5 фреймов Home).
 
-   Две "маски" одной и той же карточки, переключаются классом
-   .is-expanded на .cookie-consent (см. cookie-consent.js):
-   - Свёрнуто (по умолчанию): заголовок + текст + 3 кнопки.
-   - Развёрнуто (после "Настроить"): те же заголовок/текст, вместо
-     кнопок — 4 категории с тумблерами + одна кнопка "Сохранить".
-     "Необходимые" — тумблер всегда включён и не кликабелен
-     (aria-disabled, cookie-consent.js его игнорирует) — эти cookie
-     нужны для самой работы сайта, отключить их нельзя.
+   Кнопки в свёрнутом состоянии — теперь ВСЕ три одинаковые (светло-
+   серые, без выделения "Принять" как первичной) и в другом порядке:
+   Принять → Отклонить → Настроить (в исходном Framer-референсе было
+   Отклонить → Настроить → Принять — пользователь в Figma расставил
+   иначе, следуем макету). В развёрнутом состоянии — "Сохранить"
+   (тёмная, первичная) и "Назад" (та же светло-серая, что и остальные;
+   возвращает к свёрнутому виду БЕЗ сохранения — см. cookie-consent.js).
 
-   Один инстанс на сайт, подключается в base.njk БЕЗ условного флага
-   (в отличие от contact-toast.njk, который живёт только на страницах
-   с hasContactForm/hasAddressCopy) — баннер согласия обязан появляться
-   на любой странице, с которой человек впервые зашёл на сайт, а не
-   только на /contact/. #}
-<div class="cookie-consent" id="cookie-consent" role="dialog" aria-live="polite" aria-label="Настройки файлов cookie" hidden>
+   Категории — теперь карточки с ТОНКОЙ РАМКОЙ (border), а не залитым
+   фоном, как было в первой версии. Тумблер ON — оранжевый (--brand,
+   тот же токен, что у CTA-кнопок сайта), а не тёмный.
+
+   "Необходимые" — тумблер визуально ничем не отличается от обычного
+   ON (в Figma нет отдельного "disabled"-стиля), но остаётся
+   некликабельным (aria-disabled, cookie-consent.js его игнорирует) —
+   эти cookie нужны для работы сайта, отключить нельзя. #}
+<div class="cookie-consent" id="cookie-consent" role="dialog" aria-live="polite" aria-label="Настройка Cookie" hidden>
   <div class="cookie-consent__body">
-    <p class="cookie-consent__title">Настройки файлов cookie</p>
-    <p class="cookie-consent__text">
-      Мы используем файлы cookie для улучшения работы сайта.
-      <a class="cookie-consent__link" href="{{ '/cookies/' | url }}">Политика cookie</a>.
-    </p>
+    <div class="cookie-consent__text-block">
+      <p class="cookie-consent__title">Настройка Cookie</p>
+      <p class="cookie-consent__text">
+        Мы используем файлы cookie для улучшения работы сайта.
+        <a class="cookie-consent__link" href="{{ '/cookies/' | url }}">Политика cookie</a>.
+      </p>
+    </div>
 
-    <div class="cookie-consent__actions">
+    <div class="cookie-consent__button-row cookie-consent__actions">
+      <button type="button" class="cookie-consent__btn cookie-consent__btn--ghost" data-cookie-action="accept">Принять</button>
       <button type="button" class="cookie-consent__btn cookie-consent__btn--ghost" data-cookie-action="reject">Отклонить</button>
       <button type="button" class="cookie-consent__btn cookie-consent__btn--ghost" data-cookie-action="settings">Настроить</button>
-      <button type="button" class="cookie-consent__btn cookie-consent__btn--primary" data-cookie-action="accept">Принять</button>
     </div>
 
     <div class="cookie-consent__categories">
       <div class="cookie-consent__category">
-        <div class="cookie-consent__category-row">
+        <div class="cookie-consent__category-text">
           <p class="cookie-consent__category-title">Необходимые</p>
-          <span class="cookie-consent__toggle cookie-consent__toggle--on cookie-consent__toggle--locked" role="switch" aria-checked="true" aria-disabled="true" aria-label="Необходимые — всегда включены"></span>
+          <p class="cookie-consent__category-desc">Безопасность сайта.</p>
         </div>
-        <p class="cookie-consent__category-desc">Обеспечивают безопасность сайта.</p>
+        <span class="cookie-consent__toggle cookie-consent__toggle--on cookie-consent__toggle--locked" role="switch" aria-checked="true" aria-disabled="true" aria-label="Необходимые — всегда включены"></span>
       </div>
 
       <div class="cookie-consent__category">
-        <div class="cookie-consent__category-row">
+        <div class="cookie-consent__category-text">
           <p class="cookie-consent__category-title">Функциональные</p>
-          <span class="cookie-consent__toggle" role="switch" aria-checked="false" tabindex="0" data-cookie-category="functional" aria-label="Функциональные"></span>
+          <p class="cookie-consent__category-desc">Персонализированный контент.</p>
         </div>
-        <p class="cookie-consent__category-desc">Обеспечивают персонализированный контент.</p>
+        <span class="cookie-consent__toggle" role="switch" aria-checked="false" tabindex="0" data-cookie-category="functional" aria-label="Функциональные"></span>
       </div>
 
       <div class="cookie-consent__category">
-        <div class="cookie-consent__category-row">
+        <div class="cookie-consent__category-text">
           <p class="cookie-consent__category-title">Аналитические</p>
-          <span class="cookie-consent__toggle" role="switch" aria-checked="false" tabindex="0" data-cookie-category="analytics" aria-label="Аналитические"></span>
+          <p class="cookie-consent__category-desc">Анализ работы сайта.</p>
         </div>
-        <p class="cookie-consent__category-desc">Обеспечивают анализ работы сайта.</p>
+        <span class="cookie-consent__toggle" role="switch" aria-checked="false" tabindex="0" data-cookie-category="analytics" aria-label="Аналитические"></span>
       </div>
 
       <div class="cookie-consent__category">
-        <div class="cookie-consent__category-row">
+        <div class="cookie-consent__category-text">
           <p class="cookie-consent__category-title">Рекламные</p>
-          <span class="cookie-consent__toggle" role="switch" aria-checked="false" tabindex="0" data-cookie-category="marketing" aria-label="Рекламные"></span>
+          <p class="cookie-consent__category-desc">Персонализация рекламы.</p>
         </div>
-        <p class="cookie-consent__category-desc">Обеспечивают персонализацию рекламы.</p>
+        <span class="cookie-consent__toggle" role="switch" aria-checked="false" tabindex="0" data-cookie-category="marketing" aria-label="Рекламные"></span>
       </div>
+    </div>
 
-      <button type="button" class="cookie-consent__btn cookie-consent__btn--primary cookie-consent__btn--save" data-cookie-action="save">Сохранить</button>
+    <div class="cookie-consent__button-row cookie-consent__save-actions">
+      <button type="button" class="cookie-consent__btn cookie-consent__btn--primary" data-cookie-action="save">Сохранить</button>
+      <button type="button" class="cookie-consent__btn cookie-consent__btn--ghost" data-cookie-action="back">Назад</button>
     </div>
   </div>
 </div>
