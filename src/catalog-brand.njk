@@ -18,7 +18,9 @@ pagination:
   addAllPagesToCollections: true
 permalink: "/catalog/{{ brand.slug }}/"
 eleventyComputed:
-  title: "{{ brand.name }} — Thermo Concept Engineering"
+  # 21.08 (пользователь): разделитель "—" -> "-" везде в title, тот же
+  # заход, что и на остальных страницах (см. index.njk и другие *.njk).
+  title: "{{ brand.name }} - Thermo Concept Engineering"
   description: "{{ brand.name }} — оборудование в каталоге Thermo Concept Engineering: подбор, поставка напрямую от производителя, монтаж, пусконаладка и сервис."
 ---
 {# 14.08. Страницы брендов каталога — по одной на каждую запись из
