@@ -545,6 +545,12 @@ body.body--sticky-header .site-header:not(.is-open) {
   background: none;
   cursor: pointer;
   flex-shrink: 0;
+  /* 21.08 (пользователь, скриншот: быстрые повторные тапы по бургеру
+     триггерят браузерный зум по двойному тапу) — тот же приём, что уже
+     стоит на стрелках каруселей (.projects__nav-btn и т.п.): убирает
+     эту эвристику браузера для конкретно этого элемента, обычный тап
+     продолжает работать без задержки. */
+  touch-action: manipulation;
 }
 
 .header__burger-icon--close {
@@ -616,6 +622,52 @@ body.body--sticky-header .site-header:not(.is-open) {
 .header__mobile-cta:hover {
   background-color: var(--button-primary-hover);
   color: var(--white);
+}
+
+/* 21.08 (пользователь): открытая мобильная панель по высоте меньше
+   экрана (см. Figma, node 384:2287 — Open ниже полной высоты
+   устройства), поэтому часть страницы под ней остаётся видна и
+   кликабельна — можно было тапнуть по ней или проскроллить страницу
+   ДАЛЬШЕ, пока меню как бы всё ещё открыто. header-overlay — невидимый
+   (без затемнения, в Figma его нет) слой-перехватчик под остальным
+   контентом: перекрывает всё, кроме самого хедера/панели (см.
+   z-index ниже), клик по нему закрывает меню (header.js). Реальную
+   блокировку скролла фона делает не он, а .is-menu-locked на body
+   (ниже) — этого одного достаточно, отдельно гасить touchmove на
+   оверлее не нужно.
+   z-index: -1 — НЕ уводит слой глобально назад (он всё ещё часть
+   стекингового контекста .site-header, у которого z-index: 100, то
+   есть выше обычного контента страницы), а только ставит его позади
+   родных соседей (.header__inner/.header__mobile-panel, у них
+   z-index:auto = 0 в этом же контексте) — клики по самому хедеру и
+   панели долетают до них, а не до оверлея. */
+.header-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: default;
+}
+
+.site-header.is-open .header-overlay {
+  display: block;
+}
+
+/* Блокировка скролла фона, пока открыта мобильная панель (header.js).
+   overflow:hidden на body одного НЕ хватает на iOS Safari — оттуда и
+   классический приём position:fixed + сохранение/восстановление
+   scrollY через inline top (см. header.js): без него на iOS страница
+   всё равно продолжает "резиновый" скролл под фиксированным контентом. */
+body.is-menu-locked {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  overflow: hidden;
 }
 
 /* ---------- Строка ссылок + кнопка: >=768px ---------- */
