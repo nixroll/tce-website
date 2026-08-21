@@ -14,6 +14,13 @@
     <div class="footer__compact-content">
       <div class="footer__compact-columns">
         <ul class="footer__mlist">
+          {# 21.08 (Figma node 311:2012, Breakpoint=390px/320px): "Главная"
+             первым пунктом — только на 320/390px. На 768px (та же общая
+             разметка .footer__compact, переключается на .footer__wide
+             только с 1000px) в макете этой ссылки уже нет, поэтому прячем
+             через footer-mlink--home + media (min-width:768px) в style.css,
+             а не убираем совсем. #}
+          <li><a class="footer-mlink footer-mlink--home" href="{{ '/' | url }}">Главная</a></li>
           <li><a class="footer-mlink" href="{{ '/about/' | url }}">О нас</a></li>
           <li><a class="footer-mlink" href="{{ '/services/' | url }}">Услуги</a></li>
           <li><a class="footer-mlink" href="{{ '/catalog/' | url }}">Каталог</a></li>

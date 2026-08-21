@@ -4238,6 +4238,15 @@ body.body--header-overlay {
   color: var(--brand);
 }
 
+/* 21.08 (Figma node 311:2012): "Главная" — только на 320/390px,
+   на 768px (та же разметка .footer__compact, см. комментарий выше
+   про display-переключение) её в макете уже нет. */
+@media (min-width: 768px) {
+  .footer-mlink--home {
+    display: none;
+  }
+}
+
 .footer__compact-logo-contact {
   display: flex;
   flex-direction: column;
