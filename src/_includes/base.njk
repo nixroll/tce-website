@@ -162,6 +162,44 @@
      Скрипт грузится на КАЖДОЙ странице, поэтому его зависший кеш ломал
      бы тему Header по всему сайту, а не только на новой странице. #}
   <link rel="stylesheet" href="{{ '/css/style.19.css' | url }}">
+  {# 21.08, SEO-аудит: структурированные данные Organization. На каждой
+     странице (кроме noindex — /404.html, там смысла нет), одинаковый
+     блок — так и задумано в schema.org, это не per-page разметка, а
+     "визитка" компании, которую Google может подтянуть в панель знаний
+     / расширенный сниппет (адрес, телефон, соцсети). Реквизиты — теми
+     же данными, что уже открыто опубликованы на /bank-details/ и
+     /contact/ (юрадрес, УНП, телефон, email), ничего нового наружу не
+     уходит. logo — apple-touch-icon.png (180×180, квадратный PNG):
+     og-cover.png не годится, у Google к logo отдельное требование
+     (кв., от 112×112), а og:image — баннер 1200×630 под другую задачу.
+     sameAs — только Instagram: ссылка на Telegram в футере ведёт на
+     общий telegram.org, а не на канал компании, включать её сюда
+     как "тот же профиль организации" было бы неверно. #}
+  {% if not noindex %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "{{ site.name }}",
+    "alternateName": "ООО «Термо Концепт Инжиниринг»",
+    "url": "{{ site.origin }}/",
+    "logo": "{{ site.origin + ('/images/apple-touch-icon.png' | url) }}",
+    "description": "{{ site.description }}",
+    "email": "info@tcepro.by",
+    "telephone": "+375293820829",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "ул. Матусевича, д. 33/2, офис 801",
+      "addressLocality": "Минск",
+      "postalCode": "220091",
+      "addressCountry": "BY"
+    },
+    "sameAs": [
+      "https://www.instagram.com/thermoconceptby/"
+    ]
+  }
+  </script>
+  {% endif %}
 </head>
 {# 10.08: lightBodyBg/.body--light-top убраны — фон html/body теперь
    красится напрямую по теме Header (html:has(.site-header--home:not
