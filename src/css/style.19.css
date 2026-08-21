@@ -8860,27 +8860,44 @@ body.body--header-overlay {
   flex-shrink: 0;
 }
 
-.catalog-l__logo--arbonia {
+/* 21.08 (пользователь, три скриншота: лого у Flamco мельче, чем у
+   Viessmann на странице бренда) — селекторы ниже теперь общие для
+   карточки каталога И Brand Hero (.brand-hero__logo--<slug>, см. чуть
+   ниже комментарий у .brand-hero__logo). Раньше на странице бренда
+   лого нормализовали по единой высоте 30px, ширина auto — но у разных
+   логотипов разное соотношение "видимой отрисовки" к высоте её
+   бокса (у Flamco при 46px исходной высоты видимая марка компактнее,
+   чем у Viessmann при 32px), поэтому при принудительной высоте 30px
+   Flamco визуально ужимался сильнее. Фикс — использовать ТЕ ЖЕ
+   абсолютные width/height, что и в карточке каталога (значения из
+   Figma), а не единую высоту: тогда на странице бренда логотип ровно
+   того же размера, что пользователь уже видел на /catalog/. */
+.catalog-l__logo--arbonia,
+.brand-hero__logo--arbonia {
   width: 177.806px;
   height: 30px;
 }
 
-.catalog-l__logo--elco {
+.catalog-l__logo--elco,
+.brand-hero__logo--elco {
   width: 112px;
   height: 28px;
 }
 
-.catalog-l__logo--flamco {
+.catalog-l__logo--flamco,
+.brand-hero__logo--flamco {
   width: 159.206px;
   height: 46px;
 }
 
-.catalog-l__logo--geberit {
+.catalog-l__logo--geberit,
+.brand-hero__logo--geberit {
   width: 174.757px;
   height: 24px;
 }
 
-.catalog-l__logo--kermi {
+.catalog-l__logo--kermi,
+.brand-hero__logo--kermi {
   width: 96.842px;
   height: 36px;
 }
@@ -8891,22 +8908,26 @@ body.body--header-overlay {
    логотип не будет сплющен. Это самый ВЫСОКИЙ логотип в наборе (50px
    против 24-46 у остальных) — так в макете, у Cover высота задана
    пропорцией, места хватает. */
-.catalog-l__logo--tece {
+.catalog-l__logo--tece,
+.brand-hero__logo--tece {
   width: 98px;
   height: 50px;
 }
 
-.catalog-l__logo--oventrop {
+.catalog-l__logo--oventrop,
+.brand-hero__logo--oventrop {
   width: 183px;
   height: 44px;
 }
 
-.catalog-l__logo--viessmann {
+.catalog-l__logo--viessmann,
+.brand-hero__logo--viessmann {
   width: 188.589px;
   height: 32px;
 }
 
-.catalog-l__logo--wilo {
+.catalog-l__logo--wilo,
+.brand-hero__logo--wilo {
   width: 93.506px;
   height: 40px;
 }
@@ -9232,9 +9253,12 @@ body.body--header-overlay {
    Скрыт через display:none, а не убран из разметки: так у Content на
    мобильных не остаётся зарезервированного пустого места (п.7 ТЗ), и
    не нужен второй вариант разметки под десктоп.
-   Размер, в отличие от карточек каталога, НЕ per-brand: нормализован по
-   высоте 30px при ширине auto (п.4 ТЗ) — каждый логотип масштабируется
-   по своим пропорциям и даёт свою фактическую ширину. */
+   21.08 (пользователь): размер теперь per-brand — width/height задаёт
+   модификатор .brand-hero__logo--<slug> (см. .catalog-l__logo--* выше,
+   те же самые значения общим селектором). Раньше здесь была единая
+   высота 30px при ширине auto (п.4 ТЗ) — по факту давала логотипам
+   разный "визуальный вес" на странице бренда, не совпадающий с тем, что
+   пользователь уже видел в карточке каталога. */
 .brand-hero__logo {
   display: none;
 }
@@ -9243,8 +9267,6 @@ body.body--header-overlay {
   .brand-hero__logo {
     display: block;
     flex-shrink: 0;
-    width: auto;
-    height: 30px;
   }
 }
 
