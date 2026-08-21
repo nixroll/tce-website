@@ -6,3 +6,8 @@ netlify-test/
 *.old
 _git_junk/
 _preview_check/
+
+# Пароль от почты (Contact - L / Form - L, см. src/contact-send.php) —
+# создаётся вручную прямо на сервере, в git никогда не попадает.
+mail-config.php
+src/mail-config.php

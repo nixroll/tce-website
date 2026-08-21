@@ -5457,7 +5457,8 @@ body.body--header-overlay {
 }
 
 .contact-toast--send .contact-toast__icon--send,
-.contact-toast--copy .contact-toast__icon--copy {
+.contact-toast--copy .contact-toast__icon--copy,
+.contact-toast--error .contact-toast__icon--error {
   display: block;
 }
 

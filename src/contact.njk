@@ -149,5 +149,17 @@ stickyHeader: true
       <path d="M18.3337 5.5L8.25033 15.5833L3.66699 11" stroke="#CECFD2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </span>
+  {# 21.08: третий вариант тоста — ошибка отправки формы
+     (contact-form.js, catch на неудачном fetch к contact-send.php).
+     Крестик вместо галочки/стрелки, тот же приём с одним path и
+     stroke, что у send/copy выше, но цвет — существующий красный
+     ошибок формы (#d92d20, см. .form__input.is-invalid в style.css),
+     а не нейтральный #CECFD2 — тост должен явно читаться как "не
+     получилось", в отличие от нейтральных send/copy. #}
+  <span class="contact-toast__icon contact-toast__icon--error" aria-hidden="true">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16.5 5.5L5.5 16.5M5.5 5.5L16.5 16.5" stroke="#d92d20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
   <span class="contact-toast__text"></span>
 </div>

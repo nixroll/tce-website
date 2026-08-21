@@ -17,7 +17,12 @@
  * TOAST_DURATION мс (около того, что принято для тост-уведомлений —
  * 3с: достаточно, чтобы прочитать короткую фразу, не настолько долго,
  * чтобы раздражать), затем так же плавно исчезает. position: fixed —
- * не двигается при скролле (сам по себе уже не в потоке документа). */
+ * не двигается при скролле (сам по себе уже не в потоке документа).
+ *
+ * 21.08 — третий вариант, ERROR: contact-form.js вызывает его, когда
+ * реальная отправка формы (fetch на contact-send.php) не удалась —
+ * сеть недоступна, сервер ответил ошибкой и т.п. Тот же контроллер,
+ * просто третий пункт в тернарнике show() ниже разросся в switch. */
 (function () {
   var toast = document.getElementById('contact-toast');
   if (!toast) return;
@@ -30,6 +35,7 @@
 
   var COPY = { modifier: 'contact-toast--copy', text: 'Скопировано' };
   var SEND = { modifier: 'contact-toast--send', text: 'Отправлено' };
+  var ERROR = { modifier: 'contact-toast--error', text: 'Не удалось отправить' };
 
   var textEl = toast.querySelector('.contact-toast__text');
 
@@ -37,7 +43,7 @@
     window.clearTimeout(hideTimer);
     window.clearTimeout(removeVisibleTimer);
 
-    toast.classList.remove('contact-toast--copy', 'contact-toast--send');
+    toast.classList.remove('contact-toast--copy', 'contact-toast--send', 'contact-toast--error');
     toast.classList.add(variant.modifier);
     if (textEl) textEl.textContent = variant.text;
 
@@ -62,6 +68,9 @@
   }
 
   window.showContactToast = function (type) {
-    show(type === 'copy' ? COPY : SEND);
+    var variant = SEND;
+    if (type === 'copy') variant = COPY;
+    else if (type === 'error') variant = ERROR;
+    show(variant);
   };
 })();

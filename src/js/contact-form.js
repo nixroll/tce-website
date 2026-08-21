@@ -1,7 +1,5 @@
-/* 05.08. Contact - L / Form - L (node 937:4840): форма пока НИКУДА не
- * отправляется — по прямой просьбе пользователя ("Пока мы не
- * подключаем форму никуда"). Этот скрипт добавляет клиентские штрихи,
- * все явно попрошены:
+/* 05.08. Contact - L / Form - L (node 937:4840). Этот скрипт добавляет
+ * клиентские штрихи, все явно попрошены:
  *
  * 1) 08.08 — плавающий label у полей ввода (node 1052:7544/1063:7731,
  *    подробности в contact.njk/style.css рядом с разметкой формы):
@@ -36,17 +34,31 @@
  *    ошибку в уже-тронутых полях, а input снимает её сразу, как
  *    только поле снова валидно — так пользователь не бьётся о ту же
  *    красную рамку повторно, поправляя поле.
- * 2) Success-статус отправки: submit перехватывается, preventDefault
- *    (никакого реального запроса), дальше — нативная HTML5-валидация
- *    формы (form.checkValidity()); если обязательные поля/чекбокс не
- *    заполнены — подсвечиваем все невалидные поля (is-invalid, та же
- *    красная State=Error из Figma) И отдаём управление браузеру
- *    (reportValidity(), подсветит проблемные поля нативным способом
- *    тоже — не убираем, доступность/скринридеры), иначе имитируем
- *    успех: текст кнопки меняется на "Отправлено" (data-success-text,
- *    задан в contact.njk; меняем ТОЛЬКО .form__submit-text, не весь
+ * 2) Отправка: submit перехватывается, preventDefault, дальше —
+ *    нативная HTML5-валидация формы (form.checkValidity()); если
+ *    обязательные поля/чекбокс не заполнены — подсвечиваем все
+ *    невалидные поля (is-invalid, та же красная State=Error из Figma)
+ *    И отдаём управление браузеру (reportValidity(), подсветит
+ *    проблемные поля нативным способом тоже — не убираем,
+ *    доступность/скринридеры). Иначе кнопка блокируется и получает
+ *    текст "Отправка…", форма уходит через fetch на contact-send.php
+ *    (см. подробный комментарий там же — PHP + свой SMTP-клиент,
+ *    smtp.hoster.by) POST'ом как FormData. Успех — текст кнопки
+ *    меняется на "Отправлено" (data-success-text, задан в
+ *    contact.njk; меняем ТОЛЬКО .form__submit-text, не весь
  *    button.textContent — там теперь ещё иконка mail-01 рядом,
- *    задевать её нельзя) и кнопка блокируется от повторной "отправки".
+ *    задевать её нельзя), кнопка остаётся заблокированной (одна
+ *    заявка за загрузку страницы). Неудача (сеть недоступна, сервер
+ *    ответил ошибкой, mail-config.php ещё не залит на сервер и т.п.)
+ *    — кнопка разблокируется, текст возвращается к исходному, чтобы
+ *    можно было попробовать ещё раз, и показывается error-тост (см.
+ *    contact-toast.js).
+ *
+ *    21.08: до этого пункт был чистой клиентской заглушкой без
+ *    единого реального запроса — по прямой прежней просьбе
+ *    пользователя ("Пока мы не подключаем форму никуда"), пока не
+ *    была готова серверная часть (contact-send.php + mail-config.php
+ *    на хостинге). Теперь подключена.
  * 3) 07.08, по референсу пользователя (significa.co/get-a-quote/, там
  *    свой самописный компонент под тем же паттерном) — конфетти при
  *    успешной отправке. Библиотека — canvas-confetti (см. confetti.js,
@@ -199,6 +211,9 @@
     })();
   }
 
+  var CONTACT_FORM_ENDPOINT = '/contact-send.php';
+  var submitBtnDefaultText = submitBtnText ? submitBtnText.textContent : '';
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -213,32 +228,67 @@
     }
 
     if (submitBtn && submitBtnText) {
-      submitBtnText.textContent = submitBtn.getAttribute('data-success-text') || submitBtnText.textContent;
       submitBtn.disabled = true;
+      submitBtnText.textContent = 'Отправка…';
     }
 
-    /* 10.08 (пользователь, скриншот significa.co: "когда форму
-       отправили поля опять пустые, а у тебя остаются заполненные,
-       будто не отправилось") — form.reset() возвращает все поля к
-       пустому состоянию; плавающий label ничего дополнительно не
-       требует (переключается сам через :placeholder-shown, реагирует
-       на реальное value поля). Два ручных доп. шага: autoGrowTextarea()
-       — reset не бьёт 'input', высота Big Input сама не пересчитается
-       и останется растянутой под старый текст; submitAttempted = false
-       — иначе следующий blur по уже опустевшему обязательному полю
-       тут же подсветил бы его как ошибку сразу после "успешной"
-       отправки, что выглядело бы странно. */
-    form.reset();
-    autoGrowTextarea();
-    submitAttempted = false;
-    Array.prototype.forEach.call(floatWrappers, function (wrapper) {
-      wrapper.classList.remove('is-invalid');
-    });
+    var formData = new FormData(form);
 
-    fireConfetti();
+    fetch(CONTACT_FORM_ENDPOINT, { method: 'POST', body: formData })
+      .then(function (response) {
+        return response.json()
+          .catch(function () { return { success: false }; })
+          .then(function (data) { return { ok: response.ok, data: data }; });
+      })
+      .then(function (result) {
+        if (!result.ok || !result.data || !result.data.success) {
+          throw new Error('send_failed');
+        }
 
-    if (typeof window.showContactToast === 'function') {
-      window.showContactToast('send');
-    }
+        if (submitBtn && submitBtnText) {
+          submitBtnText.textContent = submitBtn.getAttribute('data-success-text') || submitBtnText.textContent;
+          /* Кнопка остаётся заблокированной — та же логика, что была
+             у заглушки: одна успешная заявка за загрузку страницы. */
+        }
+
+        /* 10.08 (пользователь, скриншот significa.co: "когда форму
+           отправили поля опять пустые, а у тебя остаются заполненные,
+           будто не отправилось") — form.reset() возвращает все поля к
+           пустому состоянию; плавающий label ничего дополнительно не
+           требует (переключается сам через :placeholder-shown,
+           реагирует на реальное value поля). Два ручных доп. шага:
+           autoGrowTextarea() — reset не бьёт 'input', высота Big Input
+           сама не пересчитается и останется растянутой под старый
+           текст; submitAttempted = false — иначе следующий blur по
+           уже опустевшему обязательному полю тут же подсветил бы его
+           как ошибку сразу после успешной отправки, что выглядело бы
+           странно. */
+        form.reset();
+        autoGrowTextarea();
+        submitAttempted = false;
+        Array.prototype.forEach.call(floatWrappers, function (wrapper) {
+          wrapper.classList.remove('is-invalid');
+        });
+
+        fireConfetti();
+
+        if (typeof window.showContactToast === 'function') {
+          window.showContactToast('send');
+        }
+      })
+      .catch(function () {
+        /* Сеть недоступна, сервер вернул ошибку/невалидный JSON,
+           mail-config.php ещё не залит на сервер и т.п. — разблокируем
+           кнопку и возвращаем исходный текст, чтобы можно было
+           попробовать снова, ничего в самой форме не трогаем (данные
+           пользователя остаются на месте). */
+        if (submitBtn && submitBtnText) {
+          submitBtn.disabled = false;
+          submitBtnText.textContent = submitBtnDefaultText;
+        }
+        if (typeof window.showContactToast === 'function') {
+          window.showContactToast('error');
+        }
+      });
   });
 })();

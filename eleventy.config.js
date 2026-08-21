@@ -31,6 +31,18 @@ module.exports = function (eleventyConfig) {
      файл в билде. */
   eleventyConfig.addPassthroughCopy({ "src/.htaccess": ".htaccess" });
 
+  /* 21.08. Обработчик формы (Contact - L / Catalog - L → Form - L,
+     см. form-l.njk). Обычный .php-файл — не шаблон Eleventy (расширение
+     не входит в templateFormats), поэтому сам по себе Eleventy его
+     проигнорировал бы; passthrough копирует как есть, без обработки, в
+     корень сборки — там его найдёт fetch() из contact-form.js
+     ('/contact-send.php') и там же его исполнит Apache на хостинге.
+     Пароль от почтового ящика в этом файле НЕ хранится — читается из
+     mail-config.php, который живёт только на сервере и никогда не
+     попадает ни в git, ни в сборку (см. подробный комментарий в шапке
+     contact-send.php и защиту в src/.htaccess). */
+  eleventyConfig.addPassthroughCopy({ "src/contact-send.php": "contact-send.php" });
+
   eleventyConfig.addGlobalData("currentYear", new Date().getFullYear());
 
   return {

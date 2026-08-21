@@ -63,7 +63,16 @@
    resize/::-webkit-resizer целиком (вместе с историей багов вокруг
    них — они больше не применимы, ручки в разметке больше нет),
    contact-form.js теперь на каждый input пересчитывает высоту
-   textarea под её контент (см. подробности там). #}
+   textarea под её контент (см. подробности там).
+
+   21.08, форма подключена к реальной отправке (src/contact-send.php,
+   SMTP hoster.by) — до этого была чистая клиентская заглушка (см.
+   историю выше и старую версию contact-form.js). Добавлено поле-
+   ловушка "website": простые боты, которые не исполняют CSS и просто
+   заполняют все поля формы подряд, попадаются в него; живой человек
+   его не видит (visually-hidden) и не может дотянуться табом
+   (tabindex="-1"). contact-send.php молча игнорирует отправку, если
+   оно не пустое — см. комментарий там же. #}
 <section class="form" data-figma-node="937:4840" data-figma-name="Form - L">
   <div class="form__container">
     <div class="form__intro">
@@ -107,6 +116,8 @@
               <label class="form__input-label" for="contact-message">Сообщение</label>
             </span>
           </div>
+
+          <input class="visually-hidden" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
 
           <label class="form__checkbox-row">
             <span class="form__checkbox-pad">
