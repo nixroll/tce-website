@@ -19,3 +19,19 @@ define('MAIL_SMTP_PORT', 465);
 define('MAIL_SMTP_USER', 'info@thermoconcept.by');
 define('MAIL_SMTP_PASS', 'ВПИШИТЕ_СЮДА_РЕАЛЬНЫЙ_ПАРОЛЬ_ЯЩИКА');
 define('MAIL_TO', 'thermo.concept.engin@gmail.com');
+
+/* Необязательно: уведомление в Telegram-бот при заявке (см.
+ * telegram_notify() в contact-send.php). Если эти две строки убрать
+ * или оставить пустыми — Telegram-канал просто не используется,
+ * email и leads.ndjson продолжат работать как обычно.
+ *
+ * Как получить:
+ * 1. Откройте в Telegram @BotFather, отправьте /newbot, следуйте
+ *    подсказкам (имя бота, username) — в конце придёт токен вида
+ *    "123456789:AAExxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx".
+ * 2. Напишите новому боту любое сообщение (например /start) — иначе
+ *    он не сможет писать вам первым.
+ * 3. Узнайте свой chat_id — проще всего через бота @userinfobot
+ *    (напишите ему /start, он пришлёт ваш числовой Id). */
+define('TELEGRAM_BOT_TOKEN', '');
+define('TELEGRAM_CHAT_ID', '');

@@ -2,9 +2,20 @@
 /* 21.08. Обработчик формы заявки (Contact - L / Catalog - L → Form - L,
  * см. form-l.njk) — единственный серверный код на сайте, всё остальное
  * статика. Принимает POST от contact-form.js (fetch на
- * '/contact-send.php'), проверяет обязательные поля и отправляет письмо
- * на почту клиента через авторизованный SMTP hoster.by
- * (smtp.hoster.by:465, SSL/TLS — см. mail-config.php).
+ * '/contact-send.php'), проверяет обязательные поля и уводит заявку
+ * по ТРЁМ независимым каналам:
+ *   1) email на почту клиента через авторизованный SMTP hoster.by
+ *      (smtp.hoster.by:465, SSL/TLS — см. mail-config.php);
+ *   2) уведомление в Telegram-бот (telegram_notify() ниже) — Bot API,
+ *      обычный HTTPS POST, без библиотек;
+ *   3) строка в leads.ndjson рядом на сервере — локальный журнал заявок,
+ *      подробности у appendLeadLog() ниже.
+ * Каналы независимы: если один упал (например, письмо ушло, но
+ * осело в спам-фильтре получателя — это в принципе не видно со
+ * стороны отправителя, SMTP просто подтверждает приём) — остальные
+ * всё равно сработают. Пользователю на сайте отвечаем успехом, если
+ * сработал хотя бы email ИЛИ Telegram; journal.ndjson — тихий
+ * подстраховочный канал, не влияет на ответ.
  *
  * Почему свой SMTP-клиент, а не PHPMailer: библиотеку негде было
  * подтянуть (packagist/github закрыты в песочнице, где писался этот
@@ -14,18 +25,21 @@
  * fsockopen(), написан по RFC 5321 (EHLO/AUTH LOGIN/MAIL FROM/RCPT
  * TO/DATA), проверяет код ответа сервера на каждом шаге.
  *
- * ВАЖНО про пароль: он НЕ хранится в этом файле и не должен попадать
- * в git (публичный репозиторий, история необратима). Читается из
- * mail-config.php — тот лежит РЯДОМ, прямо на сервере, создаётся
- * вручную через файловый менеджер хостинга (см. инструкцию, которая
- * шла в чате отдельным сообщением) и никогда не заливается вместе со
- * сборкой сайта. src/.htaccess блокирует прямую HTTP-раздачу файлов
- * mail-config*.php — даже если бы кто-то узнал точный адрес, файл
- * просто не отдастся браузеру.
+ * ВАЖНО про секреты: пароль от почты и токен Telegram-бота НЕ хранятся
+ * в этом файле и не должны попадать в git (публичный репозиторий,
+ * история необратима). Читаются из mail-config.php — тот лежит РЯДОМ,
+ * прямо на сервере, создаётся вручную через файловый менеджер
+ * хостинга и никогда не заливается вместе со сборкой сайта.
+ * src/.htaccess блокирует прямую HTTP-раздачу mail-config.php и
+ * leads.ndjson (там телефоны/email посетителей — тоже не для
+ * посторонних глаз) — даже если кто-то узнает точный адрес, файлы
+ * просто не отдадутся браузером.
  *
- * mail-config.example.php в корне репозитория — образец БЕЗ реального
- * пароля, только для справки, что именно должно быть в mail-config.php
- * на сервере. */
+ * mail-config.example.php в корне репозитория — образец БЕЗ реальных
+ * секретов, только для справки, что именно должно быть в
+ * mail-config.php на сервере (включая опциональные
+ * TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID — если их там нет, Telegram-канал
+ * просто тихо пропускается, defined()-проверки ниже). */
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -60,11 +74,12 @@ function contactField($key) {
     return isset($_POST[$key]) ? trim((string) $_POST[$key]) : '';
 }
 
-$name    = contactField('name');
-$phone   = contactField('phone');
-$email   = contactField('email');
-$message = contactField('message');
-$consent = contactField('consent');
+$name       = contactField('name');
+$phone      = contactField('phone');
+$email      = contactField('email');
+$message    = contactField('message');
+$consent    = contactField('consent');
+$sourcePage = contactField('source_page'); /* скрытое поле формы, см. form-l.njk — просто для контекста в письме/логе/Telegram, ничем не валидируется */
 
 $errors = [];
 if ($name === '') $errors[] = 'name';
@@ -91,20 +106,38 @@ $headerSafeName  = stripHeaderInjection($name);
 $headerSafeEmail = stripHeaderInjection($email);
 
 $subject = 'Заявка с сайта thermoconcept.by';
-$body = implode("\r\n", [
-    'Новая заявка с сайта thermoconcept.by',
-    '',
-    'Имя: ' . $name,
-    'Телефон: ' . $phone,
-    'Email: ' . ($email !== '' ? $email : '—'),
-    '',
-    'Сообщение:',
-    $message,
-]);
+$bodyLines = ['Новая заявка с сайта thermoconcept.by'];
+if ($sourcePage !== '') {
+    $bodyLines[] = 'Страница: ' . $sourcePage;
+}
+$bodyLines[] = '';
+$bodyLines[] = 'Имя: ' . $name;
+$bodyLines[] = 'Телефон: ' . $phone;
+$bodyLines[] = 'Email: ' . ($email !== '' ? $email : '—');
+$bodyLines[] = '';
+$bodyLines[] = 'Сообщение:';
+$bodyLines[] = $message;
+$body = implode("\r\n", $bodyLines);
 
 $replyToEmail = $headerSafeEmail !== '' ? $headerSafeEmail : MAIL_SMTP_USER;
 $replyToName  = $headerSafeName !== '' ? $headerSafeName : 'Сайт thermoconcept.by';
 
+/* Журнал заявок — тихий подстраховочный канал, пишется ПЕРВЫМ и
+ * независимо от того, получится ли email/Telegram ниже: даже если оба
+ * канала уведомлений откажут одновременно (сеть, неверный пароль,
+ * недоступен Telegram и т.п.), сама заявка не потеряется — appendLeadLog()
+ * гасит собственные ошибки, на общий ответ не влияет. */
+appendLeadLog([
+    'time'        => date('c'),
+    'name'        => $name,
+    'phone'       => $phone,
+    'email'       => $email,
+    'message'     => $message,
+    'source_page' => $sourcePage,
+    'ip'          => isset($_SERVER['REMOTE_ADDR']) ? (string) $_SERVER['REMOTE_ADDR'] : '',
+]);
+
+$emailOk = false;
 try {
     smtp_send_mail(
         MAIL_SMTP_HOST,
@@ -119,14 +152,90 @@ try {
         $replyToEmail,
         $replyToName
     );
+    $emailOk = true;
 } catch (Exception $e) {
     error_log('contact-send.php SMTP error: ' . $e->getMessage());
+}
+
+/* Telegram — второй, полностью независимый канал уведомлений.
+ * TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID опциональны: если их нет в
+ * mail-config.php (defined() ниже это ловит), канал просто тихо
+ * пропускается — ничего не ломается для тех, кто ещё не подключил бота. */
+$telegramOk = false;
+$telegramBotToken = defined('TELEGRAM_BOT_TOKEN') ? TELEGRAM_BOT_TOKEN : '';
+$telegramChatId   = defined('TELEGRAM_CHAT_ID') ? TELEGRAM_CHAT_ID : '';
+if ($telegramBotToken !== '' && $telegramChatId !== '') {
+    $telegramOk = telegram_notify($telegramBotToken, $telegramChatId, str_replace("\r\n", "\n", $body));
+}
+
+/* Успех для посетителя сайта — если сработал хотя бы один из "живых"
+ * каналов уведомления (email или Telegram). Журнал в leads.ndjson —
+ * подстраховка для владельца сайта, не входит в этот критерий: он не
+ * заменяет уведомление, просто гарантирует, что заявка не потеряется
+ * физически, даже если её не увидели сразу. */
+if (!$emailOk && !$telegramOk) {
     http_response_code(502);
     echo json_encode(['success' => false, 'error' => 'send_failed']);
     exit;
 }
 
 echo json_encode(['success' => true]);
+
+/**
+ * Локальный журнал заявок — leads.ndjson рядом с этим файлом (NDJSON:
+ * один JSON-объект на строку, дописывается в конец — просто и надёжно
+ * читать построчно, если понадобится смотреть/парсить вручную или
+ * позже собрать простую страницу-просмотрщик). Ошибки записи гасятся
+ * (@) намеренно: это подстраховочный канал, а не основной — сайт не
+ * должен падать целиком, если вдруг не хватило прав на запись файла.
+ * Защищён от прямой раздачи через src/.htaccess (там телефоны/email
+ * посетителей).
+ */
+function appendLeadLog(array $lead) {
+    $logPath = __DIR__ . '/leads.ndjson';
+    $line = json_encode($lead, JSON_UNESCAPED_UNICODE) . "\n";
+    @file_put_contents($logPath, $line, FILE_APPEND | LOCK_EX);
+}
+
+/**
+ * Уведомление в Telegram через Bot API (обычный HTTPS POST на
+ * api.telegram.org, без библиотек). Сначала пробует curl (почти всегда
+ * есть на shared-хостинге), при отсутствии — file_get_contents поверх
+ * stream_context (нужен allow_url_fopen, тоже почти всегда включён).
+ * Возвращает false при любой проблеме — вызывающий код это учитывает
+ * при решении, отвечать ли посетителю успехом (см. выше), сам ничего
+ * не бросает, чтобы не мешать остальным каналам.
+ */
+function telegram_notify($botToken, $chatId, $text) {
+    $url = 'https://api.telegram.org/bot' . $botToken . '/sendMessage';
+    $payload = ['chat_id' => $chatId, 'text' => $text];
+
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => http_build_query($payload),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 10,
+        ]);
+        $response = curl_exec($ch);
+        $ok = $response !== false;
+        curl_close($ch);
+        return $ok;
+    }
+
+    $context = stream_context_create([
+        'http' => [
+            'method'        => 'POST',
+            'header'        => "Content-Type: application/x-www-form-urlencoded\r\n",
+            'content'       => http_build_query($payload),
+            'timeout'       => 10,
+            'ignore_errors' => true,
+        ],
+    ]);
+    $response = @file_get_contents($url, false, $context);
+    return $response !== false;
+}
 
 /**
  * Минимальный SMTP-клиент: подключается по SSL (порт 465 — "неявный"
