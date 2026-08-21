@@ -43,6 +43,29 @@ module.exports = function (eleventyConfig) {
      contact-send.php и защиту в src/.htaccess). */
   eleventyConfig.addPassthroughCopy({ "src/contact-send.php": "contact-send.php" });
 
+  /* 21.08. Подтверждение прав на домен в Google Search Console —
+     HTML-файл-метод (пользователь выбрал его вместо метатега, файл
+     скачан прямо из интерфейса Google). Passthrough, а не обычный
+     .njk-шаблон: .html подхватило бы стандартный движок шаблонов
+     Eleventy (пусть даже без фронт-маттера это no-op), а так файл
+     гарантированно копируется байт-в-байт — тот же приём, что у
+     .htaccess/contact-send.php выше. Название файла — идентификатор
+     подтверждения от Google, менять нельзя (иначе подтверждение
+     слетит); если понадобится добавить второй ресурс/аккаунт —
+     Google выдаст новый файл с другим именем, тогда здесь добавится
+     ещё одна строка. */
+  eleventyConfig.addPassthroughCopy({
+    "src/google3ffefe27355c5a82.html": "google3ffefe27355c5a82.html",
+  });
+  /* .html по умолчанию тоже входит в templateFormats Eleventy (движок
+     Liquid) — без этой строки файл ДОПОЛНИТЕЛЬНО обрабатывался бы как
+     шаблон и (из-за "красивых URL" по умолчанию) улетал бы в
+     /google3ffefe27355c5a82/index.html, а не в корень под тем именем,
+     которое ожидает Google. Passthrough выше по-прежнему кладёт файл
+     туда, куда нужно — .eleventyignore для него просто убирает лишний,
+     конфликтующий вывод. Проверено локальной сборкой. */
+  eleventyConfig.ignores.add("src/google3ffefe27355c5a82.html");
+
   eleventyConfig.addGlobalData("currentYear", new Date().getFullYear());
 
   return {
