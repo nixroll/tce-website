@@ -4,7 +4,14 @@
  *
  * Согласие хранится в localStorage под ключом STORAGE_KEY. Формат:
  *   { necessary: true, functional: bool, analytics: bool,
- *     marketing: bool, updatedAt: "<ISO-строка>" }
+ *     updatedAt: "<ISO-строка>" }
+ *
+ * 21.08, четвёртый раунд: категорию "Рекламные" (marketing) убрали из
+ * разметки (дублировала "Функциональные") — ключ marketing здесь тоже
+ * убран из hardcoded-объектов accept/reject, чтобы согласие не хранило
+ * несуществующую больше категорию. collectFromToggles() трогать не
+ * пришлось — она и так собирает состав категорий по факту найденных
+ * в DOM [data-cookie-category], а не по жёсткому списку ключей.
  *
  * window.TCE_CONSENT всегда содержит последнее сохранённое согласие
  * (или null, если человек ещё не отвечал), при каждом сохранении на
@@ -58,7 +65,7 @@
   }
 
   function collectFromToggles() {
-    var consent = { necessary: true, functional: false, analytics: false, marketing: false };
+    var consent = { necessary: true, functional: false, analytics: false };
     toggles.forEach(function (el) {
       consent[el.dataset.cookieCategory] = el.classList.contains('cookie-consent__toggle--on');
     });
@@ -116,10 +123,10 @@
     var action = btn.dataset.cookieAction;
 
     if (action === 'reject') {
-      writeConsent({ necessary: true, functional: false, analytics: false, marketing: false });
+      writeConsent({ necessary: true, functional: false, analytics: false });
       hide();
     } else if (action === 'accept') {
-      writeConsent({ necessary: true, functional: true, analytics: true, marketing: true });
+      writeConsent({ necessary: true, functional: true, analytics: true });
       hide();
     } else if (action === 'settings') {
       banner.classList.add('is-expanded');

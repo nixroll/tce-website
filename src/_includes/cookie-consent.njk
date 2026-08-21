@@ -32,7 +32,17 @@
    Категории — карточки с тонкой рамкой (border), тумблер ON —
    оранжевый (--brand). "Необходимые" — визуально обычный ON, но
    некликабелен (aria-disabled, cookie-consent.js игнорирует клики по
-   нему и по всему его ряду) — эти cookie нужны для работы сайта. #}
+   нему и по всему его ряду) — эти cookie нужны для работы сайта.
+
+   21.08, четвёртый раунд (пользователь): категория "Рекламные" убрана —
+   по сути дублировала "Функциональные" (там уже "персонализированный
+   контент"). Осталось 3 категории: Необходимые, Функциональные,
+   Аналитические. CSS не трогался — .cookie-consent__categories это
+   flex-column с gap, без зависимостей от числа строк. cookie-consent.js
+   тоже не завязан на конкретный набор категорий (собирает согласие по
+   факту найденных в разметке [data-cookie-category]), но ключ
+   marketing из захардкоженных объектов accept/reject убран отдельно,
+   вручную — см. комментарий там. #}
 <div class="cookie-consent" id="cookie-consent" role="dialog" aria-live="polite" aria-label="Настройка Cookie" hidden>
   <div class="cookie-consent__body">
     <div class="cookie-consent__text-block">
@@ -87,14 +97,6 @@
           <p class="cookie-consent__category-desc">Анализ работы сайта.</p>
         </div>
         <span class="cookie-consent__toggle" role="switch" aria-checked="false" tabindex="0" data-cookie-category="analytics" aria-label="Аналитические"></span>
-      </div>
-
-      <div class="cookie-consent__category">
-        <div class="cookie-consent__category-text">
-          <p class="cookie-consent__category-title">Рекламные</p>
-          <p class="cookie-consent__category-desc">Персонализация рекламы.</p>
-        </div>
-        <span class="cookie-consent__toggle" role="switch" aria-checked="false" tabindex="0" data-cookie-category="marketing" aria-label="Рекламные"></span>
       </div>
     </div>
 
