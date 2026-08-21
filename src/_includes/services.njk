@@ -2,7 +2,11 @@
   <div class="services__container">
     <div class="services__title-badge">
       <span class="services__badge">Услуги</span>
-      <p class="services__heading">Полный цикл.<br> <span class="services__heading-muted">От&nbsp;расчёта и&nbsp;проекта до&nbsp;пусконаладки и&nbsp;сервиса.</span></p>
+      {# 21.08 (ТЗ от коллеги, скриншот): подзаголовок обновлён — эта же
+         строка выводится и на Home (base.njk, isHome), и на /services/
+         (services.njk, прямой include того же файла), правка одна на
+         оба места. #}
+      <p class="services__heading">Полный цикл.<br> <span class="services__heading-muted">От&nbsp;расчёта до&nbsp;ввода объекта в&nbsp;эксплуатацию.</span></p>
     </div>
     <a class="btn btn--secondary services__btn" href="{{ (servicesLBtnHref or '/services/') | url }}">{{ servicesLBtnText or 'Подробнее' }}</a>
   </div>
