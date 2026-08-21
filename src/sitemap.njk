@@ -1,0 +1,33 @@
+---
+permalink: /sitemap.xml
+eleventyExcludeFromCollections: true
+---
+{#- 21.08, SEO-аудит: /sitemap.xml тоже отдавал 404 на боевом домене —
+   файла не было вообще. collections.all — встроенная коллекция
+   Eleventy, содержит ОДНУ запись на каждую физически сгенерированную
+   страницу, включая все 9 страниц-пагинаций /catalog/<slug>/
+   (catalog-brand.njk, size:1) — добавление нового бренда в brands.js
+   само попадёт в sitemap, без правок здесь.
+
+   Единственное исключение — /404.html (noindex: true, см. 404.njk):
+   страница ошибки не должна попадать в карту сайта. Сам этот шаблон и
+   robots.njk себя не листят — eleventyExcludeFromCollections: true.
+
+   URL собран ТЕМ ЖЕ способом, что canonical/og:url в base.njk:
+   site.origin + (url | url) — origin даёт абсолютный домен, фильтр url
+   добавляет pathPrefix (на превью GitHub Pages это "/tce-website/").
+   На превью sitemap технически тоже соберётся с адресами github.io —
+   безвредно, т.к. сама страница закрыта noindex+Disallow (см.
+   base.njk и robots.njk), а поисковики sitemap с превью не найдут:
+   robots.txt там его не упоминает. -#}
+{%- set pages = collections.all -%}
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{%- for p in pages -%}
+{%- if not p.data.noindex -%}
+  <url>
+    <loc>{{ site.origin + (p.url | url) }}</loc>
+  </url>
+{%- endif -%}
+{%- endfor -%}
+</urlset>

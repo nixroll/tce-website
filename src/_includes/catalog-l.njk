@@ -91,9 +91,13 @@
   <div class="catalog-l__container">
     <div class="catalog-l__title-badge">
       <span class="catalog-l__badge">Каталог</span>
-      <p class="catalog-l__heading">Мировые производители.<br>
+      {# 21.08, SEO-аудит: было <p> — единственный смысловой заголовок
+         страницы /catalog/, а на всей странице не было ни одного h1.
+         Стили класса не завязаны на тег (см. .catalog-l__heading в
+         style.css), поэтому смена тега ничего не ломает визуально. #}
+      <h1 class="catalog-l__heading">Мировые производители.<br>
         <span class="catalog-l__heading-muted">Напрямую.</span>
-      </p>
+      </h1>
     </div>
   </div>
   <div class="catalog-l__grid">

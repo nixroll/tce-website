@@ -10,6 +10,12 @@ pagination:
   data: brands
   size: 1
   alias: brand
+  # 21.08, SEO-аудит: без этого флага Eleventy кладёт в collections.all
+  # (и в любые другие коллекции) только ПЕРВУЮ страницу пагинации — то
+  # есть из 9 страниц брендов там была видна только /catalog/arbonia/.
+  # sitemap.njk строит карту сайта именно через collections.all, поэтому
+  # остальные 8 страниц в неё не попадали.
+  addAllPagesToCollections: true
 permalink: "/catalog/{{ brand.slug }}/"
 eleventyComputed:
   title: "{{ brand.name }} — Thermo Concept Engineering"

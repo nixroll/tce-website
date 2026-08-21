@@ -1,0 +1,27 @@
+---
+permalink: /robots.txt
+eleventyExcludeFromCollections: true
+---
+{#- 21.08, SEO-аудит: на живом домене /robots.txt отдавал 404 (файла не
+   было вообще ни в src, ни в паспортруе). Сделан шаблоном (а не
+   статикой), чтобы использовать тот же флаг GITHUB_PAGES/site.isDraft,
+   что и остальной SEO-слой (canonical/og/meta robots — см.
+   src/_data/site.js, base.njk):
+
+   - боевой домен (site.isDraft=false): Allow: / + ссылка на sitemap.xml;
+   - превью на GitHub Pages (site.isDraft=true): Disallow: / — та же
+     причина, что у <meta name="robots" content="noindex, nofollow"> в
+     base.njk — превью содержит дубль боевого контента и не должно
+     попадать в индекс отдельным сайтом.
+
+   {%- -%} везде — чтобы front matter и Nunjucks-теги не оставляли
+   пустых строк в начале/между блоками файла. -#}
+{%- if site.isDraft -%}
+User-agent: *
+Disallow: /
+{%- else -%}
+User-agent: *
+Allow: /
+
+Sitemap: {{ site.origin }}/sitemap.xml
+{%- endif -%}

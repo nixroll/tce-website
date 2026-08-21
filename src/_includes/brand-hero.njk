@@ -69,12 +69,16 @@
     <div class="brand-hero__content">
       <div class="brand-hero__text">
         <a class="brand-hero__back" href="{{ '/catalog/' | url }}">←&nbsp;Каталог</a>
-        <p class="brand-hero__heading">{{ brand.name }}.<br>
+        {# 21.08, SEO-аудит: было <p> — единственный смысловой заголовок
+           каждой из 9 страниц /catalog/<slug>/, ни на одной не было h1.
+           Стили класса не завязаны на тег (см. .brand-hero__heading в
+           style.css), поэтому смена тега ничего не ломает визуально. #}
+        <h1 class="brand-hero__heading">{{ brand.name }}.<br>
           {# | safe обязателен: в category есть неразрывные пробелы
              (&nbsp;), а Nunjucks по умолчанию экранирует вывод — без
              фильтра на странице отобразилось бы литеральное "&nbsp;". #}
           <span class="brand-hero__heading-muted">{{ brand.category | safe }}</span>
-        </p>
+        </h1>
       </div>
       <img
         class="brand-hero__logo brand-hero__logo--{{ brand.slug }}"
