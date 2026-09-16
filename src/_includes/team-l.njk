@@ -1,34 +1,57 @@
 {# Team - L (Figma node 1149:12324 на /about/, "Team - L") — светлая
    секция с сеткой фото команды. НЕ переиспользуемый include (в отличие
-   от hero-l.njk) — контент (7 человек, их фото/должности) фиксирован,
+   от hero-l.njk) — контент (9 человек, их фото/должности) фиксирован,
    поэтому подключается напрямую без {% set %} переменных.
 
    Сетка (Container → Row → Card в Figma) реализована через CSS Grid
    (.team-l__grid), а не буквальным повтором вложенных Row-контейнеров
-   из Figma — на разных брейкпоинтах карточки группируются в СТРОКИ
-   ПО-РАЗНОМУ (1 колонка на 320/390, 2 на 768, 3 на 1000/1440), и even
-   число "пустых" карточек-заполнителей для ровной последней строки
-   тоже разное (0 / 1 / 2) — Grid с одним плоским списком карточек и
-   переключением grid-template-columns по брейкпоинту избегает
-   необходимости менять саму разметку (DOM) под каждый брейкпоинт.
+   из Figma — колонки: 1 на 320/390, 2 на 768, 3 на 1000, 4 на 1440
+   (см. .team-l__grid в style.css). Плоский список карточек + смена
+   grid-template-columns по брейкпоинту избегает необходимости менять
+   саму разметку (DOM) под каждый брейкпоинт.
+
+   16.09 (ТЗ пользователя): состав команды обновлён по новому Figma —
+   было 7 человек, стало 9. Изменения (сверено через get_design_context
+   на всех 5 брейкпоинтах, порядок карточек везде идентичен):
+     1) У Сергея заменено фото (та же должность, роль в сетке).
+     2) Анастасия (Бухгалтер) убрана, на её месте — Светлана (тоже
+        Бухгалтер), новое фото.
+     3) Добавлены Денис (Менеджер по продажам) и Марина (Юрист) —
+        новые карточки в конце списка.
+   Порядок карточек в разметке (сквозной, одинаковый на всех
+   брейкпоинтах — Figma просто перепаковывает один и тот же линейный
+   список в разное число колонок): Максим, Евгений, Никита, Наталья,
+   Ирина, Светлана, Сергей, Денис, Марина.
 
    Позиция Stroke у каждой карточки (сверху/слева/справа) — ПОЗИЦИОННАЯ
-   (зависит от места в сетке: первая строка/остальные строки, средняя
-   колонка/крайние), не зависит от того, реальный это человек или
-   пустой заполнитель — сверено по всем 5 брейкпоинтам через
+   (зависит от места в сетке), не зависит от того, реальный это человек
+   или пустой заполнитель — сверено по всем 5 брейкпоинтам через
    get_design_context (см. .team-l__card в style.css, там же таблица
-   nth-child). Два "пустых" placeholder-карточки (opacity:0, как в
-   Figma) нужны только для ровной сетки на 768/1000/1440 — на 320/390
-   (1 колонка) их в Figma нет вообще, поэтому они display:none там же.
+   nth-child).
 
-   Фото — PNG с прозрачным фоном (прислал пользователь, файлы уже
-   подписаны именами), у контейнера "Image card" свой фон #f3f4f6, виден
-   сквозь прозрачные части фото. Позиционирование самого фото внутри
-   квадратной рамки (индивидуальный сдвиг/масштаб на человека,
-   подобранный в Figma вручную) — те же 4 числа (left/top/width/height
-   в %), что в Figma-экспорте, одинаковые на всех брейкпоинтах
-   (масштабируются вместе с самой рамкой, т.к. заданы в %) — вынесены в
-   модификаторы .team-l__photo-img--<имя> в style.css. #}
+   16.09: при 9 людях число нужных карточек-заполнителей для ровной
+   последней строки стало другим на КАЖДОМ брейкпоинте, чем было при 7 —
+   пересчитано и сверено напрямую по Figma, а не по аналогии со старой
+   версией:
+     - 320/390 (1 колонка): 9 строк ровно, заполнители не нужны.
+     - 768 (2 колонки): 4 полных ряда + 1 (Марина) → нужен 1 заполнитель.
+     - 1000 (3 колонки): 9 = 3×3 ровно, заполнители не нужны вообще
+       (раньше на этом брейкпоинте показывались 2 — теперь 0).
+     - 1440 (4 колонки): 2 полных ряда + 1 (Марина) → нужны 3
+       заполнителя (раньше был 1).
+   Отсюда теперь 3 карточки-заполнителя вместо 2 (см. низ файла и
+   правила видимости/бордеров в style.css — переписаны заново под этот
+   расчёт, а не донастроены поверх старых).
+
+   Фото — PNG с прозрачным фоном (прислал пользователь, файлы подписаны
+   именами: Сергей/Светлана/Денис/Марина.png, уже 800×800 с прозрачным
+   фоном в готовом для пайплайна виде), у контейнера "Image card" свой
+   фон #f3f4f6, виден сквозь прозрачные части фото. Позиционирование
+   самого фото внутри квадратной рамки (индивидуальный сдвиг/масштаб на
+   человека, подобранный в Figma вручную) — те же 4 числа (left/top/
+   width/height в %), что в Figma-экспорте, одинаковые на всех
+   брейкпоинтах (масштабируются вместе с самой рамкой, т.к. заданы в %)
+   — вынесены в модификаторы .team-l__photo-img--<имя> в style.css. #}
 <section class="team-l" data-figma-node="1149:12324" data-figma-name="Team - L">
   <div class="team-l__container">
     <div class="team-l__title-badge">
@@ -103,12 +126,12 @@
       <div class="team-l__card">
         <div class="team-l__photo">
           <picture>
-            <source type="image/webp" srcset="{{ '/images/team/anastasiya-400.webp' | url }} 400w, {{ '/images/team/anastasiya-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
-            <img class="team-l__photo-img team-l__photo-img--anastasiya" src="{{ '/images/team/anastasiya-800.png' | url }}" srcset="{{ '/images/team/anastasiya-400.png' | url }} 400w, {{ '/images/team/anastasiya-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Анастасия" loading="lazy">
+            <source type="image/webp" srcset="{{ '/images/team/svetlana-400.webp' | url }} 400w, {{ '/images/team/svetlana-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
+            <img class="team-l__photo-img team-l__photo-img--svetlana" src="{{ '/images/team/svetlana-800.png' | url }}" srcset="{{ '/images/team/svetlana-400.png' | url }} 400w, {{ '/images/team/svetlana-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Светлана" loading="lazy">
           </picture>
         </div>
         <div class="team-l__meta">
-          <p class="team-l__name">Анастасия</p>
+          <p class="team-l__name">Светлана</p>
           <p class="team-l__role">Бухгалтер</p>
         </div>
       </div>
@@ -124,10 +147,34 @@
           <p class="team-l__role">Менеджер по продажам</p>
         </div>
       </div>
-      {# Пустые карточки-заполнители (см. комментарий вверху файла) —
-         видны только с 768px (первая) и с 1000px (вторая), нужны только
-         чтобы последняя строка сетки не "рвалась" — aria-hidden, т.к.
-         это не реальный контент. #}
+      <div class="team-l__card">
+        <div class="team-l__photo">
+          <picture>
+            <source type="image/webp" srcset="{{ '/images/team/denis-400.webp' | url }} 400w, {{ '/images/team/denis-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
+            <img class="team-l__photo-img team-l__photo-img--denis" src="{{ '/images/team/denis-800.png' | url }}" srcset="{{ '/images/team/denis-400.png' | url }} 400w, {{ '/images/team/denis-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Денис" loading="lazy">
+          </picture>
+        </div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Денис</p>
+          <p class="team-l__role">Менеджер по продажам</p>
+        </div>
+      </div>
+      <div class="team-l__card">
+        <div class="team-l__photo">
+          <picture>
+            <source type="image/webp" srcset="{{ '/images/team/marina-400.webp' | url }} 400w, {{ '/images/team/marina-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
+            <img class="team-l__photo-img team-l__photo-img--marina" src="{{ '/images/team/marina-800.png' | url }}" srcset="{{ '/images/team/marina-400.png' | url }} 400w, {{ '/images/team/marina-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Марина" loading="lazy">
+          </picture>
+        </div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Марина</p>
+          <p class="team-l__role">Юрист</p>
+        </div>
+      </div>
+      {# Пустые карточки-заполнители (расчёт — см. комментарий вверху
+         файла): видны только с 768 до 999.98px (первая) и с 1440px
+         (все три) — управление видимостью и бордерами по брейкпоинту
+         целиком в style.css. aria-hidden, т.к. это не реальный контент. #}
       <div class="team-l__card team-l__card--placeholder team-l__card--placeholder-1" aria-hidden="true">
         <div class="team-l__photo"></div>
         <div class="team-l__meta">
@@ -136,6 +183,13 @@
         </div>
       </div>
       <div class="team-l__card team-l__card--placeholder team-l__card--placeholder-2" aria-hidden="true">
+        <div class="team-l__photo"></div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Имя</p>
+          <p class="team-l__role">Должность</p>
+        </div>
+      </div>
+      <div class="team-l__card team-l__card--placeholder team-l__card--placeholder-3" aria-hidden="true">
         <div class="team-l__photo"></div>
         <div class="team-l__meta">
           <p class="team-l__name">Имя</p>
