@@ -8680,11 +8680,18 @@ body.body--header-overlay {
 /* Container — обёртка заголовка секции. Боковых Stroke на 320 нет
    вообще (секция без бокового паддинга, контейнер во всю ширину),
    появляются с 390 — та же логика, что у .stages-l__container. */
+/* 23.09: в шапке появился Segmented Control (Категории/Бренды). По Figma
+   (node 1846:4232, все 5 брейкпоинтов): на 320/390/768 он стоит ПОД
+   заголовком — колонка с gap 32; на 1000/1440 — справа от заголовка,
+   по нижнему краю (row + space-between). Паддинги контейнера прежние
+   (высоты шапки в макете сходятся: 384/384/382/336/344). */
 .catalog-l__container {
   width: 100%;
   max-width: 1392px;
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-4xl);
   padding: var(--spacing-8xl) var(--spacing-3xl);
 }
 
@@ -8704,6 +8711,10 @@ body.body--header-overlay {
 
 @media (min-width: 1000px) {
   .catalog-l__container {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0;
     padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
   }
 }
@@ -8713,9 +8724,70 @@ body.body--header-overlay {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-2xl);
-  flex: 1 0 0;
+  width: 100%;
   min-width: 0;
   max-width: 900px;
+}
+
+@media (min-width: 1000px) {
+  .catalog-l__title-badge {
+    flex: 1 0 0;
+  }
+}
+
+/* Segmented Control (node 1846:10399) — одинаковый на всех 5
+   брейкпоинтах: подложка #f3f4f6 с бордером, radius 12, внутренний
+   отступ 3, между сегментами 2. Сегмент 102px шириной, высота 38
+   (10 + 18 + 10: у текста в макете line-height "normal", у Inter 15px
+   это 18px). Активный — белая "таблетка" с лёгкой тенью, SemiBold,
+   #414651; неактивный — Medium, #717680. Hover неактивного в макете не
+   нарисован — берём цвет активного текста, тот же приём, что у кнопок
+   сайта (secondary → primary). */
+.catalog-seg {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 2px;
+  flex-shrink: 0;
+  padding: 3px;
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  background-color: var(--background-secondary);
+  overflow: hidden;
+}
+
+.catalog-seg__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 102px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+  letter-spacing: -0.075px;
+  white-space: nowrap;
+  color: var(--text-quaternary);
+  text-decoration: none;
+  transition: color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.catalog-seg__item.is-active {
+  font-weight: 600;
+  color: var(--text-secondary);
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+@media (hover: hover) {
+  .catalog-seg__item:not(.is-active):hover {
+    color: var(--text-secondary);
+  }
+}
+
+.catalog-seg__item.is-pencil-hover:not(.is-active) {
+  color: var(--text-secondary);
 }
 
 .catalog-l__badge {
@@ -9092,6 +9164,282 @@ body.body--header-overlay {
 .catalog-l__btn-icon path {
   stroke: var(--text-tertiary);
   transition: stroke 0.15s ease;
+}
+
+/* 23.09. Заглушка кнопки "Смотреть" в карточках-заглушках категорий:
+   бренда ещё нет — выглядит так же, но не реагирует. */
+.catalog-l__btn--stub {
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ============================================================
+   23.09. Каталог — вид "Категории" (/catalog/, Figma node 1846:4232).
+   Разметка и архитектура — см. catalog-l.njk. Сверено по всем 5
+   брейкпоинтам через get_design_context.
+   ============================================================ */
+
+.catalog-cats {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Сбрасываем типографику h2 — заголовок тут только ради семантики
+   (аккордеон: h2 > button), внешний вид задаёт кнопка. */
+.catalog-cat__heading {
+  margin: 0;
+  font: inherit;
+}
+
+/* Category Row (node 1846:10733). Хэйрлайны — слева, справа и сверху
+   (в макете так на ВСЕХ брейкпоинтах, включая 320, где шапка секции
+   боковых линий не имеет). Нижней линии у строки нет: следующую строку
+   отделяет её собственный верх, последнюю — border-bottom секции.
+   Мобильный вид (320/390, Type=Mobile): padding 24, колонка с gap 20,
+   под текстом кнопка "Смотреть"/"Скрыть". Десктоп (768+, Type=Desktop):
+   padding 24/32, ряд с gap 8, справа Icon Button с шевроном. Высота
+   закрытой строки выходит 95 (десктоп) / 151 (мобила) — как в макете. */
+.catalog-cat__toggle {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--spacing-2xl);
+  margin: 0;
+  padding: var(--spacing-3xl);
+  border: 0;
+  border-top: 1px solid var(--border-primary);
+  border-left: 1px solid var(--border-primary);
+  border-right: 1px solid var(--border-primary);
+  border-radius: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 768px) {
+  .catalog-cat__toggle {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-3xl) var(--spacing-4xl);
+  }
+}
+
+.catalog-cat__text {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-xxs);
+}
+
+@media (min-width: 768px) {
+  .catalog-cat__text {
+    flex: 1 0 0;
+  }
+}
+
+.catalog-cat__title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.09px;
+  color: var(--text-primary);
+}
+
+.catalog-cat__note {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: -0.075px;
+  color: var(--text-quaternary);
+  white-space: nowrap;
+}
+
+/* Icon Button (node 2011:11338): 36×36, radius 10, шеврон 20px.
+   Normal — бордер #e5e7ec, иконка #414651; Hover — #cbd0d8 и #181d27
+   (цвета взяты из переменных компонента в Figma). В раскрытой строке
+   в макете шеврон смотрит вверх — здесь тот же шеврон повёрнут на 180°
+   (форма идентичная), чтобы поворот можно было анимировать. */
+.catalog-cat__icon-btn {
+  display: none;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  background-color: var(--background-secondary);
+  transition: border-color 0.15s ease;
+}
+
+@media (min-width: 768px) {
+  .catalog-cat__icon-btn {
+    display: flex;
+  }
+}
+
+.catalog-cat__chevron {
+  display: block;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.catalog-cat__chevron path {
+  stroke: var(--text-secondary);
+  transition: stroke 0.15s ease;
+}
+
+.catalog-cat.is-open .catalog-cat__chevron {
+  transform: rotate(180deg);
+}
+
+/* Just Button - L (node 1849:12123), только на 320/390: фиксированная
+   ширина 102, padding 8/16, radius 10, текст 14/20 Medium #414651;
+   Hover — бордер #cbd0d8, текст #181d27. */
+.catalog-cat__text-btn {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 102px;
+  padding: var(--spacing-md) var(--spacing-xl);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  background-color: var(--background-secondary);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+@media (min-width: 768px) {
+  .catalog-cat__text-btn {
+    display: none;
+  }
+}
+
+.catalog-cat__text-btn-open,
+.catalog-cat.is-open .catalog-cat__text-btn-closed {
+  display: none;
+}
+
+.catalog-cat.is-open .catalog-cat__text-btn-open {
+  display: inline;
+}
+
+/* Hover — на всю строку (кликабельна вся строка), красится встроенная
+   кнопка, как её Hover-состояние в макете. */
+@media (hover: hover) {
+  .catalog-cat__toggle:hover .catalog-cat__icon-btn,
+  .catalog-cat__toggle:hover .catalog-cat__text-btn {
+    border-color: var(--border-secondary);
+  }
+
+  .catalog-cat__toggle:hover .catalog-cat__text-btn {
+    color: var(--text-primary);
+  }
+
+  .catalog-cat__toggle:hover .catalog-cat__chevron path {
+    stroke: var(--text-primary);
+  }
+}
+
+.catalog-cat__toggle.is-pencil-hover .catalog-cat__icon-btn,
+.catalog-cat__toggle.is-pencil-hover .catalog-cat__text-btn {
+  border-color: var(--border-secondary);
+}
+
+.catalog-cat__toggle.is-pencil-hover .catalog-cat__text-btn {
+  color: var(--text-primary);
+}
+
+.catalog-cat__toggle.is-pencil-hover .catalog-cat__chevron path {
+  stroke: var(--text-primary);
+}
+
+/* Панель: плавное раскрытие через grid-template-rows 0fr → 1fr (анимирует
+   высоту "до содержимого" без JS-замеров). Закрытая панель ещё и
+   visibility:hidden — её ссылки не попадают в Tab и в экранный диктор;
+   при закрытии visibility переключается ПОСЛЕ анимации (delay), при
+   открытии — сразу. */
+.catalog-cat__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.catalog-cat.is-open .catalog-cat__panel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition: grid-template-rows 0.3s ease, visibility 0s linear 0s;
+}
+
+.catalog-cat__panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .catalog-cat__panel,
+  .catalog-cat.is-open .catalog-cat__panel,
+  .catalog-cat__chevron {
+    transition: none;
+  }
+}
+
+/* Сетка карточек внутри категории (секция "Паровые котлы", node
+   1859:14576) — та же .catalog-l__grid, но с отличиями от вида
+   "Бренды":
+     - боковые линии у сетки на ВСЕХ брейкпоинтах, включая 320 (как у
+       строк категорий);
+     - padding карточки 24 на 320 и 32 на 390+ (у "Брендов" 40 с 1000);
+     - gap между обложкой и текстом 24 везде (у "Брендов" 32 с 390);
+     - линия НАД каждой карточкой/рядом (в макете на 320/390 это
+       border-b у карточек + border-t у ряда, на 768+ border-t у каждого
+       Row — результат одинаковый). Снизу у последнего ряда линии нет:
+       её даёт верх следующей строки категории (или низ секции).
+   Колонки те же: 1 / 1 / 2 / 2 / 3. Вертикальные разделители — общие
+   правила .catalog-l__card выше (border-left у всех колонок, кроме
+   первой). Заполнитель: 5 карточек не делятся ни на 2, ни на 3 —
+   последняя ячейка нужна и на 768/1000, и на 1440. */
+.catalog-l__grid--category {
+  border-left: 1px solid var(--border-primary);
+  border-right: 1px solid var(--border-primary);
+}
+
+.catalog-l__grid--category .catalog-l__card {
+  gap: var(--spacing-3xl);
+  padding: var(--spacing-3xl);
+  border-top: 1px solid var(--border-primary);
+  border-bottom: none;
+}
+
+@media (min-width: 390px) {
+  .catalog-l__grid--category .catalog-l__card {
+    padding: var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .catalog-l__grid--category .catalog-l__card--placeholder {
+    display: block;
+  }
 }
 
 /* Brand Hero - L (17.08, /catalog/<slug>/, Figma node 1515:24095) —

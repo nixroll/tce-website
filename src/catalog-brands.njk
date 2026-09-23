@@ -1,0 +1,30 @@
+---
+title: Бренды - Thermo Concept Engineering
+# 23.09: вид "Бренды" каталога — прежнее содержимое /catalog/ (сетка из
+# 9 брендов), теперь по своему адресу. Описание перенесено оттуда же.
+description: "Оборудование мировых производителей напрямую, с официальной гарантией: Viessmann, Geberit, Wilo, Oventrop, Kermi, Tece, Elco, Flamco, Arbonia."
+permalink: /catalog/brands/
+catalogView: brands
+layout: base.njk
+stickyHeader: true
+headerTheme: light
+hasContactForm: true
+customSections: true
+---
+{# 23.09. Вторая половина переключателя Категории/Бренды (см. большой
+   комментарий в catalog-l.njk про то, почему это отдельный адрес, а не
+   JS-вкладка). Порядок секций — 1:1 как у /catalog/ (catalog.njk): там
+   же разбор хвоста страницы, Header и флагов front matter. Отличается
+   только catalogView. #}
+{% include "catalog-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "form-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "cta.njk" %}
+{% set dividerVariant = "edge-secondary" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}

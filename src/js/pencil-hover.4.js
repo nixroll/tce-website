@@ -47,7 +47,12 @@
        Home. Свой класс (не общий .btn), поэтому в список не попадали и
        на Pencil не реагировали — CSS-правило .areas__btn.is-pencil-hover
        добавлено тем же коммитом. */
-    '.areas__btn'
+    '.areas__btn',
+    /* 23.09: каталог по категориям — сегменты переключателя вида и
+       строка категории (hover красит встроенную кнопку-шеврон или
+       "Смотреть/Скрыть"). */
+    '.catalog-seg__item',
+    '.catalog-cat__toggle'
   ].join(', ');
   var els = document.querySelectorAll(selector);
   if (!els.length) return;

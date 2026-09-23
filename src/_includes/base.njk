@@ -168,8 +168,16 @@
      .7.js — новая страница /bank-details/ (светлый Doc Hero + четыре
      Paragraph - L) и правка списка секций у переключателя темы Header.
      Скрипт грузится на КАЖДОЙ странице, поэтому его зависший кеш ломал
-     бы тему Header по всему сайту, а не только на новой странице. #}
-  <link rel="stylesheet" href="{{ '/css/style.19.css' | url }}">
+     бы тему Header по всему сайту, а не только на новой странице.
+
+     23.09: style.19.css → style.20.css и pencil-hover.3.js → .4.js —
+     каталог по категориям (Segmented Control, Category Row). Заодно
+     закрыт пропущенный ранее шаг: с момента появления style.19.css в
+     него внесли ещё около двадцати правок (cookie-баннер, safe-area,
+     Hero - L, Team - L) БЕЗ смены имени, и у тех, кто уже заходил на
+     сайт, CSS мог остаться старым из годового кеша (см. .htaccess).
+     Новое имя сбрасывает кеш сразу для всех этих правок. #}
+  <link rel="stylesheet" href="{{ '/css/style.20.css' | url }}">
   {# 21.08, SEO-аудит: структурированные данные Organization. На каждой
      странице (кроме noindex — /404.html, там смысла нет), одинаковый
      блок — так и задумано в schema.org, это не per-page разметка, а
@@ -384,7 +392,7 @@
      .form__checkbox-row/.projects__nav-btn) встречаются на разных
      страницах сайта, сам себя гасит через querySelectorAll на
      страницах без них. #}
-  <script src="{{ '/js/pencil-hover.3.js' | url }}" defer></script>
+  <script src="{{ '/js/pencil-hover.4.js' | url }}" defer></script>
   {# 11.08: gallery.js раньше грузился только под isHome (карусель была
      только у Projects - L на Home) — теперь Docs - L на /about/ тоже
      карусель на той же разметке/скрипте (см. docs-l.njk), поэтому
@@ -477,6 +485,10 @@
   {% endif %}
   {% if hasAddressCopy %}
     <script src="{{ '/js/contact-copy.js' | url }}" defer></script>
+  {% endif %}
+  {% if catalogView == "categories" %}
+    {# 23.09: раскрытие строк категорий на /catalog/ (см. catalog-l.njk). #}
+    <script src="{{ '/js/catalog-categories.js' | url }}" defer></script>
   {% endif %}
 </body>
 </html>

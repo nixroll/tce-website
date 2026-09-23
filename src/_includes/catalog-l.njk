@@ -87,7 +87,25 @@
     </div>
   </div>
 {% endmacro %}
-<section class="catalog-l" data-figma-node="1487:17117" data-figma-name="Catalog - L">
+{# 23.09. Каталог в двух видах — "Категории" и "Бренды" (Figma
+   "Catalog / Categories", node 1846:4232). Переключатель — Segmented
+   Control в заголовке секции.
+
+   Архитектура: два настоящих адреса, а не один адрес с JS-переключением:
+     /catalog/         — Категории (вид по умолчанию, в макете выбран он);
+     /catalog/brands/  — Бренды (прежняя сетка из 9 карточек).
+   Почему так: у каждого вида своя ссылка (её можно переслать, вернуться
+   кнопкой "Назад", поставить в меню), поисковик индексирует оба как
+   отдельные страницы, и ничего не держится на JS — сегменты это обычные
+   ссылки. Шапка секции у обоих видов общая и визуально одинаковая,
+   поэтому переход выглядит как смена вкладки. Страница выбирает вид
+   переменной catalogView в своём front matter (catalog.njk /
+   catalog-brands.njk), весь шаблон — этот один файл.
+
+   Шапка (Container): на 1000/1440 заголовок слева, переключатель справа,
+   по нижнему краю; на 320/390/768 переключатель под заголовком (колонка,
+   gap 32). Паддинги прежние — сверено по всем 5 брейкпоинтам. #}
+<section class="catalog-l{% if catalogView == 'categories' %} catalog-l--categories{% endif %}" data-figma-node="1487:17117" data-figma-name="Catalog - L">
   <div class="catalog-l__container">
     <div class="catalog-l__title-badge">
       <span class="catalog-l__badge">Каталог</span>
@@ -99,7 +117,87 @@
         <span class="catalog-l__heading-muted">Напрямую.</span>
       </h1>
     </div>
+    {# Segmented Control (node 1846:10399). Сегменты — ссылки,
+       активный помечен aria-current="page". #}
+    <nav class="catalog-seg" aria-label="Вид каталога">
+      <a class="catalog-seg__item{% if catalogView == 'categories' %} is-active{% endif %}" href="{{ '/catalog/' | url }}"{% if catalogView == 'categories' %} aria-current="page"{% endif %}>Категории</a>
+      <a class="catalog-seg__item{% if catalogView == 'brands' %} is-active{% endif %}" href="{{ '/catalog/brands/' | url }}"{% if catalogView == 'brands' %} aria-current="page"{% endif %}>Бренды</a>
+    </nav>
   </div>
+  {% if catalogView == "categories" %}
+  {# Список категорий (Category Row, node 1846:10733 + раскрытая секция
+     "Паровые котлы", node 1859:14576). По умолчанию все строки закрыты.
+
+     Строка — это <button> на всю ширину внутри <h2> (стандартный шаблон
+     аккордеона): кликается вся строка, а не только маленькая кнопка
+     справа, у кнопки есть aria-expanded, с клавиатуры работает сама.
+     Видимая "кнопка" внутри — декоративный <span>: на 768+ это Icon
+     Button с шевроном (node 2011:11338), на 320/390 — текстовая "Just
+     Button - L" (node 1849:12123) "Смотреть"/"Скрыть" под названием.
+     Какая показывается — решает CSS, разметка одна.
+
+     Раскрытая часть — та же сетка карточек, что у вида "Бренды", с
+     модификатором --category: в этой секции у карточек padding 32 и
+     gap 24 на всех брейкпоинтах от 390 (у "Брендов" 40/32), хэйрлайны
+     тоже свои (см. style.css). Пока внутри 5 заглушек без логотипа —
+     реальные бренды по категориям ещё не распределены (см.
+     src/_data/catalogCategories.js). #}
+  <div class="catalog-cats">
+    {%- for cat in catalogCategories %}
+    <div class="catalog-cat" id="{{ cat.slug }}">
+      <h2 class="catalog-cat__heading">
+        <button class="catalog-cat__toggle" type="button" id="{{ cat.slug }}-toggle" aria-expanded="false" aria-controls="{{ cat.slug }}-panel">
+          <span class="catalog-cat__text">
+            <span class="catalog-cat__title">{{ cat.name }}</span>
+            <span class="catalog-cat__note">{{ cat.note }}</span>
+          </span>
+          <span class="catalog-cat__icon-btn" aria-hidden="true">
+            <svg class="catalog-cat__chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 7.5L10 12.5L15 7.5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="catalog-cat__text-btn" aria-hidden="true">
+            <span class="catalog-cat__text-btn-closed">Смотреть</span>
+            <span class="catalog-cat__text-btn-open">Скрыть</span>
+          </span>
+        </button>
+      </h2>
+      <div class="catalog-cat__panel" id="{{ cat.slug }}-panel" role="region" aria-labelledby="{{ cat.slug }}-toggle">
+        <div class="catalog-cat__panel-inner">
+          <div class="catalog-l__grid catalog-l__grid--category">
+            {%- for i in range(0, 5) %}
+            <div class="catalog-l__card">
+              <div class="catalog-l__cover"></div>
+              <div class="catalog-l__content">
+                <div class="catalog-l__text">
+                  <p class="catalog-l__card-title">Название</p>
+                  <p class="catalog-l__card-desc">Описание</p>
+                </div>
+                {# Заглушка: бренда ещё нет, вести некуда — поэтому не
+                   ссылка, а неактивный элемент того же вида. #}
+                <span class="catalog-l__btn catalog-l__btn--stub" aria-hidden="true">
+                  Смотреть
+                  <svg class="catalog-l__btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3.33331 10H16.6666M11.6666 15L16.6666 10L11.6666 5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </div>
+            </div>
+            {%- endfor %}
+            {# 5 карточек: при 2 и 3 колонках последний ряд неполный —
+               пустая ячейка держит хэйрлайны ряда (в Figma там такая же
+               карточка с opacity 0). При 1 колонке скрыта. #}
+            <div class="catalog-l__card catalog-l__card--placeholder" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {%- endfor %}
+  </div>
+  {# Без JS строки не раскрыть — поэтому в этом случае показываем все
+     категории сразу открытыми, а переключатели прячем. #}
+  <noscript><style>.catalog-cat__panel{grid-template-rows:1fr;visibility:visible}.catalog-cat__icon-btn,.catalog-cat__text-btn{display:none}.catalog-cat__toggle{cursor:default}</style></noscript>
+  {% else %}
   <div class="catalog-l__grid">
     {%- for b in brands %}
     {{ card(b.slug, b.name, b.tags) }}
@@ -110,4 +208,5 @@
        placeholder там display:none. #}
     <div class="catalog-l__card catalog-l__card--placeholder" aria-hidden="true"></div>
   </div>
+  {% endif %}
 </section>
