@@ -8642,8 +8642,8 @@ body.body--header-overlay {
      Container padding  80/24 / 80/32 / 96/48 / 128-96/80 / 128-96/80
        (вертикальный/горизонтальный; на 1000+ верх 128, низ 96)
      колонок в сетке    1   / 1   / 2   / 2   / 3
-     padding карточки   24  / 32  / 32  / 40  / 40
-     gap Cover→Content  24  / 32  / 32  / 32  / 32
+     padding карточки   24  / 32  / 32  / 32  / 32   (23.09, было 40 с 1000)
+     gap Cover→Content  24  / 24  / 24  / 24  / 24   (23.09, было 32 с 390)
      заголовок секции   h5  / h5  / h5  / h5  / h4
    Аспект Cover — 384/300 на всех брейкпоинтах. Размеры логотипов
    внутри Cover — тоже одинаковые на всех (см. .catalog-l__logo--*). */
@@ -8908,9 +8908,12 @@ body.body--header-overlay {
   border-top: 1px solid var(--border-primary);
 }
 
+/* 23.09 (пользователь + Figma node 1859:14576): паддинги карточек
+   каталога поменялись и теперь ОДИНАКОВЫЕ у видов "Бренды" и
+   "Категории": padding 24 на 320 и 32 на 390+, gap обложка→текст 24
+   на всех брейкпоинтах (было 32 с 390 и padding 40 с 1000). */
 @media (min-width: 390px) {
   .catalog-l__card {
-    gap: var(--spacing-4xl);
     padding: var(--spacing-4xl);
   }
 }
@@ -8923,12 +8926,6 @@ body.body--header-overlay {
 
   .catalog-l__card:not(:nth-child(2n + 1)) {
     border-left: 1px solid var(--border-primary);
-  }
-}
-
-@media (min-width: 1000px) {
-  .catalog-l__card {
-    padding: var(--spacing-5xl);
   }
 }
 
@@ -9130,6 +9127,10 @@ body.body--header-overlay {
   color: var(--text-secondary);
   text-decoration: none;
   white-space: nowrap;
+  /* 23.09: явный pointer — у заглушек в "Категориях" это <a> без href
+     (бренда ещё нет), браузер иначе показал бы текстовый курсор, и
+     кнопка ощущалась бы иначе, чем в "Брендах". */
+  cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease;
 }
 
@@ -9164,13 +9165,6 @@ body.body--header-overlay {
 .catalog-l__btn-icon path {
   stroke: var(--text-tertiary);
   transition: stroke 0.15s ease;
-}
-
-/* 23.09. Заглушка кнопки "Смотреть" в карточках-заглушках категорий:
-   бренда ещё нет — выглядит так же, но не реагирует. */
-.catalog-l__btn--stub {
-  cursor: default;
-  pointer-events: none;
 }
 
 /* ============================================================
@@ -9408,8 +9402,7 @@ body.body--header-overlay {
    "Бренды":
      - боковые линии у сетки на ВСЕХ брейкпоинтах, включая 320 (как у
        строк категорий);
-     - padding карточки 24 на 320 и 32 на 390+ (у "Брендов" 40 с 1000);
-     - gap между обложкой и текстом 24 везде (у "Брендов" 32 с 390);
+     - паддинги карточек — общие с "Брендами" (см. .catalog-l__card);
      - линия НАД каждой карточкой/рядом (в макете на 320/390 это
        border-b у карточек + border-t у ряда, на 768+ border-t у каждого
        Row — результат одинаковый). Снизу у последнего ряда линии нет:
@@ -9424,16 +9417,8 @@ body.body--header-overlay {
 }
 
 .catalog-l__grid--category .catalog-l__card {
-  gap: var(--spacing-3xl);
-  padding: var(--spacing-3xl);
   border-top: 1px solid var(--border-primary);
   border-bottom: none;
-}
-
-@media (min-width: 390px) {
-  .catalog-l__grid--category .catalog-l__card {
-    padding: var(--spacing-4xl);
-  }
 }
 
 @media (min-width: 768px) {

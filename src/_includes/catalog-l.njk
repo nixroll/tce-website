@@ -64,21 +64,29 @@
    /catalog/<slug>/ (см. catalog-brand.njk), поэтому кнопка "Смотреть"
    в карточке всегда ведёт на реально существующий адрес — добавление
    бренда = одна строка в brands.js (плюс файл лого и размеры в CSS). #}
+{# 23.09: ОДНА карточка (и одна кнопка "Смотреть") на оба вида —
+   "Бренды" и раскрытые "Категории". Без slug это заглушка: обложка без
+   логотипа, а кнопка — тот же <a> с тем же классом (значит и тот же
+   hover), просто без href, пока вести некуда. Первая версия рисовала
+   заглушке отдельную кнопку-<span> с выключенным hover — пользователь
+   справедливо заметил, что кнопка в дизайне одна. #}
 {% macro card(slug, name, tags) %}
   <div class="catalog-l__card">
-    <div class="catalog-l__cover catalog-l__cover--{{ slug }}">
+    <div class="catalog-l__cover{% if slug %} catalog-l__cover--{{ slug }}{% endif %}">
+      {%- if slug %}
       <img
         class="catalog-l__logo catalog-l__logo--{{ slug }}"
         src="{{ ('/images/catalog-l/' + slug + '.svg') | url }}"
         alt="{{ name }}"
         loading="lazy">
+      {%- endif %}
     </div>
     <div class="catalog-l__content">
       <div class="catalog-l__text">
         <p class="catalog-l__card-title">{{ name }}</p>
         <p class="catalog-l__card-desc">{{ tags | safe }}</p>
       </div>
-      <a class="catalog-l__btn" href="{{ ('/catalog/' + slug + '/') | url }}">
+      <a class="catalog-l__btn"{% if slug %} href="{{ ('/catalog/' + slug + '/') | url }}"{% else %} aria-disabled="true"{% endif %}>
         Смотреть
         <svg class="catalog-l__btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M3.33331 10H16.6666M11.6666 15L16.6666 10L11.6666 5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -137,9 +145,8 @@
      Какая показывается — решает CSS, разметка одна.
 
      Раскрытая часть — та же сетка карточек, что у вида "Бренды", с
-     модификатором --category: в этой секции у карточек padding 32 и
-     gap 24 на всех брейкпоинтах от 390 (у "Брендов" 40/32), хэйрлайны
-     тоже свои (см. style.css). Пока внутри 5 заглушек без логотипа —
+     модификатором --category: паддинги карточек общие с "Брендами",
+     а хэйрлайны свои (см. style.css). Пока внутри 5 заглушек без логотипа —
      реальные бренды по категориям ещё не распределены (см.
      src/_data/catalogCategories.js). #}
   <div class="catalog-cats">
@@ -166,23 +173,7 @@
         <div class="catalog-cat__panel-inner">
           <div class="catalog-l__grid catalog-l__grid--category">
             {%- for i in range(0, 5) %}
-            <div class="catalog-l__card">
-              <div class="catalog-l__cover"></div>
-              <div class="catalog-l__content">
-                <div class="catalog-l__text">
-                  <p class="catalog-l__card-title">Название</p>
-                  <p class="catalog-l__card-desc">Описание</p>
-                </div>
-                {# Заглушка: бренда ещё нет, вести некуда — поэтому не
-                   ссылка, а неактивный элемент того же вида. #}
-                <span class="catalog-l__btn catalog-l__btn--stub" aria-hidden="true">
-                  Смотреть
-                  <svg class="catalog-l__btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3.33331 10H16.6666M11.6666 15L16.6666 10L11.6666 5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>
-              </div>
-            </div>
+            {{ card("", "Название", "Описание") }}
             {%- endfor %}
             {# 5 карточек: при 2 и 3 колонках последний ряд неполный —
                пустая ячейка держит хэйрлайны ряда (в Figma там такая же
