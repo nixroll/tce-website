@@ -9102,6 +9102,17 @@ body.body--header-overlay {
   height: 38px;
 }
 
+/* "Конденсационные котлы" (node 1861:16901). */
+.catalog-l__logo--geffen {
+  width: 125.461px;
+  height: 24px;
+}
+
+.catalog-l__logo--schuster {
+  width: 162px;
+  height: 24px;
+}
+
 .catalog-l__content {
   width: 100%;
   display: flex;
@@ -9446,9 +9457,8 @@ body.body--header-overlay {
        border-b у карточек + border-t у ряда, на 768+ border-t у каждого
        Row — результат одинаковый). Снизу у последнего ряда линии нет:
        её даёт верх следующей строки категории (или низ секции).
-   Колонки те же: 1 / 1 / 2 / 2 / 3. Вертикальные разделители — общие
-   правила .catalog-l__card выше (border-left у всех колонок, кроме
-   первой). Пустые ячейки — см. ниже. */
+   Колонки те же: 1 / 1 / 2 / 2 / 3. Вертикальные разделители и пустые
+   ячейки — см. ниже. */
 .catalog-l__grid--category {
   border-left: 1px solid var(--border-primary);
   border-right: 1px solid var(--border-primary);
@@ -9457,6 +9467,44 @@ body.body--header-overlay {
 .catalog-l__grid--category .catalog-l__card {
   border-top: 1px solid var(--border-primary);
   border-bottom: none;
+}
+
+/* 24.09, вертикальные разделители в категориях — как в Figma, а не
+   общим правилом "border-left у всех колонок, кроме первой". В макете
+   линию между колонками рисует конкретная карточка: при 2 колонках —
+   левая (border-right), при 3 — средняя (border-left + border-right).
+   У пустых ячеек (opacity 0 в макете) своих линий нет. Разница видна
+   на "Конденсационных котлах": в последнем ряду Viessmann + две пустые
+   ячейки — линий после Viessmann в макете нет, а общее правило их бы
+   нарисовало. В "Паровых котлах" (пустая ячейка в третьей колонке) линия
+   перед ней есть — её даёт средняя, реальная карточка. */
+@media (min-width: 768px) {
+  .catalog-l__grid--category .catalog-l__card {
+    border-left: none;
+    border-right: none;
+  }
+
+  .catalog-l__grid--category .catalog-l__card:nth-child(2n + 1) {
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 1440px) {
+  .catalog-l__grid--category .catalog-l__card:nth-child(2n + 1) {
+    border-right: none;
+  }
+
+  .catalog-l__grid--category .catalog-l__card:nth-child(3n + 2) {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .catalog-l__grid--category .catalog-l__card.catalog-l__card--placeholder {
+    border-left: none;
+    border-right: none;
+  }
 }
 
 /* Пустые ячейки в категориях (24.09): число и видимость зависят от

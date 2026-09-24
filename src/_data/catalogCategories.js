@@ -43,7 +43,19 @@ const categories = [
   },
   { slug: "parogeneratory", name: "Парогенераторы промышленные", note: "1 бренд" },
   { slug: "vodogreynye-kotly", name: "Водогрейные котлы", note: "5 брендов" },
-  { slug: "kondensatsionnye-kotly", name: "Конденсационные котлы", note: "4 бренда" },
+  {
+    slug: "kondensatsionnye-kotly",
+    name: "Конденсационные котлы",
+    note: "4 бренда",
+    /* 24.09: по Figma, node 1861:16901. У Elco здесь тот же логотип, что
+       в "Горелках" (logo "elco-burners"), подпись — просто "Elco". */
+    brands: [
+      { slug: "elco", logo: "elco-burners", name: "Elco", tags: "Конденсационные / Горелки" },
+      { slug: "geffen", name: "Geffen", tags: "Конденсационные" },
+      { slug: "schuster", name: "Schuster", tags: "Конденсационные / Деаэраторы / +1" },
+      { slug: "viessmann", name: "Viessmann", tags: "Конденсационные / Паровые / +2" },
+    ],
+  },
   {
     slug: "gorelki",
     name: "Горелки",
