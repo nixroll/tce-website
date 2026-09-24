@@ -9113,6 +9113,12 @@ body.body--header-overlay {
   height: 24px;
 }
 
+/* "Деаэраторы и паровое оборудование" (node 1863:17597). */
+.catalog-l__logo--boiler {
+  width: 138.835px;
+  height: 20px;
+}
+
 .catalog-l__content {
   width: 100%;
   display: flex;

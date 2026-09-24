@@ -69,7 +69,16 @@ const categories = [
       { slug: "flameair", name: "Flameair", tags: "Горелки" },
     ],
   },
-  { slug: "deaeratory", name: "Деаэраторы и паровое оборудование", note: "2 бренда" },
+  {
+    slug: "deaeratory",
+    name: "Деаэраторы и паровое оборудование",
+    note: "2 бренда",
+    /* 24.09: по Figma, node 1863:17597. */
+    brands: [
+      { slug: "boiler", name: "Boiler", tags: "Деаэраторы" },
+      { slug: "schuster", name: "Schuster", tags: "Деаэраторы / Водогрейные / +1" },
+    ],
+  },
   { slug: "nasosy", name: "Насосы для котельных", note: "3 бренда" },
   { slug: "vodopodgotovka", name: "Водоподготовка", note: "1 бренд" },
   { slug: "vodonagrevateli", name: "Водонагреватели", note: "5 брендов" },
