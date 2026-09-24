@@ -9086,6 +9086,22 @@ body.body--header-overlay {
   height: 44px;
 }
 
+/* "Горелки" (node 1862:17276). */
+.catalog-l__logo--elco-burners {
+  width: 94px;
+  height: 36px;
+}
+
+.catalog-l__logo--execo {
+  width: 129px;
+  height: 42px;
+}
+
+.catalog-l__logo--flameair {
+  width: 107.761px;
+  height: 38px;
+}
+
 .catalog-l__content {
   width: 100%;
   display: flex;

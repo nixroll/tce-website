@@ -72,14 +72,18 @@
    справедливо заметил, что кнопка в дизайне одна. #}
 {# 24.09: четвёртый параметр link — вести ли кнопку на /catalog/<slug>/.
    В категориях бывают бренды с логотипом, но без своей страницы
-   (Hermes, Teplofor...) — у них кнопка без href, как у заглушки. #}
-{% macro card(slug, name, tags, link) %}
+   (Hermes, Teplofor...) — у них кнопка без href, как у заглушки.
+   Пятый, logo — другой файл логотипа при том же бренде/странице (у Elco
+   в "Горелках" в макете своё начертание "elco" — logo "elco-burners",
+   а ведёт карточка на ту же /catalog/elco/). По умолчанию = slug. #}
+{% macro card(slug, name, tags, link, logo) %}
+  {%- set logo = logo or slug %}
   <div class="catalog-l__card">
-    <div class="catalog-l__cover{% if slug %} catalog-l__cover--{{ slug }}{% endif %}">
-      {%- if slug %}
+    <div class="catalog-l__cover{% if logo %} catalog-l__cover--{{ logo }}{% endif %}">
+      {%- if logo %}
       <img
-        class="catalog-l__logo catalog-l__logo--{{ slug }}"
-        src="{{ ('/images/catalog-l/' + slug + '.svg') | url }}"
+        class="catalog-l__logo catalog-l__logo--{{ logo }}"
+        src="{{ ('/images/catalog-l/' + logo + '.svg') | url }}"
         alt="{{ name }}"
         loading="lazy">
       {%- endif %}
@@ -177,7 +181,7 @@
           <div class="catalog-l__grid catalog-l__grid--category">
             {%- if cat.brands %}
             {%- for b in cat.brands %}
-            {{ card(b.slug, b.name, b.tags, b.hasPage) }}
+            {{ card(b.slug, b.name, b.tags, b.hasPage, b.logo) }}
             {%- endfor %}
             {%- else %}
             {%- for i in range(0, 5) %}

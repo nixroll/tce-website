@@ -10,7 +10,8 @@
  * js/catalog-categories.js).
  *
  * brands — карточки внутри категории, по одной на бренд:
- *   slug — имя файла логотипа (src/images/catalog-l/<slug>.svg) и,
+ *   slug — имя файла логотипа (src/images/catalog-l/<slug>.svg; можно
+ *          переопределить полем logo) и,
  *          если у бренда есть своя страница (он есть в brands.js),
  *          адрес /catalog/<slug>/ для кнопки "Смотреть";
  *   name — название под обложкой;
@@ -43,7 +44,19 @@ const categories = [
   { slug: "parogeneratory", name: "Парогенераторы промышленные", note: "1 бренд" },
   { slug: "vodogreynye-kotly", name: "Водогрейные котлы", note: "5 брендов" },
   { slug: "kondensatsionnye-kotly", name: "Конденсационные котлы", note: "4 бренда" },
-  { slug: "gorelki", name: "Горелки", note: "3 бренда" },
+  {
+    slug: "gorelki",
+    name: "Горелки",
+    note: "3 бренда",
+    /* 24.09: по Figma, node 1862:17276. Elco здесь — "Elco Burners" со
+       своим логотипом (logo), но это тот же Elco, поэтому карточка ведёт
+       на его страницу /catalog/elco/. */
+    brands: [
+      { slug: "elco", logo: "elco-burners", name: "Elco Burners", tags: "Горелки / Конденсационные" },
+      { slug: "execo", name: "ExEco", tags: "Горелки" },
+      { slug: "flameair", name: "Flameair", tags: "Горелки" },
+    ],
+  },
   { slug: "deaeratory", name: "Деаэраторы и паровое оборудование", note: "2 бренда" },
   { slug: "nasosy", name: "Насосы для котельных", note: "3 бренда" },
   { slug: "vodopodgotovka", name: "Водоподготовка", note: "1 бренд" },
