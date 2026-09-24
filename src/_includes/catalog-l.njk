@@ -70,7 +70,10 @@
    hover), просто без href, пока вести некуда. Первая версия рисовала
    заглушке отдельную кнопку-<span> с выключенным hover — пользователь
    справедливо заметил, что кнопка в дизайне одна. #}
-{% macro card(slug, name, tags) %}
+{# 24.09: четвёртый параметр link — вести ли кнопку на /catalog/<slug>/.
+   В категориях бывают бренды с логотипом, но без своей страницы
+   (Hermes, Teplofor...) — у них кнопка без href, как у заглушки. #}
+{% macro card(slug, name, tags, link) %}
   <div class="catalog-l__card">
     <div class="catalog-l__cover{% if slug %} catalog-l__cover--{{ slug }}{% endif %}">
       {%- if slug %}
@@ -86,7 +89,7 @@
         <p class="catalog-l__card-title">{{ name }}</p>
         <p class="catalog-l__card-desc">{{ tags | safe }}</p>
       </div>
-      <a class="catalog-l__btn"{% if slug %} href="{{ ('/catalog/' + slug + '/') | url }}"{% else %} aria-disabled="true"{% endif %}>
+      <a class="catalog-l__btn"{% if slug and link %} href="{{ ('/catalog/' + slug + '/') | url }}"{% else %} aria-disabled="true"{% endif %}>
         Смотреть
         <svg class="catalog-l__btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M3.33331 10H16.6666M11.6666 15L16.6666 10L11.6666 5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -172,13 +175,28 @@
       <div class="catalog-cat__panel" id="{{ cat.slug }}-panel" role="region" aria-labelledby="{{ cat.slug }}-toggle">
         <div class="catalog-cat__panel-inner">
           <div class="catalog-l__grid catalog-l__grid--category">
+            {%- if cat.brands %}
+            {%- for b in cat.brands %}
+            {{ card(b.slug, b.name, b.tags, b.hasPage) }}
+            {%- endfor %}
+            {%- else %}
             {%- for i in range(0, 5) %}
             {{ card("", "Название", "Описание") }}
             {%- endfor %}
-            {# 5 карточек: при 2 и 3 колонках последний ряд неполный —
-               пустая ячейка держит хэйрлайны ряда (в Figma там такая же
-               карточка с opacity 0). При 1 колонке скрыта. #}
-            <div class="catalog-l__card catalog-l__card--placeholder" aria-hidden="true"></div>
+            {%- endif %}
+            {# 24.09: пустые ячейки добивают неполный последний ряд (в
+               Figma там такая же карточка с opacity 0) — держат хэйрлайны
+               ряда. Сколько их нужно, зависит от числа карточек и колонок:
+               при 2 колонках (768–1439) — n % 2, при 3 (1440) —
+               (3 − n % 3) % 3. Каждая ячейка помечена, при какой сетке
+               она видна; при 1 колонке не видна ни одна (см. style.css). #}
+            {%- set n = cat.brands.length if cat.brands else 5 %}
+            {%- set ph2 = n % 2 %}
+            {%- set ph3 = (3 - n % 3) % 3 %}
+            {%- set phMax = ph2 if ph2 > ph3 else ph3 %}
+            {%- for i in range(0, phMax) %}
+            <div class="catalog-l__card catalog-l__card--placeholder{% if i < ph2 %} catalog-l__card--ph-2col{% endif %}{% if i < ph3 %} catalog-l__card--ph-3col{% endif %}" aria-hidden="true"></div>
+            {%- endfor %}
           </div>
         </div>
       </div>
@@ -191,7 +209,7 @@
   {% else %}
   <div class="catalog-l__grid">
     {%- for b in brands %}
-    {{ card(b.slug, b.name, b.tags) }}
+    {{ card(b.slug, b.name, b.tags, true) }}
     {%- endfor %}
     {# Пустая карточка-заполнитель (см. комментарий вверху файла) —
        видна только на 768/1000 (2 колонки), где 9 карточек не делятся

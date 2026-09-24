@@ -9063,6 +9063,29 @@ body.body--header-overlay {
   height: 40px;
 }
 
+/* 24.09: логотипы брендов из категорий (пока без своих страниц, поэтому
+   без пары .brand-hero__logo--*). Размеры — из Figma, node 1859:14576,
+   одинаковые на всех 5 брейкпоинтах. */
+.catalog-l__logo--hermes {
+  width: 132px;
+  height: 28px;
+}
+
+.catalog-l__logo--laggartt {
+  width: 186.292px;
+  height: 48.417px;
+}
+
+.catalog-l__logo--teplofor {
+  width: 156px;
+  height: 36px;
+}
+
+.catalog-l__logo--kzkeo {
+  width: 248.33px;
+  height: 44px;
+}
+
 .catalog-l__content {
   width: 100%;
   display: flex;
@@ -9409,8 +9432,7 @@ body.body--header-overlay {
        её даёт верх следующей строки категории (или низ секции).
    Колонки те же: 1 / 1 / 2 / 2 / 3. Вертикальные разделители — общие
    правила .catalog-l__card выше (border-left у всех колонок, кроме
-   первой). Заполнитель: 5 карточек не делятся ни на 2, ни на 3 —
-   последняя ячейка нужна и на 768/1000, и на 1440. */
+   первой). Пустые ячейки — см. ниже. */
 .catalog-l__grid--category {
   border-left: 1px solid var(--border-primary);
   border-right: 1px solid var(--border-primary);
@@ -9421,8 +9443,21 @@ body.body--header-overlay {
   border-bottom: none;
 }
 
-@media (min-width: 768px) {
-  .catalog-l__grid--category .catalog-l__card--placeholder {
+/* Пустые ячейки в категориях (24.09): число и видимость зависят от
+   количества брендов в категории — шаблон помечает каждую, при какой
+   сетке она нужна (--ph-2col / --ph-3col, см. catalog-l.njk). */
+.catalog-l__grid--category .catalog-l__card--placeholder {
+  display: none;
+}
+
+@media (min-width: 768px) and (max-width: 1439.98px) {
+  .catalog-l__grid--category .catalog-l__card--ph-2col {
+    display: block;
+  }
+}
+
+@media (min-width: 1440px) {
+  .catalog-l__grid--category .catalog-l__card--ph-3col {
     display: block;
   }
 }
