@@ -41,7 +41,15 @@ const categories = [
       { slug: "kzkeo", name: "КЗКЭО", tags: "Паровые" },
     ],
   },
-  { slug: "parogeneratory", name: "Парогенераторы промышленные", note: "1 бренд" },
+  {
+    slug: "parogeneratory",
+    name: "Парогенераторы промышленные",
+    note: "1 бренд",
+    /* 28.09: по Figma, node 1861:15631. */
+    brands: [
+      { slug: "alba", name: "Alba", tags: "Парогенераторы" },
+    ],
+  },
   {
     slug: "vodogreynye-kotly",
     name: "Водогрейные котлы",

@@ -9136,6 +9136,12 @@ body.body--header-overlay {
   height: 28px;
 }
 
+/* "Парогенераторы промышленные" (node 1861:15631). */
+.catalog-l__logo--alba {
+  width: 145.809px;
+  height: 42px;
+}
+
 .catalog-l__content {
   width: 100%;
   display: flex;
