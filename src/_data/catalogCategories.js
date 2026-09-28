@@ -15,6 +15,8 @@
  *          если у бренда есть своя страница (он есть в brands.js),
  *          адрес /catalog/<slug>/ для кнопки "Смотреть";
  *   name — название под обложкой;
+ *   size — [ширина, высота] логотипа, если в этой категории он в
+ *          макете другого размера, чем в style.css (необязательно);
  *   tags — строка под названием. Своя для категории, НЕ из brands.js:
  *          в макете у одного и того же бренда в разных категориях
  *          разные теги (у Viessmann в "Паровых котлах" —
@@ -42,7 +44,21 @@ const categories = [
     ],
   },
   { slug: "parogeneratory", name: "Парогенераторы промышленные", note: "1 бренд" },
-  { slug: "vodogreynye-kotly", name: "Водогрейные котлы", note: "5 брендов" },
+  {
+    slug: "vodogreynye-kotly",
+    name: "Водогрейные котлы",
+    note: "5 брендов",
+    /* 28.09: по Figma, node 1861:16460. Hermes и LaggarTT здесь в макете
+       мельче, чем в "Паровых котлах" (122×26 и 169.298×44 против 132×28 и
+       186.292×48.417) — поэтому size. */
+    brands: [
+      { slug: "hermes", name: "Hermes", tags: "Водогрейные / Паровые", size: [122, 26] },
+      { slug: "laggartt", name: "LaggarTT", tags: "Водогрейные / Паровые", size: [169.298, 44] },
+      { slug: "schuster", name: "Schuster", tags: "Водогрейные / Деаэраторы / +1" },
+      { slug: "teplofor", name: "Teplofor", tags: "Водогрейные / Паровые" },
+      { slug: "viessmann", name: "Viessmann", tags: "Водогрейные / Паровые / +2" },
+    ],
+  },
   {
     slug: "kondensatsionnye-kotly",
     name: "Конденсационные котлы",
