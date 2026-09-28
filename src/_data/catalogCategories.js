@@ -122,7 +122,19 @@ const categories = [
       { slug: "nyuterm", name: "Ньютерм", tags: "Водоподготовка" },
     ],
   },
-  { slug: "vodonagrevateli", name: "Водонагреватели", note: "5 брендов" },
+  {
+    slug: "vodonagrevateli",
+    name: "Водонагреватели",
+    note: "5 брендов",
+    /* 28.09: по Figma, node 1863:18248. */
+    brands: [
+      { slug: "absolute-tank", name: "Absolute Tank", tags: "Бойлеры / Расширительные баки" },
+      { slug: "huchentec", name: "HuchEnTEC", tags: "Бойлеры" },
+      { slug: "mit", name: "MIT", tags: "Бойлеры / Расширительные баки" },
+      { slug: "s-tank", name: "S-Tank", tags: "Бойлеры" },
+      { slug: "viessmann", name: "Viessmann", tags: "Бойлеры / Паровые / +2" },
+    ],
+  },
   { slug: "rasshiritelnye-baki", name: "Расширительные баки", note: "3 бренда" },
 ];
 

@@ -9142,6 +9142,29 @@ body.body--header-overlay {
   height: 42px;
 }
 
+/* "Водонагреватели" (node 1863:18248). S-Tank — 125×35 вместо 123.6×34
+   из макета: у логотипа обводка, в Figma она выходит за рамку слоя, а
+   файл экспортирован вместе с ней. */
+.catalog-l__logo--absolute-tank {
+  width: 227px;
+  height: 32px;
+}
+
+.catalog-l__logo--huchentec {
+  width: 187px;
+  height: 28px;
+}
+
+.catalog-l__logo--mit {
+  width: 96px;
+  height: 54px;
+}
+
+.catalog-l__logo--s-tank {
+  width: 125px;
+  height: 35px;
+}
+
 .catalog-l__content {
   width: 100%;
   display: flex;
