@@ -135,7 +135,18 @@ const categories = [
       { slug: "viessmann", name: "Viessmann", tags: "Бойлеры / Паровые / +2" },
     ],
   },
-  { slug: "rasshiritelnye-baki", name: "Расширительные баки", note: "3 бренда" },
+  {
+    slug: "rasshiritelnye-baki",
+    name: "Расширительные баки",
+    note: "3 бренда",
+    /* 28.09: по Figma, node 1863:18609. Flamco — логотип и размер из вида
+       "Бренды"; Absolute Tank и MIT — как в "Водонагревателях". */
+    brands: [
+      { slug: "absolute-tank", name: "Absolute Tank", tags: "Расширительные баки / Бойлеры" },
+      { slug: "flamco", name: "Flamco", tags: "Расширительные баки" },
+      { slug: "mit", name: "MIT", tags: "Расширительные баки / Бойлеры" },
+    ],
+  },
 ];
 
 /* "1 бренд / 3 бренда / 5 брендов" — обычное русское склонение по числу. */
