@@ -9130,6 +9130,12 @@ body.body--header-overlay {
   height: 30px;
 }
 
+/* "Водоподготовка" (node 1863:18082). */
+.catalog-l__logo--nyuterm {
+  width: 165.839px;
+  height: 28px;
+}
+
 .catalog-l__content {
   width: 100%;
   display: flex;
@@ -9521,6 +9527,22 @@ body.body--header-overlay {
   .catalog-l__grid--category .catalog-l__card.catalog-l__card--placeholder {
     border-left: none;
     border-right: none;
+  }
+}
+
+/* 28.09: одна реальная карточка + пустые ячейки на 1440 ("Водоподготовка",
+   node 1863:18082) — в макете у первой пустой ячейки, стоящей во ВТОРОЙ
+   колонке, есть линия слева: она закрывает карточку справа. Если первая
+   пустая ячейка в третьей колонке, линию уже даёт средняя реальная
+   карточка (её border-right), дублировать нельзя. Так же и на 768/1000:
+   там линию даёт левая карточка своим border-right.
+   NB: в макете "Конденсационных котлов" (Viessmann + две пустые) этой
+   линии нет, а в "Водоподготовке" есть — макеты расходятся. Взят вариант
+   большинства ("Паровые", "Деаэраторы", "Водоподготовка": у последней
+   реальной карточки в ряду линия справа есть всегда). */
+@media (min-width: 1440px) {
+  .catalog-l__grid--category .catalog-l__card.catalog-l__card--placeholder:nth-child(3n + 2) {
+    border-left: 1px solid var(--border-primary);
   }
 }
 

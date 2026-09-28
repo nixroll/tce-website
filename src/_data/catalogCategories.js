@@ -105,7 +105,15 @@ const categories = [
       { slug: "wilo", name: "Wilo", tags: "Насосы" },
     ],
   },
-  { slug: "vodopodgotovka", name: "Водоподготовка", note: "1 бренд" },
+  {
+    slug: "vodopodgotovka",
+    name: "Водоподготовка",
+    note: "1 бренд",
+    /* 28.09: по Figma, node 1863:18082. */
+    brands: [
+      { slug: "nyuterm", name: "Ньютерм", tags: "Водоподготовка" },
+    ],
+  },
   { slug: "vodonagrevateli", name: "Водонагреватели", note: "5 брендов" },
   { slug: "rasshiritelnye-baki", name: "Расширительные баки", note: "3 бренда" },
 ];
