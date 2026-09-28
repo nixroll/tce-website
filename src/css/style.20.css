@@ -8887,12 +8887,13 @@ body.body--header-overlay {
   border-bottom: 1px solid var(--border-primary);
 }
 
-/* Последняя ВИДИМАЯ карточка на 320/390 — девятая: placeholder за ней
-   хоть и display:none, но в DOM присутствует, поэтому :last-child
-   попал бы именно на него, а у карточки Wilo линия осталась бы и
-   задвоилась с border-bottom самой секции. Снимаем у обоих
-   последних. */
-.catalog-l__card:nth-last-child(-n + 2) {
+/* Последняя ВИДИМАЯ карточка на 320/390 — без нижней линии (её даёт
+   низ секции, иначе линия задвоится). Пустые ячейки за ней на 1 колонке
+   скрыты, но стоят в DOM, поэтому снимаем линию и у последней реальной
+   карточки перед ними (:has), и у самих ячеек. */
+.catalog-l__card:last-child,
+.catalog-l__card--placeholder,
+.catalog-l__card:has(+ .catalog-l__card--placeholder) {
   border-bottom: none;
 }
 
@@ -8942,22 +8943,24 @@ body.body--header-overlay {
   }
 }
 
-/* Пустая карточка-заполнитель — нужна ТОЛЬКО при 2 колонках
-   (768/1000), где 9 карточек не делятся нацело. На 320/390 (1
-   колонка) и 1440 (3 колонки, 9 = 3×3) остатка нет. */
+/* Пустые ячейки добивают неполный последний ряд (28.09: общее правило
+   для "Брендов" и категорий). Число и видимость зависят от количества
+   карточек — шаблон помечает каждую ячейку, при какой сетке она нужна
+   (--ph-2col — 768–1439, --ph-3col — 1440, см. catalog-l.njk). При 1
+   колонке не видна ни одна. */
 .catalog-l__card--placeholder {
   display: none;
 }
 
-@media (min-width: 768px) {
-  .catalog-l__card--placeholder {
+@media (min-width: 768px) and (max-width: 1439.98px) {
+  .catalog-l__card--ph-2col {
     display: block;
   }
 }
 
 @media (min-width: 1440px) {
-  .catalog-l__card--placeholder {
-    display: none;
+  .catalog-l__card--ph-3col {
+    display: block;
   }
 }
 
@@ -9572,25 +9575,6 @@ body.body--header-overlay {
 @media (min-width: 1440px) {
   .catalog-l__grid--category .catalog-l__card.catalog-l__card--placeholder:nth-child(3n + 2) {
     border-left: 1px solid var(--border-primary);
-  }
-}
-
-/* Пустые ячейки в категориях (24.09): число и видимость зависят от
-   количества брендов в категории — шаблон помечает каждую, при какой
-   сетке она нужна (--ph-2col / --ph-3col, см. catalog-l.njk). */
-.catalog-l__grid--category .catalog-l__card--placeholder {
-  display: none;
-}
-
-@media (min-width: 768px) and (max-width: 1439.98px) {
-  .catalog-l__grid--category .catalog-l__card--ph-2col {
-    display: block;
-  }
-}
-
-@media (min-width: 1440px) {
-  .catalog-l__grid--category .catalog-l__card--ph-3col {
-    display: block;
   }
 }
 

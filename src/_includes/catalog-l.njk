@@ -214,15 +214,23 @@
      категории сразу открытыми, а переключатели прячем. #}
   <noscript><style>.catalog-cat__panel{grid-template-rows:1fr;visibility:visible}.catalog-cat__icon-btn,.catalog-cat__text-btn{display:none}.catalog-cat__toggle{cursor:default}</style></noscript>
   {% else %}
+  {# 28.09: вид "Бренды" — все бренды из категорий, по одному разу, по
+     алфавиту (список собирается в src/_data/catalogBrands.js). Прежние
+     9 брендов из brands.js здесь больше не выводятся; их страницы
+     /catalog/<slug>/ по-прежнему генерируются из brands.js.
+     Пустые ячейки — как в категориях: число зависит от количества
+     карточек и колонок (--ph-2col / --ph-3col). #}
   <div class="catalog-l__grid">
-    {%- for b in brands %}
-    {{ card(b.slug, b.name, b.tags, true) }}
+    {%- for b in catalogBrands %}
+    {{ card(b.slug, b.name, b.tags, b.hasPage, b.logo) }}
     {%- endfor %}
-    {# Пустая карточка-заполнитель (см. комментарий вверху файла) —
-       видна только на 768/1000 (2 колонки), где 9 карточек не делятся
-       нацело; на 320/390 (1 колонка) и 1440 (3 колонки) остатка нет,
-       placeholder там display:none. #}
-    <div class="catalog-l__card catalog-l__card--placeholder" aria-hidden="true"></div>
+    {%- set n = catalogBrands.length %}
+    {%- set ph2 = n % 2 %}
+    {%- set ph3 = (3 - n % 3) % 3 %}
+    {%- set phMax = ph2 if ph2 > ph3 else ph3 %}
+    {%- for i in range(0, phMax) %}
+    <div class="catalog-l__card catalog-l__card--placeholder{% if i < ph2 %} catalog-l__card--ph-2col{% endif %}{% if i < ph3 %} catalog-l__card--ph-3col{% endif %}" aria-hidden="true"></div>
+    {%- endfor %}
   </div>
   {% endif %}
 </section>
