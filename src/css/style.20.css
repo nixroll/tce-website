@@ -9119,6 +9119,17 @@ body.body--header-overlay {
   height: 20px;
 }
 
+/* "Насосы для котельных" (node 1863:17845). */
+.catalog-l__logo--grandfar {
+  width: 216px;
+  height: 30px;
+}
+
+.catalog-l__logo--grundfos {
+  width: 213px;
+  height: 30px;
+}
+
 .catalog-l__content {
   width: 100%;
   display: flex;

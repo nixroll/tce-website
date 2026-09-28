@@ -93,7 +93,18 @@ const categories = [
       { slug: "schuster", name: "Schuster", tags: "Деаэраторы / Водогрейные / +1" },
     ],
   },
-  { slug: "nasosy", name: "Насосы для котельных", note: "3 бренда" },
+  {
+    slug: "nasosy",
+    name: "Насосы для котельных",
+    note: "3 бренда",
+    /* 28.09: по Figma, node 1863:17845. Wilo — прежний логотип и размер
+       из вида "Бренды" (один размер на бренд во всех категориях). */
+    brands: [
+      { slug: "grandfar", name: "Grandfar", tags: "Насосы" },
+      { slug: "grundfos", name: "Grundfos", tags: "Насосы" },
+      { slug: "wilo", name: "Wilo", tags: "Насосы" },
+    ],
+  },
   { slug: "vodopodgotovka", name: "Водоподготовка", note: "1 бренд" },
   { slug: "vodonagrevateli", name: "Водонагреватели", note: "5 брендов" },
   { slug: "rasshiritelnye-baki", name: "Расширительные баки", note: "3 бренда" },
