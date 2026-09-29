@@ -34,18 +34,22 @@
     </button>
   </div>
 {% endmacro %}
-{% macro slide(n, alt) %}
+{# 29.09: макрос принимает папку и максимальную ширину — новый набор
+   (projects-v2) лежит в своей папке, исходники 960px, поэтому ширины
+   400/700/960 (без апскейла до 1000). По умолчанию — старый набор
+   (images/gallery, 400/700/1000), чтобы его можно было вернуть как есть. #}
+{% macro slide(n, alt, dir = 'gallery', maxW = 1000) %}
   <div class="projects__slide">
     <picture>
       <source
         type="image/webp"
-        srcset="{{ ('/images/gallery/project-' + n + '-400.webp') | url }} 400w, {{ ('/images/gallery/project-' + n + '-700.webp') | url }} 700w, {{ ('/images/gallery/project-' + n + '-1000.webp') | url }} 1000w"
+        srcset="{{ ('/images/' + dir + '/project-' + n + '-400.webp') | url }} 400w, {{ ('/images/' + dir + '/project-' + n + '-700.webp') | url }} 700w, {{ ('/images/' + dir + '/project-' + n + '-' + maxW + '.webp') | url }} {{ maxW }}w"
         sizes="(min-width: 1440px) 421px, (min-width: 768px) calc((100vw - 146px) / 2), (min-width: 390px) calc(100vw - 90px), calc(100vw - 48px)">
       <img
-        src="{{ ('/images/gallery/project-' + n + '-1000.jpg') | url }}"
-        srcset="{{ ('/images/gallery/project-' + n + '-400.jpg') | url }} 400w, {{ ('/images/gallery/project-' + n + '-700.jpg') | url }} 700w, {{ ('/images/gallery/project-' + n + '-1000.jpg') | url }} 1000w"
+        src="{{ ('/images/' + dir + '/project-' + n + '-' + maxW + '.jpg') | url }}"
+        srcset="{{ ('/images/' + dir + '/project-' + n + '-400.jpg') | url }} 400w, {{ ('/images/' + dir + '/project-' + n + '-700.jpg') | url }} 700w, {{ ('/images/' + dir + '/project-' + n + '-' + maxW + '.jpg') | url }} {{ maxW }}w"
         sizes="(min-width: 1440px) 421px, (min-width: 768px) calc((100vw - 146px) / 2), (min-width: 390px) calc(100vw - 90px), calc(100vw - 48px)"
-        width="1000" height="1000"
+        width="{{ maxW }}" height="{{ maxW }}"
         alt="{{ alt }}"
         loading="lazy">
     </picture>
@@ -65,6 +69,32 @@
   <div class="projects__gallery" data-gallery>
     <div class="projects__viewport">
       <div class="projects__track" data-gallery-track>
+        {#- 29.09 (пользователь): новый набор — 18 фото из папки «Фото Секции
+            Проекты» (19 файлов, 15.png — точная копия 13.png, пропущен).
+            Нумерация 1–18 = порядок файлов в папке без дубля.
+            Файлы: src/images/projects-v2/project-<N>-{400,700,960}.{jpg,webp}. #}
+        {{ slide('1', 'Котельная с коллекторными группами и водоподготовкой', 'projects-v2', 960) }}
+        {{ slide('2', 'Внутрипольный конвектор у панорамного окна', 'projects-v2', 960) }}
+        {{ slide('3', 'Фасад инженерно-технического центра «Алютех»', 'projects-v2', 960) }}
+        {{ slide('4', 'Промышленная горелка на котле в котельной', 'projects-v2', 960) }}
+        {{ slide('5', 'Газовая котельная с котлами и горелками', 'projects-v2', 960) }}
+        {{ slide('6', 'Паровые котлы в промышленной котельной на этапе монтажа', 'projects-v2', 960) }}
+        {{ slide('7', 'Ванная комната с отдельностоящей ванной', 'projects-v2', 960) }}
+        {{ slide('8', 'Полотенцесушитель и душевая в санузле', 'projects-v2', 960) }}
+        {{ slide('9', 'Коттеджный посёлок в сосновом лесу', 'projects-v2', 960) }}
+        {{ slide('10', 'Въездная группа жилого квартала «Мируар»', 'projects-v2', 960) }}
+        {{ slide('11', 'Настенные котлы Viessmann с обвязкой в котельной', 'projects-v2', 960) }}
+        {{ slide('12', 'Промышленная котельная с водоподготовкой и газопроводом', 'projects-v2', 960) }}
+        {{ slide('13', 'Каскад настенных котлов в котельной', 'projects-v2', 960) }}
+        {{ slide('14', 'Котельная с настенными котлами и расширительным баком', 'projects-v2', 960) }}
+        {{ slide('15', 'Монтаж водяного тёплого пола', 'projects-v2', 960) }}
+        {{ slide('16', 'Контур настенного отопления до отделки', 'projects-v2', 960) }}
+        {{ slide('17', 'Вертикальный трубчатый радиатор в интерьере', 'projects-v2', 960) }}
+        {{ slide('18', 'Настенные котлы Viessmann с насосными группами', 'projects-v2', 960) }}
+        {#- 29.09: ПРЕЖНИЙ набор (9 фото, src/images/gallery/) скрыт по
+            просьбе пользователя, файлы НЕ удалены. Чтобы вернуть —
+            раскомментировать строки ниже (и при необходимости убрать
+            новый набор выше).
         {{ slide('1', 'Вертикальный трубчатый радиатор у панорамного окна') }}
         {{ slide('2', 'Здание инженерно-технического центра с колоннадой') }}
         {{ slide('3', 'Рабочие чертежи системы водоснабжения на объекте') }}
@@ -73,7 +103,7 @@
         {{ slide('6', 'Монтаж инженерных систем и теплоизоляции пола') }}
         {{ slide('7', 'Поставка оборудования Viessmann на объект') }}
         {{ slide('8', 'Коллектор системы отопления с расходомерами') }}
-        {{ slide('9', 'Въездная группа жилого квартала «Мируар»') }}
+        {{ slide('9', 'Въездная группа жилого квартала «Мируар»') }} #}
       </div>
     </div>
   </div>
