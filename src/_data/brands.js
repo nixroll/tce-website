@@ -125,4 +125,28 @@ module.exports = [
     /* Исходник 1920x821. */
     coverWidths: [800, 1300, 1920],
   },
+  /* 29.09. Бренды из каталога категорий (catalogCategories.js) — у
+     каждого теперь своя страница /catalog/<slug>/. Фото пока нет: поля
+     cover нет, поэтому Brand Hero рисует серый прямоугольник вместо
+     обложки, галерея — пустые квадраты (см. brand-hero.njk,
+     catalog-brand.njk). category — вторая строка заголовка, собрана из
+     линейки бренда (карточки Brand Catalog в Figma). tags здесь не
+     нужны: карточки каталога берут теги из catalogCategories.js. */
+  { slug: "absolute-tank", name: "Absolute Tank", category: "Бойлеры&nbsp;и&nbsp;расширительные баки." },
+  { slug: "alba", name: "Alba", category: "Промышленные парогенераторы." },
+  { slug: "boiler", name: "Boiler", category: "Деаэраторы для&nbsp;котельных." },
+  { slug: "execo", name: "ExEco", category: "Газовые и&nbsp;дизельные горелки." },
+  { slug: "flameair", name: "Flameair", category: "Горелки на&nbsp;газе, дизеле и&nbsp;мазуте." },
+  { slug: "geffen", name: "Geffen", category: "Конденсационные котлы." },
+  { slug: "grandfar", name: "Grandfar", category: "Насосы и&nbsp;станции давления." },
+  { slug: "grundfos", name: "Grundfos", category: "Насосы для&nbsp;отопления и&nbsp;воды." },
+  { slug: "hermes", name: "Hermes", category: "Паровые и&nbsp;водогрейные котлы." },
+  { slug: "huchentec", name: "HuchEnTEC", category: "Бойлеры для&nbsp;горячей воды." },
+  { slug: "laggartt", name: "LaggarTT", category: "Промышленные котлы." },
+  { slug: "mit", name: "MIT", category: "Бойлеры и&nbsp;баки под&nbsp;давлением." },
+  { slug: "s-tank", name: "S-Tank", category: "Бойлеры и&nbsp;теплоаккумуляторы." },
+  { slug: "schuster", name: "Schuster", category: "Водогрейные и&nbsp;паровые котлы." },
+  { slug: "teplofor", name: "Teplofor", category: "Котлы и&nbsp;парогенераторы." },
+  { slug: "kzkeo", name: "КЗКЭО", category: "Паровые котлы." },
+  { slug: "nyuterm", name: "Ньютерм", category: "Водоподготовка для&nbsp;котельных." },
 ];

@@ -72,6 +72,8 @@ eleventyComputed:
 {% set dividerVariant = "light" %}
 {% include "divider.njk" %}
 {% set dividerVariant = "" %}
+{# 29.09: заглушка для брендов без своих фото — теперь пустые квадраты
+   ("brand-placeholder" в galleries.js), а не чужой набор Arbonia. #}
 {# Brand Gallery - L (node 1555:25573) — это ТОТ ЖЕ компонент, что
    Gallery - L на /about/: вёрстка идентична по всем 5 брейкпоинтам,
    отличаются только бейдж, заголовок и набор фото. Поэтому подключается
@@ -86,7 +88,7 @@ eleventyComputed:
    Brand Hero. Как появится свой набор — заглушка сама перестанет
    срабатывать, править тут ничего не нужно. #}
 {% set brandGallerySet = "brand-" + brand.slug %}
-{% set galleryLSet = brandGallerySet if galleries[brandGallerySet] else "brand-arbonia" %}
+{% set galleryLSet = brandGallerySet if galleries[brandGallerySet] else "brand-placeholder" %}
 {% set galleryLBadge = "Галерея" %}
 {% set galleryLHeadingAccent = "В деталях." %}
 {% set galleryLHeadingMuted = "Каталог и&nbsp;объекты." %}

@@ -98,9 +98,17 @@
   <div class="gallery-l__gallery" data-gallery>
     <div class="gallery-l__viewport">
       <div class="gallery-l__track" data-gallery-track>
+        {#- 29.09: набор-заглушка (placeholder: N) — N пустых серых
+            квадратов вместо фото, пока у бренда нет своих снимков. #}
+        {%- if gallerySet.placeholder %}
+        {%- for i in range(0, gallerySet.placeholder) %}
+        <div class="gallery-l__slide gallery-l__slide--empty" aria-hidden="true"></div>
+        {%- endfor %}
+        {%- else %}
         {%- for alt in gallerySet.photos %}
         {{ slide(gallerySet.dir, loop.index, alt, slideWidths, slideMax) }}
         {%- endfor %}
+        {%- endif %}
       </div>
     </div>
   </div>

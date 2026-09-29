@@ -7411,6 +7411,11 @@ body.body--header-overlay {
   }
 }
 
+/* 29.09: слайд-заглушка без фото (набор "brand-placeholder"). */
+.gallery-l__slide--empty {
+  background: var(--background-secondary);
+}
+
 .gallery-l__slide img {
   display: block;
   width: 100%;
@@ -9066,25 +9071,29 @@ body.body--header-overlay {
   height: 40px;
 }
 
-/* 24.09: логотипы брендов из категорий (пока без своих страниц, поэтому
-   без пары .brand-hero__logo--*). Размеры — из Figma, node 1859:14576,
+/* 24.09: логотипы брендов из категорий. 29.09: у них появились свои
+   страницы — добавлена пара .brand-hero__logo--*, как у брендов выше. Размеры — из Figma, node 1859:14576,
    одинаковые на всех 5 брейкпоинтах. */
-.catalog-l__logo--hermes {
+.catalog-l__logo--hermes,
+.brand-hero__logo--hermes {
   width: 132px;
   height: 28px;
 }
 
-.catalog-l__logo--laggartt {
+.catalog-l__logo--laggartt,
+.brand-hero__logo--laggartt {
   width: 186.292px;
   height: 48.417px;
 }
 
-.catalog-l__logo--teplofor {
+.catalog-l__logo--teplofor,
+.brand-hero__logo--teplofor {
   width: 156px;
   height: 36px;
 }
 
-.catalog-l__logo--kzkeo {
+.catalog-l__logo--kzkeo,
+.brand-hero__logo--kzkeo {
   width: 248.33px;
   height: 44px;
 }
@@ -9095,52 +9104,61 @@ body.body--header-overlay {
   height: 36px;
 }
 
-.catalog-l__logo--execo {
+.catalog-l__logo--execo,
+.brand-hero__logo--execo {
   width: 129px;
   height: 42px;
 }
 
-.catalog-l__logo--flameair {
+.catalog-l__logo--flameair,
+.brand-hero__logo--flameair {
   width: 107.761px;
   height: 38px;
 }
 
 /* "Конденсационные котлы" (node 1861:16901). */
-.catalog-l__logo--geffen {
+.catalog-l__logo--geffen,
+.brand-hero__logo--geffen {
   width: 125.461px;
   height: 24px;
 }
 
-.catalog-l__logo--schuster {
+.catalog-l__logo--schuster,
+.brand-hero__logo--schuster {
   width: 162px;
   height: 24px;
 }
 
 /* "Деаэраторы и паровое оборудование" (node 1863:17597). */
-.catalog-l__logo--boiler {
+.catalog-l__logo--boiler,
+.brand-hero__logo--boiler {
   width: 138.835px;
   height: 20px;
 }
 
 /* "Насосы для котельных" (node 1863:17845). */
-.catalog-l__logo--grandfar {
+.catalog-l__logo--grandfar,
+.brand-hero__logo--grandfar {
   width: 216px;
   height: 30px;
 }
 
-.catalog-l__logo--grundfos {
+.catalog-l__logo--grundfos,
+.brand-hero__logo--grundfos {
   width: 213px;
   height: 30px;
 }
 
 /* "Водоподготовка" (node 1863:18082). */
-.catalog-l__logo--nyuterm {
+.catalog-l__logo--nyuterm,
+.brand-hero__logo--nyuterm {
   width: 165.839px;
   height: 28px;
 }
 
 /* "Парогенераторы промышленные" (node 1861:15631). */
-.catalog-l__logo--alba {
+.catalog-l__logo--alba,
+.brand-hero__logo--alba {
   width: 145.809px;
   height: 42px;
 }
@@ -9148,22 +9166,26 @@ body.body--header-overlay {
 /* "Водонагреватели" (node 1863:18248). S-Tank — 125×35 вместо 123.6×34
    из макета: у логотипа обводка, в Figma она выходит за рамку слоя, а
    файл экспортирован вместе с ней. */
-.catalog-l__logo--absolute-tank {
+.catalog-l__logo--absolute-tank,
+.brand-hero__logo--absolute-tank {
   width: 227px;
   height: 32px;
 }
 
-.catalog-l__logo--huchentec {
+.catalog-l__logo--huchentec,
+.brand-hero__logo--huchentec {
   width: 187px;
   height: 28px;
 }
 
-.catalog-l__logo--mit {
+.catalog-l__logo--mit,
+.brand-hero__logo--mit {
   width: 96px;
   height: 54px;
 }
 
-.catalog-l__logo--s-tank {
+.catalog-l__logo--s-tank,
+.brand-hero__logo--s-tank {
   width: 125px;
   height: 35px;
 }
@@ -9829,6 +9851,12 @@ body.body--header-overlay {
   overflow: hidden;
 }
 
+/* 29.09: обложка-заглушка, пока у бренда нет своего фото — серый
+   прямоугольник той же высоты (высоту по-прежнему даёт flex:1). */
+.brand-hero__cover--empty {
+  background: #f3f4f6; /* background/secondary-background (светлая тема) */
+}
+
 /* picture/img — АБСОЛЮТНО внутри .brand-hero__cover (не в потоке с
    height:100%): иначе img вообще не растягивается на выделенную flex'ом
    высоту и откатывается на натуральную, см. подробный разбор багфикса
@@ -10104,6 +10132,11 @@ body.body--header-overlay {
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
+}
+
+/* 29.09: карточка без фото — прозрачный квадрат того же размера (ТЗ). */
+.brand-catalog__image--empty {
+  background: transparent;
 }
 
 .brand-catalog__image picture {

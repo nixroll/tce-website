@@ -75,6 +75,10 @@
       {# sizes считает ширину ФОТО (карточка минус её паддинг), а не
          карточки: 1440 — 616px, 1000 — 412px, 768 — 656px, иначе почти
          вся ширина вьюпорта минус паддинги секции и карточки. #}
+      {#- 29.09 (ТЗ «Brand Catalog — заполнение по брендам»): у карточки
+          без image фото пока нет — на его месте пустой ПРОЗРАЧНЫЙ
+          квадрат того же размера (--empty), фото вставим позже. #}
+      {%- if c.image %}
       <div class="brand-catalog__image">
         <picture>
           <source
@@ -94,6 +98,9 @@
             loading="lazy">
         </picture>
       </div>
+      {%- else %}
+      <div class="brand-catalog__image brand-catalog__image--empty" aria-hidden="true"></div>
+      {%- endif %}
       <div class="brand-catalog__text">
         {# | safe — как и у описания ниже: в заголовке "Решения
            для&nbsp;потолка" есть неразрывный пробел, без фильтра

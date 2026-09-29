@@ -63,7 +63,11 @@
    вылезания за контейнер. Это прямо требует п.7 ТЗ ("верстка должна
    корректно принять перенос второй строки на 2 ряда"), и на 320/390
    перенос в макете и так штатный. #}
-{% set coverName = brand.cover or 'arbonia' %}
+{# 29.09: у 17 брендов из каталога категорий своих фото пока нет — вместо
+   обложки Arbonia (прежняя временная заглушка) теперь пустой серый
+   прямоугольник той же высоты (--empty). Как придёт фото — добавить
+   brand.cover (+ coverWidths) в brands.js, разметку не трогать. #}
+{% set coverName = brand.cover %}
 <section class="brand-hero" data-figma-node="1515:24095" data-figma-name="Brand Hero - L">
   <div class="brand-hero__container">
     <div class="brand-hero__content">
@@ -100,6 +104,7 @@
      (coverWidths), дефолт — набор Arbonia. Для нового бренда достаточно
      положить файлы и указать реальные ширины. #}
   {% set coverWidths = brand.coverWidths or [800, 1300, 2000, 2560] %}
+  {%- if coverName %}
   <div class="brand-hero__cover">
     <picture>
       <source
@@ -114,4 +119,7 @@
         fetchpriority="high">
     </picture>
   </div>
+  {%- else %}
+  <div class="brand-hero__cover brand-hero__cover--empty" aria-hidden="true"></div>
+  {%- endif %}
 </section>
