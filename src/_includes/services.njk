@@ -50,7 +50,11 @@
       <div class="services__icon"><img src="{{ '/images/services/shield-tick.svg' | url }}" alt=""></div>
       <div class="services__card-text">
         <p class="services__card-title">Сервис и гарантия</p>
-        <p class="services__card-desc">Гарантийное обслуживание,<br> запчасти и&nbsp;поддержка<br class="services__card-desc-break"> на&nbsp;весь срок.</p>
+        {#- 29.09: новый текст от клиента (сокращён под 3 строки при max-width
+            250px). Принудительные <br> из макета убраны — у нового текста
+            перенос естественный; класс .services__card-desc-break в CSS
+            остался без использования. #}
+        <p class="services__card-desc">Гарантийное и&nbsp;сервисное обслуживание, запчасти и&nbsp;поддержка на&nbsp;весь срок.</p>
       </div>
     </div>
   </div>
