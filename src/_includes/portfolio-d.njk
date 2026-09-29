@@ -129,7 +129,7 @@
       <div class="portfolio-d__text-buttons">
         <div class="portfolio-d__text-wrap is-slide-0" data-portfolio-text>
           <p class="portfolio-d__title" data-portfolio-title>База отдыха</p>
-          <p class="portfolio-d__desc" data-portfolio-desc>Построили газовую котельную для&nbsp;базы отдыха на&nbsp;14 котлах&nbsp;Viessmann.</p>
+          <p class="portfolio-d__desc" data-portfolio-desc>Разработали каскадную газовую котельную на&nbsp;14&nbsp;котлах&nbsp;Viessmann.</p>
         </div>
         {{ navButtons() }}
       </div>
@@ -149,10 +149,15 @@
      скрыты через [hidden]. portfolio-text.3.js читает их по
      data-slide-text при каждой смене слайда — см. комментарий вверху
      файла про отказ от JSON в data-атрибуте. #}
+  {#- 29.09: тексты слайдов 1, 3, 4 — новые от клиента, сокращены до
+      прежней длины: на 768 блок текста фиксированной высоты 72px (ровно
+      2 строки описания, overflow:hidden), а на 1000/390/320 макет
+      рассчитан на 3 строки. Переносы проверены замером шрифта Inter
+      Medium 16px по max-width каждого слайда на всех 5 брейкпоинтах. #}
   <div class="portfolio-d__text-data" hidden>
     <div data-slide-text="0">
       <p data-title>База отдыха</p>
-      <p data-desc>Построили газовую котельную для&nbsp;базы отдыха на&nbsp;14 котлах&nbsp;Viessmann.</p>
+      <p data-desc>Разработали каскадную газовую котельную на&nbsp;14&nbsp;котлах&nbsp;Viessmann.</p>
     </div>
     <div data-slide-text="1">
       <p data-title>Усадебная застройка</p>
@@ -160,11 +165,11 @@
     </div>
     <div data-slide-text="2">
       <p data-title>Модульные котельные</p>
-      <p data-desc>Построили три модульные котельные на&nbsp;котлах Schuster с&nbsp;горелками&nbsp;ELCO.</p>
+      <p data-desc>Запустили три модульные котельные на&nbsp;котлах Schuster и&nbsp;горелках&nbsp;ELCO.</p>
     </div>
     <div data-slide-text="3">
       <p data-title>Частный дом</p>
-      <p data-desc>Собрали гибридную котельную на&nbsp;газе и&nbsp;электричестве с&nbsp;котлами&nbsp;Viessmann.</p>
+      <p data-desc>Реализовали гибридную котельную с&nbsp;газовыми и&nbsp;электрокотлами&nbsp;Viessmann.</p>
     </div>
   </div>
 </section>
