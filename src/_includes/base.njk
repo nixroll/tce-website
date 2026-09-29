@@ -490,5 +490,10 @@
     {# 23.09: раскрытие строк категорий на /catalog/ (см. catalog-l.njk). #}
     <script src="{{ '/js/catalog-categories.js' | url }}" defer></script>
   {% endif %}
+  {% if catalogView or brand %}
+    {# 29.09: «← Каталог» на странице бренда возвращает туда, откуда
+       пришли (вкладка + раскрытая категория), см. catalog-return.js. #}
+    <script src="{{ '/js/catalog-return.js' | url }}" defer></script>
+  {% endif %}
 </body>
 </html>
