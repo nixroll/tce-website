@@ -1948,6 +1948,18 @@ body.body--header-overlay {
   --border-primary: #e5e7ec;
 }
 
+/* 29.09, багфикс (пользователь: "две линии, а нужна одна") — на
+   320–1439 дивайдер между Features - L и Team - L скрыт, секции идут
+   встык, и border-bottom у .features-l складывался с border-top у
+   .team-l в линию 2px. Пока дивайдер скрыт, верхнюю линию Team - L
+   снимаем; на 1440 дивайдер виден и обе линии нужны (сверху и снизу
+   дивайдера), как в макете. */
+@media (max-width: 1439.98px) {
+  .features-l + .divider--only-1440 + .team-l {
+    border-top: none;
+  }
+}
+
 /* Между Features - L и Team - L на /about/ — только с 1440px (см.
    divider.njk, dividerVariant="light-only-1440") */
 .divider--only-1440 {
