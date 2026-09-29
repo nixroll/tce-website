@@ -116,6 +116,9 @@
         srcset="{% for w in coverWidths %}{{ ('/images/brand-hero/' + coverName + '-' + w + '.jpg') | url }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}"
         sizes="100vw"
         alt="{{ brand.name }} — оборудование в интерьере"
+        {#- 29.09: необязательная точка кадрирования обложки (object-position),
+            если главное в кадре не по центру — см. coverPosition в brands.js. #}
+        {%- if brand.coverPosition %} style="object-position: {{ brand.coverPosition }}"{% endif %}
         fetchpriority="high">
     </picture>
   </div>

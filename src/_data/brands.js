@@ -131,7 +131,11 @@ module.exports = [
      Ньютерм заранее обрезаны по центру до 3:2.
      29.09 (позже): Alba, Flameair, Geffen, LaggarTT, Teplofor, КЗКЭО,
      Ньютерм — новые кадры из «Media/Images/brand-covers-v2» (убраны
-     повторы между брендами, у Geffen — котельная вместо ванной). */
+     повторы между брендами, у Geffen — котельная вместо ванной).
+     Затем LaggarTT, Ньютерм и S-Tank — ещё раз, по файлам от коллеги.
+     У S-Tank баннер: слева тёмное поле с надписью, справа бойлеры —
+     coverPosition "right center", чтобы на узких экранах, где обложка
+     обрезается по бокам, в кадре оставались бойлеры. */
   /* 29.09. Бренды из каталога категорий (catalogCategories.js) — у
      каждого теперь своя страница /catalog/<slug>/. Фото пока нет: поля
      cover нет, поэтому Brand Hero рисует серый прямоугольник вместо
@@ -151,9 +155,9 @@ module.exports = [
   { slug: "huchentec", name: "HuchEnTEC", category: "Бойлеры для&nbsp;горячей воды.", cover: "huchentec" },
   { slug: "laggartt", name: "LaggarTT", category: "Промышленные котлы.", cover: "laggartt" },
   { slug: "mit", name: "MIT", category: "Бойлеры и&nbsp;баки под&nbsp;давлением.", cover: "mit" },
-  { slug: "s-tank", name: "S-Tank", category: "Бойлеры и&nbsp;теплоаккумуляторы.", cover: "s-tank" },
+  { slug: "s-tank", name: "S-Tank", category: "Бойлеры и&nbsp;теплоаккумуляторы.", cover: "s-tank", coverWidths: [800, 1300, 1920], coverPosition: "right center" },
   { slug: "schuster", name: "Schuster", category: "Водогрейные и&nbsp;паровые котлы.", cover: "schuster" },
   { slug: "teplofor", name: "Teplofor", category: "Котлы и&nbsp;парогенераторы.", cover: "teplofor" },
   { slug: "kzkeo", name: "КЗКЭО", category: "Паровые котлы.", cover: "kzkeo", coverWidths: [800, 1300, 1920] },
-  { slug: "nyuterm", name: "Ньютерм", category: "Водоподготовка для&nbsp;котельных.", cover: "nyuterm" },
+  { slug: "nyuterm", name: "Ньютерм", category: "Водоподготовка для&nbsp;котельных.", cover: "nyuterm", coverWidths: [800, 1300, 2000] },
 ];
