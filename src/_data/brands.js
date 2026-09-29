@@ -128,7 +128,10 @@ module.exports = [
   /* 29.09 (вечер): обложки Brand Hero — из папки «Media/Images/Brand
      Covers» (подборка коллеги, источники в sources.md там же). Ширины —
      до исходной ширины кадра, без апскейла; вертикальные кадры Hermes и
-     Ньютерм заранее обрезаны по центру до 3:2. */
+     Ньютерм заранее обрезаны по центру до 3:2.
+     29.09 (позже): Alba, Flameair, Geffen, LaggarTT, Teplofor, КЗКЭО,
+     Ньютерм — новые кадры из «Media/Images/brand-covers-v2» (убраны
+     повторы между брендами, у Geffen — котельная вместо ванной). */
   /* 29.09. Бренды из каталога категорий (catalogCategories.js) — у
      каждого теперь своя страница /catalog/<slug>/. Фото пока нет: поля
      cover нет, поэтому Brand Hero рисует серый прямоугольник вместо
@@ -140,17 +143,17 @@ module.exports = [
   { slug: "alba", name: "Alba", category: "Промышленные парогенераторы.", cover: "alba", coverWidths: [800, 1300, 2000, 2500] },
   { slug: "boiler", name: "Boiler", category: "Деаэраторы для&nbsp;котельных.", cover: "boiler" },
   { slug: "execo", name: "ExEco", category: "Газовые и&nbsp;дизельные горелки.", cover: "execo", coverWidths: [800, 1300, 2000] },
-  { slug: "flameair", name: "Flameair", category: "Горелки на&nbsp;газе, дизеле и&nbsp;мазуте.", cover: "flameair", coverWidths: [800, 1300, 2000, 2500] },
-  { slug: "geffen", name: "Geffen", category: "Конденсационные котлы.", cover: "geffen" },
+  { slug: "flameair", name: "Flameair", category: "Горелки на&nbsp;газе, дизеле и&nbsp;мазуте.", cover: "flameair" },
+  { slug: "geffen", name: "Geffen", category: "Конденсационные котлы.", cover: "geffen", coverWidths: [800, 1300, 2000, 2500] },
   { slug: "grandfar", name: "Grandfar", category: "Насосы и&nbsp;станции давления.", cover: "grandfar", coverWidths: [800, 1300, 2000] },
   { slug: "grundfos", name: "Grundfos", category: "Насосы для&nbsp;отопления и&nbsp;воды.", cover: "grundfos", coverWidths: [800, 1300, 2000, 2480] },
   { slug: "hermes", name: "Hermes", category: "Паровые и&nbsp;водогрейные котлы.", cover: "hermes" },
   { slug: "huchentec", name: "HuchEnTEC", category: "Бойлеры для&nbsp;горячей воды.", cover: "huchentec" },
-  { slug: "laggartt", name: "LaggarTT", category: "Промышленные котлы.", cover: "laggartt", coverWidths: [800, 1300, 2000] },
+  { slug: "laggartt", name: "LaggarTT", category: "Промышленные котлы.", cover: "laggartt" },
   { slug: "mit", name: "MIT", category: "Бойлеры и&nbsp;баки под&nbsp;давлением.", cover: "mit" },
   { slug: "s-tank", name: "S-Tank", category: "Бойлеры и&nbsp;теплоаккумуляторы.", cover: "s-tank" },
   { slug: "schuster", name: "Schuster", category: "Водогрейные и&nbsp;паровые котлы.", cover: "schuster" },
-  { slug: "teplofor", name: "Teplofor", category: "Котлы и&nbsp;парогенераторы.", cover: "teplofor", coverWidths: [800, 1300, 2000, 2500] },
-  { slug: "kzkeo", name: "КЗКЭО", category: "Паровые котлы.", cover: "kzkeo" },
+  { slug: "teplofor", name: "Teplofor", category: "Котлы и&nbsp;парогенераторы.", cover: "teplofor" },
+  { slug: "kzkeo", name: "КЗКЭО", category: "Паровые котлы.", cover: "kzkeo", coverWidths: [800, 1300, 1920] },
   { slug: "nyuterm", name: "Ньютерм", category: "Водоподготовка для&nbsp;котельных.", cover: "nyuterm" },
 ];
