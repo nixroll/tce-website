@@ -1,0 +1,48 @@
+{# Other Products - L (Figma node 2291:904) — светлая секция «Другие
+   товары» на /catalog/ и /catalog/brands/, сразу под Catalog - L (без
+   дивайдера — так в макете страницы Catalog, node 175:815).
+
+   Та же схема, что у Services - L на главной (иконка + заголовок +
+   описание в карточке, «решётка» из хэйрлайнов), только без кнопки в
+   шапке и с 9 карточками. Сетка — один CSS Grid: 1 / 1 / 2 / 2 / 3
+   колонки на 320 / 390 / 768 / 1000 / 1440; хэйрлайны и паддинги — в
+   style.css у .other-products-l.
+
+   Неразрывные пробелы — после коротких предлогов и союзов (к, и, для,
+   до), как в макете на 1000/1440 (на 320/768 в Figma их расстановка
+   местами расходится — взят единый вариант). #}
+{% set otherProducts = [
+  { icon: "tool-01", title: "Запчасти к&nbsp;оборудованию", text: "Комплектующие для&nbsp;ремонта и&nbsp;обслуживания котлов и&nbsp;горелок." },
+  { icon: "waves", title: "Очистка бытовых стоков", text: "Модульные станции для&nbsp;очистки бытовых сточных вод." },
+  { icon: "shield-tick", title: "Очистка ливневых стоков", text: "Пескоуловители и&nbsp;нефтеуловители для&nbsp;дождевой и&nbsp;талой воды." },
+  { icon: "container", title: "Насосные станции", text: "Канализационные станции и&nbsp;оборудование для&nbsp;пожаротушения." },
+  { icon: "battery-full", title: "Отвод и&nbsp;накопление воды", text: "Модульные системы для&nbsp;инфильтрации и&nbsp;накопления дождевой воды." },
+  { icon: "package", title: "Резервуары и&nbsp;ёмкости", text: "Для&nbsp;чистой воды, пожарного запаса, канализации и&nbsp;химии." },
+  { icon: "marker-pin-01", title: "Полиэтиленовые колодцы", text: "Для&nbsp;кабельных и&nbsp;канализационных сетей и&nbsp;отбора проб воды." },
+  { icon: "settings-03", title: "Жироотделители", text: "Жироотделители и&nbsp;системы оборотного водоснабжения для&nbsp;моек." },
+  { icon: "speedometer-03", title: "Локальная канализация", text: "Автономные очистные сооружения для&nbsp;частных домов и&nbsp;коттеджей." }
+] %}
+<section class="other-products-l" data-figma-node="2291:904" data-figma-name="Other Products - L">
+  <div class="other-products-l__intro">
+    <div class="other-products-l__title-badge">
+      <span class="other-products-l__badge">Другие товары</span>
+      <h2 class="other-products-l__heading">Весь контур.<br>
+        <span class="other-products-l__heading-muted">От котла до&nbsp;канализации.</span>
+      </h2>
+    </div>
+  </div>
+  <div class="other-products-l__grid">
+    {%- for p in otherProducts %}
+    <div class="other-products-l__card">
+      <img class="other-products-l__icon" src="{{ ('/images/other-products/' + p.icon + '.svg') | url }}" alt="" width="24" height="24">
+      <div class="other-products-l__text">
+        <h3 class="other-products-l__card-title">{{ p.title | safe }}</h3>
+        <p class="other-products-l__card-desc">{{ p.text | safe }}</p>
+      </div>
+    </div>
+    {%- endfor %}
+    {# 9 карточек на 2 колонках (768–999) оставляют пустую ячейку — она
+       держит хэйрлайны последнего ряда (в макете там тоже карточка). #}
+    <div class="other-products-l__card other-products-l__card--placeholder" aria-hidden="true"></div>
+  </div>
+</section>

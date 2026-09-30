@@ -10719,3 +10719,244 @@ body.body--header-overlay {
   cursor: not-allowed;
 }
 
+
+/* Other Products - L (30.09, /catalog/ и /catalog/brands/, Figma node
+   2291:904) — «Другие товары. Весь контур.» Сверено по всем 5
+   брейкпоинтам (get_metadata/use_figma):
+                      320    390    768    1000   1440
+   секция, бок. пад.   0      20     24     24     24
+   intro, паддинги    80/24  80/32  96/48  128·80·96·80
+   intro, бок. линии   нет    есть   есть   есть   есть
+   макс. ширина заг.   500    500    500    500    900
+   колонок сетки       1      1      2      3      3
+   карточка, паддинг   24     24     32     32     32
+   иконка → текст      48     48     64     96     96
+   текст, max-width    250    250    250    250    нет
+   Хэйрлайны: линия над каждой карточкой (у первого ряда это линия под
+   заголовком), вертикальные — между колонками, боковые — у сетки с
+   390px. Низ последнего ряда — border-bottom самой секции. */
+.other-products-l {
+  --text-primary: #181d27;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+
+  width: 100%;
+  background-color: #fafafb;
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Сразу под Catalog - L: у неё уже есть нижняя линия — не задваиваем. */
+.catalog-l + .other-products-l {
+  border-top: none;
+}
+
+@media (min-width: 390px) {
+  .other-products-l {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .other-products-l {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+.other-products-l__intro {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .other-products-l__intro {
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .other-products-l__intro {
+    padding: var(--spacing-9xl) var(--spacing-6xl);
+  }
+}
+
+@media (min-width: 1000px) {
+  .other-products-l__intro {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+  }
+}
+
+.other-products-l__title-badge {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  min-width: 0;
+  max-width: 500px;
+}
+
+@media (min-width: 1440px) {
+  .other-products-l__title-badge {
+    max-width: 900px;
+  }
+}
+
+.other-products-l__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: #325abc;
+}
+
+.other-products-l__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
+  color: var(--text-primary);
+}
+
+@media (min-width: 1440px) {
+  .other-products-l__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
+}
+
+.other-products-l__heading-muted {
+  color: var(--text-quaternary);
+}
+
+.other-products-l__grid {
+  width: 100%;
+  max-width: 1392px;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 390px) {
+  .other-products-l__grid {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .other-products-l__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1000px) {
+  .other-products-l__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.other-products-l__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-6xl);
+  min-width: 0;
+  padding: var(--spacing-3xl);
+  border-top: 1px solid var(--border-primary);
+}
+
+@media (min-width: 768px) {
+  .other-products-l__card {
+    gap: var(--spacing-7xl);
+    padding: var(--spacing-4xl);
+  }
+
+  .other-products-l__card:nth-child(2n) {
+    border-left: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 1000px) {
+  .other-products-l__card {
+    gap: var(--spacing-9xl);
+  }
+
+  .other-products-l__card:nth-child(2n) {
+    border-left: none;
+  }
+
+  .other-products-l__card:not(:nth-child(3n + 1)) {
+    border-left: 1px solid var(--border-primary);
+  }
+}
+
+/* Пустая ячейка нужна только при 2 колонках: 9 карточек нечётно. */
+.other-products-l__card--placeholder {
+  display: none;
+}
+
+@media (min-width: 768px) and (max-width: 999.98px) {
+  .other-products-l__card--placeholder {
+    display: block;
+  }
+}
+
+.other-products-l__icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.other-products-l__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  max-width: 250px;
+}
+
+@media (min-width: 1440px) {
+  .other-products-l__text {
+    max-width: none;
+  }
+}
+
+.other-products-l__card-title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.09px;
+  color: var(--text-primary);
+}
+
+.other-products-l__card-desc {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.08px;
+  color: var(--text-quaternary);
+}
