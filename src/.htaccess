@@ -18,7 +18,11 @@ RewriteEngine On
 # основной сайт. Правило срабатывает, только когда tcepro.by направлен на
 # этот хостинг (A-запись на domain.by + синоним домена в панели
 # hoster.by); до этого оно просто ни на что не влияет.
+# Проверочные файлы Let's Encrypt (/.well-known/acme-challenge/) не
+# перенаправляем — иначе выпуск/продление сертификата на tcepro.by
+# зависел бы от того, как проверка переходит по редиректу.
 RewriteCond %{HTTP_HOST} ^(www\.)?tcepro\.by$ [NC]
+RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/
 RewriteRule ^ https://thermoconcept.by%{REQUEST_URI} [L,R=301]
 
 
