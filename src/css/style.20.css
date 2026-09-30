@@ -9116,9 +9116,11 @@ body.body--header-overlay {
   height: 36px;
 }
 
+/* 30.09: новый логотип ExEco (латиницей вместо «ЭксЭко»), Figma — группа
+   "ExEco" 116.57×42 в "Горелках"; файл 117×42, округлено по файлу. */
 .catalog-l__logo--execo,
 .brand-hero__logo--execo {
-  width: 129px;
+  width: 117px;
   height: 42px;
 }
 
