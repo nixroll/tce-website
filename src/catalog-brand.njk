@@ -16,12 +16,12 @@ pagination:
   # sitemap.njk строит карту сайта именно через collections.all, поэтому
   # остальные 8 страниц в неё не попадали.
   addAllPagesToCollections: true
-permalink: "/catalog/{{ brand.slug }}/"
+permalink: "/products/{{ brand.slug }}/"
 eleventyComputed:
   # 21.08 (пользователь): разделитель "—" -> "-" везде в title, тот же
   # заход, что и на остальных страницах (см. index.njk и другие *.njk).
   title: "{{ brand.name }} - Thermo Concept Engineering"
-  description: "{{ brand.name }} — оборудование в каталоге Thermo Concept Engineering: подбор, поставка напрямую от производителя, монтаж, пусконаладка и сервис."
+  description: "{{ brand.name }} — оборудование от Thermo Concept Engineering: подбор, поставка напрямую от производителя, монтаж, пусконаладка и сервис."
 ---
 {# 14.08. Страницы брендов каталога — по одной на каждую запись из
    src/_data/brands.js (9 штук: /catalog/arbonia/, /catalog/elco/ и
@@ -91,7 +91,7 @@ eleventyComputed:
 {% set galleryLSet = brandGallerySet if galleries[brandGallerySet] else "brand-placeholder" %}
 {% set galleryLBadge = "Галерея" %}
 {% set galleryLHeadingAccent = "В деталях." %}
-{% set galleryLHeadingMuted = "Каталог и&nbsp;объекты." %}
+{% set galleryLHeadingMuted = "Продукция и&nbsp;объекты." %}
 {% set galleryLNode = "1555:25573" %}
 {% set galleryLName = "Brand Gallery - L" %}
 {% include "gallery-l.njk" %}

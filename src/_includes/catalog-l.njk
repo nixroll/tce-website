@@ -96,7 +96,7 @@
         <p class="catalog-l__card-title">{{ name }}</p>
         <p class="catalog-l__card-desc">{{ tags | safe }}</p>
       </div>
-      <a class="catalog-l__btn"{% if slug and link %} href="{{ ('/catalog/' + slug + '/') | url }}"{% else %} aria-disabled="true"{% endif %}>
+      <a class="catalog-l__btn"{% if slug and link %} href="{{ ('/products/' + slug + '/') | url }}"{% else %} aria-disabled="true"{% endif %}>
         Смотреть
         <svg class="catalog-l__btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M3.33331 10H16.6666M11.6666 15L16.6666 10L11.6666 5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -126,7 +126,7 @@
 <section class="catalog-l{% if catalogView == 'categories' %} catalog-l--categories{% endif %}" data-figma-node="1487:17117" data-figma-name="Catalog - L">
   <div class="catalog-l__container">
     <div class="catalog-l__title-badge">
-      <span class="catalog-l__badge">Каталог</span>
+      <span class="catalog-l__badge">Продукция</span>
       {# 21.08, SEO-аудит: было <p> — единственный смысловой заголовок
          страницы /catalog/, а на всей странице не было ни одного h1.
          Стили класса не завязаны на тег (см. .catalog-l__heading в
@@ -137,9 +137,9 @@
     </div>
     {# Segmented Control (node 1846:10399). Сегменты — ссылки,
        активный помечен aria-current="page". #}
-    <nav class="catalog-seg" aria-label="Вид каталога">
-      <a class="catalog-seg__item{% if catalogView == 'categories' %} is-active{% endif %}" href="{{ '/catalog/' | url }}"{% if catalogView == 'categories' %} aria-current="page"{% endif %}>Категории</a>
-      <a class="catalog-seg__item{% if catalogView == 'brands' %} is-active{% endif %}" href="{{ '/catalog/brands/' | url }}"{% if catalogView == 'brands' %} aria-current="page"{% endif %}>Бренды</a>
+    <nav class="catalog-seg" aria-label="Вид раздела «Продукция»">
+      <a class="catalog-seg__item{% if catalogView == 'categories' %} is-active{% endif %}" href="{{ '/products/' | url }}"{% if catalogView == 'categories' %} aria-current="page"{% endif %}>Категории</a>
+      <a class="catalog-seg__item{% if catalogView == 'brands' %} is-active{% endif %}" href="{{ '/products/brands/' | url }}"{% if catalogView == 'brands' %} aria-current="page"{% endif %}>Бренды</a>
     </nav>
   </div>
   {% if catalogView == "categories" %}
