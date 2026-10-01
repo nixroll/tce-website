@@ -85,8 +85,8 @@ stickyHeader: true
         <path d="M14 25.6666C18.6667 21 23.3333 16.8213 23.3333 11.6666C23.3333 6.51199 19.1547 2.33331 14 2.33331C8.84535 2.33331 4.66667 6.51199 4.66667 11.6666C4.66667 16.8213 9.33334 21 14 25.6666Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <div class="contact__card-text">
-        <p class="contact__card-title">Физический адрес</p>
-        <a class="contact__card-value" href="https://yandex.by/maps/-/CXUov8lE" target="_blank" rel="noopener">Республика Беларусь, 220091, г.&nbsp;Минск, ул. Матусевича, д. 33/2, офис 801</a>
+        <p class="contact__card-title">Офис</p>
+        <a class="contact__card-value" href="https://yandex.by/maps/-/CXUov8lE" target="_blank" rel="noopener">Республика Беларусь, 220091, г.&nbsp;Минск, ул.&nbsp;Матусевича, д.&nbsp;33/2, офис&nbsp;801</a>
       </div>
     </div>
     <div class="contact__card">
@@ -95,15 +95,10 @@ stickyHeader: true
         <path d="M14 25.6666C18.6667 21 23.3333 16.8213 23.3333 11.6666C23.3333 6.51199 19.1547 2.33331 14 2.33331C8.84535 2.33331 4.66667 6.51199 4.66667 11.6666C4.66667 16.8213 9.33334 21 14 25.6666Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <div class="contact__card-text">
-        <p class="contact__card-title">Юридический адрес</p>
-        {# 07.08: клик — копирует адрес в буфер (contact-copy.js), тост
-           показывает contact-toast.js (window.showContactToast('copy')).
-           Не ссылка (адрес юрлица не физическая точка на карте, в
-           отличие от Физического — тому нужна ссылка на Яндекс.Карты,
-           см. выше) — обычная кнопка, но со стилями
-           .contact__card-value (та же типографика, что у ссылок в
-           этой секции). #}
-        <button type="button" class="contact__card-value" data-copy-text="Республика Беларусь, 220091, г. Минск, ул. Матусевича, д. 33/2, офис 801">Республика Беларусь, 220091, г.&nbsp;Минск, ул. Матусевича, д. 33/2, офис 801</button>
+        {# 01.10: юридический адрес убран (он есть на /bank-details/), на его
+           месте — склад, со ссылкой на Яндекс Карты, как у офиса. #}
+        <p class="contact__card-title">Склад</p>
+        <a class="contact__card-value" href="https://yandex.by/maps/-/CXa4VZy8" target="_blank" rel="noopener">Республика Беларусь, 222827, Минская область, Пуховичский район, 26&nbsp;км трассы&nbsp;М5</a>
       </div>
     </div>
   </div>

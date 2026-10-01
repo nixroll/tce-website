@@ -4686,6 +4686,27 @@ body.body--header-overlay {
   }
 }
 
+/* 01.10 (Figma 924:9666): max-width текстового блока у адресов — свой:
+   «Офис» 280 / 290 (1440), «Склад» 310 / 330 (1440). Телефон и Email
+   без ограничения. Порядок карточек: Телефон, Email | Офис, Склад. */
+.contact__cards + .contact__cards .contact__card:nth-child(1) .contact__card-text {
+  max-width: 280px;
+}
+
+.contact__cards + .contact__cards .contact__card:nth-child(2) .contact__card-text {
+  max-width: 310px;
+}
+
+@media (min-width: 1440px) {
+  .contact__cards + .contact__cards .contact__card:nth-child(1) .contact__card-text {
+    max-width: 290px;
+  }
+
+  .contact__cards + .contact__cards .contact__card:nth-child(2) .contact__card-text {
+    max-width: 330px;
+  }
+}
+
 .contact__card-title {
   margin: 0;
   font-family: var(--font-body);
