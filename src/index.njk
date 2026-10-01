@@ -130,16 +130,42 @@ hasParallax: true
    чтобы верстка и логика не дублировали пути. #}
 <section class="home-hero" data-figma-node="765:4734" data-figma-name="Home Hero">
   <div class="home-hero__media video-upgrade" aria-hidden="true">
+    {#- 01.10: видео заменено на «Concrete Animated 3D Shadows» (Artlist,
+        6148277) — прежнее клиенту не понравилось. Прежнее НЕ удалено: файлы
+        hero-home-{horizontal,vertical}[-hq].mp4 и hero-poster-*.jpg лежат в
+        src/videos/, разметка — в комментарии ниже. Чтобы вернуть: убрать
+        блок v2, раскомментировать старый.
+        Схема та же (LQ сразу → HQ подменяется в фоне, hero-video-upgrade.js):
+          десктоп ≥1000: 1280×720 (~0,8 МБ) → 1920×1080 (~3,7 МБ);
+          мобильные <1000: 540×960 (~0,5 МБ) → 608×1080 (~1,4 МБ) —
+          отдельный вертикальный кроп по центру (композиция симметричная),
+          а не горизонтальный кадр, обрезанный CSS: меньше вес, чётче.
+        H.264 High, yuv420p, без звука и служебных дорожек, faststart
+        (воспроизведение начинается до полной загрузки). Постер — первый
+        кадр (видео начинается из темноты), поэтому старт без скачка. #}
     <video class="home-hero__video video-upgrade__video"
-      poster="{{ '/videos/hero-poster-horizontal.jpg' | url }}"
+      poster="{{ '/videos/hero-v2-poster-horizontal.jpg' | url }}"
       autoplay muted loop playsinline
       preload="metadata"
       tabindex="-1"
-      data-hq-vertical="{{ '/videos/hero-home-vertical-hq.mp4' | url }}"
-      data-hq-horizontal="{{ '/videos/hero-home-horizontal-hq.mp4' | url }}">
-      <source src="{{ '/videos/hero-home-vertical.mp4' | url }}" media="(max-width: 999.98px)">
-      <source src="{{ '/videos/hero-home-horizontal.mp4' | url }}">
+      data-hq-vertical="{{ '/videos/hero-home-v2-vertical-hq.mp4' | url }}"
+      data-hq-horizontal="{{ '/videos/hero-home-v2-horizontal-hq.mp4' | url }}">
+      <source src="{{ '/videos/hero-home-v2-vertical.mp4' | url }}" media="(max-width: 999.98px)">
+      <source src="{{ '/videos/hero-home-v2-horizontal.mp4' | url }}">
     </video>
+    {#- ПРЕЖНЕЕ ВИДЕО (скрыто 01.10, файлы на месте):
+    <video class="home-hero__video video-upgrade__video"
+      poster="{ { '/videos/hero-poster-horizontal.jpg' | url } }"
+      autoplay muted loop playsinline
+      preload="metadata"
+      tabindex="-1"
+      data-hq-vertical="{ { '/videos/hero-home-vertical-hq.mp4' | url } }"
+      data-hq-horizontal="{ { '/videos/hero-home-horizontal-hq.mp4' | url } }">
+      <source src="{ { '/videos/hero-home-vertical.mp4' | url } }" media="(max-width: 999.98px)">
+      <source src="{ { '/videos/hero-home-horizontal.mp4' | url } }">
+    </video>
+    (в строках выше скобки разнесены "{ {" / "} }", чтобы Nunjucks не
+    исполнял их внутри комментария; при возврате — склеить обратно.) #}
     <div class="home-hero__blur"></div>
   </div>
   <div class="home-hero__content">
