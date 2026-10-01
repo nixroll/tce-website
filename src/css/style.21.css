@@ -4687,7 +4687,9 @@ body.body--header-overlay {
 }
 
 /* 01.10 (Figma 924:9666): max-width текстового блока у адресов — свой:
-   «Офис» 280 / 290 (1440), «Склад» 310 / 330 (1440). Телефон и Email
+   «Офис» 280 / 290 (1440), «Склад» 310 на всех ширинах (в Figma на 1440
+   контейнер 330, но сам текст 310 — так адрес встаёт в 3 строки:
+   «…222827, / Минская область, Пуховичский район, / 26 км трассы М5»). Телефон и Email
    без ограничения. Порядок карточек: Телефон, Email | Офис, Склад. */
 .contact__cards + .contact__cards .contact__card:nth-child(1) .contact__card-text {
   max-width: 280px;
@@ -4702,9 +4704,6 @@ body.body--header-overlay {
     max-width: 290px;
   }
 
-  .contact__cards + .contact__cards .contact__card:nth-child(2) .contact__card-text {
-    max-width: 330px;
-  }
 }
 
 .contact__card-title {
