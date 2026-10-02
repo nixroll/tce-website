@@ -8069,6 +8069,251 @@ body.body--header-overlay {
   color: var(--text-quaternary);
 }
 
+/* Trust - L (Figma node 2362:7041, /about/) — секция «Доверие» с тремя
+   документами. Собрана на базе Stages - L, все размеры те же:
+   - внешний px секции 0/20/24/24/24 (320/390/768/1000/1440);
+   - Container: py-80 px-24 → py-80 px-32 → py-96 px-48 → pt-128 pb-96 px-80;
+   - heading h5 (32/34) до 1440, h4 (36/38) с 1440, max-width 900;
+   - карточка: p-24 → p-32 с 768; gap номер↔контент 64 / 80 (1000) / 96 (1440);
+   - текстовый блок карточки max-width 300 на всех брейкпоинтах
+     (в отличие от Stages, на 1000 исключений нет — сверено по макету);
+   - контент карточки: текст + «Смотреть» (brand, Semibold 16/22), gap 16.
+   Сетка 1/1/2/3/3 колонки, хэйрлайны — тот же collapsed-grid, что у
+   .stages-l (border-top у карточек со 2-й строки, border-left у правой
+   колонки на 768, border-l/r у средней на 1000+). Placeholder нужен
+   только на 768 (3 карточки на 2 колонках). */
+.trust-l {
+  --text-primary: #181d27;
+  --text-quaternary: #717680;
+  --border-primary: #e5e7ec;
+  width: 100%;
+  background-color: #fafafb;
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+@media (min-width: 390px) {
+  .trust-l {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+@media (min-width: 768px) {
+  .trust-l {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+.trust-l__container {
+  width: 100%;
+  max-width: 1392px;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--spacing-8xl) var(--spacing-3xl);
+}
+@media (min-width: 390px) {
+  .trust-l__container {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+    padding: var(--spacing-8xl) var(--spacing-4xl);
+  }
+}
+@media (min-width: 768px) {
+  .trust-l__container {
+    padding: var(--spacing-9xl) var(--spacing-6xl);
+  }
+}
+@media (min-width: 1000px) {
+  .trust-l__container {
+    padding: var(--spacing-10xl) var(--spacing-8xl) var(--spacing-9xl);
+  }
+}
+.trust-l__title-badge {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
+  min-width: 0;
+  max-width: 900px;
+}
+.trust-l__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: var(--spacing-xxs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(50, 90, 188, 0.1);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.28px;
+  color: #325abc;
+}
+.trust-l__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--h5-size);
+  line-height: var(--h5-line);
+  letter-spacing: var(--h5-tracking);
+  color: var(--text-primary);
+}
+@media (min-width: 1440px) {
+  .trust-l__heading {
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-tracking);
+  }
+}
+.trust-l__heading-muted {
+  color: var(--text-quaternary);
+}
+.trust-l__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+  max-width: 1392px;
+  border-top: 1px solid var(--border-primary);
+}
+@media (min-width: 390px) {
+  .trust-l__grid {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+@media (min-width: 768px) {
+  .trust-l__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1000px) {
+  .trust-l__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.trust-l__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-7xl);
+  min-width: 0;
+  overflow: hidden;
+  padding: var(--spacing-3xl);
+}
+.trust-l__card:not(:first-child) {
+  border-top: 1px solid var(--border-primary);
+}
+@media (min-width: 768px) {
+  .trust-l__card {
+    padding: var(--spacing-4xl);
+  }
+  .trust-l__card:nth-child(-n + 2) {
+    border-top: none;
+  }
+  .trust-l__card:nth-child(n + 3) {
+    border-top: 1px solid var(--border-primary);
+  }
+  .trust-l__card:nth-child(2n) {
+    border-left: 1px solid var(--border-primary);
+  }
+}
+@media (min-width: 1000px) {
+  .trust-l__card {
+    gap: var(--spacing-8xl);
+  }
+  .trust-l__card:nth-child(n) {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .trust-l__card:nth-child(3n + 2) {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+@media (min-width: 1440px) {
+  .trust-l__card {
+    gap: var(--spacing-9xl);
+  }
+}
+.trust-l__card--placeholder {
+  display: none;
+}
+@media (min-width: 768px) and (max-width: 999.98px) {
+  .trust-l__card--placeholder {
+    display: flex;
+  }
+}
+.trust-l__card-number {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 42px;
+  letter-spacing: -0.4px;
+  color: var(--brand);
+}
+.trust-l__card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-xl);
+  width: 100%;
+}
+.trust-l__card-text-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  max-width: 300px;
+}
+.trust-l__card-title {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.09px;
+  color: var(--text-primary);
+}
+.trust-l__card-text {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.08px;
+  color: var(--text-quaternary);
+}
+.trust-l__card-link {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.08px;
+  color: var(--brand);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+@media (hover: hover) {
+  .trust-l__card-link:hover {
+    opacity: 0.8;
+  }
+}
+.trust-l__card-link:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 /* Portfolio - D (13.08, /services/, Figma node 1393:9485) — тёмная
    секция-карусель "Наши работы. Готовые объекты." с 4 слайдами
    (фото+текст на каждый). Архитектура (почему один слайд на экран, а

@@ -166,7 +166,7 @@
        все секции тёмные и Header просто оставался тёмным по умолчанию.
        На /bank-details/ тот же компонент светлый, и без учёта он
        унаследовал бы тему от предыдущего элемента. */
-    '.social, .stats, .divider, .areas, .testimonial, .services, .projects, .brands, .cta, .site-footer, .contact, .form, .hero-l, .stages-l, .portfolio-d, .catalog-l, .brand-hero, .brand-catalog, .gallery-l, .docs-l, .team-l, .features-l, .doc-hero, .paragraph-l, .hero-404, .other-products-l'
+    '.social, .stats, .divider, .areas, .testimonial, .services, .projects, .brands, .cta, .site-footer, .contact, .form, .hero-l, .stages-l, .portfolio-d, .catalog-l, .brand-hero, .brand-catalog, .gallery-l, .docs-l, .team-l, .features-l, .doc-hero, .paragraph-l, .hero-404, .other-products-l, .trust-l'
   );
   if (!candidates.length) return;
 
@@ -202,6 +202,7 @@
       el.classList.contains('form') ||
       el.classList.contains('hero-l') ||
       el.classList.contains('stages-l') ||
+      el.classList.contains('trust-l') ||
       el.classList.contains('catalog-l') ||
       el.classList.contains('brand-hero') ||
       el.classList.contains('brand-catalog') ||
