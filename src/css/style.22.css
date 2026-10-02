@@ -4315,8 +4315,8 @@ body.body--header-overlay {
 /* ---------- Общее для обоих блоков ---------- */
 .footer__logo {
   display: block;
-  width: 48px;
-  height: 48px;
+  width: 71px; /* был 48×48 (logo-mark.svg) */
+  height: 72px;
   flex-shrink: 0;
 }
 
