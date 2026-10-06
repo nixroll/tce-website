@@ -10639,6 +10639,7 @@ body.body--header-overlay {
   --cc-btn-primary-text: #f7f7f7;
   --cc-toggle-off: #f5f5f5;
   --cc-toggle-on: var(--brand);
+  --cc-toggle-locked: #94979c; /* 06.10: ON «Необходимых» — серый, см. .cookie-consent__toggle--locked */
 
   position: fixed;
   left: 16px;
@@ -10917,6 +10918,15 @@ body.body--header-overlay {
 
 .cookie-consent__toggle--locked {
   cursor: not-allowed;
+}
+
+/* 06.10 (Никита): «Необходимые» нельзя выключить, поэтому их ON — не
+   брендовый оранжевый, а серый: видно, что включено (кружок справа,
+   фон темнее выключенного #f5f5f5), но управлять вручную нельзя.
+   Цвет #94979c — из палитры сайта (text/tertiary тёмной темы).
+   Отличие от макета Figma «Cookies» (1731:14325) — намеренное. */
+.cookie-consent__toggle--on.cookie-consent__toggle--locked {
+  background-color: var(--cc-toggle-locked);
 }
 
 
