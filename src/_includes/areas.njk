@@ -37,14 +37,18 @@
     </div>
     <div class="areas__card areas__card--supply">
       <div class="areas__image">
+        {# 07.10 (Никита, правка клиента): новое фото — котельная (вместо
+           вентиляции под потолком). Файлы supply-2-{400,700,1000}.{jpg,webp},
+           центр-кроп под 615:460, как у прежних. Старые supply-*.{jpg,webp}
+           оставлены в images/areas/ (не удалять). #}
         <picture>
           <source
             type="image/webp"
-            srcset="{{ '/images/areas/supply-400.webp' | url }} 400w, {{ '/images/areas/supply-700.webp' | url }} 700w, {{ '/images/areas/supply-1000.webp' | url }} 1000w"
+            srcset="{{ '/images/areas/supply-2-400.webp' | url }} 400w, {{ '/images/areas/supply-2-700.webp' | url }} 700w, {{ '/images/areas/supply-2-1000.webp' | url }} 1000w"
             sizes="(min-width: 1440px) 616px, (min-width: 1000px) 396px, (min-width: 768px) 312px, (min-width: 390px) calc(100vw - 42px), calc(100vw - 48px)">
           <img
-            src="{{ '/images/areas/supply-1000.jpg' | url }}"
-            srcset="{{ '/images/areas/supply-400.jpg' | url }} 400w, {{ '/images/areas/supply-700.jpg' | url }} 700w, {{ '/images/areas/supply-1000.jpg' | url }} 1000w"
+            src="{{ '/images/areas/supply-2-1000.jpg' | url }}"
+            srcset="{{ '/images/areas/supply-2-400.jpg' | url }} 400w, {{ '/images/areas/supply-2-700.jpg' | url }} 700w, {{ '/images/areas/supply-2-1000.jpg' | url }} 1000w"
             sizes="(min-width: 1440px) 616px, (min-width: 1000px) 396px, (min-width: 768px) 312px, (min-width: 390px) calc(100vw - 42px), calc(100vw - 48px)"
             width="615" height="460"
             alt="Поставка оборудования"
