@@ -17,6 +17,13 @@
    08 «Отзыв. Табак Инвест», 09 «Отзыв. ТеплоДизайнСервис»,
    10 «Отзыв. Панкара Плюс». Картинки — архив tce-testimonial-letters
    (letter-NN-240/480, jpg+webp), images/testimonials/.
+   07.10, вечер (Никита: «у десятого письма искажённый скан»): в архиве
+   страницы, не равные A4, были РАСТЯНУТЫ под A4. Сильнее всего — 10
+   (PDF с поворотом страницы 270°, картинку сжало по горизонтали),
+   заметно — 07 (лист 1:1,30 → растянут на ~9%), чуть — 03 и 05.
+   Эти четыре пересобраны из оригинальных PDF с Диска: страница целиком
+   вписана в A4 без искажений, недостающее по высоте/ширине — белые поля.
+   Файлы letter-NN-v2-*, поле img в данных; прежние letter-NN-* оставлены.
 
    Тексты — из ТЗ как есть, с &nbsp;, выводятся через | safe (иначе
    Nunjucks заэкранирует &nbsp;).
@@ -67,14 +74,14 @@
 {% set letters = [
   { n: "01", href: "https://drive.google.com/file/d/1_IiyK7MSp_GH09k5X7_rr_qJv0ysvecq/view", company: "ООО «ТДМ-СтройМонтаж»", quote: "Благодарим за&nbsp;помощь в&nbsp;решении наших задач и&nbsp;надеемся на&nbsp;дальнейшее плодотворное и&nbsp;взаимовыгодное сотрудничество.", name: "—&nbsp;Д.М.&nbsp;Тарасевич", role: "Директор, ООО&nbsp;«ТДМ-СтройМонтаж»" },
   { n: "02", href: "https://drive.google.com/file/d/1ZYf9jo0vwanyjJmO7CEfIPp16Q-zl6d9/view", company: "ООО «АлюКойл» (ГК «Алютех»)", quote: "Поставка выполнена в&nbsp;срок и&nbsp;в&nbsp;полном объёме: по&nbsp;срокам и&nbsp;техническим характеристикам оборудования.", name: "—&nbsp;С.В.&nbsp;Янушко", role: "Директор, ООО&nbsp;«АлюКойл» (ГК&nbsp;«Алютех»)" },
-  { n: "03", href: "https://drive.google.com/file/d/1QvRsUfwqvAg7AqM6pX4Hc066gFio66VT/view", company: "ИООО «Вило Бел»", quote: "Профессионализм и&nbsp;ответственность сотрудников позволили нам быстро решать производственные вопросы.", name: "—&nbsp;Е.&nbsp;Козусь", role: "Зам.&nbsp;директора, ИООО&nbsp;«Вило Бел»" },
+  { n: "03", img: "03-v2", href: "https://drive.google.com/file/d/1QvRsUfwqvAg7AqM6pX4Hc066gFio66VT/view", company: "ИООО «Вило Бел»", quote: "Профессионализм и&nbsp;ответственность сотрудников позволили нам быстро решать производственные вопросы.", name: "—&nbsp;Е.&nbsp;Козусь", role: "Зам.&nbsp;директора, ИООО&nbsp;«Вило Бел»" },
   { n: "04", href: "https://drive.google.com/file/d/1EB8StM7frLLYyXvDBaCGCM9_eXVlsEQl/view", company: "ООО «Котлоэнергосервис-СМУ»", quote: "Благодарим за&nbsp;своевременную поставку котлов Schuster и&nbsp;горелок ELCO для&nbsp;котельной в&nbsp;Орше.", name: "—&nbsp;Д.В.&nbsp;Люкевич", role: "Директор, ООО&nbsp;«Котлоэнергосервис-СМУ»" },
-  { n: "05", href: "https://drive.google.com/file/d/14axQY2EvWmZiXjZCLH6jXph9VfnBtBNj/view", company: "РУ «Райская поляна»", quote: "Консультации на&nbsp;этапе проекта, согласования и&nbsp;шеф-монтаж. Компания исполнила все договорные обязательства.", name: "—&nbsp;Л.А.&nbsp;Жигаревич", role: "Зам.&nbsp;директора, РУ&nbsp;«Райская поляна»" },
+  { n: "05", img: "05-v2", href: "https://drive.google.com/file/d/14axQY2EvWmZiXjZCLH6jXph9VfnBtBNj/view", company: "РУ «Райская поляна»", quote: "Консультации на&nbsp;этапе проекта, согласования и&nbsp;шеф-монтаж. Компания исполнила все договорные обязательства.", name: "—&nbsp;Л.А.&nbsp;Жигаревич", role: "Зам.&nbsp;директора, РУ&nbsp;«Райская поляна»" },
   { n: "06", href: "https://drive.google.com/file/d/1SSyzjvrSeate3VzHqSq2FCvMbqqYRuTt/view", company: "ООО «Гидробурсервис»", quote: "Каждая поставка очистных сооружений, ДНС и&nbsp;КНС выполнена в&nbsp;оговорённые сроки и&nbsp;с&nbsp;технической поддержкой.", name: "—&nbsp;В.А.&nbsp;Валынец", role: "Директор, ООО&nbsp;«Гидробурсервис»" },
-  { n: "07", href: "https://drive.google.com/file/d/15G3Y8stRel8rf1kHW9d3oA9tlaBB6xQk/view", company: "ООО «Интерьеры 360»", quote: "Отмечаем индивидуальный подход сотрудников и&nbsp;оперативность в&nbsp;решении всех возникающих вопросов.", name: "—&nbsp;О.В.&nbsp;Подвальников", role: "Руководитель, ООО&nbsp;«Интерьеры&nbsp;360»" },
+  { n: "07", img: "07-v2", href: "https://drive.google.com/file/d/15G3Y8stRel8rf1kHW9d3oA9tlaBB6xQk/view", company: "ООО «Интерьеры 360»", quote: "Отмечаем индивидуальный подход сотрудников и&nbsp;оперативность в&nbsp;решении всех возникающих вопросов.", name: "—&nbsp;О.В.&nbsp;Подвальников", role: "Руководитель, ООО&nbsp;«Интерьеры&nbsp;360»" },
   { n: "08", href: "https://drive.google.com/file/d/14ZUoaZbT3vWEc_G5WiHaaVY_6KBiQT0p/view", company: "ООО «Табак-Инвест»", quote: "Рекомендуем компанию как&nbsp;надёжного и&nbsp;добросовестного поставщика и&nbsp;партнёра.", name: "—&nbsp;Ю.С.&nbsp;Кустанович", role: "Зам.&nbsp;директора, ООО&nbsp;«Табак-Инвест»" },
   { n: "09", href: "https://drive.google.com/file/d/10DiwVPeopnsXBw1BSEWJIv-qmxVAh26L/view", company: "ООО «ТеплоДизайнСервис»", quote: "Котельное оборудование поставлено точно в&nbsp;согласованные сроки, с&nbsp;квалифицированной технической поддержкой.", name: "—&nbsp;А.В.&nbsp;Гринкевич", role: "ООО&nbsp;«ТеплоДизайнСервис»" },
-  { n: "10", href: "https://drive.google.com/file/d/1COOrPAZfq40iZuCYpGGhhCuI4Zzk_mVB/view", company: "ООО «Панкара Плюс»", quote: "Мы&nbsp;удовлетворены работой компании и&nbsp;рады рекомендовать её&nbsp;как&nbsp;надёжного и&nbsp;ответственного партнёра.", name: "—&nbsp;А.А.&nbsp;Каранец", role: "Директор, ООО&nbsp;«Панкара Плюс»" }
+  { n: "10", img: "10-v2", href: "https://drive.google.com/file/d/1COOrPAZfq40iZuCYpGGhhCuI4Zzk_mVB/view", company: "ООО «Панкара Плюс»", quote: "Мы&nbsp;удовлетворены работой компании и&nbsp;рады рекомендовать её&nbsp;как&nbsp;надёжного и&nbsp;ответственного партнёра.", name: "—&nbsp;А.А.&nbsp;Каранец", role: "Директор, ООО&nbsp;«Панкара Плюс»" }
 ] %}
 <section class="testimonial" data-figma-node="2443:11198" data-figma-name="Testimonial" aria-roledescription="carousel" aria-label="Благодарственные письма" data-testimonial>
   <div class="testimonial__container">
@@ -85,8 +92,8 @@
           <div class="testimonial__content">
             <a class="testimonial__image" href="{{ l.href }}" target="_blank" rel="noopener" aria-label="Открыть скан письма {{ l.company }} в новой вкладке"{% if not loop.first %} tabindex="-1"{% endif %}>
               <picture class="testimonial__picture">
-                <source type="image/webp" srcset="{{ ('/images/testimonials/letter-' + l.n + '-240.webp') | url }} 240w, {{ ('/images/testimonials/letter-' + l.n + '-480.webp') | url }} 480w" sizes="(min-width: 1000px) 172px, 105px">
-                <img src="{{ ('/images/testimonials/letter-' + l.n + '-480.jpg') | url }}" srcset="{{ ('/images/testimonials/letter-' + l.n + '-240.jpg') | url }} 240w, {{ ('/images/testimonials/letter-' + l.n + '-480.jpg') | url }} 480w" sizes="(min-width: 1000px) 172px, 105px" width="480" height="679" alt="Благодарственное письмо {{ l.company }}" loading="lazy" decoding="async">
+                <source type="image/webp" srcset="{{ ('/images/testimonials/letter-' + (l.img or l.n) + '-240.webp') | url }} 240w, {{ ('/images/testimonials/letter-' + (l.img or l.n) + '-480.webp') | url }} 480w" sizes="(min-width: 1000px) 172px, 105px">
+                <img src="{{ ('/images/testimonials/letter-' + (l.img or l.n) + '-480.jpg') | url }}" srcset="{{ ('/images/testimonials/letter-' + (l.img or l.n) + '-240.jpg') | url }} 240w, {{ ('/images/testimonials/letter-' + (l.img or l.n) + '-480.jpg') | url }} 480w" sizes="(min-width: 1000px) 172px, 105px" width="480" height="679" alt="Благодарственное письмо {{ l.company }}" loading="lazy" decoding="async">
               </picture>
             </a>
             <div class="testimonial__body">
