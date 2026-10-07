@@ -2,33 +2,65 @@
   <div class="stats__intro">
     <div class="stats__title-badge">
       <span class="stats__badge">Кто мы</span>
-      <p class="stats__heading">Опыт, который измеряется.<br>
-        <span class="stats__heading-muted">Мегаватты котельных и годы опыта.</span>
-      </p>
+      {# 07.10 (Никита): второе предложение убрано. Было:
+         <p class="stats__heading">Опыт, который измеряется.<br>
+           <span class="stats__heading-muted">Мегаватты котельных и годы опыта.</span>
+         </p> #}
+      <p class="stats__heading">Опыт, который измеряется.</p>
     </div>
     <a class="btn btn--secondary stats__btn" href="{{ '/about/' | url }}">Подробнее</a>
   </div>
+  {# 07.10 (Никита, правка клиента, Figma 2434:10778): новые ячейки —
+     «Подпись → число → пояснение» одним блоком (Title and supporting
+     text, max-width 300). Четвёртая ячейка — пустая заглушка для сетки
+     2×2 на 768px (в Figma у неё контент с opacity 0), видна только там.
+     Прежняя версия ячеек (подпись+описание, число отдельно):
+       <div class="stats__grid">
+         <div class="stats__cell">
+           <div class="stats__cell-text">
+             <p class="stats__cell-title">Запущено</p>
+             <p class="stats__cell-desc">Суммарная мощность оборудования на&nbsp;объектах наших заказчиков.</p>
+           </div>
+           <p class="stats__cell-value">20 МВт</p>
+         </div>
+         <div class="stats__cell">
+           <div class="stats__cell-text">
+             <p class="stats__cell-title">На сервисе</p>
+             <p class="stats__cell-desc">Оборудование на&nbsp;регулярном сервисном обслуживании TCE.</p>
+           </div>
+           <p class="stats__cell-value">5 МВт</p>
+         </div>
+         <div class="stats__cell">
+           <div class="stats__cell-text">
+             <p class="stats__cell-title">Поставлено</p>
+             <p class="stats__cell-desc">Единиц оборудования поставлено и&nbsp;введено в&nbsp;эксплуатацию.</p>
+           </div>
+           <p class="stats__cell-value">100+</p>
+         </div>
+       </div>
+  #}
   <div class="stats__grid">
     <div class="stats__cell">
       <div class="stats__cell-text">
         <p class="stats__cell-title">Запущено</p>
-        <p class="stats__cell-desc">Суммарная мощность оборудования на&nbsp;объектах наших заказчиков.</p>
+        <p class="stats__cell-value">20 МВт</p>
+        <p class="stats__cell-desc">оборудования</p>
       </div>
-      <p class="stats__cell-value">20 МВт</p>
     </div>
     <div class="stats__cell">
       <div class="stats__cell-text">
         <p class="stats__cell-title">На сервисе</p>
-        <p class="stats__cell-desc">Оборудование на&nbsp;регулярном сервисном обслуживании TCE.</p>
+        <p class="stats__cell-value">5 МВт</p>
+        <p class="stats__cell-desc">оборудования</p>
       </div>
-      <p class="stats__cell-value">5 МВт</p>
     </div>
     <div class="stats__cell">
       <div class="stats__cell-text">
         <p class="stats__cell-title">Поставлено</p>
-        <p class="stats__cell-desc">Единиц оборудования поставлено и&nbsp;введено в&nbsp;эксплуатацию.</p>
+        <p class="stats__cell-value">100+</p>
+        <p class="stats__cell-desc">единиц оборудования</p>
       </div>
-      <p class="stats__cell-value">100+</p>
     </div>
+    <div class="stats__cell stats__cell--placeholder" aria-hidden="true"></div>
   </div>
 </section>
