@@ -9304,8 +9304,20 @@ body.body--header-overlay {
 }
 
 .portfolio-d__viewport {
-  width: 100%;
-  height: 100%;
+  /* 07.10, багфикс (Никита, скрины iPhone и Safari на Mac, /services/):
+     в Safari фото доходило до нижней рамки — не было нижнего паддинга.
+     Причина: размер .portfolio-d__media задан через aspect-ratio, а
+     Safari не считает такую высоту «определённой», и height:100% у
+     viewport/track/slide/img не срабатывал — фото вставало по своей
+     высоте и обрезалось overflow:hidden по рамке. Chrome считает иначе,
+     поэтому там всё было ок. Теперь viewport абсолютно позиционирован
+     внутри .portfolio-d__media (position:relative уже есть) с отступом,
+     равным паддингу (24px, с 768px — 32px), — размер у него всегда
+     определённый, во всех браузерах. Было:
+       width: 100%;
+       height: 100%; */
+  position: absolute;
+  inset: var(--spacing-3xl);
   touch-action: pan-y;
   cursor: grab;
   /* см. комментарий у .portfolio-d__slide img — вторая половина фикса
@@ -9339,6 +9351,11 @@ body.body--header-overlay {
 @media (min-width: 768px) {
   .portfolio-d__track {
     gap: var(--spacing-4xl);
+  }
+
+  /* = padding .portfolio-d__media с 768px, см. багфикс у .portfolio-d__viewport */
+  .portfolio-d__viewport {
+    inset: var(--spacing-4xl);
   }
 }
 
