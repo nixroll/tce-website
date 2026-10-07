@@ -98,7 +98,12 @@ stickyHeader: true
         {# 01.10: юридический адрес убран (он есть на /bank-details/), на его
            месте — склад, со ссылкой на Яндекс Карты, как у офиса. #}
         <p class="contact__card-title">Адрес склада</p>
-        <a class="contact__card-value" href="https://yandex.by/maps/-/CXa4VZy8" target="_blank" rel="noopener">Республика Беларусь, 222827, Минская область, Пуховичский район, 26&nbsp;км трассы&nbsp;М5</a>
+        {# 07.10 (Никита, правка клиента): новый адрес склада и ссылка на
+           Яндекс Карты (Figma 924:9666). Прежний вариант:
+           <a class="contact__card-value" href="https://yandex.by/maps/-/CXa4VZy8" target="_blank" rel="noopener">Республика Беларусь, 222827, Минская область, Пуховичский район, 26&nbsp;км трассы&nbsp;М5</a>
+           В макете «г.Минск» без пробела — здесь как у офиса: «г.&nbsp;Минск»,
+           плюс nbsp после «ул.» по правилу проекта. #}
+        <a class="contact__card-value" href="https://yandex.com/maps/-/CXqQMCoG" target="_blank" rel="noopener">Республика Беларусь, 220091, г.&nbsp;Минск, ул.&nbsp;Матусевича, 33/2-3</a>
       </div>
     </div>
   </div>

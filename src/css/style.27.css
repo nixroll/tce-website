@@ -4691,19 +4691,18 @@ body.body--header-overlay {
    контейнер 330, но сам текст 310 — так адрес встаёт в 3 строки:
    «…222827, / Минская область, Пуховичский район, / 26 км трассы М5»). Телефон и Email
    без ограничения. Порядок карточек: Телефон, Email | Офис, Склад. */
-.contact__cards + .contact__cards .contact__card:nth-child(1) .contact__card-text {
-  max-width: 280px;
-}
-
+/* 07.10 (Никита, правка клиента): склад переехал (новый адрес короче),
+   в Figma 924:9666 у «Title and supporting text» ОБОИХ адресов теперь
+   max-width 320 на всех 5 брейкпоинтах (сверено через use_figma). Офис:
+   2 строки на 1000/1440, 3 строки на 320/390/768 (там карточка уже
+   320). Склад: 2 строки везде. Прежние значения (офис 280 / 290 на
+   1440, склад 310) — в комментарии ниже, чтобы можно было вернуть:
+   .contact__cards + .contact__cards .contact__card:nth-child(1) .contact__card-text { max-width: 280px; }
+   .contact__cards + .contact__cards .contact__card:nth-child(2) .contact__card-text { max-width: 310px; }
+   @media (min-width: 1440px) { ...:nth-child(1) .contact__card-text { max-width: 290px; } } */
+.contact__cards + .contact__cards .contact__card:nth-child(1) .contact__card-text,
 .contact__cards + .contact__cards .contact__card:nth-child(2) .contact__card-text {
-  max-width: 310px;
-}
-
-@media (min-width: 1440px) {
-  .contact__cards + .contact__cards .contact__card:nth-child(1) .contact__card-text {
-    max-width: 290px;
-  }
-
+  max-width: 320px;
 }
 
 .contact__card-title {
