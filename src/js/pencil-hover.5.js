@@ -52,7 +52,11 @@
        строка категории (hover красит встроенную кнопку-шеврон или
        "Смотреть/Скрыть"). */
     '.catalog-seg__item',
-    '.catalog-cat__toggle'
+    '.catalog-cat__toggle',
+    /* 07.10: миниатюра письма в Testimonial (Home) — светлеет рамка и
+       чуть увеличивается письмо; CSS-правило .testimonial__image.is-
+       pencil-hover добавлено тем же коммитом. */
+    '.testimonial__image'
   ].join(', ');
   var els = document.querySelectorAll(selector);
   if (!els.length) return;
