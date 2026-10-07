@@ -51,7 +51,21 @@
    человека, подобранный в Figma вручную) — те же 4 числа (left/top/
    width/height в %), что в Figma-экспорте, одинаковые на всех
    брейкпоинтах (масштабируются вместе с самой рамкой, т.к. заданы в %)
-   — вынесены в модификаторы .team-l__photo-img--<имя> в style.css. #}
+   — вынесены в модификаторы .team-l__photo-img--<имя> в style.css.
+
+   07.10 (Никита, правка клиента): добавлены Валентин (Прораб по
+   сантехсистемам) и Валерий (Инженер по снабжению) — в конец списка,
+   после Марины. Стало 11 человек. Макета Figma под 11 нет — сетка,
+   Stroke и заполнители по той же позиционной логике, что выше.
+   Пересчёт заполнителей под 11:
+     - 320/390 (1 колонка): 0.
+     - 768 (2 колонки): 5 полных рядов + Валерий → 1.
+     - 1000 (3 колонки): 3 полных ряда + Валентин, Валерий → 1.
+     - 1440 (4 колонки): 2 полных ряда + Марина, Валентин, Валерий → 1.
+   Теперь виден только placeholder-1 (с 768px на всех ширинах);
+   placeholder-2/-3 оставлены в разметке, но скрыты (см. style.css).
+   Фото — те же 800×800 PNG с прозрачным фоном; кроп подобран через
+   Pillow-превью под масштаб и отступ головы остальных карточек. #}
 <section class="team-l" data-figma-node="1149:12324" data-figma-name="Team - L">
   <div class="team-l__container">
     <div class="team-l__title-badge">
@@ -171,9 +185,33 @@
           <p class="team-l__role">Юрист</p>
         </div>
       </div>
+      <div class="team-l__card">
+        <div class="team-l__photo">
+          <picture>
+            <source type="image/webp" srcset="{{ '/images/team/valentin-400.webp' | url }} 400w, {{ '/images/team/valentin-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
+            <img class="team-l__photo-img team-l__photo-img--valentin" src="{{ '/images/team/valentin-800.png' | url }}" srcset="{{ '/images/team/valentin-400.png' | url }} 400w, {{ '/images/team/valentin-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Валентин" loading="lazy">
+          </picture>
+        </div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Валентин</p>
+          <p class="team-l__role">Прораб по&nbsp;сантехсистемам</p>
+        </div>
+      </div>
+      <div class="team-l__card">
+        <div class="team-l__photo">
+          <picture>
+            <source type="image/webp" srcset="{{ '/images/team/valeriy-400.webp' | url }} 400w, {{ '/images/team/valeriy-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
+            <img class="team-l__photo-img team-l__photo-img--valeriy" src="{{ '/images/team/valeriy-800.png' | url }}" srcset="{{ '/images/team/valeriy-400.png' | url }} 400w, {{ '/images/team/valeriy-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Валерий" loading="lazy">
+          </picture>
+        </div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Валерий</p>
+          <p class="team-l__role">Инженер по&nbsp;снабжению</p>
+        </div>
+      </div>
       {# Пустые карточки-заполнители (расчёт — см. комментарий вверху
-         файла): видны только с 768 до 999.98px (первая) и с 1440px
-         (все три) — управление видимостью и бордерами по брейкпоинту
+         файла): с 07.10 видна только первая, с 768px; вторая и третья
+         скрыты всегда — управление видимостью и бордерами по брейкпоинту
          целиком в style.css. aria-hidden, т.к. это не реальный контент. #}
       <div class="team-l__card team-l__card--placeholder team-l__card--placeholder-1" aria-hidden="true">
         <div class="team-l__photo"></div>

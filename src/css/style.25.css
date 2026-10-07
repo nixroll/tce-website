@@ -6656,18 +6656,18 @@ body.body--header-overlay {
      - 768: 1 заполнитель (4 полных ряда по 2 + Марина).
      - 1000: 0 заполнителей (9 = 3×3 ровно — раньше было 2).
      - 1440: 3 заполнителя (2 полных ряда по 4 + Марина). */
-@media (min-width: 768px) and (max-width: 999.98px) {
+/* 07.10: стало 11 человек (+ Валентин, Валерий) — на 768, 1000 и 1440
+   нужен ровно 1 заполнитель (расчёт — в team-l.njk). placeholder-1
+   виден с 768px без верхней границы; placeholder-2/-3 больше не
+   показываются (остаются display:none из общего правила выше).
+   Было: placeholder-1 только 768–999.98 + все три с 1440. */
+@media (min-width: 768px) {
   .team-l__card--placeholder-1 {
     display: flex;
   }
 }
 
 @media (min-width: 1440px) {
-  .team-l__card--placeholder-1,
-  .team-l__card--placeholder-2,
-  .team-l__card--placeholder-3 {
-    display: flex;
-  }
 
   /* В Figma у всех трёх заполнителей последней строки нет СВОЕГО
      Stroke вообще — ни слева, ни справа (сверено через
@@ -6797,6 +6797,23 @@ body.body--header-overlay {
   top: -2.09%;
   width: 115%;
   height: 115%;
+}
+
+/* 07.10: Валентин и Валерий — кроп подобран тем же Pillow-превью, что
+   у Сергея/Дениса/Марины: верх головы ~13.5% от рамки, ширина головы
+   ~30%, лицо по центру (как у остальных карточек). width = height. */
+.team-l__photo-img--valentin {
+  left: -6.7%;
+  top: -3%;
+  width: 112.8%;
+  height: 112.8%;
+}
+
+.team-l__photo-img--valeriy {
+  left: -10.3%;
+  top: -3%;
+  width: 118.8%;
+  height: 118.8%;
 }
 
 
