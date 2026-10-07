@@ -34,8 +34,8 @@
 (function () {
   'use strict';
 
-  /* 07.10, вечер (Никита): 15 с на слайд вместо 7 из ТЗ. */
-  var AUTOPLAY_MS = 15000;
+  /* 07.10, вечер (Никита): 10 с на слайд (было 15, до этого 7 из ТЗ). */
+  var AUTOPLAY_MS = 10000;
   var LEAVE_MS = 250;
   var LEAVE_MS_REDUCED = 200;
   var SWIPE_MIN = 40;
