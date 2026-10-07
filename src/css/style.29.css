@@ -8574,6 +8574,63 @@ body.body--header-overlay {
   border-radius: 2px;
 }
 
+/* 07.10 (Никита, правка клиента): НОВАЯ ВЕРСИЯ карточек Trust - L по
+   Figma 2437:10991. Сетка, паддинги и Stroke — правила выше, без
+   изменений. Здесь:
+   1) Отступ превью → текст 24 на ВСЕХ ширинах (раньше 64 / 80 на 1000 /
+      96 на 1440 — между номером и текстом). На 320 в Figma 64, по
+      решению Никиты 24, как на остальных. Явный сброс на 1000/1440 —
+      иначе протекут прежние значения из правил выше.
+   2) .trust-l__card-image — Image card: квадрат, фон #f3f4f6, документ
+      внутри по центру, свои left/top/width/height в % (из Figma, те же
+      на всех брейкпоинтах; width:height совпадает с пропорцией файла,
+      искажений нет).
+   3) .trust-l__card-number больше не выводится (правило выше оставлено
+      для старой версии — см. комментарий в trust-l.njk). */
+.trust-l__card,
+.trust-l__card:nth-child(n) {
+  gap: var(--spacing-3xl);
+}
+
+.trust-l__card-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background-color: #f3f4f6;
+}
+
+.trust-l__card-image picture {
+  display: block;
+}
+
+.trust-l__card-img {
+  position: absolute;
+  display: block;
+  max-width: none;
+}
+
+.trust-l__card-img--montazh {
+  left: 22%;
+  top: 10.16%;
+  width: 56%;
+  height: 79.68%;
+}
+
+.trust-l__card-img--genpodryad {
+  left: 21.64%;
+  top: 10.75%;
+  width: 56.73%;
+  height: 78.5%;
+}
+
+.trust-l__card-img--kachestvo {
+  left: 23.47%;
+  top: 12%;
+  width: 53.05%;
+  height: 76%;
+}
+
 /* Portfolio - D (13.08, /services/, Figma node 1393:9485) — тёмная
    секция-карусель "Наши работы. Готовые объекты." с 4 слайдами
    (фото+текст на каждый). Архитектура (почему один слайд на экран, а

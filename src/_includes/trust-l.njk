@@ -8,17 +8,66 @@
    1 / 1 / 2 / 3 / 3 на 320 / 390 / 768 / 1000 / 1440. На 768 у сетки из
    2 колонок остаётся пустая ячейка — её закрывает placeholder (в макете
    там тоже пустая карточка), чтобы хэйрлайны последней строки не рвались.
-   CSS — в style.css у .trust-l. #}
+   CSS — в style.css у .trust-l.
+
+   07.10 (Никита, правка клиента) — НОВАЯ ВЕРСИЯ по Figma 2437:10991
+   (все 5 брейкпоинтов): вместо номера 01/02/03 у карточки квадратное
+   превью документа (Image card, фон #f3f4f6, документ по центру — свои
+   left/top/width/height в % на каждый, как в Figma), под ним заголовок,
+   описание и «Смотреть». Отступ превью → текст 24 на всех ширинах
+   (на 320 в Figma 64 — по решению Никиты как везде, 24). Заголовок
+   секции «Аттестованы. / Подтверждаем документами.», шрифт Inter
+   Display (в макете слетел на Inter — решение Никиты). Бейдж
+   «Доверие» на всех ширинах (в Figma на 1000–320 ошибочно «Этапы»).
+   Сетка, паддинги и Stroke — без изменений.
+   Превью — экспорт из Figma, наложены на #f3f4f6 (по краям была
+   прозрачность), jpg+webp 400/800 в images/trust/.
+   Ссылки — от Никиты 07.10; соответствие сверено по содержимому PDF
+   (на Google Диске у двух аттестатов перепутаны имена файлов:
+   «…монтаж…pdf» — это генподряд, «…подрядчик…pdf» — монтаж).
+
+   ПРЕЖНЯЯ ВЕРСИЯ (до 07.10), чтобы можно было вернуть:
+   { % set trustDocs = [
+     { number: "01", title: "Буклет", text: "Каталог услуг, оборудования и&nbsp;реализованных проектов&nbsp;компании.", href: "https://drive.google.com/file/d/1tcAVg5yErI38c7CpSV3Qq4qDo_gOJrAJ/view?usp=drive_link", label: "буклет" },
+     { number: "02", title: "Свидетельство", text: "Официальная регистрация товарного знака компании в&nbsp;Беларуси.", href: "https://drive.google.com/file/d/1fqWeYsn5E_t-aeGYLC5dvBQpl3slPbtt/view?usp=drive_link", label: "свидетельство" },
+     { number: "03", title: "Сертификат", text: "Подтверждение регистрации и&nbsp;прав на&nbsp;домен&nbsp;thermoconcept.by.", href: "https://drive.google.com/file/d/1ruMQm0-lgcgqSWyKzmL9KzVfPWDh0Hs7/view?usp=drive_link", label: "сертификат" }
+   ] % }
+   <section class="trust-l" data-figma-node="2362:7041" data-figma-name="Trust - L">
+     <div class="trust-l__container">
+       <div class="trust-l__title-badge">
+         <span class="trust-l__badge">Доверие</span>
+         <h2 class="trust-l__heading">Всё официально.<br>
+           <span class="trust-l__heading-muted">Подтверждаем документами.</span>
+         </h2>
+       </div>
+     </div>
+     <div class="trust-l__grid">
+       { %- for d in trustDocs % }
+       <div class="trust-l__card">
+         <p class="trust-l__card-number">{ { d.number } }</p>
+         <div class="trust-l__card-content">
+           <div class="trust-l__card-text-wrap">
+             <h3 class="trust-l__card-title">{ { d.title } }</h3>
+             <p class="trust-l__card-text">{ { d.text | safe } }</p>
+           </div>
+           <a class="trust-l__card-link" href="{ { d.href } }" target="_blank" rel="noopener" aria-label="Смотреть { { d.label } } (откроется в новой вкладке)">Смотреть</a>
+         </div>
+       </div>
+       { %- endfor % }
+       <div class="trust-l__card trust-l__card--placeholder" aria-hidden="true"></div>
+     </div>
+   </section>
+#}
 {% set trustDocs = [
-  { number: "01", title: "Буклет", text: "Каталог услуг, оборудования и&nbsp;реализованных проектов&nbsp;компании.", href: "https://drive.google.com/file/d/1tcAVg5yErI38c7CpSV3Qq4qDo_gOJrAJ/view?usp=drive_link", label: "буклет" },
-  { number: "02", title: "Свидетельство", text: "Официальная регистрация товарного знака компании в&nbsp;Беларуси.", href: "https://drive.google.com/file/d/1fqWeYsn5E_t-aeGYLC5dvBQpl3slPbtt/view?usp=drive_link", label: "свидетельство" },
-  { number: "03", title: "Сертификат", text: "Подтверждение регистрации и&nbsp;прав на&nbsp;домен&nbsp;thermoconcept.by.", href: "https://drive.google.com/file/d/1ruMQm0-lgcgqSWyKzmL9KzVfPWDh0Hs7/view?usp=drive_link", label: "сертификат" }
+  { slug: "montazh", title: "Аттестат на&nbsp;монтаж", text: "Монтаж инженерных систем зданий и&nbsp;наружных сетей.", href: "https://drive.google.com/file/d/1J4MOpJEHytHc5OE6mt5GNo0aDuaYinLX/view?usp=drive_link", label: "аттестат на монтаж", w: 800, h: 1138 },
+  { slug: "genpodryad", title: "Аттестат генподрядчика", text: "Генподряд на&nbsp;объектах 4-го класса сложности.", href: "https://drive.google.com/file/d/1_9aT2xSLHjYfBUR4626o9q0zg79F69Uz/view?usp=drive_link", label: "аттестат генподрядчика", w: 800, h: 1107 },
+  { slug: "kachestvo", title: "Свидетельство качества", text: "Система контроля качества монтажа соответствует ТКП.", href: "https://drive.google.com/file/d/1NzbTiNmkdx1eoy19j9d-o1SwyJ4jUe25/view?usp=drive_link", label: "свидетельство качества", w: 800, h: 1146 }
 ] %}
-<section class="trust-l" data-figma-node="2362:7041" data-figma-name="Trust - L">
+<section class="trust-l" data-figma-node="2437:10991" data-figma-name="Trust - L">
   <div class="trust-l__container">
     <div class="trust-l__title-badge">
       <span class="trust-l__badge">Доверие</span>
-      <h2 class="trust-l__heading">Всё официально.<br>
+      <h2 class="trust-l__heading">Аттестованы.<br>
         <span class="trust-l__heading-muted">Подтверждаем документами.</span>
       </h2>
     </div>
@@ -26,10 +75,15 @@
   <div class="trust-l__grid">
     {%- for d in trustDocs %}
     <div class="trust-l__card">
-      <p class="trust-l__card-number">{{ d.number }}</p>
+      <div class="trust-l__card-image">
+        <picture>
+          <source type="image/webp" srcset="{{ ('/images/trust/doc-' + d.slug + '-400.webp') | url }} 400w, {{ ('/images/trust/doc-' + d.slug + '-800.webp') | url }} 800w" sizes="(min-width: 1440px) 225px, (min-width: 1000px) 145px, (min-width: 768px) 170px, 56vw">
+          <img class="trust-l__card-img trust-l__card-img--{{ d.slug }}" src="{{ ('/images/trust/doc-' + d.slug + '-800.jpg') | url }}" srcset="{{ ('/images/trust/doc-' + d.slug + '-400.jpg') | url }} 400w, {{ ('/images/trust/doc-' + d.slug + '-800.jpg') | url }} 800w" sizes="(min-width: 1440px) 225px, (min-width: 1000px) 145px, (min-width: 768px) 170px, 56vw" width="{{ d.w }}" height="{{ d.h }}" alt="{{ d.title | replace('&nbsp;', ' ') }}" loading="lazy">
+        </picture>
+      </div>
       <div class="trust-l__card-content">
         <div class="trust-l__card-text-wrap">
-          <h3 class="trust-l__card-title">{{ d.title }}</h3>
+          <h3 class="trust-l__card-title">{{ d.title | safe }}</h3>
           <p class="trust-l__card-text">{{ d.text | safe }}</p>
         </div>
         <a class="trust-l__card-link" href="{{ d.href }}" target="_blank" rel="noopener" aria-label="Смотреть {{ d.label }} (откроется в новой вкладке)">Смотреть</a>
