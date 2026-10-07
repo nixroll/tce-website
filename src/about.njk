@@ -101,7 +101,11 @@ tailDividerVariant: light
 {% set galleryLBadge = "Изнутри" %}
 {% set galleryLHeadingAccent = "Наш альбом." %}
 {% set galleryLHeadingMuted = "Загляните в&nbsp;наши рабочие будни." %}
+{# 07.10: новый вид секции — фото команды над каруселью, кнопки внизу
+   (см. gallery-l.njk). Убрать эту строку = вернуть прежний вид. #}
+{% set galleryLTeamPhoto = true %}
 {% include "gallery-l.njk" %}
+{% set galleryLTeamPhoto = false %}
 {% set galleryLSet = "" %}
 {% set galleryLBadge = "" %}
 {% set galleryLHeadingAccent = "" %}

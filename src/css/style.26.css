@@ -7431,6 +7431,107 @@ body.body--header-overlay {
   }
 }
 
+/* 07.10 (Никита, правка клиента): НОВЫЙ ВИД Gallery - L — только /about/,
+   модификатор .gallery-l--team-photo (параметр galleryLTeamPhoto, см.
+   gallery-l.njk). Всё ниже — ДОБАВКИ поверх правил выше; без
+   модификатора (26 страниц брендов) секция выглядит как раньше.
+   Сверено по Figma 1300:2567 на всех 5 брейкпоинтах.
+
+   1) .gallery-l__photo — контейнер со статичным фото над каруселью.
+      Фон secondary, Stroke сверху (снизу линию даёт border-top самой
+      карусели — двойной линии нет), по бокам — с 390px. На 320 в Figma
+      у него ещё и боковые линии, но у карусели и всех секций на 320
+      их нет — по решению Никиты убраны (07.10).
+      Паддинг 24 (320/390) / 32 (с 768). Фото: на 320/390 — пропорция
+      270:197, на 768/1000/1440 — фиксированная высота 350/460/620
+      (между брейкпоинтами ширина растёт, кроп по центру, cover). */
+.gallery-l__photo {
+  width: 100%;
+  max-width: 1392px;
+  background-color: var(--background-secondary);
+  border-top: 1px solid var(--border-primary);
+  padding: var(--spacing-3xl);
+}
+
+@media (min-width: 390px) {
+  .gallery-l__photo {
+    border-left: 1px solid var(--border-primary);
+    border-right: 1px solid var(--border-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .gallery-l__photo {
+    padding: var(--spacing-4xl);
+  }
+}
+
+.gallery-l__photo picture {
+  display: block;
+}
+
+.gallery-l__photo-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 270 / 197;
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (min-width: 768px) {
+  .gallery-l__photo-img {
+    height: 350px;
+    aspect-ratio: auto;
+  }
+}
+
+@media (min-width: 1000px) {
+  .gallery-l__photo-img {
+    height: 460px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .gallery-l__photo-img {
+    height: 620px;
+  }
+}
+
+/* 2) Кнопки на 768/1000/1440 — внизу, как на 320/390: в intro скрыты,
+      нижний контейнер виден, паддинг у него 32 со всех сторон (на
+      320/390 остаётся 32/24 из базового правила). У карусели появляется
+      нижний Stroke (в базовом виде с 768 он снят).
+   3) Заголовок: max-width 520 на 768, 500 на 1000 (в базовом виде 340
+      на 320–1000), на 1440 — без ограничения, как и было. Явные
+      диапазоны, чтобы правило 1000px не «протекло» на 1440. */
+@media (min-width: 768px) {
+  .gallery-l--team-photo .gallery-l__intro .gallery-l__buttons {
+    display: none;
+  }
+
+  .gallery-l--team-photo .gallery-l__gallery {
+    border-bottom: 1px solid var(--border-primary);
+  }
+
+  .gallery-l--team-photo .gallery-l__bottom {
+    display: flex;
+    padding: var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 999.98px) {
+  .gallery-l--team-photo .gallery-l__title-badge {
+    max-width: 520px;
+  }
+}
+
+@media (min-width: 1000px) and (max-width: 1439.98px) {
+  .gallery-l--team-photo .gallery-l__title-badge {
+    max-width: 500px;
+  }
+}
+
 /* Features - L (11.08, node 1260:17615, /about/, между Hero - L и
    Team - L, окружена Divider - L с обеих сторон — см. about.njk и
    Figma Layout node 1130:8714). Локальная переопределёнка токенов —

@@ -40,7 +40,26 @@
 
    Фото — реальные рабочие фотографии, поэтому тот же формат, что у
    Projects - L (jpg+webp, 400/700/1000w), а не докс-л-формат
-   (прозрачный PNG 400×400). Имена файлов и alt'ы — в galleries.js. #}
+   (прозрачный PNG 400×400). Имена файлов и alt'ы — в galleries.js.
+
+   07.10 (Никита, правка клиента) — НОВЫЙ ВИД секции, только на /about/.
+   Включается параметром galleryLTeamPhoto (true) → у секции появляется
+   модификатор .gallery-l--team-photo. Сверено по Figma 1300:2567 на
+   всех 5 брейкпоинтах:
+     1) Над каруселью — новый контейнер .gallery-l__photo с одним
+        статичным фото команды (Figma "Container": 1440 2420:10087,
+        1000 2420:10090, 768 2420:10095, 390 2421:10100, 320 2421:10105).
+        Для каждого брейкпоинта — свой файл (images/about-team/), их
+        подготовил Никита; высота 620/460/350 на 1440/1000/768,
+        на 390/320 — пропорция 270:197.
+     2) На 768/1000/1440 кнопки уходят из intro вниз, в .gallery-l__bottom
+        (как уже было на 320/390); у карусели появляется нижний Stroke.
+     3) Заголовок шире: max-width 520 на 768, 500 на 1000 (было 340).
+   Карусель (разметка, gallery.3.js) не менялась.
+   СТАРЫЙ ВИД НЕ УДАЛЁН: без параметра секция выводится ровно как до
+   07.10 (так она и стоит на 26 страницах брендов). Чтобы вернуть
+   /about/ к прежнему виду, достаточно убрать строку
+   { % set galleryLTeamPhoto = true % } в about.njk. #}
 {% set gallerySet = galleries[galleryLSet] %}
 {% macro navButtons() %}
   <div class="gallery-l__buttons">
@@ -85,7 +104,7 @@
     </picture>
   </div>
 {% endmacro %}
-<section class="gallery-l" data-figma-node="{{ galleryLNode or '1300:2567' }}" data-figma-name="{{ galleryLName or 'Gallery - L' }}">
+<section class="gallery-l{% if galleryLTeamPhoto %} gallery-l--team-photo{% endif %}" data-figma-node="{{ galleryLNode or '1300:2567' }}" data-figma-name="{{ galleryLName or 'Gallery - L' }}">
   <div class="gallery-l__intro">
     <div class="gallery-l__title-badge">
       <span class="gallery-l__badge">{{ galleryLBadge }}</span>
@@ -95,6 +114,24 @@
     </div>
     {{ navButtons() }}
   </div>
+  {%- if galleryLTeamPhoto %}
+  {#- 07.10: статичное фото команды (см. комментарий вверху файла). Файл
+      свой на каждом брейкпоинте (media), на 320/390 — ещё и 2 ширины. #}
+  <div class="gallery-l__photo" data-figma-name="Container">
+    <picture>
+      <source media="(min-width: 1440px)" type="image/webp" srcset="{{ '/images/about-team/team-1440-1328.webp' | url }}">
+      <source media="(min-width: 1440px)" srcset="{{ '/images/about-team/team-1440-1328.jpg' | url }}">
+      <source media="(min-width: 1000px)" type="image/webp" srcset="{{ '/images/about-team/team-1000-1332.webp' | url }}">
+      <source media="(min-width: 1000px)" srcset="{{ '/images/about-team/team-1000-1332.jpg' | url }}">
+      <source media="(min-width: 768px)" type="image/webp" srcset="{{ '/images/about-team/team-768-1312.webp' | url }}">
+      <source media="(min-width: 768px)" srcset="{{ '/images/about-team/team-768-1312.jpg' | url }}">
+      <source media="(min-width: 390px)" type="image/webp" srcset="{{ '/images/about-team/team-390-604.webp' | url }} 604w, {{ '/images/about-team/team-390-1208.webp' | url }} 1208w" sizes="calc(100vw - 90px)">
+      <source media="(min-width: 390px)" srcset="{{ '/images/about-team/team-390-604.jpg' | url }} 604w, {{ '/images/about-team/team-390-1208.jpg' | url }} 1208w" sizes="calc(100vw - 90px)">
+      <source type="image/webp" srcset="{{ '/images/about-team/team-320-544.webp' | url }} 544w, {{ '/images/about-team/team-320-1088.webp' | url }} 1088w" sizes="calc(100vw - 48px)">
+      <img class="gallery-l__photo-img" src="{{ '/images/about-team/team-320-1088.jpg' | url }}" srcset="{{ '/images/about-team/team-320-544.jpg' | url }} 544w, {{ '/images/about-team/team-320-1088.jpg' | url }} 1088w" sizes="calc(100vw - 48px)" width="1088" height="794" alt="Команда TCE на объекте" loading="lazy">
+    </picture>
+  </div>
+  {%- endif %}
   <div class="gallery-l__gallery" data-gallery>
     <div class="gallery-l__viewport">
       <div class="gallery-l__track" data-gallery-track>
