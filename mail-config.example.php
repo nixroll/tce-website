@@ -18,6 +18,8 @@ define('MAIL_SMTP_HOST', 'smtp.hoster.by');
 define('MAIL_SMTP_PORT', 465);
 define('MAIL_SMTP_USER', 'info@thermoconcept.by');
 define('MAIL_SMTP_PASS', 'ВПИШИТЕ_СЮДА_РЕАЛЬНЫЙ_ПАРОЛЬ_ЯЩИКА');
+/* MAIL_TO — один адрес или несколько через запятую (с 25.10), например:
+ * define('MAIL_TO', 'a@example.by, b@example.by'); */
 define('MAIL_TO', 'thermo.concept.engin@gmail.com');
 
 /* Необязательно: уведомление в Telegram-бот при заявке (см.

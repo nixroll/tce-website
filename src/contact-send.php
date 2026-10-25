@@ -58,7 +58,11 @@ if (!file_exists($configPath)) {
 }
 require $configPath;
 /* Ожидаются константы: MAIL_SMTP_HOST, MAIL_SMTP_PORT, MAIL_SMTP_USER,
- * MAIL_SMTP_PASS, MAIL_TO — см. mail-config.example.php. */
+ * MAIL_SMTP_PASS, MAIL_TO — см. mail-config.example.php.
+ * 25.10: MAIL_TO может содержать несколько адресов через запятую
+ * (или точку с запятой) — письмо уходит одним сообщением всем сразу,
+ * см. parse_recipients() и smtp_send_mail() ниже. Один адрес, как
+ * раньше, тоже работает. */
 
 /* Honeypot: скрытое поле "website" в form-l.njk (visually-hidden +
  * tabindex="-1" + autocomplete="off") — живой посетитель его не видит
@@ -246,7 +250,38 @@ function telegram_notify($botToken, $chatId, $text) {
  * понятный JSON-ответ клиенту, не раскрывая деталей наружу (сама
  * причина уходит в error_log — искать в логах хостинга).
  */
+/**
+ * 25.10: разбирает MAIL_TO в список адресов — "a@x.by, b@y.by; c@z.com"
+ * → ['a@x.by', 'b@y.by', 'c@z.com']. Пробелы по краям срезаются,
+ * невалидные адреса и дубли (без учёта регистра) отбрасываются с
+ * записью в error_log, чтобы опечатка в одном адресе не ломала
+ * отправку остальным.
+ */
+function parse_recipients($value) {
+    $result = [];
+    $seen = [];
+    foreach (preg_split('/[,;]+/', (string) $value) as $part) {
+        $addr = trim($part);
+        if ($addr === '') continue;
+        if (!filter_var($addr, FILTER_VALIDATE_EMAIL)) {
+            error_log('contact-send.php: skipped invalid MAIL_TO address: ' . $addr);
+            continue;
+        }
+        $key = strtolower($addr);
+        if (isset($seen[$key])) continue;
+        $seen[$key] = true;
+        $result[] = $addr;
+    }
+    return $result;
+}
+
 function smtp_send_mail($host, $port, $username, $password, $toEmail, $fromName, $fromEmail, $subject, $body, $replyToEmail, $replyToName) {
+    /* 25.10: $toEmail — строка с одним или несколькими адресами через
+     * запятую (MAIL_TO) или уже готовый массив адресов. */
+    $toList = is_array($toEmail) ? $toEmail : parse_recipients($toEmail);
+    if (count($toList) === 0) {
+        throw new Exception('no_valid_recipients');
+    }
     $timeout = 15;
     $socket = @fsockopen('ssl://' . $host, $port, $errno, $errstr, $timeout);
     if (!$socket) {
@@ -255,6 +290,9 @@ function smtp_send_mail($host, $port, $username, $password, $toEmail, $fromName,
     stream_set_timeout($socket, $timeout);
 
     $expect = function ($expectedCode) use ($socket) {
+        /* 25.10: $expectedCode — код или массив допустимых кодов
+         * (для RCPT TO подходят и 250, и 251). */
+        $allowed = is_array($expectedCode) ? $expectedCode : [$expectedCode];
         $response = '';
         while ($line = fgets($socket, 515)) {
             $response .= $line;
@@ -263,7 +301,7 @@ function smtp_send_mail($host, $port, $username, $password, $toEmail, $fromName,
             if (isset($line[3]) && $line[3] === ' ') break;
         }
         $code = (int) substr($response, 0, 3);
-        if ($code !== $expectedCode) {
+        if (!in_array($code, $allowed, true)) {
             throw new Exception('unexpected_response: ' . trim($response));
         }
         return $response;
@@ -287,15 +325,34 @@ function smtp_send_mail($host, $port, $username, $password, $toEmail, $fromName,
     $send('MAIL FROM:<' . $fromEmail . '>');
     $expect(250);
 
-    $send('RCPT TO:<' . $toEmail . '>');
-    $expect(250);
+    /* 25.10: RCPT TO на каждый адрес. Если сервер отклонит один из
+     * адресов, остальные всё равно получат письмо (отказ пишем в
+     * error_log); исключение — только если не принят ни один.
+     * Было (один адрес):
+     *   $send('RCPT TO:<' . $toEmail . '>');
+     *   $expect(250); */
+    $accepted = [];
+    foreach ($toList as $rcpt) {
+        $send('RCPT TO:<' . $rcpt . '>');
+        try {
+            $expect([250, 251]);
+            $accepted[] = $rcpt;
+        } catch (Exception $e) {
+            error_log('contact-send.php: recipient rejected ' . $rcpt . ': ' . $e->getMessage());
+        }
+    }
+    if (count($accepted) === 0) {
+        $send('QUIT');
+        fclose($socket);
+        throw new Exception('all_recipients_rejected');
+    }
 
     $send('DATA');
     $expect(354);
 
     $headers = [
         'From: =?UTF-8?B?' . base64_encode($fromName) . '?= <' . $fromEmail . '>',
-        'To: <' . $toEmail . '>',
+        'To: ' . implode(', ', array_map(function ($a) { return '<' . $a . '>'; }, $accepted)),
         'Reply-To: =?UTF-8?B?' . base64_encode($replyToName) . '?= <' . $replyToEmail . '>',
         'Subject: =?UTF-8?B?' . base64_encode($subject) . '?=',
         'MIME-Version: 1.0',
