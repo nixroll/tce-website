@@ -1,0 +1,36 @@
+---
+layout: base.njk
+stickyHeader: true
+headerTheme: light
+hasContactForm: true
+customSections: true
+noindex: true
+eleventyExcludeFromCollections: true
+catalogView: products2
+p2Level: category
+pagination:
+  data: products2.categories
+  size: 1
+  alias: p2cat
+permalink: "/products2/{{ p2cat.slug }}/"
+eleventyComputed:
+  title: "{{ p2cat.name }} (тест) - Thermo Concept Engineering"
+  description: "{{ p2cat.name }}: бренды оборудования от Thermo Concept Engineering — подбор, поставка напрямую от производителя, монтаж и сервис."
+---
+{# 25.10: второй уровень тестовой ветки — бренды одной категории
+   (см. catalog2-l.njk, режим "category"). Переключателя
+   Категории/Бренды здесь нет — по задаче он только на первом уровне
+   (а на тестовом первом уровне его пока нет вовсе). #}
+{% include "catalog2-l.njk" %}
+{% include "other-products-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "form-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "cta.njk" %}
+{% set dividerVariant = "edge-secondary" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}

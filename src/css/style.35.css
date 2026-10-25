@@ -10034,6 +10034,28 @@ body.body--header-overlay {
   padding-bottom: 4px;
 }
 
+/* 25.10: тестовая ветка /products2/ (catalog2-l.njk) — у карточек
+   категорий вместо логотипа фото (первое фото галереи бренда). Та же
+   рамка .catalog-l__cover (пропорции 384/300, скругление, фон), фото
+   заполняет её целиком с обрезкой по краям. */
+.catalog-l__cover--photo {
+  position: relative;
+}
+
+.catalog-l__cover--photo picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.catalog-l__cover-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
 /* Размеры логотипов — фиксированные и ОДИНАКОВЫЕ на всех 5
    брейкпоинтах (в макете меняется только сам Cover). Значения взяты
    из Figma как есть, включая дробные. */

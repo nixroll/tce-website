@@ -1,0 +1,31 @@
+---
+title: Продукция (тест) - Thermo Concept Engineering
+description: "Оборудование для котельных по категориям: паровые и водогрейные котлы, горелки, насосы, водоподготовка, водонагреватели и расширительные баки."
+permalink: /products2/
+# 25.10: тестовая ветка «Продукции» (см. src/_data/products2.js). Только
+# на тестовом сайте; не в поиске и не в карте сайта.
+noindex: true
+eleventyExcludeFromCollections: true
+catalogView: products2
+p2Level: categories
+layout: base.njk
+stickyHeader: true
+headerTheme: light
+hasContactForm: true
+customSections: true
+---
+{# Порядок секций — как у /products/ (catalog.njk), вместо catalog-l.njk
+   своя копия catalog2-l.njk. #}
+{% include "catalog2-l.njk" %}
+{% include "other-products-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "form-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "cta.njk" %}
+{% set dividerVariant = "edge-secondary" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}

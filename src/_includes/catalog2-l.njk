@@ -1,0 +1,103 @@
+{# 25.10 (Никита, правка клиента). Тестовая ветка раздела «Продукция»
+   (/products2/, только на тестовом сайте — см. src/_data/products2.js и
+   eleventy.config.js). Текущий раздел /products/ и его catalog-l.njk НЕ
+   тронуты: здесь своя копия шапки и сетки на тех же классах
+   .catalog-l__*, поэтому сетка, Stroke, карточки и кнопка «Смотреть»
+   выглядят 1:1 как в виде «Бренды».
+
+   Два режима (p2Level):
+     - "categories" (/products2/): шапка «Продукция» БЕЗ переключателя
+       Категории/Бренды; карточки категорий — обложка-фото (первое фото
+       галереи бренда, см. products2.js), название, «N брендов»,
+       «Смотреть» → /products2/<категория>/;
+     - "category" (/products2/<категория>/): вместо бейджа — ссылка
+       «← Продукция» (как на странице бренда), заголовок — название
+       категории; карточки брендов с логотипами, «Смотреть» →
+       /products2/<категория>/<бренд>/.
+   Карточки-заполнители для ровной последней строки — тот же расчёт,
+   что в catalog-l.njk (2 колонки на 768, 3 с 1000). #}
+{% macro placeholders(n) %}
+  {%- set ph2 = n % 2 %}
+  {%- set ph3 = (3 - n % 3) % 3 %}
+  {%- set phMax = ph2 if ph2 > ph3 else ph3 %}
+  {%- for i in range(0, phMax) %}
+  <div class="catalog-l__card catalog-l__card--placeholder{% if i < ph2 %} catalog-l__card--ph-2col{% endif %}{% if i < ph3 %} catalog-l__card--ph-3col{% endif %}" aria-hidden="true"></div>
+  {%- endfor %}
+{% endmacro %}
+{% macro btn(href) %}
+      <a class="catalog-l__btn" href="{{ href | url }}">
+        Смотреть
+        <svg class="catalog-l__btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M3.33331 10H16.6666M11.6666 15L16.6666 10L11.6666 5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+{% endmacro %}
+<section class="catalog-l catalog-l--p2" data-figma-name="Catalog - L (products2)">
+  <div class="catalog-l__container">
+    <div class="catalog-l__title-badge">
+      {%- if p2Level == "category" %}
+      <a class="brand-hero__back" href="{{ '/products2/' | url }}">←&nbsp;Продукция</a>
+      <h1 class="catalog-l__heading">{{ p2cat.name }}.<br>
+        <span class="catalog-l__heading-muted">{{ p2cat.note }}.</span>
+      </h1>
+      {%- else %}
+      <span class="catalog-l__badge">Продукция</span>
+      <h1 class="catalog-l__heading">Мировые производители.<br>
+        <span class="catalog-l__heading-muted">Напрямую.</span>
+      </h1>
+      {%- endif %}
+    </div>
+  </div>
+  <div class="catalog-l__grid">
+    {%- if p2Level == "category" %}
+    {%- for b in p2cat.brands %}
+    {%- set logo = b.logo or b.slug %}
+    <div class="catalog-l__card">
+      <div class="catalog-l__cover catalog-l__cover--{{ logo }}">
+        <img
+          class="catalog-l__logo catalog-l__logo--{{ logo }}"
+          src="{{ ('/images/catalog-l/' + logo + '.svg') | url }}"
+          alt="{{ b.name }}"
+          loading="lazy">
+      </div>
+      <div class="catalog-l__content">
+        <div class="catalog-l__text">
+          <p class="catalog-l__card-title">{{ b.name }}</p>
+          <p class="catalog-l__card-desc">{{ b.tags | safe }}</p>
+        </div>
+        {{ btn('/products2/' + p2cat.slug + '/' + b.slug + '/') }}
+      </div>
+    </div>
+    {%- endfor %}
+    {{ placeholders(p2cat.brands.length) }}
+    {%- else %}
+    {%- for cat in products2.categories %}
+    <div class="catalog-l__card">
+      <div class="catalog-l__cover catalog-l__cover--photo">
+        <picture>
+          <source
+            type="image/webp"
+            srcset="{% for w in cat.cover.widths %}{{ ('/images/' + cat.cover.dir + '/photo-1-' + w + '.webp') | url }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}"
+            sizes="(min-width: 1440px) 420px, (min-width: 1000px) 33vw, (min-width: 768px) 50vw, 100vw">
+          <img
+            class="catalog-l__cover-img"
+            src="{{ ('/images/' + cat.cover.dir + '/photo-1-' + cat.cover.maxW + '.jpg') | url }}"
+            srcset="{% for w in cat.cover.widths %}{{ ('/images/' + cat.cover.dir + '/photo-1-' + w + '.jpg') | url }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}"
+            sizes="(min-width: 1440px) 420px, (min-width: 1000px) 33vw, (min-width: 768px) 50vw, 100vw"
+            alt="{{ cat.cover.alt }}"
+            loading="lazy">
+        </picture>
+      </div>
+      <div class="catalog-l__content">
+        <div class="catalog-l__text">
+          <p class="catalog-l__card-title">{{ cat.name }}</p>
+          <p class="catalog-l__card-desc">{{ cat.note }}</p>
+        </div>
+        {{ btn('/products2/' + cat.slug + '/') }}
+      </div>
+    </div>
+    {%- endfor %}
+    {{ placeholders(products2.categories.length) }}
+    {%- endif %}
+  </div>
+</section>

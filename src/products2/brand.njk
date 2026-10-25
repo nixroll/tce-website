@@ -1,0 +1,60 @@
+---
+layout: base.njk
+stickyHeader: true
+headerTheme: light
+hasContactForm: true
+hasGallery: true
+hasParallax: true
+customSections: true
+noindex: true
+eleventyExcludeFromCollections: true
+catalogView: products2
+pagination:
+  data: products2.pages
+  size: 1
+  alias: p2page
+permalink: "/products2/{{ p2page.cat.slug }}/{{ p2page.brand.slug }}/"
+eleventyComputed:
+  title: "{{ p2page.brand.name }} (тест) - Thermo Concept Engineering"
+  description: "{{ p2page.brand.name }} — оборудование от Thermo Concept Engineering: подбор, поставка напрямую от производителя, монтаж, пусконаладка и сервис."
+---
+{# 25.10: третий уровень тестовой ветки — страница бренда внутри
+   категории (/products2/<категория>/<бренд>/). Содержимое 1:1 как у
+   боевой страницы бренда (src/catalog-brand.njk), отличие одно: ссылка
+   над заголовком ведёт не в /products/, а обратно в категорию —
+   «← Паровые котлы» (brandHeroBackHref/Label, см. brand-hero.njk). #}
+{% set brand = p2page.brand %}
+{% set brandHeroBackHref = "/products2/" + p2page.cat.slug + "/" %}
+{% set brandHeroBackLabel = p2page.cat.name %}
+{% include "brand-hero.njk" %}
+{% set brandHeroBackHref = "" %}
+{% set brandHeroBackLabel = "" %}
+{% include "brand-catalog.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% set brandGallerySet = "brand-" + brand.slug %}
+{% set galleryLSet = brandGallerySet if galleries[brandGallerySet] else "brand-placeholder" %}
+{% set galleryLBadge = "Галерея" %}
+{% set galleryLHeadingAccent = "В деталях." %}
+{% set galleryLHeadingMuted = "Продукция и&nbsp;объекты." %}
+{% set galleryLNode = "1555:25573" %}
+{% set galleryLName = "Brand Gallery - L" %}
+{% include "gallery-l.njk" %}
+{% set galleryLSet = "" %}
+{% set galleryLBadge = "" %}
+{% set galleryLHeadingAccent = "" %}
+{% set galleryLHeadingMuted = "" %}
+{% set galleryLNode = "" %}
+{% set galleryLName = "" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "form-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "cta.njk" %}
+{% set dividerVariant = "edge-secondary" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
