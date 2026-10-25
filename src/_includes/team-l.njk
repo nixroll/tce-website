@@ -65,7 +65,21 @@
    Теперь виден только placeholder-1 (с 768px на всех ширинах);
    placeholder-2/-3 оставлены в разметке, но скрыты (см. style.css).
    Фото — те же 800×800 PNG с прозрачным фоном; кроп подобран через
-   Pillow-превью под масштаб и отступ головы остальных карточек. #}
+   Pillow-превью под масштаб и отступ головы остальных карточек.
+
+   25.10 (Никита, правка клиента): +3 человека, стало 14. Порядок по
+   иерархии: Дмитрий (зам. директора по продажам) — к остальным замам,
+   сразу после Никиты; Олег (производитель работ санитарно-технических
+   систем и оборудования) и Олег (производитель работ по монтажу систем
+   автоматизации) — к прорабам, сразу после Валентина, перед снабжением.
+   Должности — в той же короткой форме, что у остальных карточек.
+   Пересчёт заполнителей под 14:
+     - 320/390 (1 колонка): 0.
+     - 768 (2 колонки): 7 полных рядов → 0.
+     - 1000 (3 колонки): 4 полных ряда + 2 → 1.
+     - 1440 (4 колонки): 3 полных ряда + 2 → 2.
+   Видны placeholder-1 (с 1000px) и placeholder-2 (с 1440px),
+   placeholder-3 скрыт (см. style.css). #}
 <section class="team-l" data-figma-node="1149:12324" data-figma-name="Team - L">
   <div class="team-l__container">
     <div class="team-l__title-badge">
@@ -111,6 +125,18 @@
         <div class="team-l__meta">
           <p class="team-l__name">Никита</p>
           <p class="team-l__role">Зам. директора, гл. инженер</p>
+        </div>
+      </div>
+      <div class="team-l__card">
+        <div class="team-l__photo">
+          <picture>
+            <source type="image/webp" srcset="{{ '/images/team/dmitriy-400.webp' | url }} 400w, {{ '/images/team/dmitriy-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
+            <img class="team-l__photo-img team-l__photo-img--dmitriy" src="{{ '/images/team/dmitriy-800.png' | url }}" srcset="{{ '/images/team/dmitriy-400.png' | url }} 400w, {{ '/images/team/dmitriy-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Дмитрий" loading="lazy">
+          </picture>
+        </div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Дмитрий</p>
+          <p class="team-l__role">Зам. директора по&nbsp;продажам</p>
         </div>
       </div>
       <div class="team-l__card">
@@ -200,6 +226,30 @@
       <div class="team-l__card">
         <div class="team-l__photo">
           <picture>
+            <source type="image/webp" srcset="{{ '/images/team/oleg-santeh-400.webp' | url }} 400w, {{ '/images/team/oleg-santeh-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
+            <img class="team-l__photo-img team-l__photo-img--oleg-santeh" src="{{ '/images/team/oleg-santeh-800.png' | url }}" srcset="{{ '/images/team/oleg-santeh-400.png' | url }} 400w, {{ '/images/team/oleg-santeh-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Олег" loading="lazy">
+          </picture>
+        </div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Олег</p>
+          <p class="team-l__role">Прораб по&nbsp;сантехсистемам</p>
+        </div>
+      </div>
+      <div class="team-l__card">
+        <div class="team-l__photo">
+          <picture>
+            <source type="image/webp" srcset="{{ '/images/team/oleg-avtomatika-400.webp' | url }} 400w, {{ '/images/team/oleg-avtomatika-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
+            <img class="team-l__photo-img team-l__photo-img--oleg-avtomatika" src="{{ '/images/team/oleg-avtomatika-800.png' | url }}" srcset="{{ '/images/team/oleg-avtomatika-400.png' | url }} 400w, {{ '/images/team/oleg-avtomatika-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Олег" loading="lazy">
+          </picture>
+        </div>
+        <div class="team-l__meta">
+          <p class="team-l__name">Олег</p>
+          <p class="team-l__role">Прораб по&nbsp;автоматизации</p>
+        </div>
+      </div>
+      <div class="team-l__card">
+        <div class="team-l__photo">
+          <picture>
             <source type="image/webp" srcset="{{ '/images/team/valeriy-400.webp' | url }} 400w, {{ '/images/team/valeriy-800.webp' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px">
             <img class="team-l__photo-img team-l__photo-img--valeriy" src="{{ '/images/team/valeriy-800.png' | url }}" srcset="{{ '/images/team/valeriy-400.png' | url }} 400w, {{ '/images/team/valeriy-800.png' | url }} 800w" sizes="(min-width: 1000px) 350px, (min-width: 768px) 250px, (min-width: 390px) 240px, 225px" width="800" height="800" alt="Валерий" loading="lazy">
           </picture>
@@ -210,8 +260,8 @@
         </div>
       </div>
       {# Пустые карточки-заполнители (расчёт — см. комментарий вверху
-         файла): с 07.10 видна только первая, с 768px; вторая и третья
-         скрыты всегда — управление видимостью и бордерами по брейкпоинту
+         файла): с 25.10 первая видна с 1000px, вторая с 1440px, третья
+         скрыта всегда (было с 07.10: только первая, с 768px) — управление видимостью и бордерами по брейкпоинту
          целиком в style.css. aria-hidden, т.к. это не реальный контент. #}
       <div class="team-l__card team-l__card--placeholder team-l__card--placeholder-1" aria-hidden="true">
         <div class="team-l__photo"></div>

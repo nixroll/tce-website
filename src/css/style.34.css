@@ -7265,8 +7265,20 @@ body.body--header-overlay {
    виден с 768px без верхней границы; placeholder-2/-3 больше не
    показываются (остаются display:none из общего правила выше).
    Было: placeholder-1 только 768–999.98 + все три с 1440. */
-@media (min-width: 768px) {
+/* 25.10: стало 14 человек (+ Дмитрий и два Олега): на 768 заполнители
+   не нужны (7 полных рядов), на 1000 — 1, на 1440 — 2 (расчёт — в
+   team-l.njk). Было с 07.10:
+     @media (min-width: 768px) {
+       .team-l__card--placeholder-1 { display: flex; }
+     } */
+@media (min-width: 1000px) {
   .team-l__card--placeholder-1 {
+    display: flex;
+  }
+}
+
+@media (min-width: 1440px) {
+  .team-l__card--placeholder-2 {
     display: flex;
   }
 }
@@ -7418,6 +7430,29 @@ body.body--header-overlay {
   top: -3%;
   width: 118.8%;
   height: 118.8%;
+}
+
+/* 25.10: Дмитрий и два Олега — кроп тем же Pillow-превью: верх головы
+   ~13.6% от рамки, ширина головы ~30%, лицо по центру. width = height. */
+.team-l__photo-img--dmitriy {
+  left: -10.4%;
+  top: -4.2%;
+  width: 121%;
+  height: 121%;
+}
+
+.team-l__photo-img--oleg-santeh {
+  left: -5.5%;
+  top: -2.5%;
+  width: 117.4%;
+  height: 117.4%;
+}
+
+.team-l__photo-img--oleg-avtomatika {
+  left: -5.1%;
+  top: -3.1%;
+  width: 113.6%;
+  height: 113.6%;
 }
 
 
