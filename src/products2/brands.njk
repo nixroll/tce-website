@@ -1,0 +1,31 @@
+---
+title: Бренды (тест) - Thermo Concept Engineering
+description: "Оборудование мировых производителей напрямую, с официальной гарантией: Viessmann, Grundfos, Wilo, Elco, Flamco, Schuster и другие бренды котельного оборудования."
+permalink: /products/brands2/
+# 25.10: тестовая ветка «Продукции» (см. src/_data/products2.js). Только
+# на тестовом сайте; не в поиске и не в карте сайта.
+noindex: true
+eleventyExcludeFromCollections: true
+catalogView: products2
+p2Level: brands
+layout: base.njk
+stickyHeader: true
+headerTheme: light
+hasContactForm: true
+customSections: true
+---
+{# 25.10 вечер: тестовая копия вида «Бренды» (адрес — по просьбе Никиты). Порядок секций — как у /products/brands/, вместо catalog-l.njk
+   своя копия catalog2-l.njk. #}
+{% include "catalog2-l.njk" %}
+{% include "other-products-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "form-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "cta.njk" %}
+{% set dividerVariant = "edge-secondary" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}

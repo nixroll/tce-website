@@ -14,6 +14,13 @@
        «← Продукция» (как на странице бренда), заголовок — название
        категории; карточки брендов с логотипами, «Смотреть» →
        /products2/<категория>/<бренд>/.
+     - "brands" (/products/brands2/, 25.10 вечер): тестовая копия вида
+       «Бренды» — та же сетка всех брендов, что на /products/brands/,
+       «Смотреть» → обычная страница бренда /products/<бренд>/ (там
+       «← Продукция» вернёт сюда же через catalog-return.js).
+   На "categories" и "brands" есть переключатель Категории/Бренды, но
+   он ходит между тестовыми адресами: /products2/ ⇄ /products/brands2/.
+   На "category" переключателя нет.
    Карточки-заполнители для ровной последней строки — тот же расчёт,
    что в catalog-l.njk (2 колонки на 768, 3 с 1000). #}
 {% macro placeholders(n) %}
@@ -47,6 +54,12 @@
       </h1>
       {%- endif %}
     </div>
+    {%- if p2Level != "category" %}
+    <nav class="catalog-seg" aria-label="Вид раздела «Продукция»">
+      <a class="catalog-seg__item{% if p2Level == 'categories' %} is-active{% endif %}" href="{{ '/products2/' | url }}"{% if p2Level == 'categories' %} aria-current="page"{% endif %}>Категории</a>
+      <a class="catalog-seg__item{% if p2Level == 'brands' %} is-active{% endif %}" href="{{ '/products/brands2/' | url }}"{% if p2Level == 'brands' %} aria-current="page"{% endif %}>Бренды</a>
+    </nav>
+    {%- endif %}
   </div>
   <div class="catalog-l__grid">
     {%- if p2Level == "category" %}
@@ -70,6 +83,27 @@
     </div>
     {%- endfor %}
     {{ placeholders(p2cat.brands.length) }}
+    {%- elif p2Level == "brands" %}
+    {%- for b in catalogBrands %}
+    {%- set logo = b.logo or b.slug %}
+    <div class="catalog-l__card">
+      <div class="catalog-l__cover catalog-l__cover--{{ logo }}">
+        <img
+          class="catalog-l__logo catalog-l__logo--{{ logo }}"
+          src="{{ ('/images/catalog-l/' + logo + '.svg') | url }}"
+          alt="{{ b.name }}"
+          loading="lazy">
+      </div>
+      <div class="catalog-l__content">
+        <div class="catalog-l__text">
+          <p class="catalog-l__card-title">{{ b.name }}</p>
+          <p class="catalog-l__card-desc">{{ b.tags | safe }}</p>
+        </div>
+        {{ btn('/products/' + b.slug + '/') }}
+      </div>
+    </div>
+    {%- endfor %}
+    {{ placeholders(catalogBrands.length) }}
     {%- else %}
     {%- for cat in products2.categories %}
     <div class="catalog-l__card">
