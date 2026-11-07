@@ -111,12 +111,12 @@
         <picture>
           <source
             type="image/webp"
-            srcset="{% for w in cat.cover.widths %}{{ ('/images/' + cat.cover.dir + '/photo-1-' + w + '.webp') | url }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}"
+            srcset="{% for w in cat.cover.widths %}{{ ('/images/' + cat.cover.dir + '/photo-' + cat.cover.n + '-' + w + '.webp') | url }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}"
             sizes="(min-width: 1440px) 420px, (min-width: 1000px) 33vw, (min-width: 768px) 50vw, 100vw">
           <img
             class="catalog-l__cover-img"
-            src="{{ ('/images/' + cat.cover.dir + '/photo-1-' + cat.cover.maxW + '.jpg') | url }}"
-            srcset="{% for w in cat.cover.widths %}{{ ('/images/' + cat.cover.dir + '/photo-1-' + w + '.jpg') | url }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}"
+            src="{{ ('/images/' + cat.cover.dir + '/photo-' + cat.cover.n + '-' + cat.cover.maxW + '.jpg') | url }}"
+            srcset="{% for w in cat.cover.widths %}{{ ('/images/' + cat.cover.dir + '/photo-' + cat.cover.n + '-' + w + '.jpg') | url }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}"
             sizes="(min-width: 1440px) 420px, (min-width: 1000px) 33vw, (min-width: 768px) 50vw, 100vw"
             alt="{{ cat.cover.alt }}"
             loading="lazy">

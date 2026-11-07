@@ -35,7 +35,9 @@ const MAP = {
   "gorelki": { slug: "burners", cover: "elco" },
   "deaeratory": { slug: "deaerators", cover: "boiler" },
   "nasosy": { slug: "pumps", cover: "grandfar" },
-  "vodopodgotovka": { slug: "water-treatment", cover: "nyuterm" },
+  /* 07.11 (Никита): у Ньютерма на фото 1 (и 2, 4) их водяной знак —
+     взято фото 3, система обратного осмоса, без знака. Было: фото 1. */
+  "vodopodgotovka": { slug: "water-treatment", cover: "nyuterm", photo: 3 },
   "vodonagrevateli": { slug: "water-heaters", cover: "huchentec" },
   "rasshiritelnye-baki": { slug: "expansion-tanks", cover: "absolute-tank" },
 };
@@ -56,6 +58,9 @@ const cats = categories.map((cat) => {
     note: cat.note,
     cover: {
       dir: g.dir,
+      /* Номер фото в галерее бренда: по умолчанию первое (photo-1),
+         в MAP можно указать другое (photo: 3). */
+      n: m.photo || 1,
       widths,
       maxW: widths[widths.length - 1],
       alt: cat.name,
