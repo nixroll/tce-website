@@ -188,9 +188,9 @@
      уходит. logo — apple-touch-icon.png (180×180, квадратный PNG):
      og-cover.png не годится, у Google к logo отдельное требование
      (кв., от 112×112), а og:image — баннер 1200×630 под другую задачу.
-     sameAs — только Instagram: ссылка на Telegram в футере ведёт на
-     общий telegram.org, а не на канал компании, включать её сюда
-     как "тот же профиль организации" было бы неверно. #}
+     sameAs — Instagram и (с 07.11) Telegram-канал компании
+     https://t.me/thermoconcept. До 07.11 Telegram сюда не включали:
+     ссылка в футере вела на общий telegram.org-заглушку, а не на канал. #}
   {% if not noindex %}
   <script type="application/ld+json">
   {
@@ -211,7 +211,8 @@
       "addressCountry": "BY"
     },
     "sameAs": [
-      "https://www.instagram.com/thermoconceptby/"
+      "https://www.instagram.com/thermoconceptby/",
+      "https://t.me/thermoconcept"
     ]
   }
   </script>
