@@ -177,7 +177,7 @@
      Hero - L, Team - L) БЕЗ смены имени, и у тех, кто уже заходил на
      сайт, CSS мог остаться старым из годового кеша (см. .htaccess).
      Новое имя сбрасывает кеш сразу для всех этих правок. #}
-  <link rel="stylesheet" href="{{ '/css/style.36.css' | url }}">
+  <link rel="stylesheet" href="{{ '/css/style.37.css' | url }}">
   {# 21.08, SEO-аудит: структурированные данные Organization. На каждой
      странице (кроме noindex — /404.html, там смысла нет), одинаковый
      блок — так и задумано в schema.org, это не per-page разметка, а
@@ -497,7 +497,7 @@
   {% if catalogView or brand %}
     {# 29.09: «← Каталог» на странице бренда возвращает туда, откуда
        пришли (вкладка + раскрытая категория), см. catalog-return.js. #}
-    <script src="{{ '/js/catalog-return.js' | url }}" defer></script>
+    <script src="{{ '/js/catalog-return.2.js' | url }}" defer></script>
   {% endif %}
 </body>
 </html>

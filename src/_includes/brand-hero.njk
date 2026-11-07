@@ -72,10 +72,11 @@
   <div class="brand-hero__container">
     <div class="brand-hero__content">
       <div class="brand-hero__text">
-        {#- 25.10: адрес и текст ссылки можно переопределить
-            (brandHeroBackHref / brandHeroBackLabel) — так делает тестовая
-            ветка /products2/<категория>/<бренд>/ («← Паровые котлы»).
-            Без них — как раньше: «← Продукция» на /products/. #}
+        {#- 25.10: адрес и текст ссылки можно переопределить в шаблоне
+            (brandHeroBackHref / brandHeroBackLabel). Без них — как
+            раньше: «← Продукция» на /products/. 07.11: если на бренд
+            пришли со страницы категории, catalog-return.2.js сам
+            подставит адрес категории и текст «← Паровые котлы». #}
         <a class="brand-hero__back" href="{{ (brandHeroBackHref or '/products/') | url }}" data-catalog-back>←&nbsp;{{ brandHeroBackLabel or 'Продукция' }}</a>
         {# 21.08, SEO-аудит: было <p> — единственный смысловой заголовок
            каждой из 9 страниц /catalog/<slug>/, ни на одной не было h1.

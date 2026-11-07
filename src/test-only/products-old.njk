@@ -1,0 +1,72 @@
+---
+title: Продукция (старая версия) - Thermo Concept Engineering
+description: "Оборудование для котельных по категориям: паровые и водогрейные котлы, горелки, насосы, водоподготовка, водонагреватели и расширительные баки."
+# 07.11 (Никита): сохранённая прежняя версия /products/ — категории
+# раскрывающимися строками (catalog-l.njk, catalogView: categories).
+# Основной вид теперь — карточки (catalog-cards-l.njk). Эта страница
+# собирается ТОЛЬКО для тестового сайта (папка src/test-only/
+# игнорируется в боевой сборке, см. eleventy.config.js), закрыта от
+# поиска и не попадает в карту сайта. Вернуть как основную: в
+# src/catalog.njk поставить include "catalog-l.njk" и
+# catalogView: categories (см. комментарий там).
+permalink: /products-old/
+noindex: true
+eleventyExcludeFromCollections: true
+catalogView: categories
+layout: base.njk
+stickyHeader: true
+headerTheme: light
+hasContactForm: true
+customSections: true
+---
+{# 14.08: страница /catalog/ свёрстана по Figma Layout (node
+   1417:11201). Порядок секций сверху вниз, сверено по всем 5
+   брейкпоинтам:
+     Header Line → Catalog - L → Divider - L → Form - L →
+     Divider - L → CTA - D → Divider - D → Footer - D
+   Divider-D перед Footer есть только на 1000/1440 — это ровно
+   поведение существующего модификатора "edge-secondary" (см.
+   divider.njk), новых вариантов заводить не пришлось.
+
+   customSections: true — базовый хвост base.njk (Brands + Divider +
+   CTA + Divider) здесь НЕ подходит: по макету между Form-L и CTA-D
+   нет Brands, а дивайдеры расставлены иначе. Поэтому страница, как и
+   /contact/, берёт хвост на себя целиком (кроме Footer, он общий).
+
+   NB по Brands - D: в Figma-Layout эта секция присутствует ТОЛЬКО на
+   брейкпоинте 1000px и отсутствует на 320/390/768/1440. Расценено как
+   случайно забытый инстанс (4 из 5 брейкпоинтов без неё) — не
+   добавлена. Если задумывалось иначе, вернуть просто: include
+   brands.njk между form-l и cta.
+
+   Header — 1-в-1 как на /about/ и /services/ (пользователь просил
+   "такой же"): stickyHeader: true + headerTheme: light. Именно
+   stickyHeader даёт то самое "резиновое оттягивание" на мобилках —
+   sticky-элемент, в отличие от fixed, часть потока документа и
+   двигается вместе со страницей при overscroll-bounce на iOS,
+   поэтому под ним не обнажается пустой разрыв (подробный разбор — у
+   .site-header в style.css и в комментарии у stickyHeader в
+   base.njk). Отдельный спейсер header-line.njk (элемент "Header Line"
+   из макета) при этом НЕ нужен и намеренно не подключается: sticky
+   сам резервирует место в потоке, а base.njk по флагу stickyHeader
+   обнуляет padding-top у body — иначе отступ задвоился бы. Ровно та
+   же схема уже работает на /about/, /services/ и /contact/, где в
+   Figma этот же "Header Line" тоже нарисован.
+
+   hasContactForm — подключает contact-toast.js + confetti.js +
+   contact-form.js, без него submit формы не перехватится (см.
+   form-l.njk и base.njk). hasAddressCopy здесь не нужен — блока с
+   адресом на этой странице нет. #}
+{% include "catalog-l.njk" %}
+{% include "other-products-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "form-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "cta.njk" %}
+{% set dividerVariant = "edge-secondary" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}

@@ -66,13 +66,15 @@ module.exports = function (eleventyConfig) {
      конфликтующий вывод. Проверено локальной сборкой. */
   eleventyConfig.ignores.add("src/google3ffefe27355c5a82.html");
 
-  /* 25.10. Тестовая ветка раздела «Продукция» (/products2/, см.
-     src/_data/products2.js) собирается ТОЛЬКО для тестового сайта на
-     GitHub Pages. В обычной (боевой) сборке, которую заливают на
-     hoster.by, папки src/products2/ просто нет — эти страницы не
-     попадут на thermoconcept.by, даже если запустить деплой. */
+  /* Страницы только для тестового сайта (GitHub Pages): папка
+     src/test-only/. В обычной (боевой) сборке, которую заливают на
+     hoster.by, её просто нет — эти страницы не попадут на
+     thermoconcept.by, даже если запустить деплой.
+     07.11: там сохранённая прежняя версия /products/ (строки) —
+     /products-old/. (25.10–07.11 так же была закрыта тестовая ветка
+     /products2/, теперь она стала основным видом.) */
   if (!IS_GITHUB_PAGES) {
-    eleventyConfig.ignores.add("src/products2/**");
+    eleventyConfig.ignores.add("src/test-only/**");
   }
 
   eleventyConfig.addGlobalData("currentYear", new Date().getFullYear());

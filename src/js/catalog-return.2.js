@@ -1,4 +1,6 @@
-/* 29.09. Возврат со страницы бренда туда, откуда пришли (пользователь:
+/* 07.11: файл переименован catalog-return.js → catalog-return.2.js
+   (подпись ссылки назад названием категории, см. ниже).
+   29.09. Возврат со страницы бренда туда, откуда пришли (пользователь:
  * «← Каталог» на странице бренда всегда вёл на /catalog/ с вкладкой
  * «Категории», даже если пришли из «Брендов», и раскрытая категория
  * терялась).
@@ -44,7 +46,15 @@
     } else {
       url += location.hash;
     }
-    save({ url: url, target: new URL(link.href, location.href).pathname });
+    /* 07.11: со страницы категории (catalog-cards-l.njk) у кнопки есть
+       data-return-label — название категории для ссылки назад на
+       странице бренда («← Паровые котлы»). Без него — null, и там
+       остаётся «← Продукция». */
+    save({
+      url: url,
+      target: new URL(link.href, location.href).pathname,
+      label: link.getAttribute('data-return-label') || null
+    });
   });
 
   /* Страница бренда: ссылка «← Каталог». */
@@ -54,6 +64,7 @@
   if (!state || state.target !== location.pathname) return;
 
   back.setAttribute('href', state.url);
+  if (state.label) back.textContent = '\u2190\u00a0' + state.label;
 
   back.addEventListener('click', function (e) {
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;

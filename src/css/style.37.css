@@ -10034,7 +10034,7 @@ body.body--header-overlay {
   padding-bottom: 4px;
 }
 
-/* 25.10: тестовая ветка /products2/ (catalog2-l.njk) — у карточек
+/* 25.10 (с 07.11 — основной вид «Категории», catalog-cards-l.njk) — у карточек
    категорий вместо логотипа фото (первое фото галереи бренда). Та же
    рамка .catalog-l__cover (пропорции 384/300, скругление, фон), фото
    заполняет её целиком с обрезкой по краям. */
@@ -10056,14 +10056,15 @@ body.body--header-overlay {
   object-position: center;
 }
 
-/* 25.10, багфикс (Никита, /products2/steam-generators/ — один бренд и
+/* 25.10, багфикс (Никита, «Парогенераторы» — один бренд и
    две пустые ячейки на 1440): вертикальную линию у пустой ячейки
    оставляем только у ПЕРВОЙ из них — она закрывает последнюю реальную
    карточку справа. Следующая пустая ячейка своей линии не рисует, иначе
    выглядит, будто в ряду есть ещё один бренд. Только тестовая ветка
-   (.catalog-l--p2), текущие /products/ не затронуты. */
+   (.catalog-l--cards: /products/ и /products/<категория>/; вид «Бренды»
+   на catalog-l.njk не затронут). */
 @media (min-width: 768px) {
-  .catalog-l--p2 .catalog-l__card--placeholder + .catalog-l__card--placeholder {
+  .catalog-l--cards .catalog-l__card--placeholder + .catalog-l__card--placeholder {
     border-left: none;
   }
 }

@@ -1,0 +1,115 @@
+{# 07.11 (Никита: «клиенту понравилось, делаем как основной»). Основной
+   вид «Категории» раздела «Продукция» — карточки категорий вместо
+   прежних раскрывающихся строк. Вырос из тестовой ветки /products2/
+   (25.10), она убрана. Прежняя версия со строками НЕ удалена:
+   catalog-l.njk (вид «Категории» там же, где «Бренды») + страница
+   src/test-only/products-old.njk → /products-old/ только на тестовом
+   сайте.
+
+   Свёрстано на тех же классах .catalog-l__*, что и вид «Бренды»
+   (catalog-l.njk), поэтому сетка, Stroke, карточки и «Смотреть» 1:1.
+   Данные — src/_data/catalogCategoryCards.js.
+
+   Два режима (cardsLevel):
+     - "categories" (/products/): бейдж «Продукция», заголовок,
+       переключатель Категории/Бренды (Бренды → /products/brands/, там
+       по-прежнему catalog-l.njk); карточки категорий — обложка-фото,
+       название, «N брендов», «Смотреть» → /products/<категория>/;
+     - "category" (/products/<категория>/, catalog-category.njk): вместо
+       бейджа — «← Продукция», заголовок — название категории;
+       переключателя нет; карточки брендов с логотипами, «Смотреть» →
+       прежняя страница бренда /products/<бренд>/ с data-return-label —
+       catalog-return.2.js подпишет там ссылку назад «← <категория>».
+   Карточки-заполнители для ровной последней строки — тот же расчёт,
+   что в catalog-l.njk (2 колонки на 768, 3 с 1440). #}
+{% macro placeholders(n) %}
+  {%- set ph2 = n % 2 %}
+  {%- set ph3 = (3 - n % 3) % 3 %}
+  {%- set phMax = ph2 if ph2 > ph3 else ph3 %}
+  {%- for i in range(0, phMax) %}
+  <div class="catalog-l__card catalog-l__card--placeholder{% if i < ph2 %} catalog-l__card--ph-2col{% endif %}{% if i < ph3 %} catalog-l__card--ph-3col{% endif %}" aria-hidden="true"></div>
+  {%- endfor %}
+{% endmacro %}
+{% macro btn(href, returnLabel) %}
+      <a class="catalog-l__btn" href="{{ href | url }}"{% if returnLabel %} data-return-label="{{ returnLabel }}"{% endif %}>
+        Смотреть
+        <svg class="catalog-l__btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M3.33331 10H16.6666M11.6666 15L16.6666 10L11.6666 5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+{% endmacro %}
+<section class="catalog-l catalog-l--cards" data-figma-name="Catalog - L (cards)">
+  <div class="catalog-l__container">
+    <div class="catalog-l__title-badge">
+      {%- if cardsLevel == "category" %}
+      <a class="brand-hero__back" href="{{ '/products/' | url }}">←&nbsp;Продукция</a>
+      <h1 class="catalog-l__heading">{{ cardsCat.name }}.<br>
+        <span class="catalog-l__heading-muted">{{ cardsCat.note }}.</span>
+      </h1>
+      {%- else %}
+      <span class="catalog-l__badge">Продукция</span>
+      <h1 class="catalog-l__heading">Мировые производители.<br>
+        <span class="catalog-l__heading-muted">Напрямую.</span>
+      </h1>
+      {%- endif %}
+    </div>
+    {%- if cardsLevel != "category" %}
+    <nav class="catalog-seg" aria-label="Вид раздела «Продукция»">
+      <a class="catalog-seg__item is-active" href="{{ '/products/' | url }}" aria-current="page">Категории</a>
+      <a class="catalog-seg__item" href="{{ '/products/brands/' | url }}">Бренды</a>
+    </nav>
+    {%- endif %}
+  </div>
+  <div class="catalog-l__grid">
+    {%- if cardsLevel == "category" %}
+    {%- for b in cardsCat.brands %}
+    {%- set logo = b.logo or b.slug %}
+    <div class="catalog-l__card">
+      <div class="catalog-l__cover catalog-l__cover--{{ logo }}">
+        <img
+          class="catalog-l__logo catalog-l__logo--{{ logo }}"
+          src="{{ ('/images/catalog-l/' + logo + '.svg') | url }}"
+          alt="{{ b.name }}"
+          loading="lazy">
+      </div>
+      <div class="catalog-l__content">
+        <div class="catalog-l__text">
+          <p class="catalog-l__card-title">{{ b.name }}</p>
+          <p class="catalog-l__card-desc">{{ b.tags | safe }}</p>
+        </div>
+        {{ btn('/products/' + b.slug + '/', cardsCat.name) }}
+      </div>
+    </div>
+    {%- endfor %}
+    {{ placeholders(cardsCat.brands.length) }}
+    {%- else %}
+    {%- for cat in catalogCategoryCards.categories %}
+    <div class="catalog-l__card">
+      <div class="catalog-l__cover catalog-l__cover--photo">
+        <picture>
+          <source
+            type="image/webp"
+            srcset="{% for w in cat.cover.widths %}{{ ('/images/' + cat.cover.dir + '/' + cat.cover.prefix + '-' + w + '.webp') | url }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}"
+            sizes="(min-width: 1440px) 420px, (min-width: 1000px) 33vw, (min-width: 768px) 50vw, 100vw">
+          <img
+            class="catalog-l__cover-img"
+            src="{{ ('/images/' + cat.cover.dir + '/' + cat.cover.prefix + '-' + cat.cover.maxW + '.jpg') | url }}"
+            srcset="{% for w in cat.cover.widths %}{{ ('/images/' + cat.cover.dir + '/' + cat.cover.prefix + '-' + w + '.jpg') | url }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}"
+            sizes="(min-width: 1440px) 420px, (min-width: 1000px) 33vw, (min-width: 768px) 50vw, 100vw"
+            alt="{{ cat.cover.alt }}"
+            loading="lazy">
+        </picture>
+      </div>
+      <div class="catalog-l__content">
+        <div class="catalog-l__text">
+          <p class="catalog-l__card-title">{{ cat.name }}</p>
+          <p class="catalog-l__card-desc">{{ cat.note }}</p>
+        </div>
+        {{ btn('/products/' + cat.slug + '/') }}
+      </div>
+    </div>
+    {%- endfor %}
+    {{ placeholders(catalogCategoryCards.categories.length) }}
+    {%- endif %}
+  </div>
+</section>

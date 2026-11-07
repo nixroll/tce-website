@@ -1,0 +1,39 @@
+---
+layout: base.njk
+stickyHeader: true
+headerTheme: light
+hasContactForm: true
+customSections: true
+catalogView: cards
+cardsLevel: category
+pagination:
+  data: catalogCategoryCards.categories
+  size: 1
+  alias: cardsCat
+  # все 10 страниц — в collections.all, иначе в sitemap попадёт только
+  # первая (так же сделано у страниц брендов, catalog-brand.njk)
+  addAllPagesToCollections: true
+permalink: "/products/{{ cardsCat.slug }}/"
+eleventyComputed:
+  title: "{{ cardsCat.name }} - Thermo Concept Engineering"
+  description: "{{ cardsCat.name }}: {{ cardsCat.note }} — подбор, поставка напрямую от производителя, монтаж, пусконаладка и сервис от Thermo Concept Engineering."
+---
+{# 07.11 (Никита): страница категории раздела «Продукция» —
+   /products/<категория>/ (steam-boilers, burners, ...), карточки брендов
+   категории. Второй уровень нового вида «Категории» (см.
+   catalog-cards-l.njk, режим "category"; данные —
+   catalogCategoryCards.js). Переключателя Категории/Бренды и секции
+   «Другие товары» здесь нет — по решению Никиты 25.10 они только на
+   первом уровне. Бренды ведут на прежние страницы /products/<бренд>/. #}
+{% include "catalog-cards-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "form-l.njk" %}
+{% set dividerVariant = "light" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}
+{% include "cta.njk" %}
+{% set dividerVariant = "edge-secondary" %}
+{% include "divider.njk" %}
+{% set dividerVariant = "" %}

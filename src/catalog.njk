@@ -8,7 +8,11 @@ permalink: /products/
 # на /catalog/brands/ (catalog-brands.njk) вместе со своим описанием —
 # здесь описание про категории, без тире в середине фразы.
 description: "Оборудование для котельных по категориям: паровые и водогрейные котлы, горелки, насосы, водоподготовка, водонагреватели и расширительные баки."
-catalogView: categories
+# 07.11 (Никита): основной вид «Категории» — карточки (catalog-cards-l.njk).
+# Было: catalogView: categories (раскрывающиеся строки, catalog-l.njk;
+# сохранены — /products-old/ на тестовом сайте, src/test-only/).
+catalogView: cards
+cardsLevel: categories
 layout: base.njk
 stickyHeader: true
 headerTheme: light
@@ -53,7 +57,13 @@ customSections: true
    contact-form.js, без него submit формы не перехватится (см.
    form-l.njk и base.njk). hasAddressCopy здесь не нужен — блока с
    адресом на этой странице нет. #}
-{% include "catalog-l.njk" %}
+{# 07.11 (Никита, клиенту понравилось): вместо раскрывающихся строк —
+   карточки категорий. Было:
+     include "catalog-l.njk"  (с catalogView: categories)
+   Прежняя версия целиком сохранена: catalog-l.njk не тронут (он же
+   рисует вид «Бренды» на /products/brands/), а страница со строками
+   живёт на тестовом сайте по адресу /products-old/ (src/test-only/). #}
+{% include "catalog-cards-l.njk" %}
 {% include "other-products-l.njk" %}
 {% set dividerVariant = "light" %}
 {% include "divider.njk" %}
