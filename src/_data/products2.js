@@ -39,7 +39,15 @@ const MAP = {
      взято фото 3, система обратного осмоса, без знака. Было: фото 1. */
   "vodopodgotovka": { slug: "water-treatment", cover: "nyuterm", photo: 3 },
   "vodonagrevateli": { slug: "water-heaters", cover: "huchentec" },
-  "rasshiritelnye-baki": { slug: "expansion-tanks", cover: "absolute-tank" },
+  /* 07.11 (Никита): своя обложка — красные мембранные баки, по
+     образцу рендера Boiler: на сером фоне карточек (#f3f4f6), по
+     центру, ~72% кадра 384:300. Файл — images/products2-covers/.
+     Было: первое фото галереи Absolute Tank. */
+  "rasshiritelnye-baki": {
+    slug: "expansion-tanks",
+    cover: "absolute-tank",
+    coverFile: { dir: "products2-covers", name: "expansion-tanks", widths: [640, 1280] },
+  },
 };
 
 const brandBySlug = Object.fromEntries(brands.map((b) => [b.slug, b]));
@@ -50,14 +58,19 @@ const cats = categories.map((cat) => {
   const coverSlug = m.cover || (cat.brands[0] && cat.brands[0].slug);
   const g = galleries["brand-" + coverSlug];
   if (!g) throw new Error("products2: нет галереи для обложки " + coverSlug);
-  const widths = g.widths || [400, 700, 1000];
+  /* 07.11: либо своё фото (coverFile), либо фото из галереи бренда. */
+  const own = m.coverFile;
+  const widths = own ? own.widths : (g.widths || [400, 700, 1000]);
   return {
     slug: m.slug,
     sourceSlug: cat.slug,
     name: cat.name,
     note: cat.note,
     cover: {
-      dir: g.dir,
+      dir: own ? own.dir : g.dir,
+      /* Начало имени файла: "<name>" для своего фото или "photo-N"
+         для галереи; дальше -<ширина>.jpg/.webp. */
+      prefix: own ? own.name : "photo-" + (m.photo || 1),
       /* Номер фото в галерее бренда: по умолчанию первое (photo-1),
          в MAP можно указать другое (photo: 3). */
       n: m.photo || 1,
